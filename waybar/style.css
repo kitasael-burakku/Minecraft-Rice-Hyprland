@@ -1,0 +1,195 @@
+/* =====================================================
+   WAYBAR
+===================================================== */
+
+* {
+    all: unset;
+    font-size: 14px;
+    font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
+}
+
+window#waybar {
+    background: transparent;
+    color: #e0e0e0;
+}
+
+/* -----------------------------------
+   BASE CAPSULE (fallback / standalone)
+----------------------------------- */
+
+#clock, #cpu, #memory, #disk, #network, #pulseaudio, 
+#tray, #workspaces, #window, #custom-updates, 
+#temperature, #idle_inhibitor {
+    color: #e0e0e0;
+    background: rgba(26, 26, 26, 0.60);
+    border: 1px solid rgba(176, 190, 197, 0.40);
+    border-bottom: 2px solid rgba(176, 190, 197, 0.40);
+    border-radius: 14px;
+    margin: 6px 3px;
+    padding: 3px 12px;
+    transition: all 300ms ease-in-out;
+}
+
+#clock:hover, #cpu:hover, #memory:hover, #disk:hover, 
+#network:hover, #pulseaudio:hover, #custom-updates:hover, 
+#temperature:hover {
+    background: rgba(64, 64, 64, 0.85);
+    border-color: rgba(176, 190, 197, 0.30);
+    border-bottom-color: #ff4f5e;
+}
+
+/* -----------------------------------
+   WORKSPACES (standalone)
+----------------------------------- */
+
+#workspaces {
+    padding: 1px 4px;
+}
+
+#workspaces button {
+    color: rgba(255, 255, 255, 0.28);
+    margin: 0 3px;
+    padding: 0 9px;
+    border-radius: 999px;
+    min-width: 12px;
+    background: rgba(5, 5, 5, 0.18);
+    border: 1px solid rgba(176, 190, 197, 0.08);
+    border-bottom: 2px solid rgba(117, 117, 117, 0.12);
+    transition: all 300ms ease-in-out;
+}
+
+#workspaces button:hover {
+    color: #ffffff;
+    background: rgba(117, 117, 117, 0.16);
+    border-color: rgba(176, 190, 197, 0.20);
+    border-bottom-color: rgba(255, 79, 94, 0.35);
+}
+
+#workspaces button.active {
+    color: #ff4f5e;
+    background: rgba(255, 79, 94, 0.10);
+    border-color: rgba(255, 79, 94, 0.28);
+    border-bottom-color: #ff4f5e;
+    text-shadow: 0 0 8px rgba(255, 79, 94, 0.35);
+}
+
+#workspaces button.urgent {
+    color: #ffffff;
+    background: rgba(255, 82, 82, 0.14);
+    border: 1px solid rgba(255, 82, 82, 0.32);
+    border-bottom: 2px solid #ff5252;
+    text-shadow: 0 0 6px rgba(255, 82, 82, 0.30);
+}
+
+/* -----------------------------------
+   TOOLTIP & STATES
+----------------------------------- */
+
+tooltip {
+    color: #8a8a8a;
+    background: rgba(26, 26, 26, 0.60);
+    border: 1px solid rgba(176, 190, 197, 0.40);
+    border-radius: 25px;
+}
+
+tooltip label {
+    padding: 8px 12px;
+    color: #f5f5f5;
+}
+
+#pulseaudio.muted,
+#network.disconnected,
+#temperature.critical {
+    color: #ff5252;
+}
+
+#pulseaudio.muted,
+#network.disconnected {
+    border-color: rgba(255, 82, 82, 0.20);
+    border-bottom-color: rgba(255, 82, 82, 0.35);
+}
+
+#temperature.critical {
+    border-bottom-color: rgba(255, 82, 82, 0.45);
+}
+
+#clock {
+    font-weight: 700;
+    color: #d1d1d1;
+    letter-spacing: 0.03em;
+}
+
+#custom-updates {
+    color: #af924d;
+    font-weight: 700;
+}
+
+#idle_inhibitor.activated {
+    color: #ffffff;
+    border-bottom-color: #ff4f5e;
+    background: rgba(255, 79, 94, 0.10);
+}
+
+/* =====================================================
+   BUBBLE CONTAINERS (LEFT, CENTER, RIGHT)
+===================================================== */
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: rgba(26, 26, 26, 0.60);
+    border: 1px solid rgba(176, 190, 197, 0.40);
+    border-bottom: 2px solid rgba(176, 190, 197, 0.40);
+    border-radius: 16px;
+    margin: 6px 3px;
+    padding: 0 6px;
+    transition: all 300ms ease-in-out;
+}
+
+.modules-left:hover,
+.modules-center:hover,
+.modules-right:hover {
+    background: rgba(64, 64, 64, 0.72);
+    border-color: rgba(176, 190, 197, 0.30);
+    border-bottom-color: rgba(255, 79, 94, 0.45);
+}
+
+/* -----------------------------------
+   INNER BUBBLE MODULES RESET
+----------------------------------- */
+
+.modules-left #disk, .modules-left #pulseaudio, .modules-left #clock,
+.modules-center #window, .modules-center #workspaces, .modules-center #idle_inhibitor, .modules-center #tray,
+.modules-right #custom-updates, .modules-right #network, .modules-right #temperature, .modules-right #cpu, .modules-right #memory {
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 3px 10px;
+}
+
+.modules-center #window, 
+.modules-center #workspaces, 
+.modules-center #idle_inhibitor, 
+.modules-center #tray {
+    padding: 3px 8px;
+}
+
+.modules-center #workspaces {
+    padding: 1px 6px;
+}
+
+.modules-center #workspaces button {
+    margin: 0 2px;
+}
+
+/* ----------------------------------
+   WORKSPACE SPACING ONLY
+----------------------------------- */
+
+#workspaces button {
+    margin: 0 2px;
+}
+
+#workspaces button:not(:first-child) {
+    box-shadow: -1px 0 0 rgba(176, 190, 197, 0.08);
+}

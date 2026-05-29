@@ -1,0 +1,41 @@
+ {
+      "label": "lock",
+      "action": "hyprlock",
+      "text": "",
+      "keybind": "l"
+  },
+
+  {
+      "label": "logout",
+      "action": "hyprctl dispatch 'hl.dsp.exit()'",
+      "text": "",
+      "keybind": "e"
+  },
+
+  {
+      "label": "suspend",
+      "action": "~/.config/wlogout/scripts/suspend.sh",
+      "text": "",
+      "keybind": "u"
+  },
+
+  {
+      "label": "shutdown",
+      "action": "systemctl poweroff",
+      "text": "",
+      "keybind": "s"
+  },
+
+  {
+      "label": "hibernate",
+      "action": "systemctl hibernate",
+      "text": "",
+      "keybind": "h"
+  },
+
+  {
+      "label": "reboot",
+      "action": "systemctl reboot",
+      "text": "",
+      "keybind": "r"
+  }

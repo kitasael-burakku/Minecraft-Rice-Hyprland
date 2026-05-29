@@ -1,0 +1,35 @@
+# caches/state
+.cache/
+**/Cache/
+**/Code Cache/
+**/GPUCache/
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.old
+**/*.swp
+
+# generated/local state
+fastfetch/.last_idx
+fish/fish_variables
+
+# personal media / heavy files
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.gif
+
+# secrets
+*.key
+*.pem
+*.token
+*token*
+*secret*
+*password*
+*credentials*
+
+# editor/system
+.vscode/
+.idea/
+.DS_Store
