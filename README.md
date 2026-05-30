@@ -1,8 +1,46 @@
 # Minecraft-Rice-Hyprland
 
-Rice personal para Hyprland inspirado en una estetica Minecraft / CachyOS / Arch Linux. Este repositorio guarda mis dotfiles y scripts de escritorio: no es un instalador universal, no promete funcionar en cualquier maquina y esta pensado principalmente como referencia educativa para leer, copiar partes y adaptar.
+Minecraft-Rice-Hyprland es mi configuración personal para Hyprland inspirada en Minecraft, CachyOS y Arch Linux.
 
-El setup esta construido sobre CachyOS / Arch Linux, usa Hyprland con configuracion modular en Lua y combina Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout y SwayNC.
+Este proyecto **NO es un instalador automático**, **NO es una configuración universal** y **NO garantiza compatibilidad con todos los sistemas**.
+
+Su objetivo principal es servir como material de aprendizaje para usuarios que quieran entender cómo está construido un entorno Hyprland real utilizando:
+
+- Hyprland modular en Lua
+- Waybar
+- Rofi
+- Kitty
+- Fish
+- Fastfetch
+- Hyprlock
+- SwayNC
+- Scripts personalizados
+
+La idea de este repositorio no es copiar todo y esperar que funcione.
+
+La idea es:
+
+```text
+Leer
+↓
+Entender
+↓
+Adaptar
+↓
+Aprender
+↓
+Construir tu propia configuración
+```
+
+Muchas configuraciones modernas utilizan instaladores automáticos que ocultan gran parte del funcionamiento interno del sistema.
+
+Este repositorio toma la dirección opuesta.
+
+Aquí encontrarás rutas reales, scripts reales, configuraciones reales y decisiones tomadas para un sistema de uso diario. Algunas cosas funcionarán inmediatamente, otras requerirán modificaciones, y precisamente ahí es donde ocurre el aprendizaje.
+
+Si buscas una instalación de un clic probablemente este repositorio no sea para ti.
+
+Si te interesa aprender cómo está construido un rice de Hyprland y entender qué hace cada archivo antes de ejecutarlo, entonces probablemente sí.
 
 ## Hardware utilizado
 
@@ -14,7 +52,24 @@ OS: CachyOS
 
 Esta configuración fue desarrollada y probada principalmente en este hardware.
 
-## Screenshots
+## ¿A quién está dirigido?
+
+Este repositorio puede ser útil si:
+
+- Quieres aprender cómo se organiza un rice real.
+- Te interesa Hyprland y Wayland.
+- Quieres entender cómo funcionan los dotfiles.
+- Te gusta modificar configuraciones y adaptarlas a tu sistema.
+- Prefieres comprender lo que instalas antes de ejecutarlo.
+
+Probablemente NO sea para ti si:
+
+- Buscas una instalación completamente automática.
+- No quieres editar archivos de configuración.
+- No quieres modificar rutas, sensores o programas.
+- Esperas compatibilidad garantizada.
+- Quieres una configuración lista para usar sin realizar cambios.
+
 ## Screenshots
 
 ### Desktop
@@ -58,17 +113,16 @@ que permite utilizar contenido animado dentro de la terminal.
 
 ```text
 .
-├── fastfetch/        # Configs jsonc, logos y presets visuales de fastfetch
-├── fish/             # config.fish, funciones y temas de Fish shell
-├── hypr/             # Hyprland Lua, modulos, hypridle.conf y hyprlock.conf base
-├── hyprlock/         # Layout, colores, wallpaper y scripts de lock screen
-├── kitty/            # Configuracion de Kitty y colores
-├── rofi/             # Launcher y tema Rofi
-├── swaync/           # Config, estilos, iconos y tema de notificaciones
-├── waybar/           # Config, CSS y scripts de Waybar
+├── fastfetch/
+├── fish/
+├── hypr/
+├── hyprlock/
+├── kitty/
+├── rofi/
+├── scripts/
+├── swaync/
+├── waybar/
 └── wlogout/
-├── scripts/          # Scripts personales
-│   └── terminal-bg-cava.sh          # Layout, CSS, iconos y scripts de apagado/sesion
 ```
 
 ## Dependencias
@@ -113,6 +167,235 @@ Marcadas como **por verificar**:
 - `glava`: usado opcionalmente por scripts de Hyprlock si Spotify esta reproduciendo.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub, cursores, wallpapers y assets externos: instala o reemplaza segun tu sistema.
 - `obs`, `brave`, `vscodium`: son aplicaciones personales atadas a keybinds, no requisitos del entorno base.
+
+## Antes de empezar
+
+⚠️ Haz una copia de seguridad de tu configuración actual antes de copiar cualquier archivo.
+
+Ejemplo:
+
+```bash
+mkdir -p ~/backup-configs
+
+cp -r \
+~/.config/hypr \
+~/.config/waybar \
+~/.config/kitty \
+~/.config/fish \
+~/backup-configs 2>/dev/null
+```
+
+Si algo sale mal podrás restaurar tu configuración anterior fácilmente.
+
+⚠️ Lee los archivos antes de copiarlos.
+
+⚠️ No ejecutes scripts que no entiendas.
+
+⚠️ Revisa las rutas personales, wallpapers, sensores y programas antes de iniciar sesión en Hyprland.
+
+## Explicación de los comandos utilizados
+
+Si eres nuevo en Linux, esta sección explica brevemente algunos de los comandos utilizados durante la instalación.
+
+### git clone
+
+```bash
+git clone https://github.com/usuario/repositorio.git
+```
+
+Clona (descarga) un repositorio GitHub a tu computadora.
+
+Equivalente a descargar un ZIP, pero conservando el historial de Git.
+
+---
+
+### cd
+
+```bash
+cd ~/dotfiles
+```
+
+Cambia de directorio.
+
+Permite moverte entre carpetas desde la terminal.
+
+Ejemplo:
+
+```bash
+cd ~/.config
+```
+
+entra en la carpeta `.config`.
+
+---
+
+### mkdir
+
+```bash
+mkdir -p ~/.config
+```
+
+Crea directorios.
+
+La opción `-p` crea la carpeta únicamente si no existe y evita errores si ya está creada.
+
+---
+
+### cp
+
+```bash
+cp archivo.txt destino/
+```
+
+Copia archivos.
+
+Ejemplo:
+
+```bash
+cp config.fish ~/.config/fish/
+```
+
+copia el archivo a la carpeta de configuración de Fish.
+
+---
+
+### cp -r
+
+```bash
+cp -r hypr waybar ~/.config/
+```
+
+Copia directorios completos.
+
+La opción `-r` significa **recursivo** y permite copiar carpetas junto con todos sus archivos internos.
+
+Sin `-r`, Linux no copiará directorios.
+
+---
+
+### chmod
+
+```bash
+chmod +x script.sh
+```
+
+Agrega permisos de ejecución.
+
+Esto permite ejecutar el archivo como programa o script.
+
+Ejemplo:
+
+```bash
+chmod +x ~/.config/waybar/scripts/update.sh
+```
+
+---
+
+### chsh
+
+```bash
+chsh -s /usr/bin/fish
+```
+
+Cambia la shell predeterminada del usuario.
+
+Después de cerrar sesión y volver a entrar, Fish se abrirá automáticamente en lugar de Bash.
+
+---
+
+### rg (ripgrep)
+
+```bash
+rg "wallpaper" .
+```
+
+Busca texto dentro de archivos.
+
+Muy útil para encontrar:
+
+- rutas personales
+- nombres de usuario
+- sensores de hardware
+- wallpapers
+- variables
+
+Ejemplo:
+
+```bash
+rg "/home/|tu-usuario|wallpaper" .
+```
+
+---
+
+### sudo
+
+```bash
+sudo pacman -S paquete
+```
+
+Ejecuta un comando con permisos de administrador.
+
+Se utiliza para instalar programas o modificar partes del sistema.
+
+Úsalo únicamente cuando entiendas lo que hace el comando.
+
+---
+
+### pacman
+
+```bash
+sudo pacman -S paquete
+```
+
+Gestor de paquetes de Arch Linux y CachyOS.
+
+Comandos comunes:
+
+```bash
+sudo pacman -S paquete
+```
+
+Instalar paquete.
+
+```bash
+sudo pacman -Rns paquete
+```
+
+Eliminar paquete junto con dependencias innecesarias.
+
+```bash
+sudo pacman -Syu
+```
+
+Actualizar todo el sistema.
+
+---
+
+### yay
+
+```bash
+yay -S paquete
+```
+
+Instala paquetes desde el AUR (Arch User Repository).
+
+Funciona de forma similar a pacman pero permite acceder a software mantenido por la comunidad.
+
+---
+
+### ¿Por qué no existe un instalador automático?
+
+Este repositorio busca enseñar cómo funciona una configuración real de Linux.
+
+Copiar archivos manualmente permite:
+
+- Entender dónde vive cada configuración.
+- Aprender la estructura de `~/.config`.
+- Saber qué programa utiliza cada archivo.
+- Detectar errores más fácilmente.
+- Modificar partes específicas sin depender de scripts automáticos.
+
+La instalación manual requiere un poco más de trabajo, pero también enseña mucho más sobre el sistema.
 
 ## Instalacion manual
 
@@ -246,17 +529,48 @@ Este repositorio mezcla configuracion propia con herramientas, temas, assets y r
 
 Si reutilizas este rice, conserva los creditos de los proyectos y assets que uses.
 
-## Advertencias
+## Advertencias importantes
 
-- No hay garantia de compatibilidad con todas las versiones de Hyprland.
-- No es un instalador automatico ni una configuracion universal.
-- Algunas rutas estan escritas para ser didacticas y deben modificarse.
-- Algunos comandos pueden fallar si falta un paquete o servicio.
-- Las acciones de Wlogout ejecutan apagado, reinicio, suspension e hibernacion.
-- Las funciones de Fish pueden modificar paquetes, cache y archivos de usuario.
-- Revisa cualquier script antes de ejecutarlo en tu sistema.
-- No se incluye licencia en este README porque no se debe inventar una. Si quieres publicar una licencia, agregala de forma explicita en un archivo `LICENSE`.
+⚠️ Este proyecto está diseñado para ser leído, entendido y adaptado.
+
+⚠️ No es una configuración universal.
+
+⚠️ Algunas rutas contienen referencias personales y deben modificarse antes de utilizarse.
+
+⚠️ Algunas configuraciones dependen de hardware AMD específico.
+
+⚠️ Waybar puede requerir cambios en sensores de temperatura según tu equipo.
+
+⚠️ Algunos scripts ejecutan acciones reales sobre el sistema.
+
+⚠️ Wlogout puede apagar, reiniciar, suspender o hibernar el equipo.
+
+⚠️ Las funciones de Fish pueden actualizar paquetes, limpiar cachés y modificar archivos de usuario.
+
+⚠️ Lee cualquier script antes de ejecutarlo.
+
+⚠️ No copies configuraciones a ciegas.
+
+⚠️ Si algo falla, ejecuta el comando manualmente y revisa el error real en la terminal.
+
+⚠️ Este repositorio es una referencia educativa y una base para crear tu propia configuración, no una receta cerrada.
 
 ## Estado del proyecto
 
 Este repo representa mi rice personal en progreso. Puede tener rutas, decisiones y dependencias muy especificas de mi sistema. Usalo como material de aprendizaje y como base para crear tu propia configuracion, no como una receta cerrada.
+
+## Filosofía del proyecto
+
+Mi objetivo con este rice no es construir una configuración perfecta.
+
+Mi objetivo es construir una configuración que yo pueda entender, mantener y modificar sin depender de herramientas externas o capas innecesarias de abstracción.
+
+Prefiero:
+
+- Configuración modular antes que archivos gigantes.
+- Instalación manual antes que scripts mágicos.
+- Entender antes que copiar.
+- Simplicidad antes que complejidad innecesaria.
+- Aprender antes que automatizar.
+
+Si este repositorio te ayuda a aprender algo sobre Linux, Hyprland, Waybar, Fish o dotfiles, entonces ya cumplió su propósito.
