@@ -1,0 +1,103 @@
+KEYBINDS
+========
+
+Mod principal: SUPER
+
+
+APPS
+----
+
+SUPER + T           Abrir terminal
+SUPER + E           Abrir file manager
+SUPER + B           Abrir Brave
+SUPER + R           Abrir launcher
+SUPER + A           Abrir/cerrar SwayNC
+SUPER + O           Abrir OBS
+SUPER + CTRL + H    Abrir config de Hyprland en VSCodium
+
+
+VENTANAS
+--------
+
+SUPER + Q           Cerrar ventana
+SUPER + V           Toggle floating
+SUPER + F           Fullscreen modo 1
+SUPER + SHIFT + F   Fullscreen modo 0
+
+
+SISTEMA
+-------
+
+SUPER + Delete              Salir de Hyprland / hyprshutdown
+SUPER + Escape              Abrir Wlogout
+SUPER + ALT + H             Bloquear pantalla
+CTRL + SHIFT + Escape       Abrir btop
+SHIFT + X                   Toggle Cava
+SUPER + W                   Recargar Waybar
+
+
+CLIPBOARD / COLOR
+-----------------
+
+SUPER + SHIFT + V   Historial de clipboard
+SUPER + P           Color picker
+
+
+SCREENSHOTS
+-----------
+
+SUPER + F12         Screenshot monitor completo
+SUPER + F11         Screenshot de región con Swappy
+SUPER + F10         Screenshot ventana activa
+
+
+FOCO
+----
+
+SUPER + Left        Foco izquierda
+SUPER + Right       Foco derecha
+SUPER + Up          Foco arriba
+SUPER + Down        Foco abajo
+
+
+MOVER VENTANAS
+--------------
+
+SUPER + SHIFT + Left     Mover ventana izquierda
+SUPER + SHIFT + Right    Mover ventana derecha
+SUPER + SHIFT + Up       Mover ventana arriba
+SUPER + SHIFT + Down     Mover ventana abajo
+
+
+WORKSPACES
+----------
+
+SUPER + 1-0             Cambiar a workspace 1-10
+SUPER + SHIFT + 1-0     Mover ventana a workspace 1-10
+
+
+SCRATCHPAD
+----------
+
+SUPER + S           Toggle scratchpad
+SUPER + SHIFT + S   Mover ventana al scratchpad
+
+
+MEDIA
+-----
+
+Volumen +           Subir volumen
+Volumen -           Bajar volumen
+Mute                Silenciar
+Next                Siguiente canción
+Play/Pause          Reproducir/pausar
+Previous            Canción anterior
+
+
+MOUSE
+-----
+
+SUPER + Click izquierdo    Mover ventana
+SUPER + Click derecho      Redimensionar ventana
+SUPER + Scroll down        Workspace siguiente
+SUPER + Scroll up          Workspace anterior
