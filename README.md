@@ -128,6 +128,9 @@ Copia las carpetas que quieras usar:
 ```bash
 mkdir -p ~/.config
 cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts ~/.config/
+
+mkdir -p ~/Documents
+cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
 
 Da permisos de ejecucion a los scripts:
