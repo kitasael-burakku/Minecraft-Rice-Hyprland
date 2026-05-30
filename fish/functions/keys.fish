@@ -1,3 +1,3 @@
 function keys
-    less ~/Projects/dotfiles/KEYBINDS.md
+    less ~/Documents/KEYBINDS.txt
 end
