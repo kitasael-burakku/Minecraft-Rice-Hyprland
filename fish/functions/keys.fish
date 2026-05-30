@@ -1,3 +1,3 @@
 function keys
-    bat ~/Projects/dotfiles/KEYBINDS.md
+    less ~/Projects/dotfiles/KEYBINDS.md
 end
