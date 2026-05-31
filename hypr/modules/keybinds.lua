@@ -39,7 +39,25 @@ hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- Toggle floating mode
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. "+ CTRL + V", function()
+    local win = hl.get_active_window()
+    local monitor = hl.get_active_monitor()
+
+    if not win or not monitor then
+        return
+    end
+
+    if not win.floating then
+        local width = monitor.width * 0.62
+        local height = monitor.height * 0.58
+
+        hl.dispatch(hl.dsp.window.float({ action = "set" }))
+        hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
+        hl.dispatch(hl.dsp.window.center())
+    else
+        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+    end
+end)
 
 -- Fullscreen modes
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 1 }))
