@@ -14,12 +14,11 @@
     "display": {
       "separator": "",
       "constants": [
-        // CONSTANT {$1} - VERTICAL BARS AT START AND 75th CHARACTERS FORWARD AND BACKWARD
         "\u001b[90m│                                                            │\u001b[60D\u001b[39m"
       ]
     },
     "modules": [
-      // CUSTOM - Top UI bar
+
       {
         "type": "custom",
         "key": "{#90}╭ Keys ───────╮",

@@ -100,3 +100,11 @@ Mod principal: `SUPER`
 | `SUPER + Click derecho` | Redimensionar ventana |
 | `SUPER + Scroll down` | Workspace siguiente |
 | `SUPER + Scroll up` | Workspace anterior |
+
+## Layout Switcher
+
+| Keybind | Acción |
+|---|---|
+| `SUPER + SHIFT + D` | Dwindle layout |
+| `SUPER + SHIFT + M` | Master layout |
+| `SUPER + SHIFT + O` | Scrolling layout |

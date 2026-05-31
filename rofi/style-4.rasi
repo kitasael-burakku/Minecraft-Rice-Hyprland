@@ -2,35 +2,39 @@
 configuration {
     modi: "drun,run,filebrowser,window";
     show-icons: true;
+
     display-drun: "󰀻";
     display-run: "󰁔";
     display-filebrowser: "󰉋";
     display-window: "󱂬";
+
     drun-display-format: "{name}";
     window-format: "{w} · {c}";
 }
 
-/*****----- Palette -----*****/
+/*****----- Palette: Kitasan-Ship Gray Glass -----*****/
 * {
-    font: "JetBrainsMono Nerd Font 10";
+    font: "JetBrainsMono Nerd Font Propo 10";
 
-    bg: #050505e6;
-    bg-window: #050505e6;
-    bg-element: #1a1a1acc;
+    bg-clear: transparent;
+
+    bg-main: #1e1e1ecc;
+    bg-glass: #1a1a1a99;
+    bg-soft: #141414cc;
     bg-hover: #404040cc;
+    bg-selected: #b0bec526;
 
-    fg: #e0e0e0;
-    fg-soft: #d1d1d1;
-    fg-muted: #8a8a8a;
-    fg-dim: #757575;
+    fg: #e6e6e6;
+    fg-soft: #d8d8d8;
+    fg-muted: #909090;
+    fg-dim: #6f6f6f;
 
-    accent: #8a8a8a;
-    accent-alt: #757575;
+    border: #b8c5cc66;
+    border-soft: #6f6f6f55;
+    border-hover: #b8c5cc55;
 
-    border-cold: #b0bec566;
-    border-muted: #75757566;
-
-    white: #ffffff;
+    accent: #f7f7f7;
+    accent-muted: #b8c5cc;
     black: #050505;
 
     background-color: transparent;
@@ -39,6 +43,7 @@ configuration {
 /*****----- Main Window -----*****/
 window {
     transparency: "real";
+
     location: center;
     anchor: center;
     fullscreen: false;
@@ -46,17 +51,22 @@ window {
     width: 760px;
 
     border-radius: 20px;
-    border: 1px;
-    border-color: @border-cold;
 
-    background-color: @bg-window;
+    background-color: @bg-main;
+
+    border: 1px;
+    border-color: @border;
+
     cursor: "default";
 }
 
 /*****----- Main Box -----*****/
 mainbox {
-    spacing: 18px;
-    padding: 32px;
+    spacing: 16px;
+    padding: 28px;
+
+    background-color: transparent;
+
     children: [ "inputbar", "listview", "mode-switcher" ];
 }
 
@@ -65,12 +75,12 @@ inputbar {
     spacing: 12px;
     padding: 12px 18px;
 
-    border-radius: 14px;
+    border-radius: 16px;
 
-    background-color: @bg-element;
+    background-color: @bg-glass;
 
-    border: 0px 0px 2px 0px;
-    border-color: @accent;
+    border: 1px;
+    border-color: @border-soft;
 
     text-color: @fg;
 
@@ -79,13 +89,17 @@ inputbar {
 
 prompt {
     background-color: transparent;
-    text-color: @accent;
-    font: "JetBrainsMono Nerd Font Bold 12";
+
+    text-color: @accent-muted;
+
+    font: "JetBrainsMono Nerd Font Propo Bold 12";
 }
 
 entry {
     background-color: transparent;
+
     text-color: @fg;
+
     cursor: text;
 
     placeholder: "Search...";
@@ -107,7 +121,7 @@ listview {
     fixed-columns: true;
 
     spacing: 8px;
-    margin: 4px 0px;
+    margin: 2px 0px;
 
     background-color: transparent;
     text-color: @fg;
@@ -118,55 +132,70 @@ element {
     spacing: 14px;
     padding: 10px 14px;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
     background-color: transparent;
+
     text-color: @fg-muted;
 
     cursor: pointer;
+
+    border: 1px;
+    border-color: transparent;
 }
 
-element normal.normal {
-    background-color: transparent;
-}
-
+element normal.normal,
 element alternate.normal {
     background-color: transparent;
+    text-color: @fg-muted;
 }
 
 element selected.normal {
-    background-color: @bg-element;
+    background-color: @bg-selected;
 
     text-color: @fg;
 
-    border: 0px 0px 0px 4px;
-    border-color: @accent;
+    border: 1px;
+    border-color: @border-hover;
 
-    border-radius: 12px;
+    border-radius: 14px;
 }
 
 element selected.active,
 element selected.urgent {
-    background-color: @accent;
-    text-color: @black;
+    background-color: @bg-hover;
+
+    text-color: @accent;
+
+    border: 1px;
+    border-color: @border-hover;
 }
 
 element-icon {
     size: 28px;
+
+    background-color: transparent;
+
     cursor: inherit;
 }
 
 element-text {
     vertical-align: 0.5;
     horizontal-align: 0.0;
+
+    background-color: transparent;
+
     cursor: inherit;
+
     text-color: inherit;
 }
 
 /*****----- Mode Switcher -----*****/
 mode-switcher {
-    spacing: 12px;
-    margin: 8px 0px 0px 0px;
+    spacing: 10px;
+    margin: 6px 0px 0px 0px;
+
+    background-color: transparent;
 }
 
 button {
@@ -174,22 +203,25 @@ button {
 
     padding: 10px;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
-    background-color: @bg-element;
+    background-color: @bg-glass;
+
     text-color: @fg-dim;
 
     cursor: pointer;
 
     border: 1px;
-    border-color: @border-muted;
+    border-color: @border-soft;
 }
 
 button selected {
-    background-color: @accent;
-    text-color: @black;
+    background-color: @bg-selected;
 
-    border-color: @accent;
+    text-color: @fg;
+
+    border: 1px;
+    border-color: @border-hover;
 }
 
 /*****----- Message -----*****/
@@ -200,14 +232,15 @@ message {
 textbox {
     padding: 14px;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
-    background-color: @bg-element;
+    background-color: @bg-glass;
+
     text-color: @fg-soft;
 
     vertical-align: 0.5;
     horizontal-align: 0.5;
 
     border: 1px;
-    border-color: @border-muted;
+    border-color: @border-soft;
 }

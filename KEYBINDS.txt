@@ -101,3 +101,10 @@ SUPER + Click izquierdo    Mover ventana
 SUPER + Click derecho      Redimensionar ventana
 SUPER + Scroll down        Workspace siguiente
 SUPER + Scroll up          Workspace anterior
+
+LAYOUT SWITCHER 
+---------------
+
+SUPER + SHIFT + D          Dwindle layout
+SUPER + SHIFT + M          Master layout
+SUPER + SHIFT + O          Scrolling layout

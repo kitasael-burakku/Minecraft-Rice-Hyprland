@@ -1,6 +1,6 @@
 {
-    "spacing": 1,
-    "margin-top": 2,
+    "spacing": 2,
+    "margin-top": 15,
 
     "modules-left": [
         "disk",
