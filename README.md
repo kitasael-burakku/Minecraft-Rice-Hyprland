@@ -15,6 +15,11 @@ Su objetivo principal es servir como material de aprendizaje para usuarios que q
 - Hyprlock
 - SwayNC
 - Scripts personalizados
+- Qylock para el tema SDDM estilo Minecraft
+- MINEGRUB para el tema GRUB estilo Minecraft
+
+> Qylock GitHub: https://github.com/Darkkal44/qylock  
+> MINEGRUB GitHub: https://github.com/Lxtharia/minegrub-theme
 
 La idea de este repositorio no es copiar todo y esperar que funcione.
 
@@ -101,28 +106,29 @@ Probablemente NO sea para ti si:
 - Wlogout con acciones de bloqueo, salida, suspension, apagado, hibernacion y reinicio.
 - Atajos para screenshots, color picker, control multimedia, scratchpad, Waybar reload y herramientas de sistema.
 
-### Extras
+## Créditos
 
 Este rice utiliza terminal-bg, una herramienta creada por DaarcyDev
 que permite utilizar contenido animado dentro de la terminal.
 
-- YouTube: https://www.youtube.com/@DaarcyDev
-- GitHub: https://github.com/DaarcyDev/terminal-bg
+> YouTube: https://www.youtube.com/@DaarcyDev  
+> GitHub: https://github.com/DaarcyDev/terminal-bg
 
 ## Estructura del repo
 
 ```text
 .
-├── fastfetch/
-├── fish/
-├── hypr/
-├── hyprlock/
-├── kitty/
-├── rofi/
-├── scripts/
-├── swaync/
-├── waybar/
-└── wlogout/
+├── docs/screenshots/   # Capturas del rice
+├── fastfetch/          # Configs jsonc, logos y presets visuales de fastfetch
+├── fish/               # config.fish, funciones y temas de Fish shell
+├── hypr/               # Hyprland Lua, módulos, hypridle.conf y hyprlock.conf base
+├── hyprlock/           # Layout, colores, wallpaper y scripts de lock screen
+├── kitty/              # Configuración de Kitty y colores
+├── rofi/               # Launcher y tema Rofi
+├── scripts/            # Scripts personales
+├── swaync/             # Config, estilos, iconos y tema de notificaciones
+├── waybar/             # Config, CSS y scripts de Waybar
+└── wlogout/            # Layout, CSS, iconos y scripts de apagado/sesión
 ```
 
 ## Dependencias
