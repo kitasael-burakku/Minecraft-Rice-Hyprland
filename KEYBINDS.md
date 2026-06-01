@@ -19,7 +19,7 @@ Mod principal: `SUPER`
 | Keybind | Acción |
 |---|---|
 | `SUPER + Q` | Cerrar ventana |
-| `SUPER + V` | Toggle floating |
+| `SUPER + CTRL +V` | Toggle floating |
 | `SUPER + F` | Fullscreen modo 1 |
 | `SUPER + SHIFT + F` | Fullscreen modo 0 |
 
