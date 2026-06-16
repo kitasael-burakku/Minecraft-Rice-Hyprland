@@ -7,10 +7,10 @@ Mod principal: SUPER
 APPS
 ----
 
-SUPER + T           Abrir terminal
+SUPER + Enter           Abrir terminal
 SUPER + E           Abrir file manager
 SUPER + B           Abrir Brave
-SUPER + R           Abrir launcher
+SUPER + Space           Abrir launcher
 SUPER + A           Abrir/cerrar SwayNC
 SUPER + O           Abrir OBS
 SUPER + CTRL + H    Abrir config de Hyprland en VSCodium

@@ -5,50 +5,51 @@
 -- \____|__  /___|  /__|__|_|  (____  /__| |__|\____/|___|  /____  >
 --         \/     \/         \/     \/                    \/     \/ 
 
--- ─────────────────────────────────────────────────────────────────────────────
--- Velvet Motion Animations
--- ─────────────────────────────────────────────────────────────────────────────
+-- ╔═══════════════════════════════════════════════════════════╗
+-- ║                V E L V E T   M O T I O N                  ║
+-- ╚═══════════════════════════════════════════════════════════╝
 
--- Curves
-hl.curve("silkOut",       { type = "bezier", points = { {0.16, 1.00}, {0.30, 1.00} } })
-hl.curve("softIn",        { type = "bezier", points = { {0.38, 0.00}, {0.20, 1.00} } })
-hl.curve("cinemaFade",    { type = "bezier", points = { {0.22, 0.00}, {0.36, 1.00} } })
-hl.curve("glass",         { type = "bezier", points = { {0.25, 0.10}, {0.25, 1.00} } })
-hl.curve("swiftSlide",    { type = "bezier", points = { {0.05, 0.90}, {0.18, 1.00} } })
-hl.curve("calm",          { type = "bezier", points = { {0.40, 0.00}, {0.60, 1.00} } })
+-- ─── Bézier curves ──────────────────────────────────────────
+hl.curve("velvetOut",   { type="bezier", points={{0.08,0.96},{0.16,1.00}} })
+hl.curve("velvetIn",    { type="bezier", points={{0.32,0.00},{0.14,0.98}} })
+hl.curve("silkEase",    { type="bezier", points={{0.16,0.06},{0.20,1.00}} })
+hl.curve("breathe",     { type="bezier", points={{0.24,0.00},{0.52,1.00}} })
+hl.curve("snapDrift",   { type="bezier", points={{0.04,0.84},{0.14,1.00}} })
+hl.curve("snapClose",   { type="bezier", points={{1.0,0.90},{1.0,0.10}} })
+hl.curve("ghostFade",   { type="bezier", points={{0.00,0.00},{0.72,1.00}} })
 
--- Springs
-hl.curve("velvetWindow",  { type = "spring", mass = 1, stiffness = 95,  dampening = 20 })
-hl.curve("softPop",       { type = "spring", mass = 1, stiffness = 115, dampening = 17 })
-hl.curve("cleanDrag",     { type = "spring", mass = 1, stiffness = 160, dampening = 30 })
-hl.curve("workspaceFlow", { type = "spring", mass = 1, stiffness = 130, dampening = 24 })
+-- ─── Springs ────────────────────────────────────────────────
+hl.curve("windowSettle",{ type="spring", mass=1, stiffness=110, dampening=26 })
+hl.curve("windowBirth", { type="spring", mass=1, stiffness=130, dampening=20 })
+hl.curve("windowGlide", { type="spring", mass=1, stiffness=200, dampening=34 })
+hl.curve("floorLift",   { type="spring", mass=1, stiffness=125, dampening=28 })
 
--- Global
-hl.animation({ leaf = "global",        enabled = true, speed = 7.0,  bezier = "silkOut" })
-hl.animation({ leaf = "border",        enabled = true, speed = 7.5,  bezier = "glass"   })
+-- ─── Global ─────────────────────────────────────────────────
+hl.animation({ leaf="global",  enabled=true, speed=6.5, bezier="velvetOut" })
+hl.animation({ leaf="border",  enabled=true, speed=8.2, bezier="silkEase"  })
 
--- Windows
-hl.animation({ leaf = "windows",       enabled = true, speed = 5.0,  spring = "velvetWindow" })
-hl.animation({ leaf = "windowsIn",     enabled = true, speed = 4.4,  spring = "softPop",      style = "popin 88%" })
-hl.animation({ leaf = "windowsOut",    enabled = true, speed = 3.6,  bezier = "cinemaFade",   style = "popin 96%" })
-hl.animation({ leaf = "windowsMove",   enabled = true, speed = 7.2,  spring = "cleanDrag"     })
+-- ─── Windows ────────────────────────────────────────────────
+hl.animation({ leaf="windows",     enabled=true, speed=5.2, spring="windowSettle"})
+hl.animation({ leaf="windowsIn",   enabled=true, speed=4.6, spring="windowBirth",  style="popin 88%" })
+hl.animation({ leaf="windowsOut",  enabled=true, speed=3.8, bezier="snapClose",  style="popin 25%" })
+hl.animation({ leaf="windowsMove", enabled=true, speed=7.4, spring="windowGlide" })
 
--- Fades
-hl.animation({ leaf = "fade",          enabled = true, speed = 2.0,  bezier = "cinemaFade" })
-hl.animation({ leaf = "fadeIn",        enabled = true, speed = 1.6,  bezier = "softIn"     })
-hl.animation({ leaf = "fadeOut",       enabled = true, speed = 1.3,  bezier = "calm"       })
+-- ─── Fades ──────────────────────────────────────────────────
+hl.animation({ leaf="fade",    enabled=true, speed=1.4, bezier="breathe"   })
+hl.animation({ leaf="fadeIn",  enabled=true, speed=1.1, bezier="velvetIn"  })
+hl.animation({ leaf="fadeOut", enabled=true, speed=0.7, bezier="ghostFade" })
 
--- Layers
-hl.animation({ leaf = "layers",        enabled = true, speed = 4.0,  bezier = "silkOut" })
-hl.animation({ leaf = "layersIn",      enabled = true, speed = 3.6,  bezier = "glass",      style = "slide top" })
-hl.animation({ leaf = "layersOut",     enabled = true, speed = 3.0,  bezier = "cinemaFade", style = "slide top" })
-hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.4,  bezier = "softIn" })
-hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.1,  bezier = "calm"   })
+-- ─── Layers ─────────────────────────────────────────────────
+hl.animation({ leaf="layers",        enabled=true, speed=4.4, bezier="velvetOut"})
+hl.animation({ leaf="layersIn",      enabled=true, speed=3.6, bezier="silkEase",   style="slide bot" })
+hl.animation({ leaf="layersOut",     enabled=true, speed=2.8, bezier="snapClose", style="slide bot" })
+hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.0, bezier="velvetIn" })
+hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.8, bezier="ghostFade"})
 
--- Workspaces
-hl.animation({ leaf = "workspaces",    enabled = true, speed = 5.6,  spring = "workspaceFlow", style = "slide" })
-hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 5.0,  bezier = "swiftSlide",    style = "slide" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 6.0,  bezier = "silkOut",       style = "slide" })
+-- ─── Workspaces ─────────────────────────────────────────────
+hl.animation({ leaf="workspaces",    enabled=true, speed=5.6, spring="floorLift", style="slidefadevert 20%" })
+hl.animation({ leaf="workspacesIn",  enabled=true, speed=5.0, bezier="snapDrift", style="slidefadevert 20%" })
+hl.animation({ leaf="workspacesOut", enabled=true, speed=5.6, bezier="velvetOut", style="slidefadevert 20%" })
 
--- Zoom
-hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 6.0,  bezier = "glass" })
+-- ─── Zoom ───────────────────────────────────────────────────
+hl.animation({ leaf="zoomFactor", enabled=true, speed=6.8, bezier="silkEase" })

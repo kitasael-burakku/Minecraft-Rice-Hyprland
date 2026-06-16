@@ -6,7 +6,7 @@
 --         \/   \/\/             \/        \/      \/    \/ ---------
 
 local mainMod = "SUPER"
-local home = os.getenv("HOME") or "/home/tu-usuario"
+local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
 local function notify_missing(app)
     return "notify-send 'Missing command' '" .. app .. " is not installed or not in PATH'"
@@ -15,11 +15,14 @@ end
 -----------------------------
 ---- MAIN APPLICATIONS ------
 -----------------------------
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(Programs.terminal)) -- Terminal
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(Programs.terminal)) -- Terminal
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(Programs.fileManager)) -- File Manager
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brave")) -- Browser
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(Programs.menu)) -- App Launcher
+hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(Programs.menu)) -- App Launcher
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t")) -- Notification Center
+
+-- Wallpaper picker
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("quickshell -c qs-wallpaper-picker"))
 
 -- Gaming / Recording
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs")) -- OBS Studio
@@ -39,7 +42,7 @@ hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- Toggle floating mode
-hl.bind(mainMod .. "+ CTRL + V", function()
+hl.bind("+ CTRL + ALT + V", function()
     local win = hl.get_active_window()
     local monitor = hl.get_active_monitor()
 
@@ -48,8 +51,8 @@ hl.bind(mainMod .. "+ CTRL + V", function()
     end
 
     if not win.floating then
-        local width = monitor.width * 0.62
-        local height = monitor.height * 0.58
+        local width = monitor.width * 0.5
+        local height = monitor.height * 0.6
 
         hl.dispatch(hl.dsp.window.float({ action = "set" }))
         hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
@@ -81,7 +84,7 @@ hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " -e btop"))
 
 -- Cava
-hl.bind("SHIFT + X", hl.dsp.exec_cmd("pgrep -x cava >/dev/null && pkill -x cava || kitty --class cava-float cava"))
+hl.bind(mainMod .. "+ SHIFT + X", hl.dsp.exec_cmd("pgrep -x cava >/dev/null && pkill -x cava || kitty --class cava-float cava"))
 
 -- Reload Waybar
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
@@ -130,10 +133,8 @@ hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" })
 
 for i = 1, 10 do
     local key = i % 10
-
     -- Switch workspace
     hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-
     -- Move window to workspace
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
@@ -168,9 +169,8 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 ---------------------
 
 -- Move / resize windows
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
 -- Workspace scrolling
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))

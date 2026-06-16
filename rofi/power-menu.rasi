@@ -1,0 +1,142 @@
+/* =====================================================
+   POWER MENU — Kitasan Glass
+===================================================== */
+
+configuration {
+    show-icons: false;
+}
+
+* {
+    font: "DepartureMono Nerd Font 12";
+
+    bg:         #1e1e1ecc;
+    bg-soft:    #1a1a1acc;
+    bg-hover:   #404040cc;
+
+    fg:         #e9edf0;
+    fg-muted:   #909090;
+
+    border:     #b0bec566;
+    border-soft:#b0bec533;
+
+    danger:     #ff4f5e;
+    danger-bg:  #ff4f5e22;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+/* Main window */
+window {
+    width: 420px;
+
+    location: center;
+    anchor: center;
+
+    border-radius: 24px;
+
+    background-color: @bg;
+
+    border: 1px;
+    border-color: @border;
+
+    padding: 0px;
+}
+
+/* Layout */
+mainbox {
+    spacing: 16px;
+    padding: 24px;
+
+    background-color: transparent;
+
+    children: [ "inputbar", "listview" ];
+}
+
+/* Top bar */
+inputbar {
+    padding: 12px 16px;
+    spacing: 10px;
+
+    border-radius: 16px;
+
+    background-color: @bg-soft;
+
+    border: 1px;
+    border-color: @border-soft;
+
+    children: [ "prompt", "entry" ];
+}
+
+prompt {
+    text-color: @fg;
+    font: "DepartureMono Nerd Font 13";
+}
+
+entry {
+    placeholder: "Press Enter to confirms...";
+    placeholder-color: @fg-muted;
+
+    text-color: @fg;
+    background-color: transparent;
+}
+
+/* List */
+listview {
+    lines: 4;
+    columns: 1;
+
+    spacing: 10px;
+
+    fixed-height: true;
+
+    background-color: transparent;
+}
+
+/* Items */
+element {
+    padding: 13px 18px;
+    spacing: 12px;
+
+    border-radius: 16px;
+
+    background-color: transparent;
+    text-color: @fg-muted;
+
+    border: 1px;
+    border-color: transparent;
+
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @bg-hover;
+    text-color: @fg;
+
+    border: 1px;
+    border-color: @border;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+
+    vertical-align: 0.5;
+}
+
+/* Message fallback */
+message {
+    background-color: transparent;
+}
+
+textbox {
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background-color: @bg-soft;
+    text-color: @fg;
+
+    border: 1px;
+    border-color: @border-soft;
+}

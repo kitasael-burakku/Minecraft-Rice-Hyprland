@@ -141,7 +141,7 @@ hl.layer_rule({
         namespace = "logout_dialog",
     },
 
-    animation = "slide 60%",
+    animation = "slide 50%",
 })
 
 -- Rofi
@@ -160,7 +160,7 @@ hl.layer_rule({
         namespace = "rofi",
     },
 
-    ignore_alpha = 1,
+    ignore_alpha = 0.5,
 })
 
 hl.layer_rule({
@@ -169,7 +169,7 @@ hl.layer_rule({
         namespace = "rofi",
     },
 
-    animation = "popin",
+    animation = "popin 50%",
 })
 
 -- Waybar
@@ -199,14 +199,14 @@ hl.layer_rule({
 
 --hl.workspace_rule({
 --    workspace = "w[tv1]",
---    gaps_out  = 20,
---    gaps_in   = 10,
+--    gaps_out  = 18,
+--    gaps_in   = 25,
 --})
 
 --hl.workspace_rule({
 --    workspace = "f[1]",
---    gaps_out  = 20,
---    gaps_in   = 10,
+--    gaps_out  = 18,
+--    gaps_in   = 25,
 --})
 
 --hl.window_rule({
@@ -216,7 +216,7 @@ hl.layer_rule({
 --        workspace = "w[tv1]",
 --    },
 
---    border_size   = 1,
+--  border_size   = 1,
 --    rounding      = 18,
 --    rounding_power = 4,
 --})
@@ -226,8 +226,8 @@ hl.layer_rule({
 --   match = {
 --        float     = false,
 --        workspace = "f[1]",
---    },
-
+--}),
+--
 --    border_size = 1,
 --    rounding    = 18,
 --    rounding_power = 4,

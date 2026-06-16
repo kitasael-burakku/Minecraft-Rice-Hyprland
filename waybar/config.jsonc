@@ -1,6 +1,6 @@
 {
-    "spacing": 2,
-    "margin-top": 15,
+    "spacing": 1,
+    "margin-top": 5,
 
     "modules-left": [
         "disk",
@@ -20,7 +20,8 @@
         "network",
         "temperature",
         "cpu",
-        "memory"
+        "memory",
+        "custom/power"
     ],
 
     "hyprland/window": {
@@ -129,5 +130,13 @@
         },
     "tooltip-format-activated": "Idle inhibitor: active",
     "tooltip-format-deactivated": "Idle inhibitor: inactive"
+    },
+
+    "custom/power": {
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "Power menu",
+        "on-click": "~/.config/waybar/scripts/power-menu.sh"
     }
 }
+

@@ -5,17 +5,18 @@
 -- \____|__  /____/ |__|  \____/____  > |__| (____  /__|   |__|  
 --         \/                       \/            \/             
 
-local home = os.getenv("HOME") or "/home/tu-usuario"
+local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
 hl.on("hyprland.start", function()
    
-    -- Fondo de pantalla (Asegúrate de que la ruta sea exacta)
+    -- Fondo de pantalla
     hl.exec_cmd("mpvpaper -o '--loop-file=inf --no-audio' '*' " .. home .. "/Videos/wallpapersvideo/minecraft.mp4 &")
     
     -- Entorno
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-
-    -- UI y Daemons (Agregando & para que no bloqueen el hilo)
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
+    hl.exec_cmd("systemctl --user start hyprland-session.service")
+    
+    -- UI y Daemons
     hl.exec_cmd("hyprctl setcursor Future-black-cursors 24")
     hl.exec_cmd(home .. "/.config/waybar/scripts/launch.sh &")
     hl.exec_cmd("sleep 2 && hypridle &")
@@ -29,5 +30,5 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("udiskie --tray &")
 
     -- Terminal 
-    hl.exec_cmd(home .. "/.config/scripts/terminal-bg-cava.sh")
+    hl.exec_cmd(home .. "/.config/scripts/terminal-bg-cava.sh &")
 end)

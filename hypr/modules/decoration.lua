@@ -8,8 +8,8 @@
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
-        gaps_in  = 14,
-        gaps_out = 22,
+        gaps_in  = 15,
+        gaps_out = 30,
 
         border_size = 1,
 
@@ -17,9 +17,8 @@ hl.config({
             active_border = {
                 colors = {
                     "rgba(c6c6c655)",
-                    "rgba(b8c5cc35)",
                 },
-                angle = 45,
+
             },
 
             inactive_border = "rgba(00000022)",
@@ -40,7 +39,6 @@ hl.config({
 
         active_opacity   = 0.8,
         inactive_opacity = 0.7,
-        fullscreen_opacity = 0.9,
 
         dim_inactive = true,
         dim_strength = 0.06,
