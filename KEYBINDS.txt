@@ -1,108 +1,110 @@
 KEYBINDS
 ========
 
-Mod principal: SUPER
+Main modifier: SUPER
 
 
 APPS
 ----
 
-SUPER + Enter           Abrir terminal
-SUPER + E           Abrir file manager
-SUPER + B           Abrir Brave
-SUPER + Space           Abrir launcher
-SUPER + A           Abrir/cerrar SwayNC
-SUPER + O           Abrir OBS
-SUPER + CTRL + H    Abrir config de Hyprland en VSCodium
+SUPER + Enter              Open terminal
+SUPER + E                  Open file manager
+SUPER + B                  Open Brave
+SUPER + Space              Open launcher
+SUPER + A                  Open/close SwayNC
+SUPER + SHIFT + W          Open wallpaper selector (Quickshell)
+SUPER + O                  Open OBS
+SUPER + CTRL + H           Open Hyprland config in VSCodium
 
 
-VENTANAS
---------
-
-SUPER + Q           Cerrar ventana
-SUPER + CTRL + V    Toggle floating
-SUPER + F           Fullscreen modo 1
-SUPER + SHIFT + F   Fullscreen modo 0
-
-
-SISTEMA
+WINDOWS
 -------
 
-SUPER + Delete              Salir de Hyprland / hyprshutdown
-SUPER + Escape              Abrir Wlogout
-SUPER + ALT + H             Bloquear pantalla
-CTRL + SHIFT + Escape       Abrir btop
-SHIFT + X                   Toggle Cava
-SUPER + W                   Recargar Waybar
+SUPER + Q                  Close window
+CTRL + ALT + V             Toggle floating
+SUPER + F                  Fullscreen mode 1
+SUPER + SHIFT + F          Fullscreen mode 0
+
+
+SYSTEM
+------
+
+SUPER + Delete             Exit Hyprland / hyprshutdown
+SUPER + Escape             Open Wlogout
+SUPER + ALT + H            Lock screen
+CTRL + SHIFT + Escape      Open btop
+SUPER + SHIFT + X          Toggle Cava
+SUPER + W                  Reload Waybar
 
 
 CLIPBOARD / COLOR
 -----------------
 
-SUPER + SHIFT + V   Historial de clipboard
-SUPER + P           Color picker
+SUPER + SHIFT + V          Clipboard history
+SUPER + P                  Color picker
 
 
 SCREENSHOTS
 -----------
 
-SUPER + F12         Screenshot monitor completo
-SUPER + F11         Screenshot de región con Swappy
-SUPER + F10         Screenshot ventana activa
+SUPER + F12                Full monitor screenshot
+SUPER + F11                Region screenshot with Swappy
+SUPER + F10                Active window screenshot
 
 
-FOCO
-----
+FOCUS
+-----
 
-SUPER + Left        Foco izquierda
-SUPER + Right       Foco derecha
-SUPER + Up          Foco arriba
-SUPER + Down        Foco abajo
+SUPER + Left               Focus left
+SUPER + Right              Focus right
+SUPER + Up                 Focus up
+SUPER + Down               Focus down
 
 
-MOVER VENTANAS
---------------
+MOVE WINDOWS
+------------
 
-SUPER + SHIFT + Left     Mover ventana izquierda
-SUPER + SHIFT + Right    Mover ventana derecha
-SUPER + SHIFT + Up       Mover ventana arriba
-SUPER + SHIFT + Down     Mover ventana abajo
+SUPER + SHIFT + Left       Move window left
+SUPER + SHIFT + Right      Move window right
+SUPER + SHIFT + Up         Move window up
+SUPER + SHIFT + Down       Move window down
 
 
 WORKSPACES
 ----------
 
-SUPER + 1-0             Cambiar a workspace 1-10
-SUPER + SHIFT + 1-0     Mover ventana a workspace 1-10
+SUPER + 1-0                Switch to workspace 1-10
+SUPER + SHIFT + 1-0        Move window to workspace 1-10
 
 
 SCRATCHPAD
 ----------
 
-SUPER + S           Toggle scratchpad
-SUPER + SHIFT + S   Mover ventana al scratchpad
+SUPER + S                  Toggle scratchpad
+SUPER + SHIFT + S          Move window to scratchpad
 
 
 MEDIA
 -----
 
-Volumen +           Subir volumen
-Volumen -           Bajar volumen
-Mute                Silenciar
-Next                Siguiente canción
-Play/Pause          Reproducir/pausar
-Previous            Canción anterior
+Volume +                   Increase volume
+Volume -                   Decrease volume
+Mute                       Mute audio
+Next                       Next track
+Play/Pause                 Play/Pause
+Previous                   Previous track
 
 
 MOUSE
 -----
 
-SUPER + Click izquierdo    Mover ventana
-SUPER + Click derecho      Redimensionar ventana
-SUPER + Scroll down        Workspace siguiente
-SUPER + Scroll up          Workspace anterior
+SUPER + Left click         Move window
+SUPER + Right click        Resize window
+SUPER + Scroll down        Next workspace
+SUPER + Scroll up          Previous workspace
 
-LAYOUT SWITCHER 
+
+LAYOUT SWITCHER
 ---------------
 
 SUPER + SHIFT + D          Dwindle layout

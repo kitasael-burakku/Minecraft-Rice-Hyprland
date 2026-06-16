@@ -91,7 +91,8 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 |---|---|
 | Hyprland (Lua) | Window manager modular |
 | Waybar | Barra de estado |
-| Rofi | Launcher y selector de clipboard |
+| Rofi | Launcher, selector de clipboard y power menu decorativo |
+| Quickshell | Selector de wallpapers (imagen y video) |
 | Kitty | Terminal |
 | Fish + Starship | Shell con prompt personalizado |
 | Fastfetch | Info del sistema al abrir terminal |
@@ -112,16 +113,18 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 
 ## Features
 
-- Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`.
-- Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard y udiskie.
-- Waybar con módulos para disco, audio, reloj, workspaces, tray, updates, red, temperatura, CPU y memoria.
-- Rofi como launcher de aplicaciones y selector para historial de clipboard.
-- Kitty con Fish como shell, colores personalizados y soporte para imágenes de Fastfetch.
-- Fish con Starship, Fastfetch aleatorio, aliases modernos, funciones de actualización y limpieza.
-- Hyprlock con layout visual, wallpaper, reloj, fecha, usuario, estado de batería y scripts MPRIS.
+- Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`, incluyendo un sistema de animaciones con curvas y springs con nombre propio (`animations.lua`).
+- Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie y fondo animado de terminal con Cava.
+- Selector de wallpapers en Quickshell (imagen y video), atajo `SUPER + SHIFT + W` — basado en un proyecto externo con modificaciones propias, ver [Quickshell — Selector de wallpapers](#quickshell--selector-de-wallpapers).
+- Waybar con módulos para disco, audio, reloj, workspaces, tray, updates (con acceso directo a `sysupdate`), red, temperatura, CPU, memoria y un botón de power conectado a un mini-menú en Rofi.
+- Rofi como launcher de aplicaciones, selector de historial de clipboard y power menu decorativo (la fuente distinta en ese menú es a propósito, para que resalte; la sesión real se maneja con Wlogout).
+- Kitty con Fish como shell, tema de colores propio ("Kitasan-Ship Refined", compartido también con Fish) y soporte para imágenes de Fastfetch vía el protocolo gráfico de Kitty.
+- Fish con Starship, rotación aleatoria entre 6 presets de Fastfetch, aliases modernos, y funciones propias de mantenimiento, diagnóstico y un visor interactivo de atajos — ver [Funciones de Fish](#funciones-de-fish).
+- Hyprlock con layout minimalista (reloj, fecha, usuario, contraseña) y varios scripts adicionales en el repo que no están conectados al layout actual (batería, MPRIS, clima, ubicación — disponibles si quieres armar tu propia versión más cargada de info).
 - SwayNC con centro de notificaciones, controles rápidos y tema `goldship`.
-- Wlogout con acciones de bloqueo, salida, suspensión, apagado, hibernación y reinicio.
-- Atajos para screenshots, color picker, control multimedia, scratchpad, Waybar reload y herramientas de sistema.
+- Wlogout con acciones de bloqueo, salida, suspensión, apagado, hibernación y reinicio — es el menú de sesión real del sistema.
+- Layout de Hyprland intercambiable en caliente (dwindle / master / scrolling) y workspace especial tipo scratchpad.
+- Atajos para screenshots, color picker, control multimedia, floating con resize automático, Waybar reload y herramientas de sistema.
 
 ---
 
@@ -135,7 +138,8 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 ├── hypr/               # Hyprland Lua, módulos, hypridle.conf y hyprlock.conf base
 ├── hyprlock/           # Layout, colores, wallpaper y scripts de lock screen
 ├── kitty/              # Configuración de Kitty y colores
-├── rofi/               # Launcher y tema Rofi
+├── quickshell/         # Selector de wallpapers (proyecto externo modificado)
+├── rofi/               # Launcher, clipboard y power menu
 ├── scripts/            # Scripts personales
 ├── swaync/             # Config, estilos, iconos y tema de notificaciones
 ├── waybar/             # Config, CSS y scripts de Waybar
@@ -178,7 +182,9 @@ yay -S \
   brave-bin \
   vscodium-bin \
   cava \
-  glava
+  glava \
+  quickshell \
+  awww
 ```
 
 **Marcadas como por verificar:**
@@ -188,6 +194,7 @@ yay -S \
 - `glava`: usado opcionalmente en scripts de Hyprlock si Spotify está reproduciendo.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: instala o reemplaza según tu sistema.
 - `obs`, `brave`, `vscodium`: aplicaciones personales atadas a keybinds, no son requisitos del entorno base.
+- `quickshell`, `awww`: requeridos por el selector de wallpapers (`quickshell/qs-wallpaper-picker/`). Revisa el nombre exacto del paquete en AUR para tu sistema; `matugen` es opcional y no viene activo en este rice.
 
 ---
 
@@ -203,6 +210,13 @@ cp -r \
   ~/.config/waybar \
   ~/.config/kitty \
   ~/.config/fish \
+  ~/.config/rofi \
+  ~/.config/fastfetch \
+  ~/.config/hyprlock \
+  ~/.config/swaync \
+  ~/.config/wlogout \
+  ~/.config/scripts \
+  ~/.config/quickshell \
   ~/backup-configs 2>/dev/null
 ```
 
@@ -229,7 +243,7 @@ Copia las carpetas que quieras usar:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts ~/.config/
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts quickshell ~/.config/
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
@@ -244,6 +258,7 @@ chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/*.sh
 chmod +x ~/.config/scripts/terminal-bg-cava.sh
+chmod +x ~/.config/quickshell/qs-wallpaper-picker/scripts/*.sh
 ```
 
 Si quieres usar Fish como shell por defecto:
@@ -290,6 +305,50 @@ Archivos importantes:
 - `hypr/modules/monitors.lua` — salida, modo, posición y escala.
 - `hypr/modules/input.lua` — layout de teclado y dispositivos específicos.
 - `hypr/modules/environment.lua` — variables de entorno Wayland, Qt, Electron y AMD.
+- `hypr/modules/decoration.lua` — gaps, bordes, redondeo, opacidad, sombra y blur.
+- `hypr/modules/layout.lua` — configuración de los tres layouts disponibles (dwindle, master, scrolling) y cuál es el default.
+- `hypr/modules/animations.lua` — sistema de curvas y springs con nombre propio para ventanas, fades, layers, workspaces y zoom.
+- `hypr/modules/windowrules.lua` — reglas de ventana y de capa (blur/alpha/animación para SwayNC, Rofi, Wlogout, Waybar).
+- `hypr/modules/misc.lua` — ajustes varios, incluye desactivar el wallpaper/logo aleatorio de Hyprland.
+
+---
+
+## Quickshell — Selector de wallpapers
+
+`quickshell/qs-wallpaper-picker/` es un selector de wallpapers con soporte para imagen y video, construido sobre Quickshell. Está atado al atajo `SUPER + SHIFT + W` (definido en `hypr/modules/keybinds.lua`) y se invoca como `quickshell -c qs-wallpaper-picker`.
+
+No es 100% original. La cadena de crédito es:
+
+- Diseño de la UI original: [ilyamiro/nixos-configuration](https://github.com/ilyamiro/nixos-configuration)
+- Portado y extendido para Arch/Hyprland/Quickshell por [magetsu002/qs-wallpaper-picker](https://github.com/magetsu002/qs-wallpaper-picker) (MIT)
+- Esta versión tiene diferencias reales respecto al repo de magetsu002 — no es una copia exacta, aunque mantiene la base y la licencia.
+
+El proyecto original soporta theming dinámico opcional vía [matugen](https://github.com/InioX/matugen), pero en este rice viene **desactivado**.
+
+Antes de usarlo, copia tu configuración local:
+
+```bash
+cp ~/.config/quickshell/qs-wallpaper-picker/config/Settings.qml.example \
+   ~/.config/quickshell/qs-wallpaper-picker/config/Settings.qml
+```
+
+Y ajusta ahí tu propio `wallpaperDir` (y, si quieres, activa matugen/reload de Hyprland/Waybar). No edites `Settings.qml.example` directamente — ese archivo es la plantilla, no tu configuración real.
+
+---
+
+## Funciones de Fish
+
+Además de los alias y la integración con herramientas externas, Fish trae funciones propias invocables como comandos:
+
+- `sysupdate` — actualiza pacman y AUR (yay) en una sola pasada, con salida animada. Es lo mismo que corre el módulo `custom/updates` de Waybar al hacer click.
+- `quickcache` — limpieza rápida de cachés de apps conocidas (Brave, Spotify, Electron, etc.), con confirmación antes de borrar.
+- `checktrash` / `cleantrash` — el primero solo reporta qué se puede limpiar (paquetes huérfanos, cachés, papelera); el segundo lo limpia de verdad, con confirmación.
+- `checkerrors` — diagnóstico de servicios fallidos, errores de journalctl (incluyendo Hyprland/portales) y coredumps recientes. Solo lectura, no cambia nada.
+- `healthcheck` — el chequeo más completo: sistema, memoria/zram, actualizaciones pendientes, paquetes huérfanos, archivos `.pacnew`/`.pacsave`, servicios fallidos, red y temperaturas.
+- `keybinds` — abre un visor interactivo de `KEYBINDS.txt` directo en la terminal, con navegación tipo vim (`h/j/k/l`), búsqueda (`:` + espacio) y paginación por sección. Mientras está abierto, flota y centra automáticamente la ventana de la terminal.
+- `fastfetch` (la función, no el binario) — elige al azar uno de los presets en `fastfetch/config*.jsonc`, evitando repetir el mismo dos veces seguidas.
+
+> ⚠️ `keybinds` depende de que `KEYBINDS.txt` mantenga un formato exacto: encabezado de sección en MAYÚSCULAS, una línea de solo guiones debajo, y entradas `TECLA␣␣␣␣Descripción` con al menos dos espacios entre columnas. Si editas ese archivo a mano, respeta el formato o el visor deja de reconocer las secciones.
 
 ---
 
@@ -299,28 +358,28 @@ Revisa como mínimo antes de usar:
 
 - `hypr/hyprlock.conf` — cambia `$hyprlockDir` por tu ruta real (`/home/tu-usuario/.config/hyprlock`).
 - `hypr/modules/autostart.lua` — cambia la ruta del wallpaper animado `~/Videos/wallpapersvideo/minecraft.mp4`.
-- `hypr/modules/autostart.lua` — cambia o instala el cursor `Future-black-cursors`.
-- `hypr/modules/environment.lua` — revisa `XCURSOR_THEME`, variables AMD y Qt según tu hardware.
+- `hypr/modules/environment.lua` y `hypr/modules/autostart.lua` — ambos definen el mismo tema de cursor; si lo cambias, actualízalo en los dos archivos para que no queden desincronizados.
 - `hypr/modules/input.lua` — cambia nombres de mouse/teclado si no tienes esos dispositivos.
 - `hypr/modules/programs.lua` — cambia `kitty`, `thunar` o el launcher si usas otras apps.
 - `hypr/modules/keybinds.lua` — cambia `brave`, `obs`, `vscodium`, rutas de screenshots y comandos que no uses.
-- `waybar/config.jsonc` — cambia `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` por el sensor correcto de tu máquina.
+- `waybar/config.jsonc` — cambia `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` por el sensor correcto de tu máquina. El módulo `hyprland/window` muestra el texto fijo `"CachyOs"` a propósito (decisión estética); cámbialo a `{title}` si prefieres ver el título real de la ventana enfocada.
 - `hyprlock/layouts/layout.conf` — cambia `~/.config/hyprlock/wallpapers/1.png` si usas otro wallpaper.
-- `wlogout/style.css` — revisa rutas con `$HOME`; CSS no siempre expande variables de shell, puede necesitar ruta absoluta.
+- `wlogout/style.css` — las seis rutas de iconos (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) están escritas como ruta absoluta a mi usuario; cámbialas por la tuya.
 - `fastfetch/config*.jsonc` — cambia logos, imágenes y presets si no quieres usar los assets incluidos.
 - `swaync/config.json` — cambia botones como `blueman-manager`, `nwg-look` o `nm-connection-editor` si no los usas.
+- `quickshell/qs-wallpaper-picker/config/Settings.qml` — está versionado con mi `wallpaperDir` personal; cópialo desde `Settings.qml.example` y pon el tuyo en vez de editar el mío directo.
 
 Para encontrar todas las rutas personales de golpe:
 
 ```bash
-rg "/home/|tu-usuario|wallpaper|hwmon|Future-black|Colloid" .
+rg "/home/|tu-usuario|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
 ```
 
 ---
 
 ## Scripts y comandos utilizados en el rice
 
-- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`
+- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `quickshell`, `awww`
 - **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`, `glava`
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
 - **Sistema:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
@@ -339,6 +398,7 @@ rg "/home/|tu-usuario|wallpaper|hwmon|Future-black|Colloid" .
 - Waybar puede romper el módulo de temperatura si tu sensor de hardware no es el mismo que el mío.
 - Las funciones de Fish ejecutan tareas reales como actualizar paquetes y limpiar caché. Léelas antes de usarlas.
 - Los scripts de Hyprlock usan MPRIS, `playerctl`, `curl`, `jq`, `imagemagick` y servicios externos como `wttr.in` o `ipinfo.io`.
+- La carpeta `hyprlock/` trae scripts de batería, MPRIS/Spotify, clima, ubicación y cronómetro que **no están conectados** al `layout.conf` activo — quedaron disponibles por si quieres armar tu propio layout más cargado de información; el lock screen actual es deliberadamente minimalista.
 - Algunas configuraciones están pensadas para mi hardware específico, mis programas y mi flujo de trabajo.
 
 ---
@@ -461,6 +521,9 @@ La instalación manual requiere más trabajo, pero enseña mucho más sobre cóm
 ## Créditos externos
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout y SwayNC pertenecen a sus respectivos proyectos.
+- El selector de wallpapers en Quickshell tiene diseño de UI original de [ilyamiro](https://github.com/ilyamiro/nixos-configuration), portado a Hyprland/Quickshell por [magetsu002](https://github.com/magetsu002/qs-wallpaper-picker) (MIT). Esta versión tiene cambios propios respecto al repo de magetsu002.
+- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que el selector de wallpapers soporta opcionalmente; no está activa en este rice.
+- Algunos presets de `fastfetch/config*.jsonc` están adaptados de los ejemplos oficiales del propio proyecto Fastfetch.
 - terminal-bg fue creado por [DaarcyDev](https://www.youtube.com/@DaarcyDev).
 - Minecraft es propiedad de Mojang/Microsoft. La estética usada aquí es fan-made/personal.
 - SDDM Minecraft, Minegrub, cursores, wallpapers, iconos, logos e imágenes de personajes son assets externos salvo que se indique lo contrario.

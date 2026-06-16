@@ -8,8 +8,8 @@
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 -- Cursor settings
-hl.env("XCURSOR_THEME", "Colloid-cursors")
-hl.env("XCURSOR_SIZE", "20")
+hl.env("XCURSOR_THEME", "Future-black-cursors")
+hl.env("XCURSOR_SIZE", "24")
 
 -- Toolkit Backends
 hl.env("GDK_BACKEND", "wayland,x11,*")
