@@ -21,8 +21,10 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("brave")) -- Browser
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(Programs.menu)) -- App Launcher
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t")) -- Notification Center
 
--- Wallpaper picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("quickshell -c qs-wallpaper-picker"))
+-- Wallpaper picker 
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(
+    'rofi -show wallpapers -modi "wallpapers:' .. home .. '/.config/rofi/scripts/wallpaper_rofi.sh" -theme ' .. home .. '/.config/rofi/wallpaper-picker.rasi'
+))
 
 -- Gaming / Recording
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs")) -- OBS Studio

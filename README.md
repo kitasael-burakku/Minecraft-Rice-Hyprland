@@ -91,8 +91,8 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 |---|---|
 | Hyprland (Lua) | Window manager modular |
 | Waybar | Barra de estado |
-| Rofi | Launcher, selector de clipboard y power menu decorativo |
-| Quickshell | Selector de wallpapers (imagen y video) |
+| Rofi | Launcher, selector de clipboard, selector de wallpapers (imagen y video) y power menu decorativo |
+| matugen | Theming dinámico: genera paleta de color a partir del wallpaper de imagen activo |
 | Kitty | Terminal |
 | Fish + Starship | Shell con prompt personalizado |
 | Fastfetch | Info del sistema al abrir terminal |
@@ -115,7 +115,7 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 
 - Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`, incluyendo un sistema de animaciones con curvas y springs con nombre propio (`animations.lua`).
 - Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie y fondo animado de terminal con Cava.
-- Selector de wallpapers en Quickshell (imagen y video), atajo `SUPER + SHIFT + W` — basado en un proyecto externo con modificaciones propias, ver [Quickshell — Selector de wallpapers](#quickshell--selector-de-wallpapers).
+- Selector de wallpapers propio en modo script de Rofi (imagen y video), atajo `SUPER + SHIFT + W` — con generación automática de thumbnails y theming dinámico vía matugen al aplicar un wallpaper, ver [Rofi — Selector de wallpapers](#rofi--selector-de-wallpapers).
 - Waybar con módulos para disco, audio, reloj, workspaces, tray, updates (con acceso directo a `sysupdate`), red, temperatura, CPU, memoria y un botón de power conectado a un mini-menú en Rofi.
 - Rofi como launcher de aplicaciones, selector de historial de clipboard y power menu decorativo (la fuente distinta en ese menú es a propósito, para que resalte; la sesión real se maneja con Wlogout).
 - Kitty con Fish como shell, tema de colores propio ("Kitasan-Ship Refined", compartido también con Fish) y soporte para imágenes de Fastfetch vía el protocolo gráfico de Kitty.
@@ -138,8 +138,7 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 ├── hypr/               # Hyprland Lua, módulos, hypridle.conf y hyprlock.conf base
 ├── hyprlock/           # Layout, colores, wallpaper y scripts de lock screen
 ├── kitty/              # Configuración de Kitty y colores
-├── quickshell/         # Selector de wallpapers (proyecto externo modificado)
-├── rofi/               # Launcher, clipboard y power menu
+├── rofi/               # Launcher, clipboard, selector de wallpapers y power menu
 ├── scripts/            # Scripts personales
 ├── swaync/             # Config, estilos, iconos y tema de notificaciones
 ├── waybar/             # Config, CSS y scripts de Waybar
@@ -166,7 +165,7 @@ sudo pacman -S \
   bluez bluez-utils blueman \
   wl-clipboard cliphist grim slurp swappy \
   thunar btop udiskie polkit-kde-agent \
-  jq curl imagemagick libnotify \
+  jq curl imagemagick libnotify ffmpeg \
   pacman-contrib reflector fzf bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd
 ```
@@ -183,9 +182,12 @@ yay -S \
   vscodium-bin \
   cava \
   glava \
-  quickshell \
+  swww \
+  matugen \
   awww
 ```
+
+`awww` queda como fallback opcional dentro de `wallpaper_rofi.sh` si no tienes `swww`; no es obligatorio si ya tienes `swww` instalado.
 
 **Marcadas como por verificar:**
 
@@ -194,7 +196,7 @@ yay -S \
 - `glava`: usado opcionalmente en scripts de Hyprlock si Spotify está reproduciendo.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: instala o reemplaza según tu sistema.
 - `obs`, `brave`, `vscodium`: aplicaciones personales atadas a keybinds, no son requisitos del entorno base.
-- `quickshell`, `awww`: requeridos por el selector de wallpapers (`quickshell/qs-wallpaper-picker/`). Revisa el nombre exacto del paquete en AUR para tu sistema; `matugen` es opcional y no viene activo en este rice.
+- `swww`, `matugen`: requeridos por el selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) para aplicar imágenes y generar el theming dinámico. Revisa el nombre exacto del paquete en AUR para tu sistema.
 
 ---
 
@@ -216,7 +218,6 @@ cp -r \
   ~/.config/swaync \
   ~/.config/wlogout \
   ~/.config/scripts \
-  ~/.config/quickshell \
   ~/backup-configs 2>/dev/null
 ```
 
@@ -243,7 +244,7 @@ Copia las carpetas que quieras usar:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts quickshell ~/.config/
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts ~/.config/
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
@@ -258,7 +259,7 @@ chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/*.sh
 chmod +x ~/.config/scripts/terminal-bg-cava.sh
-chmod +x ~/.config/quickshell/qs-wallpaper-picker/scripts/*.sh
+chmod +x ~/.config/rofi/scripts/*.sh
 ```
 
 Si quieres usar Fish como shell por defecto:
@@ -313,26 +314,24 @@ Archivos importantes:
 
 ---
 
-## Quickshell — Selector de wallpapers
+## Rofi — Selector de wallpapers
 
-`quickshell/qs-wallpaper-picker/` es un selector de wallpapers con soporte para imagen y video, construido sobre Quickshell. Está atado al atajo `SUPER + SHIFT + W` (definido en `hypr/modules/keybinds.lua`) y se invoca como `quickshell -c qs-wallpaper-picker`.
-
-No es 100% original. La cadena de crédito es:
-
-- Diseño de la UI original: [ilyamiro/nixos-configuration](https://github.com/ilyamiro/nixos-configuration)
-- Portado y extendido para Arch/Hyprland/Quickshell por [magetsu002/qs-wallpaper-picker](https://github.com/magetsu002/qs-wallpaper-picker) (MIT)
-- Esta versión tiene diferencias reales respecto al repo de magetsu002 — no es una copia exacta, aunque mantiene la base y la licencia.
-
-El proyecto original soporta theming dinámico opcional vía [matugen](https://github.com/InioX/matugen), pero en este rice viene **desactivado**.
-
-Antes de usarlo, copia tu configuración local:
+`rofi/scripts/wallpaper_rofi.sh` es un selector de wallpapers con soporte para imagen y video, construido como un modo-script nativo de Rofi (sin depender de un proyecto externo). Está atado al atajo `SUPER + SHIFT + W` (definido en `hypr/modules/keybinds.lua`) y se invoca así:
 
 ```bash
-cp ~/.config/quickshell/qs-wallpaper-picker/config/Settings.qml.example \
-   ~/.config/quickshell/qs-wallpaper-picker/config/Settings.qml
+rofi -show wallpapers -modi "wallpapers:~/.config/rofi/scripts/wallpaper_rofi.sh"
 ```
 
-Y ajusta ahí tu propio `wallpaperDir` (y, si quieres, activa matugen/reload de Hyprland/Waybar). No edites `Settings.qml.example` directamente — ese archivo es la plantilla, no tu configuración real.
+Reemplaza al selector anterior basado en Quickshell, que se quitó del repo por completo.
+
+Cómo funciona:
+
+- Lee los wallpapers desde `WALLPAPER_DIR` (por defecto `~/Videos/wallpapersvideo`, la misma carpeta que usa el wallpaper animado de `autostart.lua`). Si guardas tus wallpapers en otro lugar, exporta esa variable antes de lanzar Rofi en vez de mover archivos.
+- Cada vez que abres el menú, dispara en segundo plano `generate-thumbs.sh`, que genera (o regenera si el archivo cambió) un thumbnail `.jpg` por wallpaper en `~/.cache/rofi-wallpapers/thumbs` usando ImageMagick para imágenes y un frame de ffmpeg para videos. No bloquea la apertura del menú: si un thumbnail nuevo todavía no está listo, esa entrada aparece sin ícono pero sigue siendo seleccionable.
+- Al elegir un wallpaper, los formatos de video (`mp4`, `mkv`, `mov`, `webm`) se aplican relanzando `mpvpaper`; los formatos de imagen (`jpg`, `jpeg`, `png`, `webp`, `gif`) se aplican con `swww` (o `awww` como fallback si no tienes `swww`).
+- Después de aplicar el wallpaper, llama a `matugen_reload.sh`, que genera una paleta de color con `matugen` a partir de la imagen elegida y recarga colores de Hypr, Waybar, Kitty, SwayNC y SwayOSD (cada paso es desactivable con variables de entorno; el reload de Cava viene desactivado por defecto). El theming dinámico solo aplica cuando el wallpaper elegido es una imagen — con videos, `mpvpaper` cambia el fondo pero la paleta de color no se actualiza.
+
+No hay un archivo de configuración personal que copiar (a diferencia del `Settings.qml` del picker anterior): basta con tener tus wallpapers en `WALLPAPER_DIR` y dar permisos de ejecución a los scripts (`chmod +x ~/.config/rofi/scripts/*.sh`).
 
 ---
 
@@ -367,7 +366,6 @@ Revisa como mínimo antes de usar:
 - `wlogout/style.css` — las seis rutas de iconos (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) están escritas como ruta absoluta a mi usuario; cámbialas por la tuya.
 - `fastfetch/config*.jsonc` — cambia logos, imágenes y presets si no quieres usar los assets incluidos.
 - `swaync/config.json` — cambia botones como `blueman-manager`, `nwg-look` o `nm-connection-editor` si no los usas.
-- `quickshell/qs-wallpaper-picker/config/Settings.qml` — está versionado con mi `wallpaperDir` personal; cópialo desde `Settings.qml.example` y pon el tuyo en vez de editar el mío directo.
 
 Para encontrar todas las rutas personales de golpe:
 
@@ -379,13 +377,13 @@ rg "/home/|tu-usuario|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
 
 ## Scripts y comandos utilizados en el rice
 
-- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `quickshell`, `awww`
+- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `swww`, `awww`, `matugen`
 - **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`, `glava`
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
 - **Sistema:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
 - **Red/GUI:** `nm-connection-editor`, `blueman-manager`, `nwg-look`
 - **Terminal/shell:** `kitty`, `fish`, `starship`, `fastfetch`, `fzf`, `bat`, `eza`, `zoxide`, `ripgrep`
-- **Utilidades:** `curl`, `jq`, `imagemagick`/`magick`, `libnotify`/`notify-send`, `udiskie`, `reflector`
+- **Utilidades:** `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `libnotify`/`notify-send`, `udiskie`, `reflector`
 
 ---
 
@@ -521,8 +519,8 @@ La instalación manual requiere más trabajo, pero enseña mucho más sobre cóm
 ## Créditos externos
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout y SwayNC pertenecen a sus respectivos proyectos.
-- El selector de wallpapers en Quickshell tiene diseño de UI original de [ilyamiro](https://github.com/ilyamiro/nixos-configuration), portado a Hyprland/Quickshell por [magetsu002](https://github.com/magetsu002/qs-wallpaper-picker) (MIT). Esta versión tiene cambios propios respecto al repo de magetsu002.
-- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que el selector de wallpapers soporta opcionalmente; no está activa en este rice.
+- El selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) es trabajo propio, construido como modo-script nativo de Rofi tras dejar atrás la versión anterior basada en Quickshell.
+- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que usa el selector de wallpapers para generar paleta de color a partir de wallpapers de imagen; está activa por defecto.
 - Algunos presets de `fastfetch/config*.jsonc` están adaptados de los ejemplos oficiales del propio proyecto Fastfetch.
 - terminal-bg fue creado por [DaarcyDev](https://www.youtube.com/@DaarcyDev).
 - Minecraft es propiedad de Mojang/Microsoft. La estética usada aquí es fan-made/personal.

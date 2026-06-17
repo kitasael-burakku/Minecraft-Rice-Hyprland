@@ -74,7 +74,7 @@ prompt {
 }
 
 entry {
-    placeholder: "Press Enter to confirms...";
+    placeholder: "Press Enter to confirm...";
     placeholder-color: @fg-muted;
 
     text-color: @fg;

@@ -12,7 +12,7 @@ SUPER + E                  Open file manager
 SUPER + B                  Open Brave
 SUPER + Space              Open launcher
 SUPER + A                  Open/close SwayNC
-SUPER + SHIFT + W          Open wallpaper selector (Quickshell)
+SUPER + SHIFT + W          Open wallpaper selector (Rofi)
 SUPER + O                  Open OBS
 SUPER + CTRL + H           Open Hyprland config in VSCodium
 
