@@ -92,7 +92,7 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 | Hyprland (Lua) | Window manager modular |
 | Waybar | Barra de estado |
 | Rofi | Launcher, selector de clipboard, selector de wallpapers (imagen y video) y power menu decorativo |
-| matugen | Theming dinámico opcional (paleta de color desde el wallpaper); soportado por el picker pero desactivado por defecto |
+| matugen | Theming dinámico opcional — el script de reload está listo para usarlo pero no viene conectado a Hypr/Waybar en este rice, ver [Adiciones externas](#adiciones-externas) |
 | Kitty | Terminal |
 | Fish + Starship | Shell con prompt personalizado |
 | Fastfetch | Info del sistema al abrir terminal |
@@ -196,7 +196,7 @@ yay -S \
 - `glava`: usado opcionalmente en scripts de Hyprlock si Spotify está reproduciendo.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: instala o reemplaza según tu sistema.
 - `obs`, `brave`, `vscodium`: aplicaciones personales atadas a keybinds, no son requisitos del entorno base.
-- `swww`: requerido por el selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) para aplicar imágenes. Revisa el nombre exacto del paquete en AUR para tu sistema. `matugen` solo es necesario si activas el theming dinámico (desactivado por defecto, ver [Rofi — Selector de wallpapers](#rofi--selector-de-wallpapers)).
+- `swww`: requerido por el selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) para aplicar imágenes. Revisa el nombre exacto del paquete en AUR para tu sistema. `matugen` solo lo necesitas si armas el theme selector descrito en [Adiciones externas](#adiciones-externas).
 
 ---
 
@@ -329,9 +329,25 @@ Cómo funciona:
 - Lee los wallpapers desde `WALLPAPER_DIR` (por defecto `~/Videos/wallpapersvideo`, la misma carpeta que usa el wallpaper animado de `autostart.lua`). Si guardas tus wallpapers en otro lugar, exporta esa variable antes de lanzar Rofi en vez de mover archivos.
 - Cada vez que abres el menú, dispara en segundo plano `generate-thumbs.sh`, que genera (o regenera si el archivo cambió) un thumbnail `.jpg` por wallpaper en `~/.cache/rofi-wallpapers/thumbs` usando ImageMagick para imágenes y un frame de ffmpeg para videos. No bloquea la apertura del menú: si un thumbnail nuevo todavía no está listo, esa entrada aparece sin ícono pero sigue siendo seleccionable.
 - Al elegir un wallpaper, los formatos de video (`mp4`, `mkv`, `mov`, `webm`) se aplican relanzando `mpvpaper`; los formatos de imagen (`jpg`, `jpeg`, `png`, `webp`, `gif`) se aplican con `swww` (o `awww` como fallback si no tienes `swww`).
-- Después de aplicar el wallpaper, llama a `matugen_reload.sh`, que puede generar una paleta de color con `matugen` y recargar Hypr, Waybar, Kitty, SwayNC y SwayOSD para que tomen esa paleta. **Viene desactivado por defecto** porque este rice no usa theming dinámico ni cambia de colores al cambiar de wallpaper.
+- Después de aplicar el wallpaper, llama a `matugen_reload.sh`, que puede correr `matugen` y avisarle a Hypr, Waybar, Kitty, SwayNC y SwayOSD que recarguen. **Viene desactivado por defecto** porque este rice no cambia de colores — ver [Adiciones externas](#adiciones-externas) si quieres conectarlo de verdad.
 
 No hay un archivo de configuración personal que copiar (a diferencia del `Settings.qml` del picker anterior): basta con tener tus wallpapers en `WALLPAPER_DIR` y dar permisos de ejecución a los scripts (`chmod +x ~/.config/rofi/scripts/*.sh`).
+
+---
+
+## Adiciones externas
+
+Soy bastante purista con esto: cambio de wallpaper seguido (según el ánimo o la hora del día), pero no cambio de paleta de color cada vez que lo hago. Por eso `rofi/scripts/matugen_reload.sh` viene con todas sus variables `ENABLE_*` (`ENABLE_DYNAMIC_COLORS`, `ENABLE_MATUGEN`, `ENABLE_HYPR_RELOAD`, `ENABLE_WAYBAR_RELOAD`, `ENABLE_KITTY_RELOAD`, `ENABLE_CAVA_RELOAD`, `ENABLE_SWAYNC_RELOAD`, `ENABLE_SWAYOSD_RELOAD`) apagadas por defecto.
+
+El script ya sabe cuándo correr `matugen` y a qué procesos avisarles después de aplicar un wallpaper, pero la parte de "aplicar esos colores" no está conectada en este repo: `hypr/modules/decoration.lua` tiene los colores escritos directo en el código, `waybar/style.css` no importa ningún archivo de colores externo, y `kitty.conf` usa mi tema estático propio. No la armé de punta a punta, así que no la documento como si funcionara.
+
+Si quieres un theme selector real con esto, tendrías que:
+
+1. Tener tus propios templates de matugen apuntando a las rutas de `HYPR_COLORS_PATH` / `WAYBAR_COLORS_PATH` (o exportar esas variables a donde sí escriban).
+2. Hacer que `decoration.lua`, `waybar/style.css` y `kitty.conf` lean esos archivos generados en vez de los valores fijos que tienen ahora.
+3. Prender solo las variables `ENABLE_*` que correspondan a lo que conectes.
+
+Si lo terminas armando, este es un buen lugar para anotar cómo te quedó.
 
 ---
 
@@ -520,7 +536,7 @@ La instalación manual requiere más trabajo, pero enseña mucho más sobre cóm
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout y SwayNC pertenecen a sus respectivos proyectos.
 - El selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) es trabajo propio, construido como modo-script nativo de Rofi tras dejar atrás la versión anterior basada en Quickshell.
-- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que soporta opcionalmente el selector de wallpapers; viene desactivada por defecto.
+- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que el script de reload del selector de wallpapers está preparado para usar, pero no viene conectada en este rice — ver [Adiciones externas](#adiciones-externas).
 - Algunos presets de `fastfetch/config*.jsonc` están adaptados de los ejemplos oficiales del propio proyecto Fastfetch.
 - terminal-bg fue creado por [DaarcyDev](https://www.youtube.com/@DaarcyDev).
 - Minecraft es propiedad de Mojang/Microsoft. La estética usada aquí es fan-made/personal.
