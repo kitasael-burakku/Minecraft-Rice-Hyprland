@@ -1,0 +1,112 @@
+# ── Kitasan Floating Stone Bubbles Starship ─────────────────────
+# Palette: Minecraft shaders wallpaper
+#   grass  #3d6b28   dirt   #5c3d1a
+#   water  #2a4d5c   stone  #4a4a4a
+#   snow   #c8d8e8   autumn #7a3a1a
+
+format = """$cmd_duration${custom.user_pretty}${custom.hostname_pretty}$directory$git_branch$git_status$python$nodejs$rust$golang$status$line_break      $character"""
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[custom.user_pretty]
+command = "echo $USER_PRETTY"
+when = "test -n \"$USER_PRETTY\""
+style = "bg:#3d6b28 fg:#e8f5e0 bold" # Grass (Verde pasto)
+format = "[](fg:#3d6b28)[$output]($style)[](fg:#3d6b28) "
+
+[custom.hostname_pretty]
+command = "hostnamectl --pretty"
+when = "test -n \"$(hostnamectl --pretty)\""
+style = "bg:#3d6b28 fg:#e8f5e0 bold" # Grass (Verde pasto)
+format = "[](fg:#3d6b28)[$output]($style)[](fg:#3d6b28) "
+
+[directory]
+home_symbol = " ホーム"
+read_only = " 読取専用"
+style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
+format = "[](fg:#5c3d1a)[ 󰉋 → $path ]($style)[](fg:#5c3d1a) "
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Desktop" = " デスクトップ"
+"Documents" = " ドキュメント"
+"Downloads" = " ダウンロード"
+"Music" = "󰎈 音楽"
+"Pictures" = " 写真"
+"Videos" = " ビデオ"
+"Projects" = "󱌢 プロジェクト"
+"GitHub" = "󰊤 ギットハブ"
+"Code" = " コード"
+".config" = " 設定"
+
+[git_branch]
+symbol = "~"
+style = "bg:#2a4d5c fg:#c8e8f0 bold" # Water (Azul agua)
+truncation_length = 18
+truncation_symbol = ""
+format = "[](fg:#2a4d5c)[ $symbol $branch ]($style)[](fg:#2a4d5c) "
+
+[git_status]
+style = "bg:#2a4d5c fg:#ff6b77 bold" # Water (Azul agua con texto de alerta)
+conflicted = "🏳"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕"
+untracked = "?${count}"
+stashed = "󰆼"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = "✘${count}"
+format = "[](fg:#2a4d5c)[$all_status$ahead_behind]($style)[](fg:#2a4d5c) "
+
+[python]
+symbol = ""
+style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
+format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+
+[nodejs]
+symbol = ""
+style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
+format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+
+[rust]
+symbol = ""
+style = "bg:#7a3a1a fg:#f5c8a0 bold" # Autumn (Madera/Otoño)
+format = "[](fg:#7a3a1a)[ $symbol $version ]($style)[](fg:#7a3a1a) "
+
+[golang]
+symbol = ""
+style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
+format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+
+[cmd_duration]
+min_time = 2000
+show_milliseconds = false
+style = "bg:#4a4a4a fg:#c8d8e8 italic" # Stone (Gris piedra) y Snow (Texto claro)
+format = "[](fg:#4a4a4a)[ 󰪢 $duration ]($style)[](fg:#4a4a4a) "
+
+[character]
+success_symbol = "[❯](fg:#5a8a3c)" # Verde pasto para aciertos
+error_symbol = "[❯](fg:#ff4f5e)" # Rojo redstone para errores
+
+[status]
+disabled = false
+format = "[](fg:#2a4d5c)[✘ エラー $status](bg:#2a4d5c fg:#ff6b77 bold)[](fg:#2a4d5c) "
+
+[package]
+disabled = true
+
+[line_break]
+disabled = false
+
+[memory_usage]
+disabled = true
+
+[time]
+disabled = true
