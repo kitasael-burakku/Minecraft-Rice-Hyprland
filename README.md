@@ -23,9 +23,6 @@ Este proyecto **NO es un instalador automático**, **NO es una configuración un
 ### Hyprlock
 ![Hyprlock](docs/screenshots/hyprlock.jpg)
 
-## Video demostrativo
-[![Ver demo](docs/screenshots/3.png)](https://github.com/kitasael-burakku/Minecraft-Rice-Hyprland/releases/download/1.0/demo.mp4)
-
 ---
 
 ## ¿Por dónde empezar?
