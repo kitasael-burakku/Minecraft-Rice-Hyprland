@@ -9,13 +9,13 @@ APPS
 
 SUPER + Enter              Open terminal
 SUPER + E                  Open file manager
-SUPER + B                  Open Brave
+SUPER + B                  Open Zen Browser
 SUPER + Space              Open launcher
 SUPER + A                  Open/close SwayNC
 SUPER + SHIFT + W          Open wallpaper selector (Rofi)
+SUPER + T                  Open Spotify (Or any music player)
 SUPER + O                  Open OBS
-SUPER + CTRL + H           Open Hyprland config in VSCodium
-
+SUPER + ALT + M 	       Reload Terminal-Bg (Cava)
 
 WINDOWS
 -------
@@ -29,13 +29,16 @@ SUPER + SHIFT + F          Fullscreen mode 0
 SYSTEM
 ------
 
+SUPER + F1		   Keybind Viewer
+SUPER + F2		   Update System
+SUPER + R		   Launch Game
 SUPER + Delete             Exit Hyprland / hyprshutdown
 SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      Open btop
 SUPER + SHIFT + X          Toggle Cava
 SUPER + W                  Reload Waybar
-
+SUPER + CTRL + H 	   Open Hyprland config in VsCodium
 
 CLIPBOARD / COLOR
 -----------------
