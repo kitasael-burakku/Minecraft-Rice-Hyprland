@@ -13,5 +13,5 @@ Programs = {
     browser     = "zen-browser",
     music       = "spotify-launcher",
     wallpaper   = 'pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show wallpapers -modi "wallpapers:$HOME/.config/rofi/scripts/wallpaper_rofi.sh" -theme $HOME/.config/rofi/wallpaper-picker.rasi',
-    clipboard = 'cliphist list | rofi -dmenu -display-columns 2 -p "Clipboard" -theme $HOME/.config/rofi/clipboard.rasi | cliphist decode | wl-copy',
+    clipboard = 'pgrep -x rofi >/dev/null && pkill -x rofi || cliphist list | rofi -dmenu -display-columns 2 -p "Clipboard" -theme $HOME/.config/rofi/clipboard.rasi | cliphist decode | wl-copy'
 }

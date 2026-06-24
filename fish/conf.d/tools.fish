@@ -7,7 +7,11 @@ alias grep="rg"
 alias ls="eza --icons --group-directories-first"
 alias ll="eza -lah --icons --group-directories-first"
 alias la="eza -a --icons --group-directories-first"
+alias move="mv -v"
+alias copy="cp -v"
+alias copyall="cp -rv"
 alias f="fd"
+
 
 # ── System Maintenance ──────────────────────────────────
 alias mirrors="sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist"
