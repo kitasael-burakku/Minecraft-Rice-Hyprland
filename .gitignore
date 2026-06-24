@@ -33,3 +33,7 @@ fish/fish_variables
 .vscode/
 .idea/
 .DS_Store
+
+## ia
+CLAUDE.md
+.claude/

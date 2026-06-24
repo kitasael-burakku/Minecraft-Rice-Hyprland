@@ -32,9 +32,7 @@ hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(Programs.menu))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t"))
 
 -- Wallpaper picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(
-    'rofi -show wallpapers -modi "wallpapers:' .. home .. '/.config/rofi/scripts/wallpaper_rofi.sh" -theme ' .. home .. '/.config/rofi/wallpaper-picker.rasi'
-))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(Programs.wallpaper))
 
 -- Spotify
 hl.bind(mainMod .. "+ T", hl.dsp.exec_cmd(Programs.music))
@@ -115,7 +113,7 @@ hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
 -----------------------------
 
 -- Clipboard history
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd('cliphist list | rofi -dmenu -display-columns 2 -p "Clipboard" -theme ' .. home .. '/.config/rofi/style-4.rasi | cliphist decode | wl-copy'))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(Programs.clipboard))
 
 -- Color picker
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("hyprpicker -a"))

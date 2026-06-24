@@ -94,14 +94,15 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 | Rofi | Launcher, selector de clipboard, selector de wallpapers (imagen y video) y power menu decorativo |
 | matugen | Theming dinámico opcional — el script de reload está listo para usarlo pero no viene conectado a Hypr/Waybar en este rice, ver [Adiciones externas](#adiciones-externas) |
 | Kitty | Terminal |
-| Fish + Starship | Shell con prompt personalizado |
+| Fish + Starship | Shell con prompt personalizado — incluye `starship.toml` con tema "Floating Stone Bubbles" (paleta de shaders de Minecraft) |
 | Fastfetch | Info del sistema al abrir terminal |
 | Hyprlock | Pantalla de bloqueo |
 | SwayNC | Centro de notificaciones |
 | Wlogout | Menú de sesión |
 | mpvpaper | Wallpaper animado |
-| cava / glava | Visualizador de audio |
-| terminal-bg | Fondo animado dentro de la terminal |
+| cava | Visualizador de audio — incluye config, shaders GLSL propios y temas (agua, solarized_dark, tricolor) |
+| glava | Visualizador alternativo, usado opcionalmente en scripts de Hyprlock |
+| terminal-bg | Fondo animado dentro de la terminal (lanza cava en modo noncurses) |
 | Qylock | Tema SDDM estilo Minecraft |
 | MINEGRUB | Tema GRUB estilo Minecraft |
 
@@ -113,18 +114,21 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 
 ## Features
 
-- Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`, incluyendo un sistema de animaciones con curvas y springs con nombre propio (`animations.lua`).
-- Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie y fondo animado de terminal con Cava.
+- Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`, incluyendo un sistema de animaciones con curvas y springs con nombre propio "Velvet Motion" (`animations.lua`).
+- Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie y fondo animado de terminal con cava.
 - Selector de wallpapers propio en modo script de Rofi (imagen y video), atajo `SUPER + SHIFT + W` — con generación automática de thumbnails y soporte opcional (desactivado por defecto) de theming dinámico vía matugen, ver [Rofi — Selector de wallpapers](#rofi--selector-de-wallpapers).
 - Waybar con módulos para disco, audio, reloj, workspaces, tray, updates (con acceso directo a `sysupdate`), red, temperatura, CPU, memoria y un botón de power conectado a un mini-menú en Rofi.
 - Rofi como launcher de aplicaciones, selector de historial de clipboard y power menu decorativo (la fuente distinta en ese menú es a propósito, para que resalte; la sesión real se maneja con Wlogout).
-- Kitty con Fish como shell, tema de colores propio ("Kitasan-Ship Refined", compartido también con Fish) y soporte para imágenes de Fastfetch vía el protocolo gráfico de Kitty.
-- Fish con Starship, rotación aleatoria entre 6 presets de Fastfetch, aliases modernos, y funciones propias de mantenimiento, diagnóstico y un visor interactivo de atajos — ver [Funciones de Fish](#funciones-de-fish).
+- Kitty con Fish como shell, tema de colores propio "Kitasan-Ship Minecraft Edition" (paleta de Creeper greens, stone grays, redstone reds) y soporte para imágenes de Fastfetch vía el protocolo gráfico de Kitty.
+- Fish con Starship, paleta "Minecraft Overworld" aplicada a la sintaxis del shell, rotación aleatoria entre 6 presets de Fastfetch, aliases modernos, y funciones propias de mantenimiento, diagnóstico y un visor interactivo de atajos — ver [Funciones de Fish](#funciones-de-fish).
+- cava con config propia (pipewire, noncurses, 60fps), tres temas intercambiables (`agua`, `solarized_dark`, `tricolor`) y seis shaders GLSL propios para el modo visual.
 - Hyprlock con layout minimalista (reloj, fecha, usuario, contraseña) y varios scripts adicionales en el repo que no están conectados al layout actual (batería, MPRIS, clima, ubicación — disponibles si quieres armar tu propia versión más cargada de info).
 - SwayNC con centro de notificaciones, controles rápidos y tema `goldship`.
 - Wlogout con acciones de bloqueo, salida, suspensión, apagado, hibernación y reinicio — es el menú de sesión real del sistema.
-- Layout de Hyprland intercambiable en caliente (dwindle / master / scrolling) y workspace especial tipo scratchpad.
+- Layout de Hyprland intercambiable en caliente (dwindle / master / scrolling), con `scrolling` como layout por defecto.
+- Gesto de 3 dedos horizontal para cambiar de workspace configurado en `hypr/modules/input.lua`.
 - Atajos para screenshots, color picker, control multimedia, floating con resize automático, Waybar reload y herramientas de sistema.
+- The fuck: corrector de comandos mal escritos integrado en Fish.
 
 ---
 
@@ -132,20 +136,22 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 
 ```text
 .
+├── cava/               # Config, shaders GLSL y temas para el visualizador de audio
 ├── docs/screenshots/   # Capturas del rice
 ├── fastfetch/          # Configs jsonc, logos y presets visuales
-├── fish/               # config.fish, funciones y temas de Fish shell
+├── fish/               # config.fish, funciones, aliases y temas de Fish shell
 ├── hypr/               # Hyprland Lua, módulos, hypridle.conf y hyprlock.conf base
 ├── hyprlock/           # Layout, colores, wallpaper y scripts de lock screen
 ├── kitty/              # Configuración de Kitty y colores
 ├── rofi/               # Launcher, clipboard, selector de wallpapers y power menu
-├── scripts/            # Scripts personales
+├── scripts/            # Scripts personales (terminal-bg-cava.sh)
+├── starship.toml       # Config de Starship (prompt), va en ~/.config/starship.toml
 ├── swaync/             # Config, estilos, iconos y tema de notificaciones
 ├── waybar/             # Config, CSS y scripts de Waybar
 └── wlogout/            # Layout, CSS, iconos y scripts de apagado/sesión
 ```
 
-Cada carpeta va dentro de `~/.config/` en tu sistema, excepto `docs/`.
+Cada carpeta va dentro de `~/.config/` en tu sistema, excepto `docs/` y `starship.toml` (que va directamente en `~/.config/starship.toml`).
 
 ---
 
@@ -167,7 +173,13 @@ sudo pacman -S \
   thunar btop udiskie polkit-kde-agent \
   jq curl imagemagick libnotify ffmpeg \
   pacman-contrib reflector fzf bat eza zoxide ripgrep \
-  lm_sensors ttf-jetbrains-mono-nerd
+  lm_sensors ttf-jetbrains-mono-nerd\
+  thefuck
+```
+
+> Si usas cachyOS puedes descargar Zen-Browser desde los paquetes de pacman 
+```bash
+sudo pacman -S zen-browser-bin
 ```
 
 ### AUR o por verificar
@@ -178,7 +190,6 @@ yay -S \
   hyprshot \
   hyprpicker \
   nwg-look \
-  brave-bin \
   vscodium-bin \
   cava \
   glava \
@@ -186,6 +197,13 @@ yay -S \
   matugen \
   awww
 ```
+
+> Si no usas cachyOS puedes descargar Zen-Browser desde los paquetes del AUR 
+```bash
+yay -S zen-browser-bin
+```
+
+## IMPORTANTE: SI INSTALAS COSAS DESDE EL AUR REVISA BIEN LO QUE SE VA A INSTALAR.
 
 `awww` queda como fallback opcional dentro de `wallpaper_rofi.sh` si no tienes `swww`; no es obligatorio si ya tienes `swww` instalado.
 
@@ -244,7 +262,8 @@ Copia las carpetas que quieras usar:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts ~/.config/
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts cava ~/.config/
+cp starship.toml ~/.config/starship.toml
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
@@ -300,15 +319,15 @@ require("modules.windowrules")
 
 Archivos importantes:
 
-- `hypr/modules/programs.lua` — terminal, file manager y launcher.
+- `hypr/modules/programs.lua` — terminal, file manager y launcher (tabla global `Programs` usada por `keybinds.lua`).
 - `hypr/modules/keybinds.lua` — atajos de teclado, screenshots, multimedia y sesión.
 - `hypr/modules/autostart.lua` — servicios y programas que arrancan con Hyprland.
-- `hypr/modules/monitors.lua` — salida, modo, posición y escala.
-- `hypr/modules/input.lua` — layout de teclado y dispositivos específicos.
+- `hypr/modules/monitors.lua` — detección automática de salida, resolución, posición y escala.
+- `hypr/modules/input.lua` — layout de teclado, sensibilidad, gesto de 3 dedos horizontal para cambiar workspace, y placeholder de configuración por dispositivo.
 - `hypr/modules/environment.lua` — variables de entorno Wayland, Qt, Electron y AMD.
-- `hypr/modules/decoration.lua` — gaps, bordes, redondeo, opacidad, sombra y blur.
-- `hypr/modules/layout.lua` — configuración de los tres layouts disponibles (dwindle, master, scrolling) y cuál es el default.
-- `hypr/modules/animations.lua` — sistema de curvas y springs con nombre propio para ventanas, fades, layers, workspaces y zoom.
+- `hypr/modules/decoration.lua` — gaps, bordes, redondeo, opacidad, sombra y blur. Los colores están escritos directamente (no se leen desde matugen).
+- `hypr/modules/layout.lua` — configuración de los tres layouts (dwindle, master, scrolling); el default activo es `scrolling`. Se puede cambiar en caliente con `SUPER + SHIFT + D/M/O`.
+- `hypr/modules/animations.lua` — sistema de curvas y springs con nombre propio ("Velvet Motion") para ventanas, fades, layers, workspaces y zoom.
 - `hypr/modules/windowrules.lua` — reglas de ventana y de capa (blur/alpha/animación para SwayNC, Rofi, Wlogout, Waybar).
 - `hypr/modules/misc.lua` — ajustes varios, incluye desactivar el wallpaper/logo aleatorio de Hyprland.
 
@@ -332,6 +351,18 @@ Cómo funciona:
 - Después de aplicar el wallpaper, llama a `matugen_reload.sh`, que puede correr `matugen` y avisarle a Hypr, Waybar, Kitty, SwayNC y SwayOSD que recarguen. **Viene desactivado por defecto** porque este rice no cambia de colores — ver [Adiciones externas](#adiciones-externas) si quieres conectarlo de verdad.
 
 No hay un archivo de configuración personal que copiar (a diferencia del `Settings.qml` del picker anterior): basta con tener tus wallpapers en `WALLPAPER_DIR` y dar permisos de ejecución a los scripts (`chmod +x ~/.config/rofi/scripts/*.sh`).
+
+---
+
+## Cava — Visualizador de audio
+
+La carpeta `cava/` incluye tres componentes:
+
+- **`config`** — configura cava con método pipewire, salida noncurses a 60fps en modo mono (promediado). Esta es la config que usa `scripts/terminal-bg-cava.sh` para el fondo animado de la terminal.
+- **`themes/`** — tres paletas de color: `agua` (azules), `solarized_dark` y `tricolor`. Para activar un tema, copia su contenido al bloque `[color]` de `cava/config`.
+- **`shaders/`** — seis shaders GLSL para el modo visual de cava: `bar_spectrum.frag`, `eye_of_phi.frag`, `northern_lights.frag`, `spectrogram.frag`, `winamp_line_style_spectrum.frag` y `pass_through.vert`. Para usarlos activa el método `ngl` en la sección `[output]` de `cava/config` y apunta `shader` a la ruta del `.frag` que quieras.
+
+> Los shaders requieren que cava esté compilado con soporte OpenGL (`ngl`). Revisa tu paquete antes de activarlos.
 
 ---
 
@@ -372,16 +403,18 @@ Además de los alias y la integración con herramientas externas, Fish trae func
 Revisa como mínimo antes de usar:
 
 - `hypr/hyprlock.conf` — cambia `$hyprlockDir` por tu ruta real (`/home/tu-usuario/.config/hyprlock`).
-- `hypr/modules/autostart.lua` — cambia la ruta del wallpaper animado `~/Videos/wallpapersvideo/minecraft.mp4`.
+- `hypr/modules/autostart.lua` — cambia la ruta del wallpaper animado `~/Videos/wallpapersvideo/minecraft2.mp4` por la tuya.
 - `hypr/modules/environment.lua` y `hypr/modules/autostart.lua` — ambos definen el mismo tema de cursor; si lo cambias, actualízalo en los dos archivos para que no queden desincronizados.
-- `hypr/modules/input.lua` — cambia nombres de mouse/teclado si no tienes esos dispositivos.
+- `hypr/modules/input.lua` — la entrada `hl.device({ name = "epic-mouse-v1" })` es un placeholder de ejemplo; cámbiala por el nombre real de tu mouse si quieres ajuste de sensibilidad por dispositivo, o elimínala.
 - `hypr/modules/programs.lua` — cambia `kitty`, `thunar` o el launcher si usas otras apps.
-- `hypr/modules/keybinds.lua` — cambia `brave`, `obs`, `vscodium`, rutas de screenshots y comandos que no uses.
+- `hypr/modules/keybinds.lua` — cambia `obs`, `vscodium`, rutas de screenshots y comandos que no uses.
 - `waybar/config.jsonc` — cambia `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` por el sensor correcto de tu máquina. El módulo `hyprland/window` muestra el texto fijo `"CachyOs"` a propósito (decisión estética); cámbialo a `{title}` si prefieres ver el título real de la ventana enfocada.
 - `hyprlock/layouts/layout.conf` — cambia `~/.config/hyprlock/wallpapers/1.png` si usas otro wallpaper.
 - `wlogout/style.css` — las seis rutas de iconos (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) están escritas como ruta absoluta a mi usuario; cámbialas por la tuya.
 - `fastfetch/config*.jsonc` — cambia logos, imágenes y presets si no quieres usar los assets incluidos.
 - `swaync/config.json` — cambia botones como `blueman-manager`, `nwg-look` o `nm-connection-editor` si no los usas.
+
+> `hypr/modules/monitors.lua` usa detección automática (`output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"`), así que no debería necesitar cambios en la mayoría de casos. Si tienes varios monitores o una configuración específica, ajústalo ahí.
 
 Para encontrar todas las rutas personales de golpe:
 
