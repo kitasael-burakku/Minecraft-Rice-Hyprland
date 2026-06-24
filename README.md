@@ -9,16 +9,22 @@ Este proyecto **NO es un instalador automático**, **NO es una configuración un
 ## Screenshots
 
 ### Desktop
-![Desktop](docs/screenshots/3.png)
+![Desktop](docs/screenshots/desktop.jpg)
 
 ### Rofi + SwayNC
-![Rofi-Swaync](docs/screenshots/2.png)
+![Rofi-Swaync](docs/screenshots/rofi.jpg)
+
+## Wallpaper Picker
+![Wallpaper-picker](docs/screenshots/wallpaper-picker.jpg)
 
 ### Terminal con fondo animado
-![Terminal-bg](docs/screenshots/1.png)
+![Terminal-bg](docs/screenshots/keybinds.jpg)
 
 ### Hyprlock
-![Hyprlock](docs/screenshots/4.png)
+![Hyprlock](docs/screenshots/hyprlock.jpg)
+
+## Video demostrativo
+[![Ver demo](docs/screenshots/3.png)](https://github.com/kitasael-burakku/Minecraft-Rice-Hyprland/releases/download/1.0/demo.mp4)
 
 ---
 
