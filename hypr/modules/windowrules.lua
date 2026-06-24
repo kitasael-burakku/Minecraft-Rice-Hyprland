@@ -20,6 +20,10 @@
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 -- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
+--------------------
+---- WINDOW RULES ----
+--------------------
+
 -- Ignore maximize requests from all apps
 local suppressMaximizeRule = hl.window_rule({
     name  = "suppress-maximize-events",
@@ -61,8 +65,59 @@ hl.window_rule({
         class = "^(cava-float)$",
     },
     
-    float = true,
+    float   = true,
     opacity = 0.90,
+})
+
+--------------------
+---- MEDIA APPS ----
+--------------------
+
+-- MPV: float centrado con tamaño razonable
+hl.window_rule({
+    name  = "mpv-float",
+    match = {
+        class = "^(mpv)$",
+    },
+
+    float  = true,
+    center = true,
+    size   = "960 540",
+})
+
+-- MPV: animación popin para que se sienta menos abrupto
+hl.window_rule({
+    name  = "mpv-anim",
+    match = {
+        class = "^(mpv)$",
+    },
+
+    animation = "popin 80%",
+})
+
+--------------------
+---- ANIMACIONES ----
+--------------------
+
+-- Ventanas flotantes: popin para sentirse más natural al abrir
+hl.window_rule({
+    name  = "float-anim-popin",
+    match = {
+        float = true,
+        class = "negative:^(mpv|cava-float|rofi)$",
+    },
+
+    animation = "popin 75%",
+})
+
+-- Ventanas tiled: slide suave (por defecto ya lo tienen pero lo fijamos)
+hl.window_rule({
+    name  = "tiled-anim-slide",
+    match = {
+        float = false,
+    },
+
+    animation = "slide",
 })
 
 --------------------
@@ -195,40 +250,39 @@ hl.layer_rule({
 ---- WORKSPACE RULES ----
 --------------------------
 
--- Smart gaps / no gaps when only
+-- Smart gaps / no gaps when only one tiled window
+hl.workspace_rule({
+    workspace = "w[tv1]",
+    gaps_out  = 30,
+    gaps_in   = 15,
+})
 
---hl.workspace_rule({
---    workspace = "w[tv1]",
---    gaps_out  = 18,
---    gaps_in   = 25,
---})
+hl.workspace_rule({
+    workspace = "f[1]",
+    gaps_out  = 30,
+    gaps_in   = 15,
+})
 
---hl.workspace_rule({
---    workspace = "f[1]",
---    gaps_out  = 18,
---    gaps_in   = 25,
---})
+hl.window_rule({
+    name  = "no-gaps-wtv1",
+    match = {
+        float     = false,
+        workspace = "w[tv1]",
+    },
 
---hl.window_rule({
---    name  = "no-gaps-wtv1",
---    match = {
---        float     = false,
---        workspace = "w[tv1]",
---    },
+    border_size    = 1,
+    rounding       = 18,
+    rounding_power = 4,
+})
 
---  border_size   = 1,
---    rounding      = 18,
---    rounding_power = 4,
---})
+hl.window_rule({
+    name  = "no-gaps-f1",
+    match = {
+        float     = false,
+        workspace = "f[1]",
+    },
 
---hl.window_rule({
---    name  = "no-gaps-f1",
---   match = {
---        float     = false,
---        workspace = "f[1]",
---}),
---
---    border_size = 1,
---    rounding    = 18,
---    rounding_power = 4,
---})
+    border_size    = 1,
+    rounding       = 18,
+    rounding_power = 4,
+})

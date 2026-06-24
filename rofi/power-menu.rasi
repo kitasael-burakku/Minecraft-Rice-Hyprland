@@ -1,6 +1,6 @@
 /* =====================================================
    POWER MENU — Kitasan Glass
-===================================================== */
+   ===================================================== */
 
 configuration {
     show-icons: false;
@@ -11,16 +11,23 @@ configuration {
 
     bg:         #1e1e1ecc;
     bg-soft:    #1a1a1acc;
+    bg-glass:   #1a1a1a99;
     bg-hover:   #404040cc;
 
     fg:         #e9edf0;
     fg-muted:   #909090;
+    fg-dim:     #6f6f6f;
 
-    border:     #b0bec566;
-    border-soft:#b0bec533;
+    border:      #b0bec566;
+    border-soft: #b0bec533;
 
-    danger:     #ff4f5e;
-    danger-bg:  #ff4f5e22;
+    accent:      #f7f7f7;
+    accent-muted:#b8c5cc;
+
+    danger:      #ff4f5e;
+    danger-bg:   #ff4f5e22;
+
+    overlay:     #0a0a0aaa;
 
     background-color: transparent;
     text-color: @fg;
@@ -28,10 +35,10 @@ configuration {
 
 /* Main window */
 window {
-    width: 420px;
+    width: 440px;
 
     location: center;
-    anchor: center;
+    anchor:   center;
 
     border-radius: 24px;
 
@@ -45,22 +52,23 @@ window {
 
 /* Layout */
 mainbox {
-    spacing: 16px;
-    padding: 24px;
+    spacing: 18px;
+    padding: 26px;
 
     background-color: transparent;
 
     children: [ "inputbar", "listview" ];
 }
 
+
 /* Top bar */
 inputbar {
-    padding: 12px 16px;
+    padding: 13px 18px;
     spacing: 10px;
 
     border-radius: 16px;
 
-    background-color: @bg-soft;
+    background-color: @bg-glass;
 
     border: 1px;
     border-color: @border-soft;
@@ -69,13 +77,13 @@ inputbar {
 }
 
 prompt {
-    text-color: @fg;
+    text-color: @accent-muted;
     font: "DepartureMono Nerd Font 13";
 }
 
 entry {
-    placeholder: "Press Enter to confirm...";
-    placeholder-color: @fg-muted;
+    placeholder: "Confirma con Enter...";
+    placeholder-color: @fg-dim;
 
     text-color: @fg;
     background-color: transparent;
@@ -83,19 +91,21 @@ entry {
 
 /* List */
 listview {
-    lines: 4;
+    lines: 5;
     columns: 1;
 
     spacing: 10px;
 
+    cycle: true;
     fixed-height: true;
+    scrollbar: false;
 
     background-color: transparent;
 }
 
 /* Items */
 element {
-    padding: 13px 18px;
+    padding: 14px 18px;
     spacing: 12px;
 
     border-radius: 16px;
@@ -111,7 +121,7 @@ element {
 
 element selected {
     background-color: @bg-hover;
-    text-color: @fg;
+    text-color: @accent;
 
     border: 1px;
     border-color: @border;
@@ -134,7 +144,7 @@ textbox {
 
     border-radius: 14px;
 
-    background-color: @bg-soft;
+    background-color: @bg-glass;
     text-color: @fg;
 
     border: 1px;

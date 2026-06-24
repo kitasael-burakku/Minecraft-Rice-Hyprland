@@ -1,8 +1,6 @@
 /* =====================================================
-   WALLPAPER PICKER — Kitasan Glass (Grid Edition)
-   Mismo lenguaje visual que style-4.rasi / power-menu.rasi:
-   gris frío translúcido, bordes redondeados, acento blanco suave.
-===================================================== */
+   WALLPAPER PICKER — Kitasan Glass (Grid Edition v2)
+   ===================================================== */
 
 configuration {
     show-icons: true;

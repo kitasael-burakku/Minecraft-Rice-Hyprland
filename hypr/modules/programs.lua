@@ -9,5 +9,7 @@
 Programs = {
     terminal    = "kitty",
     fileManager = "thunar",
-    menu        = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/launcher.sh"
+    menu        = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/launcher.sh",
+    browser     = "zen-browser",
+    music       = "spotify-launcher"
 }
