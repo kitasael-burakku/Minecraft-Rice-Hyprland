@@ -42,4 +42,4 @@ fish/functions/RPS.exe.fish
 
 # ── IA ───────────────────────────────────────────────────────
 CLAUDE.md
-.claude/
+.claude/!assets/demo.mp4
