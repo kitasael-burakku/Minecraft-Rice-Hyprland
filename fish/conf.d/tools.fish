@@ -12,13 +12,6 @@ alias copy="cp -v"
 alias copyall="cp -rv"
 alias removeall="rm -rf"
 alias remove="rm"
-alias letters="toilet -f mono12"
-
-# ── Personal Projects ───────────────────────────────────
-alias game="cd ~/Projects/ProjectRPS && echo ""You Entered into the dev"""
-alias exec_game="RPS.exe"
-alias docs="cd ~/Projects/notas && echo ""Welcome to documentation from RPS"""
-alias dotfiles="cd ~/Projects/dotfiles && echo ""Welcome to dotfiles on git""" 
 
 # ── System Maintenance ──────────────────────────────────
 alias mirrors="sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist"

@@ -96,7 +96,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 |---|---|
 | Hyprland (Lua) | Modular window manager |
 | Waybar | Status bar |
-| Rofi | Launcher, clipboard selector, wallpaper selector (image and video), and decorative power menu |
+| Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), and decorative power menu |
 | matugen | Optional dynamic theming — the reload script is ready to use it but it's not connected to Hypr/Waybar in this rice, see [External Additions](#external-additions) |
 | Kitty | Terminal |
 | Fish + Starship | Shell with custom prompt — includes `starship.toml` with "Floating Stone Bubbles" theme (Minecraft shader palette) |
@@ -121,7 +121,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 
 - Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name "Velvet Motion" (`animations.lua`).
 - Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, and animated terminal background with cava.
-- Custom wallpaper selector as a native Rofi script mode (image and video), shortcut `SUPER + SHIFT + W` — with automatic thumbnail generation and optional (disabled by default) dynamic theming via matugen, see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
+- Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + SHIFT + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Optional dynamic theming via matugen is disabled by default — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
 - Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu.
 - Rofi as application launcher, clipboard history selector, and decorative power menu (the different font in that menu is intentional, to make it stand out; the actual session is handled by Wlogout).
 - Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
@@ -148,7 +148,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 ├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
 ├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
 ├── kitty/              # Kitty configuration and colors
-├── rofi/               # Launcher, clipboard, wallpaper selector and power menu
+├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), and power menu
 ├── scripts/            # Personal scripts (terminal-bg-cava.sh)
 ├── starship.toml       # Starship config (prompt), goes in ~/.config/starship.toml
 ├── swaync/             # Notification center config, styles, icons and theme
@@ -340,22 +340,49 @@ Key files:
 
 ## Rofi — Wallpaper Selector
 
-`rofi/scripts/wallpaper_rofi.sh` is a wallpaper selector with support for both images and video, built as a native Rofi script mode (without depending on an external project). It's tied to the `SUPER + SHIFT + W` shortcut (defined in `hypr/modules/keybinds.lua`) and invoked like this:
+The wallpaper selector is a two-level Rofi picker built entirely as native Rofi script mode, without depending on any external project. It's tied to `SUPER + SHIFT + W` and orchestrated by a wrapper script that chains two independent Rofi instances:
 
-```bash
-rofi -show wallpapers -modi "wallpapers:~/.config/rofi/scripts/wallpaper_rofi.sh"
+```
+SUPER + SHIFT + W
+      ↓
+wallpaper_launcher.sh               ← entry point (called from keybind)
+      ↓
+rofi (wallpaper-type-select.rasi)   ← level 0: choose type
+  │   󰎁  Video
+  │   󰉏  Imagen
+      ↓ (selection written to /tmp/rofi-wallpaper-next)
+rofi (wallpaper-picker.rasi)        ← level 1: thumbnail grid
+  │   [thumb] [thumb] [thumb] ...
+      ↓
+applies wallpaper + matugen_reload
 ```
 
-It replaces the previous Quickshell-based selector, which was removed from the repo entirely.
+**Scripts involved:**
 
-How it works:
+- `rofi/scripts/wallpaper_launcher.sh` — entry point called by the keybind. Runs the type selector, waits for it to close, reads the chosen directory from `/tmp/rofi-wallpaper-next`, then opens the grid picker with the correct theme. This sequential approach (blocking Rofi instances) is what makes the two-level flow reliable.
+- `rofi/scripts/wallpaper_rofi.sh` — runs as the script mode modi for the type selector. On selection, writes the target directory and prompt label to `/tmp/rofi-wallpaper-next` and exits cleanly.
+- `rofi/scripts/wallpaper_grid.sh` — runs as the script mode modi for the thumbnail grid. Lists wallpapers from the chosen directory with their thumbnails as icons. On selection, applies the wallpaper and calls `matugen_reload.sh`.
+- `rofi/scripts/generate-thumbs.sh` — generates `.jpg` thumbnails for both `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` into `~/.cache/rofi-wallpapers/thumbs`. Runs in the background when the picker opens — never blocks the menu.
+- `rofi/scripts/matugen_reload.sh` — called after applying a wallpaper. Can reload matugen, Hypr, Waybar, Kitty, Cava, SwayNC, and SwayOSD. **All `ENABLE_*` flags are off by default** — see [External Additions](#external-additions).
 
-- Reads wallpapers from `WALLPAPER_DIR` (default `~/Videos/wallpapersvideo`, the same folder used by the animated wallpaper in `autostart.lua`). If you store your wallpapers elsewhere, export that variable before launching Rofi instead of moving files.
-- Every time you open the menu, it fires `generate-thumbs.sh` in the background, which generates (or regenerates if the file changed) a `.jpg` thumbnail per wallpaper in `~/.cache/rofi-wallpapers/thumbs` using ImageMagick for images and an ffmpeg frame for videos. It doesn't block the menu from opening: if a new thumbnail isn't ready yet, that entry appears without an icon but remains selectable.
-- When you choose a wallpaper, video formats (`mp4`, `mkv`, `mov`, `webm`) are applied by relaunching `mpvpaper`; image formats (`jpg`, `jpeg`, `png`, `webp`, `gif`) are applied with `swww` (or `awww` as fallback if you don't have `swww`).
-- After applying the wallpaper, it calls `matugen_reload.sh`, which can run `matugen` and notify Hypr, Waybar, Kitty, SwayNC, and SwayOSD to reload. **Disabled by default** because this rice doesn't change color schemes — see [External Additions](#external-additions) if you want to wire it up.
+**Directories:**
 
-There's no personal config file to copy (unlike the `Settings.qml` from the previous picker): just have your wallpapers in `WALLPAPER_DIR` and give the scripts execution permissions (`chmod +x ~/.config/rofi/scripts/*.sh`).
+| Variable | Default | Contents |
+|---|---|---|
+| `WALLPAPER_DIR_VIDEO` | `~/Videos/wallpapersvideo` | Videos (`mp4`, `mkv`, `mov`, `webm`) and images |
+| `WALLPAPER_DIR_IMG` | `~/Pictures/Wallpapers` | Static images only (`jpg`, `png`, `webp`, `gif`) |
+
+Both can be overridden by exporting the variable before the launcher runs.
+
+**Applying wallpapers:**
+- Video formats → relaunches `mpvpaper` with `--loop-file --hwdec=auto`
+- Image formats → `swww img` with transition (or `awww` as fallback)
+
+**Themes:**
+- Type selector uses `rofi/wallpaper-type-select.rasi` (compact list, inherits Ship Gray style from `style-4.rasi`)
+- Grid picker uses `rofi/wallpaper-picker.rasi` (4-column thumbnail grid)
+
+The keybind in `hypr/modules/programs.lua` calls `wallpaper_launcher.sh` directly, not `wallpaper_rofi.sh`. If you point the keybind at the wrong script, only the type selector opens and nothing happens after you choose.
 
 ---
 
@@ -573,7 +600,7 @@ Manual installation requires more work, but teaches you much more about how the 
 ## External Credits
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout, and SwayNC belong to their respective projects.
-- The Rofi wallpaper selector (`rofi/scripts/wallpaper_rofi.sh`) is original work, built as a native Rofi script mode after leaving behind the previous Quickshell-based version.
+- The Rofi wallpaper selector (`rofi/scripts/wallpaper_launcher.sh` + `wallpaper_rofi.sh` + `wallpaper_grid.sh`) is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via `/tmp/rofi-wallpaper-next`. Replaces the previous Quickshell-based version.
 - [matugen](https://github.com/InioX/matugen) is the dynamic theming tool that the wallpaper selector's reload script is prepared to use, but it's not connected in this rice — see [External Additions](#external-additions).
 - Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
 - terminal-bg was created by [DaarcyDev](https://www.youtube.com/@DaarcyDev).
