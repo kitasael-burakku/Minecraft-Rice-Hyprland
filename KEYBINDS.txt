@@ -7,13 +7,13 @@ Main modifier: SUPER
 APPS
 ----
 
-SUPER + Enter              Open terminal
-SUPER + E                  Open file manager
-SUPER + B                  Open Zen Browser
-SUPER + Space              Open launcher
+SUPER + Enter              Open Terminal
+SUPER + E                  Open File manager
+SUPER + B                  Open Browser
+SUPER + Space              Open Launcher
 SUPER + A                  Open/close SwayNC
-SUPER + SHIFT + W          Open wallpaper selector (Rofi)
-SUPER + T                  Open Spotify (Or any music player)
+SUPER + SHIFT + W          Open Wallpaper selector (Rofi)
+SUPER + T                  Open Music Player
 SUPER + O                  Open OBS
 SUPER + ALT + M 	       Reload Terminal-Bg (Cava)
 
@@ -29,16 +29,15 @@ SUPER + SHIFT + F          Fullscreen mode 0
 SYSTEM
 ------
 
-SUPER + F1		   Keybind Viewer
-SUPER + F2		   Update System
-SUPER + R		   Launch Game
-SUPER + Delete             Exit Hyprland / hyprshutdown
+SUPER + F1		           Keybind Viewer
+SUPER + F2		           Update System
+SUPER + R		           Launch Game
+SUPER + Delete             hyprshutdown (fallback: Exit Hyprland)
 SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      Open btop
-SUPER + SHIFT + X          Toggle Cava
 SUPER + W                  Reload Waybar
-SUPER + CTRL + H 	   Open Hyprland config in VsCodium
+SUPER + CTRL + H 	       Open Hyprland config in VsCodium
 
 CLIPBOARD / COLOR
 -----------------
