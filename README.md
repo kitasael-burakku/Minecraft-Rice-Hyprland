@@ -1,8 +1,10 @@
 # Minecraft-Rice-Hyprland
 
-Mi configuración personal para Hyprland inspirada en Minecraft, corriendo en CachyOS.
+My personal Hyprland configuration inspired by Minecraft, running on CachyOS.
 
-Este proyecto **NO es un instalador automático**, **NO es una configuración universal** y **NO garantiza compatibilidad con todos los sistemas**.
+This project is **NOT an automatic installer**, **NOT a universal configuration**, and **does NOT guarantee compatibility with all systems**.
+
+> You can do whatever you want with this dotfile — if you don't want to install or use a configuration, you simply don't have to copy it.
 
 ---
 
@@ -17,7 +19,7 @@ Este proyecto **NO es un instalador automático**, **NO es una configuración un
 ## Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/wallpaper-picker.jpg)
 
-### Terminal con fondo animado
+### Terminal with animated background
 ![Terminal-bg](docs/screenshots/keybinds.jpg)
 
 ### Hyprlock
@@ -25,56 +27,56 @@ Este proyecto **NO es un instalador automático**, **NO es una configuración un
 
 ---
 
-## ¿Por dónde empezar?
+## Where to start?
 
-Este repositorio está pensado para dos tipos de personas:
+This repository is designed for two types of people:
 
-**Si vienes de Windows o eres nuevo en Linux →**
-Lee primero la sección [Explicación de comandos](#explicación-de-los-comandos-utilizados), luego [Antes de empezar](#antes-de-empezar) y después sigue el orden del README.
+**If you're coming from Windows or are new to Linux →**
+Read the [Command Reference](#command-reference) section first, then [Before You Begin](#before-you-begin), and then follow the README in order.
 
-**Si ya conoces Linux y dotfiles →**
-Ve directo a [Estructura del repo](#estructura-del-repo), [Hyprland en Lua](#hyprland-en-lua) y [Cosas que debes cambiar](#cosas-que-debes-cambiar).
+**If you already know Linux and dotfiles →**
+Go straight to [Repo Structure](#repo-structure), [Hyprland in Lua](#hyprland-in-lua), and [Things You Must Change](#things-you-must-change).
 
 ---
 
-## Por qué existe este repositorio
+## Why this repository exists
 
-Llegué a Linux desde Windows buscando más control sobre mi sistema. Empecé con Arch, cometí muchos errores, aprendí de todos ellos, y eventualmente migré a CachyOS donde construí este rice.
+I came to Linux from Windows looking for more control over my system. I started with Arch, made a lot of mistakes, learned from all of them, and eventually migrated to CachyOS where I built this rice.
 
-La mayoría de configuraciones modernas usan instaladores automáticos que ocultan cómo funciona todo por dentro. Este repositorio toma la dirección opuesta.
+Most modern configurations use automatic installers that hide how everything works under the hood. This repository takes the opposite approach.
 
-La idea no es copiar todo y esperar que funcione. La idea es:
+The idea is not to copy everything and hope it works. The idea is:
 
 ```text
-Leer → Entender → Adaptar → Aprender → Construir tu propia configuración
+Read → Understand → Adapt → Learn → Build your own configuration
 ```
 
-Aquí encontrarás rutas reales, scripts reales y decisiones tomadas para un sistema de uso diario. Algunas cosas funcionarán de inmediato, otras requerirán modificaciones, y precisamente ahí es donde ocurre el aprendizaje.
+Here you'll find real paths, real scripts, and decisions made for a daily-use system. Some things will work right away, others will require modifications — and that's precisely where the learning happens.
 
-Si buscas una instalación de un clic, este repositorio probablemente no sea para ti.
-Si quieres entender qué hace cada archivo antes de ejecutarlo, entonces probablemente sí.
-
----
-
-## ¿A quién está dirigido?
-
-Puede ser útil si:
-
-- Vienes de Windows y quieres aprender Linux desde adentro.
-- Quieres entender cómo se organiza y construye un rice real.
-- Te interesa Hyprland, Wayland y los dotfiles.
-- Prefieres comprender lo que instalas antes de ejecutarlo.
-- Te gusta modificar configuraciones y adaptarlas a tu sistema.
-
-Probablemente NO sea para ti si:
-
-- Buscas una instalación completamente automática.
-- No quieres editar archivos de configuración.
-- Esperas compatibilidad garantizada sin realizar cambios.
+If you're looking for a one-click install, this repository probably isn't for you.
+If you want to understand what each file does before running it, then it probably is.
 
 ---
 
-## Hardware utilizado
+## Who is this for?
+
+This may be useful if:
+
+- You're coming from Windows and want to learn Linux from the inside out.
+- You want to understand how a real rice is organized and built.
+- You're interested in Hyprland, Wayland, and dotfiles.
+- You prefer to understand what you install before running it.
+- You like modifying and adapting configurations to your own system.
+
+It's probably NOT for you if:
+
+- You're looking for a fully automatic installer.
+- You don't want to edit configuration files.
+- You expect guaranteed compatibility without making changes.
+
+---
+
+## Hardware used
 
 ```
 CPU: AMD Ryzen 7 8700F
@@ -84,30 +86,30 @@ Monitor: 1920x1080 @ 200Hz
 OS: CachyOS
 ```
 
-Esta configuración fue desarrollada y probada en este hardware. Algunas partes dependen específicamente de AMD.
+This configuration was developed and tested on this hardware. Some parts depend specifically on AMD.
 
 ---
 
-## Herramientas utilizadas
+## Tools used
 
-| Herramienta | Función |
+| Tool | Function |
 |---|---|
-| Hyprland (Lua) | Window manager modular |
-| Waybar | Barra de estado |
-| Rofi | Launcher, selector de clipboard, selector de wallpapers (imagen y video) y power menu decorativo |
-| matugen | Theming dinámico opcional — el script de reload está listo para usarlo pero no viene conectado a Hypr/Waybar en este rice, ver [Adiciones externas](#adiciones-externas) |
+| Hyprland (Lua) | Modular window manager |
+| Waybar | Status bar |
+| Rofi | Launcher, clipboard selector, wallpaper selector (image and video), and decorative power menu |
+| matugen | Optional dynamic theming — the reload script is ready to use it but it's not connected to Hypr/Waybar in this rice, see [External Additions](#external-additions) |
 | Kitty | Terminal |
-| Fish + Starship | Shell con prompt personalizado — incluye `starship.toml` con tema "Floating Stone Bubbles" (paleta de shaders de Minecraft) |
-| Fastfetch | Info del sistema al abrir terminal |
-| Hyprlock | Pantalla de bloqueo |
-| SwayNC | Centro de notificaciones |
-| Wlogout | Menú de sesión |
-| mpvpaper | Wallpaper animado |
-| cava | Visualizador de audio — incluye config, shaders GLSL propios y temas (agua, solarized_dark, tricolor) |
-| glava | Visualizador alternativo, usado opcionalmente en scripts de Hyprlock |
-| terminal-bg | Fondo animado dentro de la terminal (lanza cava en modo noncurses) |
-| Qylock | Tema SDDM estilo Minecraft |
-| MINEGRUB | Tema GRUB estilo Minecraft |
+| Fish + Starship | Shell with custom prompt — includes `starship.toml` with "Floating Stone Bubbles" theme (Minecraft shader palette) |
+| Fastfetch | System info on terminal open |
+| Hyprlock | Lock screen |
+| SwayNC | Notification center |
+| Wlogout | Session menu |
+| mpvpaper | Animated wallpaper |
+| cava | Audio visualizer — includes config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
+| glava | Alternative visualizer, optionally used in Hyprlock scripts |
+| terminal-bg | Animated background inside the terminal (launches cava in noncurses mode) |
+| Qylock | Minecraft-style SDDM theme |
+| MINEGRUB | Minecraft-style GRUB theme |
 
 > Qylock: https://github.com/Darkkal44/qylock
 > MINEGRUB: https://github.com/Lxtharia/minegrub-theme
@@ -117,52 +119,52 @@ Esta configuración fue desarrollada y probada en este hardware. Algunas partes 
 
 ## Features
 
-- Configuración de Hyprland separada en módulos Lua dentro de `hypr/modules/`, incluyendo un sistema de animaciones con curvas y springs con nombre propio "Velvet Motion" (`animations.lua`).
-- Autostart para wallpaper animado con `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie y fondo animado de terminal con cava.
-- Selector de wallpapers propio en modo script de Rofi (imagen y video), atajo `SUPER + SHIFT + W` — con generación automática de thumbnails y soporte opcional (desactivado por defecto) de theming dinámico vía matugen, ver [Rofi — Selector de wallpapers](#rofi--selector-de-wallpapers).
-- Waybar con módulos para disco, audio, reloj, workspaces, tray, updates (con acceso directo a `sysupdate`), red, temperatura, CPU, memoria y un botón de power conectado a un mini-menú en Rofi.
-- Rofi como launcher de aplicaciones, selector de historial de clipboard y power menu decorativo (la fuente distinta en ese menú es a propósito, para que resalte; la sesión real se maneja con Wlogout).
-- Kitty con Fish como shell, tema de colores propio "Kitasan-Ship Minecraft Edition" (paleta de Creeper greens, stone grays, redstone reds) y soporte para imágenes de Fastfetch vía el protocolo gráfico de Kitty.
-- Fish con Starship, paleta "Minecraft Overworld" aplicada a la sintaxis del shell, rotación aleatoria entre 6 presets de Fastfetch, aliases modernos, y funciones propias de mantenimiento, diagnóstico y un visor interactivo de atajos — ver [Funciones de Fish](#funciones-de-fish).
-- cava con config propia (pipewire, noncurses, 60fps), tres temas intercambiables (`agua`, `solarized_dark`, `tricolor`) y seis shaders GLSL propios para el modo visual.
-- Hyprlock con layout minimalista (reloj, fecha, usuario, contraseña) y varios scripts adicionales en el repo que no están conectados al layout actual (batería, MPRIS, clima, ubicación — disponibles si quieres armar tu propia versión más cargada de info).
-- SwayNC con centro de notificaciones, controles rápidos y tema `goldship`.
-- Wlogout con acciones de bloqueo, salida, suspensión, apagado, hibernación y reinicio — es el menú de sesión real del sistema.
-- Layout de Hyprland intercambiable en caliente (dwindle / master / scrolling), con `scrolling` como layout por defecto.
-- Gesto de 3 dedos horizontal para cambiar de workspace configurado en `hypr/modules/input.lua`.
-- Atajos para screenshots, color picker, control multimedia, floating con resize automático, Waybar reload y herramientas de sistema.
-- The fuck: corrector de comandos mal escritos integrado en Fish.
+- Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name "Velvet Motion" (`animations.lua`).
+- Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, and animated terminal background with cava.
+- Custom wallpaper selector as a native Rofi script mode (image and video), shortcut `SUPER + SHIFT + W` — with automatic thumbnail generation and optional (disabled by default) dynamic theming via matugen, see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
+- Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu.
+- Rofi as application launcher, clipboard history selector, and decorative power menu (the different font in that menu is intentional, to make it stand out; the actual session is handled by Wlogout).
+- Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
+- Fish with Starship, "Minecraft Overworld" palette applied to shell syntax, random rotation between 6 Fastfetch presets, modern aliases, and custom maintenance/diagnostic functions plus an interactive keybind viewer — see [Fish Functions](#fish-functions).
+- cava with custom config (pipewire, noncurses, 60fps), three swappable themes (`agua`, `solarized_dark`, `tricolor`) and six custom GLSL shaders for visual mode.
+- Hyprlock with minimalist layout (clock, date, user, password) and several additional scripts in the repo that are not connected to the current layout (battery, MPRIS, weather, location — available if you want to build your own info-heavy version).
+- SwayNC with notification center, quick controls, and `goldship` theme.
+- Wlogout with lock, logout, suspend, shutdown, hibernate, and reboot actions — this is the system's real session menu.
+- Hot-swappable Hyprland layout (dwindle / master / scrolling), with `scrolling` as the default.
+- 3-finger horizontal swipe gesture to switch workspaces, configured in `hypr/modules/input.lua`.
+- Shortcuts for screenshots, color picker, multimedia control, floating with auto-resize, Waybar reload, and system tools.
+- The fuck: typo corrector integrated into Fish.
 
 ---
 
-## Estructura del repo
+## Repo Structure
 
 ```text
 .
-├── cava/               # Config, shaders GLSL y temas para el visualizador de audio
-├── docs/screenshots/   # Capturas del rice
-├── fastfetch/          # Configs jsonc, logos y presets visuales
-├── fish/               # config.fish, funciones, aliases y temas de Fish shell
-├── hypr/               # Hyprland Lua, módulos, hypridle.conf y hyprlock.conf base
-├── hyprlock/           # Layout, colores, wallpaper y scripts de lock screen
-├── kitty/              # Configuración de Kitty y colores
-├── rofi/               # Launcher, clipboard, selector de wallpapers y power menu
-├── scripts/            # Scripts personales (terminal-bg-cava.sh)
-├── starship.toml       # Config de Starship (prompt), va en ~/.config/starship.toml
-├── swaync/             # Config, estilos, iconos y tema de notificaciones
-├── waybar/             # Config, CSS y scripts de Waybar
-└── wlogout/            # Layout, CSS, iconos y scripts de apagado/sesión
+├── cava/               # Config, GLSL shaders and themes for the audio visualizer
+├── docs/screenshots/   # Rice screenshots
+├── fastfetch/          # jsonc configs, logos and visual presets
+├── fish/               # config.fish, functions, aliases and Fish shell themes
+├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
+├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
+├── kitty/              # Kitty configuration and colors
+├── rofi/               # Launcher, clipboard, wallpaper selector and power menu
+├── scripts/            # Personal scripts (terminal-bg-cava.sh)
+├── starship.toml       # Starship config (prompt), goes in ~/.config/starship.toml
+├── swaync/             # Notification center config, styles, icons and theme
+├── waybar/             # Waybar config, CSS and scripts
+└── wlogout/            # Layout, CSS, icons and shutdown/session scripts
 ```
 
-Cada carpeta va dentro de `~/.config/` en tu sistema, excepto `docs/` y `starship.toml` (que va directamente en `~/.config/starship.toml`).
+Each folder goes inside `~/.config/` on your system, except `docs/` and `starship.toml` (which goes directly at `~/.config/starship.toml`).
 
 ---
 
-## Dependencias
+## Dependencies
 
-Los nombres pueden variar según los repositorios habilitados. Revisa cada paquete antes de instalarlo.
+Package names may vary depending on your enabled repositories. Check each package before installing it.
 
-### Base recomendada para Arch / CachyOS
+### Recommended base for Arch / CachyOS
 
 ```bash
 sudo pacman -Syu
@@ -180,12 +182,12 @@ sudo pacman -S \
   thefuck
 ```
 
-> Si usas cachyOS puedes descargar Zen-Browser desde los paquetes de pacman 
+> If you use CachyOS you can download Zen-Browser from pacman packages:
 ```bash
 sudo pacman -S zen-browser-bin
 ```
 
-### AUR o por verificar
+### AUR or to verify
 
 ```bash
 yay -S \
@@ -201,29 +203,29 @@ yay -S \
   awww
 ```
 
-> Si no usas cachyOS puedes descargar Zen-Browser desde los paquetes del AUR 
+> If you don't use CachyOS you can download Zen-Browser from AUR packages:
 ```bash
 yay -S zen-browser-bin
 ```
 
-## IMPORTANTE: SI INSTALAS COSAS DESDE EL AUR REVISA BIEN LO QUE SE VA A INSTALAR.
+## IMPORTANT: IF YOU INSTALL THINGS FROM THE AUR, CAREFULLY REVIEW WHAT WILL BE INSTALLED.
 
-`awww` queda como fallback opcional dentro de `wallpaper_rofi.sh` si no tienes `swww`; no es obligatorio si ya tienes `swww` instalado.
+`awww` is an optional fallback inside `wallpaper_rofi.sh` if you don't have `swww`; it's not required if you already have `swww` installed.
 
-**Marcadas como por verificar:**
+**Marked as to verify:**
 
-- `hyprland-lua`: este rice usa `hypr/hyprland.lua` con llamadas `hl.*`, no `hyprland.conf` clásico. Verifica el paquete o método correcto para tu versión de Hyprland.
-- `hyprshutdown`: aparece como fallback opcional en un keybind.
-- `glava`: usado opcionalmente en scripts de Hyprlock si Spotify está reproduciendo.
-- `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: instala o reemplaza según tu sistema.
-- `obs`, `brave`, `vscodium`: aplicaciones personales atadas a keybinds, no son requisitos del entorno base.
-- `swww`: requerido por el selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) para aplicar imágenes. Revisa el nombre exacto del paquete en AUR para tu sistema. `matugen` solo lo necesitas si armas el theme selector descrito en [Adiciones externas](#adiciones-externas).
+- `hyprland-lua`: this rice uses `hypr/hyprland.lua` with `hl.*` calls, not classic `hyprland.conf`. Verify the correct package or method for your version of Hyprland.
+- `hyprshutdown`: appears as an optional fallback in a keybind.
+- `glava`: optionally used in Hyprlock scripts if Spotify is playing.
+- `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: install or replace according to your system.
+- `obs`, `brave`, `vscodium`: personal applications tied to keybinds, not requirements of the base environment.
+- `swww`: required by the Rofi wallpaper selector (`rofi/scripts/wallpaper_rofi.sh`) to apply images. Check the exact package name in AUR for your system. `matugen` is only needed if you build the theme selector described in [External Additions](#external-additions).
 
 ---
 
-## Antes de empezar
+## Before You Begin
 
-> ⚠️ Haz un backup de tu configuración actual antes de copiar cualquier archivo.
+> ⚠️ Make a backup of your current configuration before copying any files.
 
 ```bash
 mkdir -p ~/backup-configs
@@ -242,26 +244,26 @@ cp -r \
   ~/backup-configs 2>/dev/null
 ```
 
-Si algo sale mal podrás restaurar tu configuración anterior fácilmente.
+If something goes wrong you'll be able to restore your previous configuration easily.
 
-> ⚠️ Lee los archivos antes de copiarlos.
+> ⚠️ Read the files before copying them.
 
-> ⚠️ No ejecutes scripts que no entiendas.
+> ⚠️ Don't run scripts you don't understand.
 
-> ⚠️ Revisa rutas personales, wallpapers, sensores y programas antes de iniciar sesión en Hyprland.
+> ⚠️ Check personal paths, wallpapers, sensors, and programs before logging into Hyprland.
 
 ---
 
-## Instalación manual
+## Manual Installation
 
-Este repo no es plug-and-play.
+This repo is not plug-and-play.
 
 ```bash
 git clone https://github.com/kitasael-burakku/Minecraft-Rice-Hyprland.git ~/dotfiles
 cd ~/dotfiles
 ```
 
-Copia las carpetas que quieras usar:
+Copy the folders you want to use:
 
 ```bash
 mkdir -p ~/.config
@@ -272,7 +274,7 @@ mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
 
-Da permisos de ejecución a los scripts:
+Give execution permissions to the scripts:
 
 ```bash
 chmod +x ~/.config/waybar/scripts/*.sh
@@ -284,25 +286,25 @@ chmod +x ~/.config/scripts/terminal-bg-cava.sh
 chmod +x ~/.config/rofi/scripts/*.sh
 ```
 
-Si quieres usar Fish como shell por defecto:
+If you want to use Fish as your default shell:
 
 ```bash
 chsh -s /usr/bin/fish
 ```
 
-Antes de iniciar sesión en Hyprland revisa rutas, monitores, sensores, wallpaper y programas. Si algo no existe en tu sistema, Hyprland puede iniciar incompleto o algunos atajos no harán nada.
+Before logging into Hyprland, check paths, monitors, sensors, wallpaper, and programs. If something doesn't exist on your system, Hyprland may start incomplete or some shortcuts won't do anything.
 
 ---
 
-## Hyprland en Lua
+## Hyprland in Lua
 
-La configuración principal está en:
+The main configuration is at:
 
 ```text
 hypr/hyprland.lua
 ```
 
-Ese archivo carga módulos:
+That file loads modules:
 
 ```lua
 require("modules.animations")
@@ -318,152 +320,152 @@ require("modules.monitors")
 require("modules.windowrules")
 ```
 
-> Esto **no es el formato clásico** de `hyprland.conf`. Necesitas tener funcionando el soporte de Lua para Hyprland en tu instalación. Si tu Hyprland solo lee `hyprland.conf`, esta configuración no cargará tal cual.
+> This is **not the classic `hyprland.conf` format**. You need Lua support for Hyprland to be working in your installation. If your Hyprland only reads `hyprland.conf`, this configuration will not load as-is.
 
-Archivos importantes:
+Key files:
 
-- `hypr/modules/programs.lua` — terminal, file manager y launcher (tabla global `Programs` usada por `keybinds.lua`).
-- `hypr/modules/keybinds.lua` — atajos de teclado, screenshots, multimedia y sesión.
-- `hypr/modules/autostart.lua` — servicios y programas que arrancan con Hyprland.
-- `hypr/modules/monitors.lua` — detección automática de salida, resolución, posición y escala.
-- `hypr/modules/input.lua` — layout de teclado, sensibilidad, gesto de 3 dedos horizontal para cambiar workspace, y placeholder de configuración por dispositivo.
-- `hypr/modules/environment.lua` — variables de entorno Wayland, Qt, Electron y AMD.
-- `hypr/modules/decoration.lua` — gaps, bordes, redondeo, opacidad, sombra y blur. Los colores están escritos directamente (no se leen desde matugen).
-- `hypr/modules/layout.lua` — configuración de los tres layouts (dwindle, master, scrolling); el default activo es `scrolling`. Se puede cambiar en caliente con `SUPER + SHIFT + D/M/O`.
-- `hypr/modules/animations.lua` — sistema de curvas y springs con nombre propio ("Velvet Motion") para ventanas, fades, layers, workspaces y zoom.
-- `hypr/modules/windowrules.lua` — reglas de ventana y de capa (blur/alpha/animación para SwayNC, Rofi, Wlogout, Waybar).
-- `hypr/modules/misc.lua` — ajustes varios, incluye desactivar el wallpaper/logo aleatorio de Hyprland.
+- `hypr/modules/programs.lua` — terminal, file manager and launcher (global `Programs` table used by `keybinds.lua`).
+- `hypr/modules/keybinds.lua` — keyboard shortcuts, screenshots, multimedia and session.
+- `hypr/modules/autostart.lua` — services and programs that launch with Hyprland.
+- `hypr/modules/monitors.lua` — automatic output detection, resolution, position, and scale.
+- `hypr/modules/input.lua` — keyboard layout, sensitivity, 3-finger horizontal swipe to switch workspace, and per-device config placeholder.
+- `hypr/modules/environment.lua` — Wayland, Qt, Electron, and AMD environment variables.
+- `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Colors are hardcoded (not read from matugen).
+- `hypr/modules/layout.lua` — configuration for the three layouts (dwindle, master, scrolling); the active default is `scrolling`. Can be hot-swapped with `SUPER + SHIFT + D/M/O`.
+- `hypr/modules/animations.lua` — custom curves and springs system ("Velvet Motion") for windows, fades, layers, workspaces, and zoom.
+- `hypr/modules/windowrules.lua` — window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout, Waybar).
+- `hypr/modules/misc.lua` — miscellaneous settings, includes disabling Hyprland's random wallpaper/logo.
 
 ---
 
-## Rofi — Selector de wallpapers
+## Rofi — Wallpaper Selector
 
-`rofi/scripts/wallpaper_rofi.sh` es un selector de wallpapers con soporte para imagen y video, construido como un modo-script nativo de Rofi (sin depender de un proyecto externo). Está atado al atajo `SUPER + SHIFT + W` (definido en `hypr/modules/keybinds.lua`) y se invoca así:
+`rofi/scripts/wallpaper_rofi.sh` is a wallpaper selector with support for both images and video, built as a native Rofi script mode (without depending on an external project). It's tied to the `SUPER + SHIFT + W` shortcut (defined in `hypr/modules/keybinds.lua`) and invoked like this:
 
 ```bash
 rofi -show wallpapers -modi "wallpapers:~/.config/rofi/scripts/wallpaper_rofi.sh"
 ```
 
-Reemplaza al selector anterior basado en Quickshell, que se quitó del repo por completo.
+It replaces the previous Quickshell-based selector, which was removed from the repo entirely.
 
-Cómo funciona:
+How it works:
 
-- Lee los wallpapers desde `WALLPAPER_DIR` (por defecto `~/Videos/wallpapersvideo`, la misma carpeta que usa el wallpaper animado de `autostart.lua`). Si guardas tus wallpapers en otro lugar, exporta esa variable antes de lanzar Rofi en vez de mover archivos.
-- Cada vez que abres el menú, dispara en segundo plano `generate-thumbs.sh`, que genera (o regenera si el archivo cambió) un thumbnail `.jpg` por wallpaper en `~/.cache/rofi-wallpapers/thumbs` usando ImageMagick para imágenes y un frame de ffmpeg para videos. No bloquea la apertura del menú: si un thumbnail nuevo todavía no está listo, esa entrada aparece sin ícono pero sigue siendo seleccionable.
-- Al elegir un wallpaper, los formatos de video (`mp4`, `mkv`, `mov`, `webm`) se aplican relanzando `mpvpaper`; los formatos de imagen (`jpg`, `jpeg`, `png`, `webp`, `gif`) se aplican con `swww` (o `awww` como fallback si no tienes `swww`).
-- Después de aplicar el wallpaper, llama a `matugen_reload.sh`, que puede correr `matugen` y avisarle a Hypr, Waybar, Kitty, SwayNC y SwayOSD que recarguen. **Viene desactivado por defecto** porque este rice no cambia de colores — ver [Adiciones externas](#adiciones-externas) si quieres conectarlo de verdad.
+- Reads wallpapers from `WALLPAPER_DIR` (default `~/Videos/wallpapersvideo`, the same folder used by the animated wallpaper in `autostart.lua`). If you store your wallpapers elsewhere, export that variable before launching Rofi instead of moving files.
+- Every time you open the menu, it fires `generate-thumbs.sh` in the background, which generates (or regenerates if the file changed) a `.jpg` thumbnail per wallpaper in `~/.cache/rofi-wallpapers/thumbs` using ImageMagick for images and an ffmpeg frame for videos. It doesn't block the menu from opening: if a new thumbnail isn't ready yet, that entry appears without an icon but remains selectable.
+- When you choose a wallpaper, video formats (`mp4`, `mkv`, `mov`, `webm`) are applied by relaunching `mpvpaper`; image formats (`jpg`, `jpeg`, `png`, `webp`, `gif`) are applied with `swww` (or `awww` as fallback if you don't have `swww`).
+- After applying the wallpaper, it calls `matugen_reload.sh`, which can run `matugen` and notify Hypr, Waybar, Kitty, SwayNC, and SwayOSD to reload. **Disabled by default** because this rice doesn't change color schemes — see [External Additions](#external-additions) if you want to wire it up.
 
-No hay un archivo de configuración personal que copiar (a diferencia del `Settings.qml` del picker anterior): basta con tener tus wallpapers en `WALLPAPER_DIR` y dar permisos de ejecución a los scripts (`chmod +x ~/.config/rofi/scripts/*.sh`).
-
----
-
-## Cava — Visualizador de audio
-
-La carpeta `cava/` incluye tres componentes:
-
-- **`config`** — configura cava con método pipewire, salida noncurses a 60fps en modo mono (promediado). Esta es la config que usa `scripts/terminal-bg-cava.sh` para el fondo animado de la terminal.
-- **`themes/`** — tres paletas de color: `agua` (azules), `solarized_dark` y `tricolor`. Para activar un tema, copia su contenido al bloque `[color]` de `cava/config`.
-- **`shaders/`** — seis shaders GLSL para el modo visual de cava: `bar_spectrum.frag`, `eye_of_phi.frag`, `northern_lights.frag`, `spectrogram.frag`, `winamp_line_style_spectrum.frag` y `pass_through.vert`. Para usarlos activa el método `ngl` en la sección `[output]` de `cava/config` y apunta `shader` a la ruta del `.frag` que quieras.
-
-> Los shaders requieren que cava esté compilado con soporte OpenGL (`ngl`). Revisa tu paquete antes de activarlos.
+There's no personal config file to copy (unlike the `Settings.qml` from the previous picker): just have your wallpapers in `WALLPAPER_DIR` and give the scripts execution permissions (`chmod +x ~/.config/rofi/scripts/*.sh`).
 
 ---
 
-## Adiciones externas
+## Cava — Audio Visualizer
 
-Soy bastante purista con esto: cambio de wallpaper seguido (según el ánimo o la hora del día), pero no cambio de paleta de color cada vez que lo hago. Por eso `rofi/scripts/matugen_reload.sh` viene con todas sus variables `ENABLE_*` (`ENABLE_DYNAMIC_COLORS`, `ENABLE_MATUGEN`, `ENABLE_HYPR_RELOAD`, `ENABLE_WAYBAR_RELOAD`, `ENABLE_KITTY_RELOAD`, `ENABLE_CAVA_RELOAD`, `ENABLE_SWAYNC_RELOAD`, `ENABLE_SWAYOSD_RELOAD`) apagadas por defecto.
+The `cava/` folder includes three components:
 
-El script ya sabe cuándo correr `matugen` y a qué procesos avisarles después de aplicar un wallpaper, pero la parte de "aplicar esos colores" no está conectada en este repo: `hypr/modules/decoration.lua` tiene los colores escritos directo en el código, `waybar/style.css` no importa ningún archivo de colores externo, y `kitty.conf` usa mi tema estático propio. No la armé de punta a punta, así que no la documento como si funcionara.
+- **`config`** — configures cava with pipewire method, noncurses output at 60fps in mono mode (averaged). This is the config used by `scripts/terminal-bg-cava.sh` for the animated terminal background.
+- **`themes/`** — three color palettes: `agua` (blues), `solarized_dark`, and `tricolor`. To activate a theme, copy its contents into the `[color]` block of `cava/config`.
+- **`shaders/`** — six GLSL shaders for cava's visual mode: `bar_spectrum.frag`, `eye_of_phi.frag`, `northern_lights.frag`, `spectrogram.frag`, `winamp_line_style_spectrum.frag`, and `pass_through.vert`. To use them, enable the `ngl` method in the `[output]` section of `cava/config` and point `shader` to the path of the `.frag` you want.
 
-Si quieres un theme selector real con esto, tendrías que:
-
-1. Tener tus propios templates de matugen apuntando a las rutas de `HYPR_COLORS_PATH` / `WAYBAR_COLORS_PATH` (o exportar esas variables a donde sí escriban).
-2. Hacer que `decoration.lua`, `waybar/style.css` y `kitty.conf` lean esos archivos generados en vez de los valores fijos que tienen ahora.
-3. Prender solo las variables `ENABLE_*` que correspondan a lo que conectes.
-
-Si lo terminas armando, este es un buen lugar para anotar cómo te quedó.
+> Shaders require cava to be compiled with OpenGL support (`ngl`). Check your package before enabling them.
 
 ---
 
-## Funciones de Fish
+## External Additions
 
-Además de los alias y la integración con herramientas externas, Fish trae funciones propias invocables como comandos:
+I'm fairly purist about this: I change wallpapers often (based on mood or time of day), but I don't change my color palette every time I do. That's why `rofi/scripts/matugen_reload.sh` ships with all its `ENABLE_*` variables (`ENABLE_DYNAMIC_COLORS`, `ENABLE_MATUGEN`, `ENABLE_HYPR_RELOAD`, `ENABLE_WAYBAR_RELOAD`, `ENABLE_KITTY_RELOAD`, `ENABLE_CAVA_RELOAD`, `ENABLE_SWAYNC_RELOAD`, `ENABLE_SWAYOSD_RELOAD`) turned off by default.
 
-- `sysupdate` — actualiza pacman y AUR (yay) en una sola pasada, con salida animada. Es lo mismo que corre el módulo `custom/updates` de Waybar al hacer click.
-- `quickcache` — limpieza rápida de cachés de apps conocidas (Brave, Spotify, Electron, etc.), con confirmación antes de borrar.
-- `checktrash` / `cleantrash` — el primero solo reporta qué se puede limpiar (paquetes huérfanos, cachés, papelera); el segundo lo limpia de verdad, con confirmación.
-- `checkerrors` — diagnóstico de servicios fallidos, errores de journalctl (incluyendo Hyprland/portales) y coredumps recientes. Solo lectura, no cambia nada.
-- `healthcheck` — el chequeo más completo: sistema, memoria/zram, actualizaciones pendientes, paquetes huérfanos, archivos `.pacnew`/`.pacsave`, servicios fallidos, red y temperaturas.
-- `keybinds` — abre un visor interactivo de `KEYBINDS.txt` directo en la terminal, con navegación tipo vim (`h/j/k/l`), búsqueda (`:` + espacio) y paginación por sección. Mientras está abierto, flota y centra automáticamente la ventana de la terminal.
-- `fastfetch` (la función, no el binario) — elige al azar uno de los presets en `fastfetch/config*.jsonc`, evitando repetir el mismo dos veces seguidas.
+The script already knows when to run `matugen` and which processes to notify after applying a wallpaper, but the "apply those colors" part isn't wired up in this repo: `hypr/modules/decoration.lua` has colors hardcoded, `waybar/style.css` doesn't import any external color file, and `kitty.conf` uses my own static theme. I didn't build it end-to-end, so I don't document it as if it works.
 
-> ⚠️ `keybinds` depende de que `KEYBINDS.txt` mantenga un formato exacto: encabezado de sección en MAYÚSCULAS, una línea de solo guiones debajo, y entradas `TECLA␣␣␣␣Descripción` con al menos dos espacios entre columnas. Si editas ese archivo a mano, respeta el formato o el visor deja de reconocer las secciones.
+If you want a real theme selector with this, you'd need to:
+
+1. Have your own matugen templates pointing to the paths in `HYPR_COLORS_PATH` / `WAYBAR_COLORS_PATH` (or export those variables to wherever they should write).
+2. Make `decoration.lua`, `waybar/style.css`, and `kitty.conf` read those generated files instead of the fixed values they have now.
+3. Enable only the `ENABLE_*` variables that correspond to what you actually wire up.
+
+If you end up building it, this is a good place to document how you set it up.
 
 ---
 
-## Cosas que debes cambiar
+## Fish Functions
 
-Revisa como mínimo antes de usar:
+Beyond aliases and external tool integrations, Fish includes custom functions invocable as commands:
 
-- `hypr/hyprlock.conf` — cambia `$hyprlockDir` por tu ruta real (`/home/tu-usuario/.config/hyprlock`).
-- `hypr/modules/autostart.lua` — cambia la ruta del wallpaper animado `~/Videos/wallpapersvideo/minecraft2.mp4` por la tuya.
-- `hypr/modules/environment.lua` y `hypr/modules/autostart.lua` — ambos definen el mismo tema de cursor; si lo cambias, actualízalo en los dos archivos para que no queden desincronizados.
-- `hypr/modules/input.lua` — la entrada `hl.device({ name = "epic-mouse-v1" })` es un placeholder de ejemplo; cámbiala por el nombre real de tu mouse si quieres ajuste de sensibilidad por dispositivo, o elimínala.
-- `hypr/modules/programs.lua` — cambia `kitty`, `thunar` o el launcher si usas otras apps.
-- `hypr/modules/keybinds.lua` — cambia `obs`, `vscodium`, rutas de screenshots y comandos que no uses.
-- `waybar/config.jsonc` — cambia `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` por el sensor correcto de tu máquina. El módulo `hyprland/window` muestra el texto fijo `"CachyOs"` a propósito (decisión estética); cámbialo a `{title}` si prefieres ver el título real de la ventana enfocada.
-- `hyprlock/layouts/layout.conf` — cambia `~/.config/hyprlock/wallpapers/1.png` si usas otro wallpaper.
-- `wlogout/style.css` — las seis rutas de iconos (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) están escritas como ruta absoluta a mi usuario; cámbialas por la tuya.
-- `fastfetch/config*.jsonc` — cambia logos, imágenes y presets si no quieres usar los assets incluidos.
-- `swaync/config.json` — cambia botones como `blueman-manager`, `nwg-look` o `nm-connection-editor` si no los usas.
+- `sysupdate` — updates pacman and AUR (yay) in one pass, with animated output. This is the same thing that runs when you click the `custom/updates` module in Waybar.
+- `quickcache` — quick cleanup of known app caches (Brave, Spotify, Electron, etc.), with confirmation before deleting.
+- `checktrash` / `cleantrash` — the first only reports what can be cleaned (orphan packages, caches, trash); the second actually cleans it, with confirmation.
+- `checkerrors` — diagnoses failed services, journalctl errors (including Hyprland/portals), and recent coredumps. Read-only, changes nothing.
+- `healthcheck` — the most complete check: system, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, network, and temperatures.
+- `keybinds` — opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window.
+- `fastfetch` (the function, not the binary) — randomly picks one of the presets in `fastfetch/config*.jsonc`, avoiding repeating the same one twice in a row.
 
-> `hypr/modules/monitors.lua` usa detección automática (`output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"`), así que no debería necesitar cambios en la mayoría de casos. Si tienes varios monitores o una configuración específica, ajústalo ahí.
+> ⚠️ `keybinds` depends on `KEYBINDS.txt` maintaining an exact format: section header in UPPERCASE, a line of only dashes below it, and entries as `KEY    Description` with at least two spaces between columns. If you edit that file manually, respect the format or the viewer will stop recognizing sections.
 
-Para encontrar todas las rutas personales de golpe:
+---
+
+## Things You Must Change
+
+At minimum, review before using:
+
+- `hypr/hyprlock.conf` — change `$hyprlockDir` to your real path (`/home/your-username/.config/hyprlock`).
+- `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft2.mp4` to yours.
+- `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
+- `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
+- `hypr/modules/programs.lua` — change `kitty`, `thunar`, or the launcher if you use other apps.
+- `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, screenshot paths, and commands you don't use.
+- `waybar/config.jsonc` — change `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
+- `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/1.png` if you use a different wallpaper.
+- `wlogout/style.css` — the six icon paths (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) are written as absolute paths to my user; change them to yours.
+- `fastfetch/config*.jsonc` — change logos, images and presets if you don't want to use the included assets.
+- `swaync/config.json` — change buttons like `blueman-manager`, `nwg-look`, or `nm-connection-editor` if you don't use them.
+
+> `hypr/modules/monitors.lua` uses automatic detection (`output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"`), so it shouldn't need changes in most cases. If you have multiple monitors or a specific configuration, adjust it there.
+
+To find all personal paths at once:
 
 ```bash
-rg "/home/|tu-usuario|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
+rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
 ```
 
 ---
 
-## Scripts y comandos utilizados en el rice
+## Scripts and Commands Used in This Rice
 
 - **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `swww`, `awww`, `matugen`
 - **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`, `glava`
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
-- **Sistema:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
-- **Red/GUI:** `nm-connection-editor`, `blueman-manager`, `nwg-look`
+- **System:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
+- **Network/GUI:** `nm-connection-editor`, `blueman-manager`, `nwg-look`
 - **Terminal/shell:** `kitty`, `fish`, `starship`, `fastfetch`, `fzf`, `bat`, `eza`, `zoxide`, `ripgrep`
-- **Utilidades:** `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `libnotify`/`notify-send`, `udiskie`, `reflector`
+- **Utilities:** `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `libnotify`/`notify-send`, `udiskie`, `reflector`
 
 ---
 
-## Notas para principiantes
+## Notes for Beginners
 
-- No copies todo a ciegas. Empieza por una carpeta, prueba, y luego sigue con otra.
-- Si un comando falla, ejecútalo manualmente en la terminal para ver el error real.
-- Las rutas con `/home/tu-usuario/...` son ejemplos. Cámbialas por tu usuario real o usa `$HOME` cuando el programa lo soporte.
-- Los iconos dependen de Nerd Fonts. Si ves cuadros o símbolos raros, instala y selecciona una Nerd Font en tu terminal.
-- Waybar puede romper el módulo de temperatura si tu sensor de hardware no es el mismo que el mío.
-- Las funciones de Fish ejecutan tareas reales como actualizar paquetes y limpiar caché. Léelas antes de usarlas.
-- Los scripts de Hyprlock usan MPRIS, `playerctl`, `curl`, `jq`, `imagemagick` y servicios externos como `wttr.in` o `ipinfo.io`.
-- La carpeta `hyprlock/` trae scripts de batería, MPRIS/Spotify, clima, ubicación y cronómetro que **no están conectados** al `layout.conf` activo — quedaron disponibles por si quieres armar tu propio layout más cargado de información; el lock screen actual es deliberadamente minimalista.
-- Algunas configuraciones están pensadas para mi hardware específico, mis programas y mi flujo de trabajo.
+- Don't blindly copy everything. Start with one folder, test it, then move on to the next.
+- If a command fails, run it manually in the terminal to see the actual error.
+- Paths with `/home/your-username/...` are examples. Replace them with your actual username or use `$HOME` when the program supports it.
+- Icons depend on Nerd Fonts. If you see squares or strange symbols, install and select a Nerd Font in your terminal.
+- Waybar may break the temperature module if your hardware sensor is different from mine.
+- Fish functions run real tasks like updating packages and cleaning caches. Read them before using them.
+- Hyprlock scripts use MPRIS, `playerctl`, `curl`, `jq`, `imagemagick`, and external services like `wttr.in` or `ipinfo.io`.
+- The `hyprlock/` folder includes scripts for battery, MPRIS/Spotify, weather, location, and stopwatch that **are not connected** to the active `layout.conf` — they were left available in case you want to build your own info-heavy layout; the current lock screen is deliberately minimalist.
+- Some settings are tailored specifically to my hardware, my programs, and my workflow.
 
 ---
 
-## Explicación de los comandos utilizados
+## Command Reference
 
-> Esta sección es para quienes vienen de Windows o están comenzando en Linux. Si ya los conoces, puedes saltarla.
+> This section is for people coming from Windows or just starting out with Linux. If you already know these, feel free to skip it.
 
 ### git clone
 
 ```bash
-git clone https://github.com/usuario/repositorio.git
+git clone https://github.com/user/repository.git
 ```
 
-Descarga un repositorio de GitHub a tu computadora, conservando el historial de cambios. Es equivalente a descargar un ZIP pero mejor.
+Downloads a repository from GitHub to your computer, preserving the change history. It's equivalent to downloading a ZIP but better.
 
 ---
 
@@ -473,7 +475,7 @@ Descarga un repositorio de GitHub a tu computadora, conservando el historial de 
 cd ~/dotfiles
 ```
 
-Cambia de directorio (carpeta) en la terminal. `cd ~/.config` entra a la carpeta de configuración.
+Changes the current directory (folder) in the terminal. `cd ~/.config` enters the configuration folder.
 
 ---
 
@@ -483,18 +485,18 @@ Cambia de directorio (carpeta) en la terminal. `cd ~/.config` entra a la carpeta
 mkdir -p ~/.config
 ```
 
-Crea directorios. La opción `-p` evita errores si la carpeta ya existe.
+Creates directories. The `-p` flag avoids errors if the folder already exists.
 
 ---
 
-### cp y cp -r
+### cp and cp -r
 
 ```bash
-cp archivo.txt destino/        # copia un archivo
-cp -r hypr waybar ~/.config/   # copia carpetas completas (recursivo)
+cp file.txt destination/        # copies a file
+cp -r hypr waybar ~/.config/    # copies entire folders (recursive)
 ```
 
-Sin `-r`, Linux no copia directorios.
+Without `-r`, Linux won't copy directories.
 
 ---
 
@@ -504,7 +506,7 @@ Sin `-r`, Linux no copia directorios.
 chmod +x script.sh
 ```
 
-Agrega permisos de ejecución. Necesario para poder ejecutar scripts `.sh` como programas.
+Adds execution permissions. Required to run `.sh` scripts as programs.
 
 ---
 
@@ -514,7 +516,7 @@ Agrega permisos de ejecución. Necesario para poder ejecutar scripts `.sh` como 
 chsh -s /usr/bin/fish
 ```
 
-Cambia la shell predeterminada del usuario. Después de cerrar sesión y volver a entrar, Fish se abrirá automáticamente en lugar de Bash.
+Changes the user's default shell. After logging out and back in, Fish will open automatically instead of Bash.
 
 ---
 
@@ -524,81 +526,81 @@ Cambia la shell predeterminada del usuario. Después de cerrar sesión y volver 
 rg "wallpaper" .
 ```
 
-Busca texto dentro de archivos. Muy útil para encontrar rutas personales, nombres de usuario, sensores y variables en los configs.
+Searches for text inside files. Very useful for finding personal paths, usernames, sensors, and variables in configs.
 
 ---
 
 ### sudo
 
 ```bash
-sudo pacman -S paquete
+sudo pacman -S package
 ```
 
-Ejecuta un comando con permisos de administrador. Úsalo solo cuando entiendas qué hace el comando.
+Runs a command with administrator permissions. Only use it when you understand what the command does.
 
 ---
 
 ### pacman
 
 ```bash
-sudo pacman -S paquete      # instalar
-sudo pacman -Rns paquete    # eliminar con dependencias innecesarias
-sudo pacman -Syu            # actualizar todo el sistema
+sudo pacman -S package      # install
+sudo pacman -Rns package    # remove with unneeded dependencies
+sudo pacman -Syu            # update the entire system
 ```
 
-Gestor de paquetes de Arch Linux y CachyOS.
+Package manager for Arch Linux and CachyOS.
 
 ---
 
 ### yay
 
 ```bash
-yay -S paquete
+yay -S package
 ```
 
-Instala paquetes desde el AUR (Arch User Repository). Funciona similar a pacman pero accede a software mantenido por la comunidad.
+Installs packages from the AUR (Arch User Repository). Works similar to pacman but accesses community-maintained software.
 
 ---
 
-### ¿Por qué no hay instalador automático?
+### Why is there no automatic installer?
 
-Copiar archivos manualmente permite entender dónde vive cada configuración, qué programa usa cada archivo, detectar errores más fácilmente y modificar partes específicas sin depender de scripts automáticos.
+Copying files manually lets you understand where each configuration lives, which program uses each file, detect errors more easily, and modify specific parts without depending on automatic scripts.
 
-La instalación manual requiere más trabajo, pero enseña mucho más sobre cómo funciona el sistema.
-
----
-
-## Créditos externos
-
-- Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout y SwayNC pertenecen a sus respectivos proyectos.
-- El selector de wallpapers en Rofi (`rofi/scripts/wallpaper_rofi.sh`) es trabajo propio, construido como modo-script nativo de Rofi tras dejar atrás la versión anterior basada en Quickshell.
-- [matugen](https://github.com/InioX/matugen) es la herramienta de theming dinámico que el script de reload del selector de wallpapers está preparado para usar, pero no viene conectada en este rice — ver [Adiciones externas](#adiciones-externas).
-- Algunos presets de `fastfetch/config*.jsonc` están adaptados de los ejemplos oficiales del propio proyecto Fastfetch.
-- terminal-bg fue creado por [DaarcyDev](https://www.youtube.com/@DaarcyDev).
-- Minecraft es propiedad de Mojang/Microsoft. La estética usada aquí es fan-made/personal.
-- SDDM Minecraft, Minegrub, cursores, wallpapers, iconos, logos e imágenes de personajes son assets externos salvo que se indique lo contrario.
-- Nerd Fonts y JetBrains Mono Nerd Font pertenecen a sus respectivos autores.
-
-Si reutilizas este rice, conserva los créditos de los proyectos y assets que uses.
+Manual installation requires more work, but teaches you much more about how the system actually works.
 
 ---
 
-## Estado del proyecto
+## External Credits
 
-Rice personal en progreso. Puede tener rutas, decisiones y dependencias muy específicas de mi sistema. Úsalo como material de aprendizaje y como base para crear tu propia configuración.
+- Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout, and SwayNC belong to their respective projects.
+- The Rofi wallpaper selector (`rofi/scripts/wallpaper_rofi.sh`) is original work, built as a native Rofi script mode after leaving behind the previous Quickshell-based version.
+- [matugen](https://github.com/InioX/matugen) is the dynamic theming tool that the wallpaper selector's reload script is prepared to use, but it's not connected in this rice — see [External Additions](#external-additions).
+- Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
+- terminal-bg was created by [DaarcyDev](https://www.youtube.com/@DaarcyDev).
+- Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
+- SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted.
+- Nerd Fonts and JetBrains Mono Nerd Font belong to their respective authors.
+
+If you reuse this rice, keep the credits for the projects and assets you use.
 
 ---
 
-## Filosofía del proyecto
+## Project Status
 
-Mi objetivo no es construir una configuración perfecta, sino una que yo pueda entender, mantener y modificar sin depender de herramientas externas o capas innecesarias de abstracción.
+Personal rice in progress. May contain paths, decisions, and dependencies very specific to my system. Use it as learning material and as a base to build your own configuration.
 
-Prefiero:
+---
 
-- Configuración modular antes que archivos gigantes.
-- Instalación manual antes que scripts mágicos.
-- Entender antes que copiar.
-- Simplicidad antes que complejidad innecesaria.
-- Aprender antes que automatizar.
+## Project Philosophy
 
-Si este repositorio te ayuda a aprender algo sobre Linux, Hyprland, Waybar, Fish o dotfiles, entonces ya cumplió su propósito.
+My goal is not to build a perfect configuration, but one that I can understand, maintain, and modify without depending on external tools or unnecessary layers of abstraction.
+
+I prefer:
+
+- Modular configuration over giant files.
+- Manual installation over magic scripts.
+- Understanding over copying.
+- Simplicity over unnecessary complexity.
+- Learning over automating.
+
+If this repository helps you learn something about Linux, Hyprland, Waybar, Fish, or dotfiles, then it has already fulfilled its purpose.
