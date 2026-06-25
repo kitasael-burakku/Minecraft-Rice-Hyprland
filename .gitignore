@@ -1,4 +1,4 @@
-# caches/state
+# ── Caches / estado ──────────────────────────────────────────
 .cache/
 **/Cache/
 **/Code Cache/
@@ -9,18 +9,24 @@
 **/*.old
 **/*.swp
 
-# generated/local state
+# ── Generados / estado local ─────────────────────────────────
 fastfetch/.last_idx
+fastfetch/.lastfastfetch
 fish/fish_variables
+fish/keybinds_lang
 
-# personal media / heavy files
+# ── Funciones locales (no parte del rice) ────────────────────
+fish/functions/dotbackup.fish
+fish/functions/RPS.exe.fish
+
+# ── Media pesada ─────────────────────────────────────────────
 *.mp4
 *.mov
 *.mkv
 *.webm
 *.gif
 
-# secrets
+# ── Secretos ─────────────────────────────────────────────────
 *.key
 *.pem
 *.token
@@ -29,11 +35,11 @@ fish/fish_variables
 *password*
 *credentials*
 
-# editor/system
+# ── Editor / sistema ─────────────────────────────────────────
 .vscode/
 .idea/
 .DS_Store
 
-## ia
+# ── IA ───────────────────────────────────────────────────────
 CLAUDE.md
 .claude/
