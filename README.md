@@ -16,14 +16,14 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 ### Rofi + SwayNC
 ![Rofi-Swaync](docs/screenshots/rofi.jpg)
 
-## Wallpaper Picker
+### Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/wallpaper-picker.jpg)
 
-## Video Wallpaper Picker
+### Video Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/video-wallpaper-picker.jpg)
 
-## Image Wallpaper Picker 
-![Wallpaper-picker](docs/screenshots/Image_wallpaperpicker.jpg)'
+### Image Wallpaper Picker
+![Wallpaper-picker](docs/screenshots/Image_wallpaperpicker.jpg)
 
 ### Terminal with animated background
 ![Terminal-bg](docs/screenshots/keybinds.jpg)
@@ -131,7 +131,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu.
 - Rofi as application launcher, clipboard history selector, and decorative power menu (the different font in that menu is intentional, to make it stand out; the actual session is handled by Wlogout).
 - Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
-- Fish with Starship, "Minecraft Overworld" palette applied to shell syntax, random rotation between 6 Fastfetch presets, modern aliases, and custom maintenance/diagnostic functions plus an interactive keybind viewer — see [Fish Functions](#fish-functions).
+- Fish with Starship, "Minecraft Overworld" palette applied to shell syntax, random rotation between 9 Fastfetch presets, modern aliases, and custom maintenance/diagnostic functions plus an interactive keybind viewer — see [Fish Functions](#fish-functions).
 - cava with custom config (pipewire, noncurses, 60fps), three swappable themes (`agua`, `solarized_dark`, `tricolor`) and six custom GLSL shaders for visual mode.
 - Hyprlock with minimalist layout (clock, date, user, password) and several additional scripts in the repo that are not connected to the current layout (battery, MPRIS, weather, location — available if you want to build your own info-heavy version).
 - SwayNC with notification center, quick controls, and `goldship` theme.
