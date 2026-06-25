@@ -20,11 +20,9 @@ fish/functions/dotbackup.fish
 fish/functions/RPS.exe.fish
 
 # ── Media pesada ─────────────────────────────────────────────
-*.mp4
 *.mov
 *.mkv
 *.webm
-*.gif
 
 # ── Secretos ─────────────────────────────────────────────────
 *.key
@@ -42,4 +40,4 @@ fish/functions/RPS.exe.fish
 
 # ── IA ───────────────────────────────────────────────────────
 CLAUDE.md
-.claude/!assets/demo.mp4
+.claude
