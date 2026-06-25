@@ -19,6 +19,12 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 ## Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/wallpaper-picker.jpg)
 
+## Video Wallpaper Picker
+![Wallpaper-picker](docs/screenshots/video-wallpaper-picker.jpg)
+
+## Image Wallpaper Picker 
+![Wallpaper-picker](docs/screenshots/Image_wallpaperpicker.jpg)'
+
 ### Terminal with animated background
 ![Terminal-bg](docs/screenshots/keybinds.jpg)
 
