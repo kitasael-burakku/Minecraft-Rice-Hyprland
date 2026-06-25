@@ -42,11 +42,12 @@ apply_wallpaper() {
             ;;
         jpg|jpeg|png|webp|gif)
             pkill -x mpvpaper 2>/dev/null
-            if command -v swww >/dev/null 2>&1; then
-                swww img "$target" --transition-type any >/dev/null 2>&1
-            elif command -v awww >/dev/null 2>&1; then
-                awww img "$target" >/dev/null 2>&1
+            # Asegurar que awww-daemon esté corriendo
+            if ! pgrep -x awww-daemon >/dev/null 2>&1; then
+                awww-daemon &
+                sleep 0.5
             fi
+            awww img "$target" --transition-type any >/dev/null 2>&1
             ;;
         *)
             echo "$(date) ERROR: extensión no soportada: $target" >> "$LOG"

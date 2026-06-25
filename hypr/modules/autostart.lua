@@ -10,8 +10,8 @@ local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 hl.on("hyprland.start", function()
    
     -- Fondo de pantalla
-    hl.exec_cmd("swww-daemon &")
-    hl.exec_cmd("sleep 0.5 && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. home .. "/Videos/wallpapersvideo/minecraft2.mp4 &")
+    hl.exec_cmd("awww-daemon &")
+    hl.exec_cmd("sleep 0.5 && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. home .. "/Videos/wallpapersvideo/minecraft3.mp4 &")
     
     -- Entorno
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")

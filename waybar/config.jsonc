@@ -23,13 +23,14 @@
     ],
 
     "hyprland/window": {
-        "format": " 󰣇 {title}",
+        "format": "󰣇 {title}",
+        "max_lenght": 30,
         "separate-outputs": true
     },
 
     "clock": {
         "interval": 60,
-        "format": " 󰥔 {:%H:%M} ",
+        "format": "󰥔 {:%H:%M}",
         "max-length": 25,
         "tooltip-format": "<tt>{calendar}</tt>"
     },
@@ -53,7 +54,7 @@
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-bluetooth": " {volume}%",
+        "format-bluetooth": " 󰂯 {volume}%",
         "format-muted": "󰖁 Muted",
         "format-icons": {
             "default": [""," "]
@@ -66,14 +67,14 @@
 
     "cpu": {
         "interval": 10,
-        "format": "{usage}% ",
+        "format": " {usage}%",
         "max-length": 10,
         "tooltip": false
     },
 
     "memory": {
         "interval": 30,
-        "format": "{percentage}% ",
+        "format": " {percentage}%",
         "max-length": 10,
         "tooltip": true,
         "tooltip-format": " Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
@@ -81,7 +82,7 @@
 
     "disk": {
         "interval": 30,
-        "format": " {used}/{total}",
+        "format": "󰋊 {used}/{total}",
         "path": "/",
         "unit": "GB",
         "tooltip-format": " Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
@@ -89,8 +90,8 @@
 
     "network": {
         "format-wifi": "󰖩 {signalStrength}%",
-        "format-ethernet": "",
-        "format-disconnected": "󰈀",
+        "format-ethernet": "󰈀 Wired",
+        "format-disconnected": "󰈂 Disconnected",
         "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n {signalStrength}%",
         "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
         "tooltip-format-disconnected": "Disconnected",
@@ -115,7 +116,7 @@
     "temperature": {
         "interval": 10,
         "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
-        "format": "{temperatureC}°C ",
+        "format": " {temperatureC}°C ",
         "tooltip": true,
         "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
         "critical-threshold": 80
@@ -132,7 +133,7 @@
     },
 
     "custom/power": {
-        "format": "",
+        "format": "",
         "tooltip": true,
         "tooltip-format": "Power menu",
         "on-click": "~/.config/waybar/scripts/power-menu.sh"
