@@ -210,3 +210,5 @@ hl.bind(mainMod .. "+ SHIFT + M", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 
 -- Scrolling layout
 hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "scrolling" } })']]))
+
+

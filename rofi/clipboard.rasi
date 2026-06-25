@@ -1,0 +1,151 @@
+/* =====================================================
+   CLIPBOARD — Kitasan Glass
+   ===================================================== */
+
+configuration {
+    show-icons: false;
+}
+
+* {
+    font: "JetBrainsMono Nerd Font Propo 10";
+
+    bg-main:      #1e1e1ecc;
+    bg-glass:     #1a1a1a99;
+    bg-selected:  #b0bec526;
+    bg-hover:     #404040cc;
+
+    fg:           #e6e6e6;
+    fg-muted:     #909090;
+    fg-dim:       #6f6f6f;
+
+    border:       #b8c5cc66;
+    border-soft:  #6f6f6f55;
+    border-hover: #b8c5ccaa;
+
+    accent:       #f7f7f7;
+    accent-muted: #b8c5cc;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            560px;
+    border-radius:    20px;
+    border:           1px;
+    border-color:     @border;
+    background-color: @bg-main;
+    cursor:           "default";
+}
+
+mainbox {
+    spacing:          0px;
+    padding:          0px;
+    background-color: transparent;
+    children:         [ "inputbar", "listbox" ];
+}
+
+listbox {
+    spacing:          12px;
+    padding:          16px 20px 20px 20px;
+    background-color: transparent;
+    children:         [ "listview", "message" ];
+}
+
+inputbar {
+    spacing:          10px;
+    padding:          14px 20px;
+    background-color: #111111cc;
+    border:           0px 0px 1px 0px;
+    border-color:     @border-soft;
+    text-color:       @fg;
+    children:         [ "prompt", "entry" ];
+}
+
+prompt {
+    expand:           false;
+    str:              "󰅇";
+    padding:          8px 12px;
+    border-radius:    100%;
+    background-color: @bg-glass;
+    border:           1px;
+    border-color:     @border-soft;
+    text-color:       @accent-muted;
+    font:             "JetBrainsMono Nerd Font Propo Bold 12";
+}
+
+entry {
+    expand:           true;
+    padding:          8px 14px;
+    border-radius:    100%;
+    background-color: @bg-glass;
+    border:           1px;
+    border-color:     @border-soft;
+    text-color:       @fg;
+    cursor:           text;
+    placeholder:      "Buscar en historial...";
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    columns:      1;
+    lines:        12;
+    cycle:        true;
+    dynamic:      true;
+    scrollbar:    false;
+    layout:       vertical;
+    fixed-height: true;
+    spacing:      4px;
+    background-color: transparent;
+    text-color:   @fg;
+}
+
+element {
+    padding:          8px 12px;
+    spacing:          10px;
+    border-radius:    100%;
+    border:           1px;
+    border-color:     transparent;
+    background-color: transparent;
+    text-color:       @fg-muted;
+    cursor:           pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg-muted;
+    border-color:     transparent;
+}
+
+element selected.normal {
+    background-color: @bg-selected;
+    text-color:       @fg;
+    border-color:     @border-hover;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    cursor:           inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+}
+
+message {
+    background-color: transparent;
+}
+
+textbox {
+    padding:          10px 14px;
+    border-radius:    100%;
+    background-color: @bg-glass;
+    text-color:       @fg-muted;
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+    border:           1px;
+    border-color:     @border-soft;
+}

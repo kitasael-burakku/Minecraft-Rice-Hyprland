@@ -5,6 +5,27 @@
 function sysupdate
     clear
 
+    set_color red
+    echo "+-----------------------------------+"
+    echo "|    󰮯 Full Arch update routine     |"   
+    echo "+-----------------------------------+"
+    echo "| This will update all the packages |"
+    echo "|  Pacman and Yay on a script fish  |"
+    echo "+-----------------------------------+"
+    set_color normal
+
+    echo ""
+    read -P "Continue? [y/N] > " confirm
+
+    if test "$confirm" != "y" -a "$confirm" != "Y"
+        set_color red
+        echo "Cancelled."
+        set_color normal
+        return
+    end
+
+    echo ""
+
     if not command -q yay
         set_color red
         echo "yay not found."
@@ -25,7 +46,7 @@ function sysupdate
 
     sleep 0.2
 
-    sudo pacman -Syu
+    sudo pacman -Syu </dev/tty
     or begin
         set_color red
         echo "Pacman update failed. Aborting AUR update."
@@ -48,7 +69,7 @@ function sysupdate
 
     sleep 0.2
 
-    yay -Sua
+    yay -Sua </dev/tty
     or begin
         set_color red
         echo "AUR update failed."

@@ -27,8 +27,8 @@
 
     {
       "type": "command",
-      "key": "{#90}│ {#92} User       {#90}│",
-      "text": "test -n \"$USER_PRETTY\" && printf \"$USER_PRETTY\"",
+      "key": "{#90}│{#92} User        {#90}│",
+      "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{$1}{result}"
     },
 

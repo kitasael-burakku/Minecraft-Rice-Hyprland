@@ -8,4 +8,5 @@ command -v waybar >/dev/null 2>&1 || {
 }
 
 pkill -x waybar 2>/dev/null || true
+
 waybar &

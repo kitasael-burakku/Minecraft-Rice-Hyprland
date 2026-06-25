@@ -1,9 +1,3 @@
-# ── Kitasan Floating Stone Bubbles Starship ─────────────────────
-# Palette: Minecraft shaders wallpaper
-#   grass  #3d6b28   dirt   #5c3d1a
-#   water  #2a4d5c   stone  #4a4a4a
-#   snow   #c8d8e8   autumn #7a3a1a
-
 format = """$cmd_duration${custom.user_pretty}${custom.hostname_pretty}$directory$git_branch$git_status$python$nodejs$rust$golang$status$line_break      $character"""
 
 [username]
@@ -15,20 +9,20 @@ disabled = true
 [custom.user_pretty]
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#3d6b28 fg:#e8f5e0 bold" # Grass (Verde pasto)
-format = "[](fg:#3d6b28)[$output]($style)[](fg:#3d6b28) "
+style = "bg:#3a3a3a fg:#e2e2e2 bold"
+format = "[](fg:#3a3a3a)[$output]($style)[](fg:#3a3a3a) "
 
 [custom.hostname_pretty]
 command = "hostnamectl --pretty"
 when = "test -n \"$(hostnamectl --pretty)\""
-style = "bg:#3d6b28 fg:#e8f5e0 bold" # Grass (Verde pasto)
-format = "[](fg:#3d6b28)[$output]($style)[](fg:#3d6b28) "
+style = "bg:#3a3a3a fg:#e2e2e2 bold"
+format = "[](fg:#3a3a3a)[$output]($style)[](fg:#3a3a3a) "
 
 [directory]
-home_symbol = " ホーム"
-read_only = " 読取専用"
-style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
-format = "[](fg:#5c3d1a)[ 󰉋 → $path ]($style)[](fg:#5c3d1a) "
+home_symbol = " ホーム"
+read_only = " 読取専用"
+style = "bg:#2a3a44 fg:#c0c8cc bold"
+format = "[](fg:#2a3a44)[ 󰉋 → $path ]($style)[](fg:#2a3a44) "
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -46,13 +40,13 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = "~"
-style = "bg:#2a4d5c fg:#c8e8f0 bold" # Water (Azul agua)
+style = "bg:#484848 fg:#d0d0d0 bold"
 truncation_length = 18
 truncation_symbol = ""
-format = "[](fg:#2a4d5c)[ $symbol $branch ]($style)[](fg:#2a4d5c) "
+format = "[](fg:#484848)[ $symbol $branch ]($style)[](fg:#484848) "
 
 [git_status]
-style = "bg:#2a4d5c fg:#ff6b77 bold" # Water (Azul agua con texto de alerta)
+style = "bg:#484848 fg:#a85a48 bold"
 conflicted = "🏳"
 ahead = "⇡${count}"
 behind = "⇣${count}"
@@ -63,41 +57,41 @@ modified = "!${count}"
 staged = "+${count}"
 renamed = "»${count}"
 deleted = "✘${count}"
-format = "[](fg:#2a4d5c)[$all_status$ahead_behind]($style)[](fg:#2a4d5c) "
+format = "[](fg:#484848)[$all_status$ahead_behind]($style)[](fg:#484848) "
 
 [python]
 symbol = ""
-style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
-format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+style = "bg:#2a3a44 fg:#c0c8cc bold"
+format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
 
 [nodejs]
 symbol = ""
-style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
-format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+style = "bg:#2a3a44 fg:#c0c8cc bold"
+format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
 
 [rust]
 symbol = ""
-style = "bg:#7a3a1a fg:#f5c8a0 bold" # Autumn (Madera/Otoño)
-format = "[](fg:#7a3a1a)[ $symbol $version ]($style)[](fg:#7a3a1a) "
+style = "bg:#3a3028 fg:#c0a880 bold"
+format = "[](fg:#3a3028)[ $symbol $version ]($style)[](fg:#3a3028) "
 
 [golang]
 symbol = ""
-style = "bg:#5c3d1a fg:#f5deb3 bold" # Dirt (Marrón tierra)
-format = "[](fg:#5c3d1a)[ $symbol $version ]($style)[](fg:#5c3d1a) "
+style = "bg:#2a3a44 fg:#c0c8cc bold"
+format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
 
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "bg:#4a4a4a fg:#c8d8e8 italic" # Stone (Gris piedra) y Snow (Texto claro)
-format = "[](fg:#4a4a4a)[ 󰪢 $duration ]($style)[](fg:#4a4a4a) "
+style = "bg:#242424 fg:#b0b0b0 italic"
+format = "[](fg:#242424)[ 󰪢 $duration ]($style)[](fg:#242424) "
 
 [character]
-success_symbol = "[❯](fg:#5a8a3c)" # Verde pasto para aciertos
-error_symbol = "[❯](fg:#ff4f5e)" # Rojo redstone para errores
+success_symbol = "[ ](fg:#909090)"
+error_symbol = "[ ](fg:#a85a48)"
 
 [status]
 disabled = false
-format = "[](fg:#2a4d5c)[✘ エラー $status](bg:#2a4d5c fg:#ff6b77 bold)[](fg:#2a4d5c) "
+format = "[](fg:#484848)[✘ エラー $status](bg:#484848 fg:#a85a48 bold)[](fg:#484848) "
 
 [package]
 disabled = true

@@ -2,18 +2,20 @@ function cleantrash
     clear
 
     set_color red
-    echo "󰮯 System Cleanup"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "This will remove orphan packages, clean package caches,"
-    echo "remove pacman temporary downloads, clean yay cache,"
-    echo "and empty your user trash."
+    echo "+----------------------------------------------------------+"
+    echo "|                    󰮯 System Cleanup                      |"
+    echo "+----------------------------------------------------------+"
+    echo "|  This will remove orphan packages, clean package caches, |"
+    echo "|    remove pacman temporary downloads, clean yay cache,   |"
+    echo "|              and empty your user trash.                  |"
+    echo "+----------------------------------------------------------+"
     set_color normal
 
     echo ""
     read -P "Continue? [y/N] > " confirm
 
     if test "$confirm" != "y" -a "$confirm" != "Y"
-        set_color brblack
+        set_color red
         echo "Cancelled."
         set_color normal
         return

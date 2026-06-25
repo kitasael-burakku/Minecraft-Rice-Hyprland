@@ -14,4 +14,4 @@ fi
 
 pkill -f "terminal-bg --script cava"
 
-terminal-bg --script cava
+terminal-bg --script cava &

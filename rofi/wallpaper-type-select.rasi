@@ -1,0 +1,172 @@
+/* =====================================================
+   WALLPAPER TYPE SELECTOR — hereda style-4.rasi
+   ===================================================== */
+
+configuration {
+    show-icons: true;
+}
+
+/*****----- Palette: Kitasan-Ship Gray Glass -----*****/
+* {
+    font:                       "JetBrainsMono Nerd Font Propo 10";
+
+    bg-clear:                   transparent;
+    bg-main:                    #1e1e1ecc;
+    bg-glass:                   #1a1a1a99;
+    bg-soft:                    #141414cc;
+    bg-hover:                   #404040cc;
+    bg-selected:                #b0bec526;
+
+    fg:                         #e6e6e6;
+    fg-soft:                    #d8d8d8;
+    fg-muted:                   #909090;
+    fg-dim:                     #6f6f6f;
+
+    border-col:                 #b8c5cc66;
+    border-soft:                #6f6f6f55;
+    border-hover:               #b8c5ccaa;
+
+    accent:                     #f7f7f7;
+    accent-muted:               #b8c5cc;
+
+    background-color:           transparent;
+    text-color:                 @fg;
+}
+
+/*****----- Main Window -----*****/
+window {
+    transparency:               "real";
+    location:                   center;
+    anchor:                     center;
+    fullscreen:                 false;
+    width:                      440px;
+
+    border-radius:              20px;
+    border:                     1px;
+    border-color:               @border-col;
+    cursor:                     "default";
+    background-color:           @bg-main;
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                    true;
+    spacing:                    0px;
+    padding:                    0px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "inputbar", "listbox" ];
+}
+
+listbox {
+    spacing:                    16px;
+    padding:                    20px;
+    background-color:           transparent;
+    orientation:                vertical;
+    children:                   [ "listview" ];
+}
+
+/*****----- Inputbar (con sidebar igual que style-4) -----*****/
+inputbar {
+    enabled:                    true;
+    spacing:                    12px;
+    padding:                    80px 30px 24px 30px;
+    background-color:           transparent;
+    background-image:           url("~/.config/rofi/assets/sidebar.png", width);
+    text-color:                 @fg;
+    orientation:                horizontal;
+    children:                   [ "textbox-prompt-colon", "entry" ];
+}
+
+textbox-prompt-colon {
+    enabled:                    true;
+    expand:                     false;
+    str:                        "󰋫";
+    padding:                    12px 15px;
+    border-radius:              100%;
+    background-color:           @bg-glass;
+    border:                     1px;
+    border-color:               @border-soft;
+    text-color:                 @accent-muted;
+    font:                       "JetBrainsMono Nerd Font Propo Bold 12";
+}
+
+entry {
+    enabled:                    true;
+    expand:                     true;
+    padding:                    12px 18px;
+    border-radius:              100%;
+    background-color:           @bg-glass;
+    border:                     1px;
+    border-color:               @border-soft;
+    text-color:                 @fg;
+    cursor:                     text;
+    placeholder:                "Tipo de wallpaper...";
+    placeholder-color:          @fg-dim;
+}
+
+/*****----- Listview: 2 entradas en lista -----*****/
+listview {
+    enabled:                    true;
+    columns:                    1;
+    lines:                      2;
+    cycle:                      false;
+    dynamic:                    false;
+    scrollbar:                  false;
+    layout:                     vertical;
+    fixed-height:               true;
+    fixed-columns:              true;
+
+    spacing:                    6px;
+    background-color:           transparent;
+    text-color:                 @fg;
+    cursor:                     "default";
+}
+
+/*****----- Elements — pill igual que style-4 -----*****/
+element {
+    enabled:                    true;
+    spacing:                    12px;
+    padding:                    10px 14px;
+    border-radius:              100%;
+    border:                     1px;
+    border-color:               transparent;
+    background-color:           transparent;
+    text-color:                 @fg-muted;
+    cursor:                     pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color:           transparent;
+    text-color:                 @fg-muted;
+    border-color:               transparent;
+}
+
+element selected.normal {
+    background-color:           @bg-selected;
+    text-color:                 @fg;
+    border-color:               @border-hover;
+}
+
+element selected.urgent,
+element selected.active {
+    background-color:           @bg-hover;
+    text-color:                 @accent;
+    border-color:               @border-hover;
+}
+
+element-icon {
+    background-color:           transparent;
+    text-color:                 inherit;
+    size:                       28px;
+    cursor:                     inherit;
+}
+
+element-text {
+    background-color:           transparent;
+    text-color:                 inherit;
+    cursor:                     inherit;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}

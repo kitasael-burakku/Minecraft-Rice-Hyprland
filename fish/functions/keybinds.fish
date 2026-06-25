@@ -1,9 +1,6 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# KEYBINDS Viewer
-# Interactive Fish menu for KEYBINDS.txt
-# ─────────────────────────────────────────────────────────────────────────────
-
 function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
+    clear
+
     set -l doc $argv[1]
 
     if test -z "$doc"
@@ -24,6 +21,29 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         return 1
     end
 
+    # ── Color palette ──────────────────────────────────────────────────────
+    # True-color hex values. On terminals that report no 24-bit support we fall
+    # back to named colors (cyan / yellow / white / red …) so the viewer still
+    # looks right everywhere. Fish also approximates hex to the closest palette
+    # color on its own, but the explicit fallback keeps things predictable.
+    if test "$COLORTERM" = truecolor -o "$COLORTERM" = 24bit
+        set -g __kb_border  909090   # stone gray      (kitty color3)
+        set -g __kb_muted   7a7a76   # shadow stone    (fish comment)
+        set -g __kb_accent  4ec9c3   # diamond cyan    (kitty color26)
+        set -g __kb_section caa46a   # wheat amber     (kitty color16)
+        set -g __kb_key     e6e6e6   # snow white      (kitty foreground)
+        set -g __kb_desc    c7c7c7   # stone light     (kitty color11)
+        set -g __kb_error   d63a3a   # redstone red    (kitty color25)
+    else
+        set -g __kb_border  white
+        set -g __kb_muted   brblack
+        set -g __kb_accent  cyan
+        set -g __kb_section yellow
+        set -g __kb_key     white
+        set -g __kb_desc    brwhite
+        set -g __kb_error   red
+    end
+
     # ── Settings ─────────────────────────────────────────────────────────────
     set -l width 74
     set -l page 1
@@ -40,7 +60,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     set -l total (count $sections)
 
     if test $total -eq 0
-        set_color red
+        set_color $__kb_error
         echo "No sections found in: $doc"
         set_color normal
         return 1
@@ -59,7 +79,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     # ── Box helpers ──────────────────────────────────────────────────────────
 
     function __kb_line -a width
-        set_color brblack
+        set_color $__kb_border
         printf "  ┌"
         for i in (seq 1 (math "$width - 2"))
             printf "─"
@@ -69,7 +89,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     end
 
     function __kb_mid -a width
-        set_color brblack
+        set_color $__kb_border
         printf "  ├"
         for i in (seq 1 (math "$width - 2"))
             printf "─"
@@ -79,7 +99,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     end
 
     function __kb_bottom -a width
-        set_color brblack
+        set_color $__kb_border
         printf "  └"
         for i in (seq 1 (math "$width - 2"))
             printf "─"
@@ -94,7 +114,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         set -l len (string length --visible "$text")
         set -l pad (math "max(0, $inner - $len)")
 
-        set_color brblack
+        set_color $__kb_border
         printf "  │"
         printf "%s" "$text"
         printf "%*s" $pad ""
@@ -109,12 +129,12 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         set -l left (math "max(0, floor(($inner - $len) / 2))")
         set -l right (math "max(0, $inner - $len - $left)")
 
-        set_color brblack
+        set_color $__kb_border
         printf "  │"
         printf "%*s" $left ""
         set_color $color
         printf "%s" "$text"
-        set_color brblack
+        set_color $__kb_border
         printf "%*s" $right ""
         printf "│\n"
         set_color normal
@@ -128,15 +148,15 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         set key (string shorten --max $key_width --char "…" -- "$key")
         set desc (string shorten --max $desc_width --char "…" -- "$desc")
 
-        set_color brblack
+        set_color $__kb_border
         printf "  │  "
-        set_color white
+        set_color $__kb_key
         printf "%-25s" "$key"
-        set_color brblack
+        set_color $__kb_border
         printf "  →  "
-        set_color brwhite
+        set_color $__kb_desc
         printf "%-*s" $desc_width "$desc"
-        set_color brblack
+        set_color $__kb_border
         printf "│\n"
         set_color normal
     end
@@ -147,29 +167,30 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         set -l len (string length -- "$label")
         set -l pad (math "max(0, $inner - $len)")
 
-        set_color brblack
+        set_color $__kb_border
         printf "  │  "
 
-        set_color cyan
+        set_color $__kb_accent
         printf "h/k"
-        set_color brblack
+        set_color $__kb_muted
         printf " prev   "
 
-        set_color cyan
+        set_color $__kb_accent
         printf "j/l"
-        set_color brblack
+        set_color $__kb_muted
         printf " next   "
 
-        set_color cyan
+        set_color $__kb_accent
         printf ":<space>"
-        set_color brblack
+        set_color $__kb_muted
         printf " search   "
 
-        set_color cyan
+        set_color $__kb_accent
         printf "q"
-        set_color brblack
+        set_color $__kb_muted
         printf " quit"
 
+        set_color $__kb_border
         printf "%*s│\n" $pad ""
         set_color normal
     end
@@ -207,13 +228,13 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         echo ""
 
         __kb_line $width
-        __kb_text $width cyan "KEYBINDS"
-        __kb_text $width brblack "Hyprland Control Manual"
+        __kb_text $width $__kb_accent "KEYBINDS"
+        __kb_text $width $__kb_muted "Hyprland Control Manual"
         __kb_mid $width
         __kb_raw $width "  Page  : $page / $total"
         __kb_raw $width "  Mod   : SUPER"
         __kb_mid $width
-        __kb_text $width yellow "$section"
+        __kb_text $width $__kb_section "$section"
         __kb_mid $width
 
         set -l found 0
@@ -231,7 +252,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         end
 
         if test $found -eq 0
-            __kb_text $width brblack "No entries found"
+            __kb_text $width $__kb_muted "No entries found"
         end
 
         __kb_mid $width
@@ -250,14 +271,15 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         echo ""
 
         __kb_line $width
-        __kb_text $width cyan "KEYBINDS"
-        __kb_text $width brblack "Search Results"
+        __kb_text $width $__kb_accent "KEYBINDS"
+        __kb_text $width $__kb_muted "Search Results"
         __kb_mid $width
         __kb_raw $width "  Query : $query"
         __kb_mid $width
 
         set -l current_section ""
         set -l found 0
+        set -l count 0
 
         while read -l line
             if string match -qr '^[A-Z0-9 /]+[[:space:]]*$' -- "$line"
@@ -275,8 +297,9 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
 
             if string match -qi "*$query*" -- "$line"
                 set found 1
+                set count (math "$count + 1")
 
-                __kb_text $width yellow "$current_section"
+                __kb_text $width $__kb_section "$current_section"
 
                 if string match -qr '\s{2,}' -- "$line"
                     set -l key (string replace -r '\s{2,}.*$' '' -- "$line")
@@ -291,10 +314,12 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         end < "$doc"
 
         if test $found -eq 0
-            __kb_text $width red "No results found"
-            __kb_mid $width
+            __kb_text $width $__kb_error "No results found"
+        else
+            __kb_raw $width "  $count match(es)"
         end
 
+        __kb_mid $width
         __kb_raw $width "  Press h/j/k/l/q to return"
         __kb_bottom $width
 
@@ -354,7 +379,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         end
     end
 
-    # ── Main loop ────────────────────────────────────────────────────────────
+    # ── Main loop ──────────────────────────────────────────────────────────────
 
     while true
         __kb_draw "$doc" $width $page $total $sections
@@ -398,6 +423,10 @@ function __keybinds_prepare_window
     command -q hyprctl; or return 0
     command -q jq; or return 0
 
+    # Floating window size — keep in sync with the centring maths below.
+    set -l win_w 595
+    set -l win_h 820
+
     set -g __kb_window_addr (hyprctl activewindow -j | jq -r '.address')
     set -g __kb_was_floating (hyprctl activewindow -j | jq -r '.floating')
 
@@ -406,7 +435,7 @@ function __keybinds_prepare_window
     end
 
     hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'on', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
-    hyprctl eval "hl.dispatch(hl.dsp.window.resize({ x = 595, y = 820, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+    hyprctl eval "hl.dispatch(hl.dsp.window.resize({ x = $win_w, y = $win_h, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
 
     set -l mon (hyprctl monitors -j | jq -r '.[] | select(.focused == true) | "\(.x) \(.y) \(.width) \(.height)"' | head -n 1)
 
@@ -416,8 +445,8 @@ function __keybinds_prepare_window
         set -l mw (echo $mon | awk '{print $3}')
         set -l mh (echo $mon | awk '{print $4}')
 
-        set -l x (math "$mx + (($mw - 1000) / 2)")
-        set -l y (math "$my + (($mh - 620) / 2)")
+        set -l x (math "$mx + (($mw - $win_w) / 2)")
+        set -l y (math "$my + (($mh - $win_h) / 2)")
 
         hyprctl eval "hl.dispatch(hl.dsp.window.move({ x = $x, y = $y, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
     end
@@ -436,6 +465,17 @@ function __keybinds_restore_window
 end
 
 function keybinds --description "Open keybinds viewer in current terminal as floating window"
+    if test "$argv[1]" = -h -o "$argv[1]" = --help
+        echo "keybinds — interactive Hyprland keybinds viewer"
+        echo ""
+        echo "Usage: keybinds [/path/to/KEYBINDS.txt]"
+        echo "  Defaults to ~/Documents/KEYBINDS.txt, then ~/Projects/dotfiles/KEYBINDS.txt"
+        echo ""
+        echo "Controls:  h/k prev   j/l next   :<space> search   q quit"
+        return 0
+    end
+
+    clear
     __keybinds_prepare_window
     __keybinds_viewer $argv
     __keybinds_restore_window
