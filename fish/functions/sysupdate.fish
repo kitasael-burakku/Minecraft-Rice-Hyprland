@@ -69,7 +69,7 @@ function sysupdate
     __su_top $W
     __su_row $W ffffff "󰮯  Full Arch Update Routine"
     __su_mid $W
-    __su_row $W 686058 "Updates Pacman + AUR packages"
+    __su_row $W 686058 "Updates Pacman + AUR (yay / paru)"
     __su_bot $W
     echo ""
 
@@ -83,9 +83,15 @@ function sysupdate
         return
     end
 
-    if not command -q yay
+    # ── Detectar AUR helper ──────────────────────────────────────────────────
+    set -l aur_helper ""
+    if command -q yay
+        set aur_helper yay
+    else if command -q paru
+        set aur_helper paru
+    else
         set_color a85a48
-        echo "  yay not found."
+        echo "  No AUR helper found (yay or paru required)."
         set_color normal
         return 1
     end
@@ -102,10 +108,10 @@ function sysupdate
         return 1
     end
 
-    __su_section $W bd7fd4 " AUR — yay"
+    __su_section $W bd7fd4 " AUR — $aur_helper"
     echo ""
     sleep 0.1
-    yay -Sua
+    $aur_helper -Sua
     or begin
         set_color a85a48
         echo ""

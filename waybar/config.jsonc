@@ -23,9 +23,24 @@
     ],
 
     "hyprland/window": {
-        "format": "󰣇 {title}",
-        "max-length": 20,
-        "separate-outputs": true
+    "format": "󰣇 {title}",
+    "max-length": 30,
+    "separate-outputs": true,
+    "rewrite": {
+         "^.*Mozilla Firefox.*$": "  Firefox",
+         "^.*Zen Browser.*$":     "󰈹  Zen",
+         "^.*Spotify.*$":         "  Spotify",
+         "^.*fish.*$":            "  Terminal",
+         "^.*Thunar.*$":          "󰉋  Files",
+         "^.*Discord.*$":         "󰙯  Discord",
+         "^.*VSCodium.*$":        "󰨞  VSCodium",
+         "^.*Steam.*$":           "󰓓  Steam",
+         "^.*OBS.*$":             "󰐻  OBS Studio",
+         "^.*btop.*$":            "󰍛  Btop",
+         "^.*Goverlay.*$":        "󰊖  GOverlay",
+         "^.*keybinds.*$":        "󰌌  Keybinds",
+         "^.*sysupdate.*$":       "󰚰  Sysupdate"
+        }
     },
 
     "clock": {
