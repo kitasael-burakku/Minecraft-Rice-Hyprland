@@ -10,19 +10,19 @@ disabled = true
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
 style = "bg:#3a3a3a fg:#e2e2e2 bold"
-format = "[](fg:#3a3a3a)[$output]($style)[](fg:#3a3a3a) "
+format = "[](fg:#3a3a3a)[ $output]($style)[](fg:#3a3a3a) " # Añadido icono de usuario 
 
 [custom.hostname_pretty]
 command = "hostnamectl --pretty"
 when = "test -n \"$(hostnamectl --pretty)\""
 style = "bg:#3a3a3a fg:#e2e2e2 bold"
-format = "[](fg:#3a3a3a)[$output]($style)[](fg:#3a3a3a) "
+format = "[](fg:#3a3a3a)[󰍹 $output]($style)[](fg:#3a3a3a) " # Añadido icono de monitor/host 󰍹
 
 [directory]
-home_symbol = " ホーム"
-read_only = " 読取専用"
+home_symbol = "  ホーム" # Cambiado a icono de casa de Nerd Fonts 
+read_only = "  読取専用" # Añadido candado de lectura 
 style = "bg:#2a3a44 fg:#c0c8cc bold"
-format = "[](fg:#2a3a44)[ 󰉋 → $path ]($style)[](fg:#2a3a44) "
+format = "[](fg:#2a3a44)[ 󰉋 $path ]($style)[](fg:#2a3a44) " # Limpiado el texto dejando solo el icono de carpeta 󰉋
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -39,59 +39,59 @@ truncation_symbol = "…/"
 ".config" = " 設定"
 
 [git_branch]
-symbol = "~"
+symbol = " " # Cambiado la tilde ~ por el icono oficial de Git Branch 
 style = "bg:#484848 fg:#d0d0d0 bold"
 truncation_length = 18
 truncation_symbol = ""
-format = "[](fg:#484848)[ $symbol $branch ]($style)[](fg:#484848) "
+format = "[](fg:#484848)[ $symbol$branch ]($style)[](fg:#484848) "
 
 [git_status]
 style = "bg:#484848 fg:#a85a48 bold"
-conflicted = "🏳"
+conflicted = "󰞇 " # Icono de conflicto de Git más moderno 󰞇
 ahead = "⇡${count}"
 behind = "⇣${count}"
 diverged = "⇕"
-untracked = "?${count}"
-stashed = "󰆼"
-modified = "!${count}"
-staged = "+${count}"
-renamed = "»${count}"
-deleted = "✘${count}"
+untracked = "${count}" # Icono de interrogación estilizado 
+stashed = "󰆼 "
+modified = " ${count}" # Icono de modificado 
+staged = " ${count}" # Icono de staged/añadido 
+renamed = " ${count}" # Icono de renombrado 
+deleted = " ${count}" # Icono de eliminado de git 
 format = "[](fg:#484848)[$all_status$ahead_behind]($style)[](fg:#484848) "
 
 [python]
-symbol = ""
+symbol = " "
 style = "bg:#2a3a44 fg:#c0c8cc bold"
-format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
+format = "[](fg:#2a3a44)[ $symbol$version ]($style)[](fg:#2a3a44) "
 
 [nodejs]
-symbol = ""
+symbol = " "
 style = "bg:#2a3a44 fg:#c0c8cc bold"
-format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
+format = "[](fg:#2a3a44)[ $symbol$version ]($style)[](fg:#2a3a44) "
 
 [rust]
-symbol = ""
+symbol = " "
 style = "bg:#3a3028 fg:#c0a880 bold"
-format = "[](fg:#3a3028)[ $symbol $version ]($style)[](fg:#3a3028) "
+format = "[](fg:#3a3028)[ $symbol$version ]($style)[](fg:#3a3028) "
 
 [golang]
-symbol = ""
+symbol = " "
 style = "bg:#2a3a44 fg:#c0c8cc bold"
-format = "[](fg:#2a3a44)[ $symbol $version ]($style)[](fg:#2a3a44) "
+format = "[](fg:#2a3a44)[ $symbol$version ]($style)[](fg:#2a3a44) "
 
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
 style = "bg:#242424 fg:#b0b0b0 italic"
-format = "[](fg:#242424)[ 󰪢 $duration ]($style)[](fg:#242424) "
+format = "[](fg:#242424)[ 󰔚 $duration ]($style)[](fg:#242424) " # Cambiado a un icono de reloj de arena/cronómetro más sutil 󰔚
 
 [character]
-success_symbol = "[ ](fg:#909090)"
-error_symbol = "[ ](fg:#a85a48)"
+success_symbol = "[ ](fg:#909090)" # Cambiado por una flecha minimalista y limpia 
+error_symbol = "[ ](fg:#a85a48)"
 
 [status]
 disabled = false
-format = "[](fg:#484848)[✘ エラー $status](bg:#484848 fg:#a85a48 bold)[](fg:#484848) "
+format = "[](fg:#484848)[󰅚 エラー $status](bg:#484848 fg:#a85a48 bold)[](fg:#484848) " # Cambiado la "✘" por el icono Nerd Font de error de sistema 󰅚
 
 [package]
 disabled = true
