@@ -27,14 +27,13 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     # looks right everywhere. Fish also approximates hex to the closest palette
     # color on its own, but the explicit fallback keeps things predictable.
     if test "$COLORTERM" = truecolor -o "$COLORTERM" = 24bit
-        # Truecolor: Paleta Cyberpunk-Minimalista de alto contraste
-        set -g __kb_border  404040   # Gris oscuro sólido para delimitar la caja sin brillar de más
-        set -g __kb_muted   6f6f6f   # Texto secundario/líneas sutiles
-        set -g __kb_accent  00f5d4   # Neón Cyan Eléctrico (para prompts, contadores y estados)
-        set -g __kb_section ff007f   # Neón Magenta/Pink (para los títulos de secciones detectados por awk)
-        set -g __kb_key     ffffff   # Blanco puro brillante (para que las combinaciones de teclas salten a la vista)
-        set -g __kb_desc    e6e6e6   # Blanco suave/Plata (para la descripción de lo que hace la tecla)
-        set -g __kb_error   ff3333   # Rojo neón puro (para fallas o advertencias)
+        set -g __kb_border  ffffff   
+        set -g __kb_muted   b4b4b3 
+        set -g __kb_accent  ff4d4d  
+        set -g __kb_section ff8080   
+        set -g __kb_key     ffffff
+        set -g __kb_desc    e0e0e0
+        set -g __kb_error   ff0033
     else
         # Fallback estándar: Colores ANSI brillantes nativos
         set -g __kb_border  brblack
