@@ -1,20 +1,17 @@
 /* =====================================================
-   WALLPAPER PICKER — Kitasan Glass (Grid Edition v2)
+   WALLPAPER PICKER — Kitasan Glass (Grid Edition v3)
    ===================================================== */
 
 configuration {
     show-icons: true;
 }
 
-/*****----- Palette: heredada de Kitasan-Ship Gray Glass -----*****/
 * {
     font: "JetBrainsMono Nerd Font Propo 10";
-
     bg-main:     #1e1e1ecc;
     bg-glass:    #1a1a1a99;
-    bg-soft:     #141414cc;
     bg-hover:    #404040cc;
-    bg-selected: #b0bec526;
+    bg-selected: #b0bec533; 
 
     fg:          #e6e6e6;
     fg-soft:     #d8d8d8;
@@ -24,7 +21,6 @@ configuration {
     border:       #b8c5cc66;
     border-soft:  #6f6f6f55;
     border-hover: #b8c5ccaa;
-
     accent:       #f7f7f7;
     accent-muted: #b8c5cc;
 
@@ -32,106 +28,64 @@ configuration {
     text-color: @fg;
 }
 
-/*****----- Main Window -----*****/
 window {
     transparency: "real";
-
     location: center;
     anchor: center;
-    fullscreen: false;
-
-    /* Grid ancho: 4 columnas de tarjetas + paddings cómodos */
     width: 1180px;
-
-    border-radius: 24px;
-
+    border-radius: 20px;
     background-color: @bg-main;
-
     border: 1px;
     border-color: @border;
-
-    cursor: "default";
 }
 
-/*****----- Main Box -----*****/
 mainbox {
-    spacing: 18px;
+    spacing: 20px;
     padding: 30px;
-
-    background-color: transparent;
-
     children: [ "inputbar", "listview", "message" ];
 }
 
-/*****----- Inputbar -----*****/
 inputbar {
     spacing: 12px;
-    padding: 12px 18px;
-
-    border-radius: 16px;
-
+    padding: 14px 18px;
+    border-radius: 12px;
     background-color: @bg-glass;
-
     border: 1px;
     border-color: @border-soft;
-
-    text-color: @fg;
-
     children: [ "prompt", "entry" ];
 }
 
 prompt {
-    background-color: transparent;
     text-color: @accent-muted;
     font: "JetBrainsMono Nerd Font Propo Bold 12";
 }
 
 entry {
-    background-color: transparent;
     text-color: @fg;
-
-    cursor: text;
-
-    placeholder: "Buscar wallpaper...";
+    placeholder: "Buscar fondo de pantalla...";
     placeholder-color: @fg-dim;
 }
 
-/*****----- Listview (GRID) -----*****/
 listview {
     columns: 4;
     lines: 2;
-
     cycle: true;
     dynamic: true;
-
     scrollbar: false;
-
     layout: vertical;
-    fixed-height: false;
+    fixed-height: true; /* Previene deformación si un título es muy largo */
     fixed-columns: true;
-
-    spacing: 16px;
+    spacing: 18px;
     margin: 4px 0px;
-
-    background-color: transparent;
-    text-color: @fg;
 }
 
-/*****----- Elements (tarjetas del grid) -----*****/
 element {
     orientation: vertical;
-
-    padding: 10px;
-    spacing: 10px;
-
-    border-radius: 18px;
-
+    padding: 12px;
+    spacing: 8px;
+    border-radius: 14px; /* Ajuste armónico con la ventana externa */
     background-color: @bg-glass;
-
     text-color: @fg-muted;
-
-    cursor: pointer;
-
     border: 1px;
     border-color: @border-soft;
 }
@@ -146,8 +100,7 @@ element alternate.normal {
 element selected.normal {
     background-color: @bg-selected;
     text-color: @fg;
-
-    border: 2px;
+    border: 1px; /* 1px constante para eliminar el molesto "parpadeo/salto" físico */
     border-color: @border-hover;
 }
 
@@ -155,51 +108,34 @@ element selected.active,
 element selected.urgent {
     background-color: @bg-hover;
     text-color: @accent;
-    border: 2px;
+    border: 1px;
     border-color: @border-hover;
 }
 
-/* Thumbnail grande, ocupa casi todo el ancho de la tarjeta */
 element-icon {
-    size: 220px;
-
-    border-radius: 12px;
-
+    size: 230px; /* Máximo aprovechamiento horizontal de tus thumbnails */
+    border-radius: 10px; /* Principio de radio anidado perfecto (Padre 14px - Hijo 10px) */
     background-color: transparent;
-
-    cursor: inherit;
 }
 
-/* Nombre del wallpaper debajo del thumbnail, centrado */
 element-text {
     horizontal-align: 0.5;
     vertical-align: 0.5;
-
-    background-color: transparent;
     text-color: inherit;
-
-    cursor: inherit;
-
-    font: "JetBrainsMono Nerd Font Propo 9";
+    font: "JetBrainsMono Nerd Font Propo 10"; /* Fuente unificada */
 }
 
-/*****----- Message (fallback / hints) -----*****/
 message {
     background-color: transparent;
-    border: 0px;
 }
 
 textbox {
     padding: 12px 16px;
-
-    border-radius: 14px;
-
+    border-radius: 12px;
     background-color: @bg-glass;
     text-color: @fg-soft;
-
     vertical-align: 0.5;
     horizontal-align: 0.5;
-
     border: 1px;
     border-color: @border-soft;
 }

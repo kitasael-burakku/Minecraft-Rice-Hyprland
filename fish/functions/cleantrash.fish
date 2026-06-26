@@ -1,126 +1,142 @@
 function cleantrash
     clear
 
-    set_color red
-    echo "+----------------------------------------------------------+"
-    echo "|                    󰮯 System Cleanup                      |"
-    echo "+----------------------------------------------------------+"
-    echo "|  This will remove orphan packages, clean package caches, |"
-    echo "|    remove pacman temporary downloads, clean yay cache,   |"
-    echo "|              and empty your user trash.                  |"
-    echo "+----------------------------------------------------------+"
-    set_color normal
+    # ── Palette ───────────────────────────────────────────────────────────────
+    set -l C_RESET  (set_color normal)
+    set -l C_BOLD   (set_color --bold ffffff)
+    set -l C_DIM    (set_color 686058)
+    set -l C_GREEN  (set_color 6aab7a)
+    set -l C_RED    (set_color a85a48)
+    set -l C_YELLOW (set_color b89458)
+    set -l C_CYAN   (set_color 6a96b0)
+    set -l C_BORDER (set_color 909090)
 
+    set -l W 52
+
+    # ── Box helpers ───────────────────────────────────────────────────────────
+    function __ct_top -a w
+        set_color 909090
+        printf "  ┌"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┐\n"
+        set_color normal
+    end
+    function __ct_mid -a w
+        set_color 909090
+        printf "  ├"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┤\n"
+        set_color normal
+    end
+    function __ct_bot -a w
+        set_color 909090
+        printf "  └"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┘\n"
+        set_color normal
+    end
+    function __ct_row -a w color text
+        set -l inner (math "$w - 2")
+        set -l len (string length --visible "$text")
+        set -l left (math "max(0, floor(($inner - $len) / 2))")
+        set -l right (math "max(0, $inner - $len - $left)")
+        set_color 909090; printf "  │"; printf "%*s" $left ""
+        set_color $color; printf "%s" "$text"
+        set_color 909090; printf "%*s│\n" $right ""
+        set_color normal
+    end
+    function __ct_section -a color icon text
+        echo ""
+        set_color $color
+        printf "  ── %s %s\n" "$icon" "$text"
+        set_color normal
+    end
+    function __ct_ok -a text
+        set_color 6aab7a; echo "  ✓ $text"; set_color normal
+    end
+    function __ct_skip -a text
+        set_color 686058; echo "  · $text"; set_color normal
+    end
+
+    # ── Banner ────────────────────────────────────────────────────────────────
     echo ""
-    read -P "Continue? [y/N] > " confirm
+    __ct_top $W
+    __ct_row $W ffffff "󰮯  System Cleanup"
+    __ct_mid $W
+    __ct_row $W 686058 "Orphans · Package cache · Yay cache · Trash"
+    __ct_bot $W
+    echo ""
+
+    read -p 'set_color b89458; echo -n "  Continue? [y/N] > "; set_color normal' confirm
 
     if test "$confirm" != "y" -a "$confirm" != "Y"
-        set_color red
-        echo "Cancelled."
-        set_color normal
+        echo ""
+        set_color a85a48; echo "  Cancelled."; set_color normal
         return
     end
 
-    echo ""
-
-    set_color yellow
-    echo "󰮯 Removing orphan packages:"
-    set_color normal
+    # ── Orphan packages ───────────────────────────────────────────────────────
+    __ct_section b89458 "󰮯" "Orphan packages"
 
     set orphans (pacman -Qtdq 2>/dev/null)
-
     if test (count $orphans) -gt 0
-        printf "%s\n" $orphans
-        sudo pacman -Rns $orphans
+        printf "  %s\n" $orphans
+        echo ""
+        sudo pacman -Rns -- $orphans
     else
-        echo "No orphan packages."
+        __ct_skip "No orphan packages."
     end
 
-    echo ""
-
-    set_color yellow
-    echo "󰪺 Removing pacman temporary downloads:"
-    set_color normal
+    # ── Pacman temp downloads ─────────────────────────────────────────────────
+    __ct_section 6a96b0 "󰪺" "Pacman temporary downloads"
 
     set downloads (find /var/cache/pacman/pkg -maxdepth 1 -name 'download-*' 2>/dev/null)
-
     if test (count $downloads) -gt 0
-        printf "%s\n" $downloads
+        printf "  %s\n" $downloads
         sudo rm -rf -- $downloads
-        set_color green
-        echo "Temporary pacman downloads removed."
-        set_color normal
+        __ct_ok "Temporary downloads removed."
     else
-        echo "No temporary pacman downloads found."
+        __ct_skip "No temporary downloads found."
     end
 
-    echo ""
-
-    set_color cyan
-    echo "󰪺 Cleaning pacman cache:"
-    set_color normal
+    # ── Pacman cache ──────────────────────────────────────────────────────────
+    __ct_section 6a96b0 "󰪺" "Pacman cache"
 
     if command -q paccache
         sudo paccache -r
     else
-        echo "paccache not found."
+        __ct_skip "paccache not found."
     end
 
-    echo ""
-
-    set_color magenta
-    echo "󰏗 Cleaning yay cache:"
-    set_color normal
+    # ── Yay cache ─────────────────────────────────────────────────────────────
+    __ct_section bd7fd4 "󰏗" "Yay cache"
 
     if command -q yay
         yay -Sc
     else
-        echo "yay not found."
+        __ct_skip "yay not found."
     end
 
-    echo ""
-
-    set_color yellow
-    echo "󰩺 Emptying user trash:"
-    set_color normal
+    # ── Trash ─────────────────────────────────────────────────────────────────
+    __ct_section b89458 "󰩺" "User trash"
 
     set trash_files "$HOME/.local/share/Trash/files"
-    set trash_info "$HOME/.local/share/Trash/info"
+    set trash_info  "$HOME/.local/share/Trash/info"
 
     if command -q gio
         if gio trash --empty 2>/dev/null
-            echo "Trash emptied."
+            __ct_ok "Trash emptied."
         else
-            if test -d "$trash_files"
-                find "$trash_files" -mindepth 1 -exec rm -rf {} +
-            end
-
-            if test -d "$trash_info"
-                find "$trash_info" -mindepth 1 -exec rm -rf {} +
-            end
-
-            echo "Trash emptied using fallback method."
+            test -d "$trash_files" && find "$trash_files" -mindepth 1 -exec rm -rf {} +
+            test -d "$trash_info"  && find "$trash_info"  -mindepth 1 -exec rm -rf {} +
+            __ct_ok "Trash emptied (fallback)."
         end
     else
-        if test -d "$trash_files"
-            find "$trash_files" -mindepth 1 -exec rm -rf {} +
-        end
-
-        if test -d "$trash_info"
-            find "$trash_info" -mindepth 1 -exec rm -rf {} +
-        end
-
-        echo "Trash emptied using fallback method."
+        test -d "$trash_files" && find "$trash_files" -mindepth 1 -exec rm -rf {} +
+        test -d "$trash_info"  && find "$trash_info"  -mindepth 1 -exec rm -rf {} +
+        __ct_ok "Trash emptied (fallback)."
     end
 
+    # ── Done ──────────────────────────────────────────────────────────────────
     echo ""
-
-    set_color green
-    echo "✅ System cleanup complete."
+    set_color 909090
+    printf "  ────────────────────────────────────────────────────\n"
     set_color normal
-
+    set_color 6aab7a; echo "  ✓ System cleanup complete."; set_color normal
     echo ""
-    set_color brblack
-    read -P "Press Enter to exit..."
-    set_color normal
+    read -p 'set_color 686058; echo -n "  Press Enter to exit..."; set_color normal' __discard
 end

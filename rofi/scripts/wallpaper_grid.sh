@@ -5,7 +5,6 @@
 
 set -u
 
-# Recibe el directorio y prompt via variables de entorno (seteadas por el launcher)
 SRC_DIR="${WALLPAPER_SRC_DIR:-$HOME/Videos/wallpapersvideo}"
 PROMPT_LABEL="${WALLPAPER_PROMPT:-󰎁  Video}"
 
@@ -30,7 +29,7 @@ apply_wallpaper() {
     case "$ext_lc" in
         mp4|mkv|mov|webm)
             pkill -x mpvpaper 2>/dev/null
-            sleep 0.2
+            sleep 0.1
             if [ -n "$MONITOR" ]; then
                 nohup mpvpaper -o "no-audio --loop-file --hwdec=auto" "$MONITOR" "$target" \
                     >/tmp/mpvpaper.log 2>&1 &
@@ -42,12 +41,8 @@ apply_wallpaper() {
             ;;
         jpg|jpeg|png|webp|gif)
             pkill -x mpvpaper 2>/dev/null
-            # Asegurar que awww-daemon esté corriendo
-            if ! pgrep -x awww-daemon >/dev/null 2>&1; then
-                awww-daemon &
-                sleep 0.5
-            fi
-            awww img "$target" --transition-type any >/dev/null 2>&1
+            # Backend nativo awww restaurado y optimizado sin sleeps
+            awww img "$target" --transition-type any --transition-fps 60 >/dev/null 2>&1
             ;;
         *)
             echo "$(date) ERROR: extensión no soportada: $target" >> "$LOG"
@@ -56,7 +51,6 @@ apply_wallpaper() {
     esac
 }
 
-# ── ROFI_RETV=1: aplicar wallpaper elegido ───────────────────────────────────
 if [ "${ROFI_RETV:-0}" = "1" ]; then
     chosen_display="${1:-}"
     echo "$(date) GRID SELECTED: $chosen_display (dir: $SRC_DIR)" >> "$LOG"
@@ -88,7 +82,6 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
     exit 0
 fi
 
-# ── ROFI_RETV=0: listar thumbs ───────────────────────────────────────────────
 echo -en "\0prompt\x1f${PROMPT_LABEL}\n"
 echo -en "\0no-custom\x1ftrue\n"
 

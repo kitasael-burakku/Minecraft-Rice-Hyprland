@@ -24,7 +24,7 @@
 
     "hyprland/window": {
         "format": "󰣇 {title}",
-        "max_lenght": 30,
+        "max-length": 20,
         "separate-outputs": true
     },
 
@@ -44,8 +44,9 @@
             "3": "3",
             "4": "4",
             "5": "5",
-            "active": " 󰊠 ",
-            "default": ""
+            "active": "󰊠",
+            "urgent": "",
+            "default": ""
         },
         "persistent-workspaces": {
             "*": 5
@@ -54,10 +55,10 @@
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-bluetooth": " 󰂯 {volume}%",
+        "format-bluetooth": "󰂯 {volume}%",
         "format-muted": "󰖁 Muted",
         "format-icons": {
-            "default": [""," "]
+            "default": ["", " "]
         },
         "scroll-step": 1,
         "on-click": "pavucontrol",
@@ -92,7 +93,7 @@
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀 Wired",
         "format-disconnected": "󰈂 Disconnected",
-        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n {signalStrength}%",
+        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%", // Corregido formato visual
         "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
         "tooltip-format-disconnected": "Disconnected",
         "on-click": "nm-connection-editor"
@@ -116,7 +117,8 @@
     "temperature": {
         "interval": 10,
         "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
-        "format": " {temperatureC}°C ",
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["", "", ""], // Iconos dinámicos según el calor
         "tooltip": true,
         "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
         "critical-threshold": 80

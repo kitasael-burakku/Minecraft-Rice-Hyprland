@@ -19,17 +19,6 @@ WAYBAR_LAUNCH_PATH="${WAYBAR_LAUNCH_PATH:-$HOME/.config/waybar/scripts/launch.sh
 KITTY_SIGNAL_PROCESS="${KITTY_SIGNAL_PROCESS:-.kitty-wrapped}"
 EXTRA_RELOAD_COMMAND="${EXTRA_RELOAD_COMMAND:-}"
 
-echo "===== $(date) RUN scripts/matugen_reload.sh =====" >> "$LOG"
-echo "WALL=$WALL" >> "$LOG"
-echo "FLAGS: dynamic=$ENABLE_DYNAMIC_COLORS matugen=$ENABLE_MATUGEN hypr=$ENABLE_HYPR_RELOAD waybar=$ENABLE_WAYBAR_RELOAD kitty=$ENABLE_KITTY_RELOAD cava=$ENABLE_CAVA_RELOAD swaync=$ENABLE_SWAYNC_RELOAD swayosd=$ENABLE_SWAYOSD_RELOAD" >> "$LOG"
-echo "PATHS: hypr=$HYPR_COLORS_PATH waybar=$WAYBAR_COLORS_PATH launch=$WAYBAR_LAUNCH_PATH" >> "$LOG"
-
-before_hypr="$(grep -m1 '^\$source_color' "$HYPR_COLORS_PATH" 2>/dev/null || echo 'hypr:missing')"
-before_waybar="$(grep -m1 '@define-color source_color' "$WAYBAR_COLORS_PATH" 2>/dev/null || echo 'waybar:missing')"
-
-echo "BEFORE HYPR:   $before_hypr" >> "$LOG"
-echo "BEFORE WAYBAR: $before_waybar" >> "$LOG"
-
 if [ "$ENABLE_DYNAMIC_COLORS" = "1" ] && [ "$ENABLE_MATUGEN" = "1" ] && command -v matugen >/dev/null 2>&1 && [ -n "$WALL" ] && [ -f "$WALL" ]; then
     matugen image "$WALL" >/tmp/matugen-run.log 2>&1 || true
 fi
@@ -52,8 +41,7 @@ if [ "$ENABLE_SWAYOSD_RELOAD" = "1" ] && systemctl --user is-active --quiet sway
 fi
 
 if [ "$ENABLE_HYPR_RELOAD" = "1" ] && command -v hyprctl >/dev/null 2>&1; then
-    hyprctl reload >/dev/null 2>&1 || true
-    sleep 0.2
+    # Una única recarga limpia y directa para evitar micro-tirones (stuttering)
     hyprctl reload >/dev/null 2>&1 || true
 fi
 
@@ -62,17 +50,10 @@ if [ "$ENABLE_WAYBAR_RELOAD" = "1" ] && [ -x "$WAYBAR_LAUNCH_PATH" ]; then
     pkill -9 cava 2>/dev/null || true
     pkill -9 -f 'cava_waybar.sh' 2>/dev/null || true
     rm -f /tmp/waybar-launch.lock
-    sleep 0.5
+    sleep 0.1 # Reducido el tiempo de espera para un despliegue inmediato de la barra
     nohup bash "$WAYBAR_LAUNCH_PATH" >/tmp/waybar-launch.log 2>&1 &
 fi
 
 if [ -n "$EXTRA_RELOAD_COMMAND" ]; then
     bash -lc "$EXTRA_RELOAD_COMMAND" >/tmp/wallpaper-picker-extra-reload.log 2>&1 || true
 fi
-
-after_hypr="$(grep -m1 '^\$source_color' "$HYPR_COLORS_PATH" 2>/dev/null || echo 'hypr:missing')"
-after_waybar="$(grep -m1 '@define-color source_color' "$WAYBAR_COLORS_PATH" 2>/dev/null || echo 'waybar:missing')"
-
-echo "AFTER HYPR:    $after_hypr" >> "$LOG"
-echo "AFTER WAYBAR:  $after_waybar" >> "$LOG"
-echo >> "$LOG"

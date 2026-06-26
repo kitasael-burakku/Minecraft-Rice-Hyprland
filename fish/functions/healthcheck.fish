@@ -1,172 +1,199 @@
 function healthcheck
     clear
 
-    function __hc_section
+    set -l W 52
+
+    # ── Box helpers ───────────────────────────────────────────────────────────
+    function __hc_top -a w
+        set_color 909090
+        printf "  ┌"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┐\n"
+        set_color normal
+    end
+    function __hc_mid -a w
+        set_color 909090
+        printf "  ├"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┤\n"
+        set_color normal
+    end
+    function __hc_bot -a w
+        set_color 909090
+        printf "  └"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┘\n"
+        set_color normal
+    end
+    function __hc_row -a w color text
+        set -l inner (math "$w - 2")
+        set -l len (string length --visible "$text")
+        set -l left (math "max(0, floor(($inner - $len) / 2))")
+        set -l right (math "max(0, $inner - $len - $left)")
+        set_color 909090; printf "  │"; printf "%*s" $left ""
+        set_color $color; printf "%s" "$text"
+        set_color 909090; printf "%*s│\n" $right ""
+        set_color normal
+    end
+    function __hc_section -a color icon text
         echo ""
-        set_color yellow
-        echo "$argv[1]"
+        set_color $color
+        printf "  ── %s %s\n" "$icon" "$text"
+        set_color 686058
+        printf "  ──────────────────────────────────────────────────\n"
         set_color normal
     end
-
-    function __hc_ok
-        set_color green
-        echo "✅ $argv"
+    function __hc_val -a label value
+        set_color 686058; printf "  %-16s" "$label"
+        set_color ffffff; echo "$value"
         set_color normal
     end
-
-    function __hc_warn
-        set_color yellow
-        echo "⚠️  $argv"
-        set_color normal
+    function __hc_ok -a text
+        set_color 6aab7a; echo "  ✓ $text"; set_color normal
+    end
+    function __hc_warn -a text
+        set_color b89458; echo "  ⚠ $text"; set_color normal
+    end
+    function __hc_bad -a text
+        set_color a85a48; echo "  ✘ $text"; set_color normal
+    end
+    function __hc_none -a text
+        set_color 686058; echo "  · $text"; set_color normal
     end
 
-    function __hc_bad
-        set_color red
-        echo "❌ $argv"
-        set_color normal
-    end
+    # ── Banner ────────────────────────────────────────────────────────────────
+    echo ""
+    __hc_top $W
+    __hc_row $W ffffff "󰒋  System Health Check"
+    __hc_mid $W
+    __hc_row $W 686058 "System · Memory · Disk · Network · Temps"
+    __hc_bot $W
+    echo ""
 
-    set_color cyan
-    echo "󰒋 System Health Check"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    set_color normal
+    # ── System ────────────────────────────────────────────────────────────────
+    __hc_section 6a96b0 "󰌢" "System"
+    __hc_val "Host:"   (uname -n)
+    __hc_val "Kernel:" (uname -r)
+    __hc_val "Uptime:" (uptime -p)
+    __hc_val "Shell:"  (basename $SHELL)
 
-    __hc_section "󰌢 System:"
-    echo "Host:   "(uname -n)
-    echo "Kernel: "(uname -r)
-    echo "Uptime: "(uptime -p)
-    echo "Shell:  $SHELL"
-
-    __hc_section "󰍛 Memory:"
-    free -h | awk '/Mem:/ {print "RAM:    used "$3" / "$2} /Swap:/ {print "Swap:   used "$3" / "$2}'
-
-    if swapon --show=NAME,SIZE,USED,TYPE | rg -q "zram"
-        swapon --show=NAME,SIZE,USED,TYPE | rg "zram"
+    # ── Memory ────────────────────────────────────────────────────────────────
+    __hc_section 6a96b0 "󰍛" "Memory"
+    free -h | awk '/Mem:/  { printf "  %-16s%s / %s\n", "RAM:", $3, $2 }
+                  /Swap:/ { printf "  %-16s%s / %s\n", "Swap:", $3, $2 }'
+    if swapon --show=NAME,SIZE,USED,TYPE 2>/dev/null | rg -q "zram"
+        swapon --show=NAME,SIZE,USED,TYPE | rg "zram" | awk '{printf "  %-16s%s  used %s\n", "zram:", $2, $3}'
     else
-        echo "zram:   not detected"
+        __hc_none "zram not detected."
     end
 
-    __hc_section "󰚰 Updates:"
+    # ── Updates ───────────────────────────────────────────────────────────────
+    __hc_section b89458 "󰚰" "Updates"
     if command -q checkupdates
         set pacman_updates (checkupdates 2>/dev/null | wc -l | string trim)
     else
         set pacman_updates "?"
     end
-
     if command -q yay
         set aur_updates (yay -Qua 2>/dev/null | wc -l | string trim)
     else
         set aur_updates "?"
     end
 
-    echo "Pacman: $pacman_updates"
-    echo "AUR:    $aur_updates"
+    __hc_val "Pacman:" "$pacman_updates pending"
+    __hc_val "AUR:"    "$aur_updates pending"
 
     if test "$pacman_updates" = "0" -a "$aur_updates" = "0"
-        __hc_ok "System packages are up to date."
+        __hc_ok "System is up to date."
     else
         __hc_warn "Updates available."
     end
 
-    __hc_section "󰮯 Orphan packages:"
+    # ── Orphans ───────────────────────────────────────────────────────────────
+    __hc_section b89458 "󰮯" "Orphan packages"
     set orphans (pacman -Qtdq 2>/dev/null)
-
     if test (count $orphans) -gt 0
-        printf "%s\n" $orphans
+        printf "  %s\n" $orphans
     else
         __hc_ok "No orphan packages."
     end
 
-    __hc_section "󰘓 Pacnew / Pacsave:"
+    # ── Pacnew / Pacsave ──────────────────────────────────────────────────────
+    __hc_section b89458 "󰘓" "Pacnew / Pacsave"
     set pacfiles (find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)
-
     if test (count $pacfiles) -gt 0
-        printf "%s\n" $pacfiles
+        printf "  %s\n" $pacfiles
     else
-        __hc_ok "No pacnew/pacsave files found."
+        __hc_ok "No pacnew/pacsave files."
     end
 
-    __hc_section "󰋊 Failed systemd services:"
+    # ── Failed services ───────────────────────────────────────────────────────
+    __hc_section a85a48 "󰋊" "Failed services"
     set failed_system (systemctl --failed --no-legend 2>/dev/null)
-
     if test (count $failed_system) -gt 0
-        printf "%s\n" $failed_system
-
+        printf "  %s\n" $failed_system
         if printf "%s\n" $failed_system | rg -q "tpm2|pcrproduct"
-            __hc_warn "TPM failures detected. Known issue in your setup."
+            __hc_warn "TPM failures detected — known issue."
         end
     else
         __hc_ok "No failed system services."
     end
 
-    __hc_section "󰋊 Failed user services:"
     set failed_user (systemctl --user --failed --no-legend 2>/dev/null)
-
     if test (count $failed_user) -gt 0
-        printf "%s\n" $failed_user
+        printf "  %s\n" $failed_user
     else
         __hc_ok "No failed user services."
     end
 
-    __hc_section "󰍛 Boot errors summary:"
+    # ── Boot errors ───────────────────────────────────────────────────────────
+    __hc_section a85a48 "󰍛" "Boot errors"
     set boot_errors (journalctl -b -p 3 --no-pager 2>/dev/null)
     set error_count (printf "%s\n" $boot_errors | wc -l | string trim)
 
-    echo "Errors this boot: $error_count"
+    __hc_val "Errors:" "$error_count this boot"
 
     if test "$error_count" = "0"
         __hc_ok "No critical boot errors."
     else if printf "%s\n" $boot_errors | rg -q "tpm2|pcrproduct|TPM key integrity"
-        __hc_warn "Critical errors are mostly TPM known issue."
-
-        set non_tpm_errors (printf "%s\n" $boot_errors | rg -i "random-seed|bluetooth|filesystem|nvme|amdgpu|i/o error|failed to mount|corrupt" | head -12)
-
-        if test (count $non_tpm_errors) -gt 0
-            printf "%s\n" $non_tpm_errors
+        __hc_warn "Critical errors are mostly TPM — known issue."
+        set non_tpm (printf "%s\n" $boot_errors | rg -i "random-seed|bluetooth|filesystem|nvme|amdgpu|i/o error|failed to mount|corrupt" | head -12)
+        if test (count $non_tpm) -gt 0
+            printf "  %s\n" $non_tpm
         else
-            echo "No extra non-TPM critical errors matched."
+            __hc_none "No extra non-TPM errors."
         end
     else
         printf "%s\n" $boot_errors | rg -i "fail|error|random-seed|bluetooth|filesystem|nvme|amdgpu" | head -12
     end
 
-    __hc_section "󰪺 Disk usage:"
-    df -h / /boot 2>/dev/null
+    # ── Disk ──────────────────────────────────────────────────────────────────
+    __hc_section 6a96b0 "󰪺" "Disk"
+    df -h / /boot 2>/dev/null | awk 'NR>1 {printf "  %-16s%s used of %s\n", $6":", $3, $2}'
 
-    __hc_section "󰪺 Cache overview:"
-    if test -d ~/.cache
-        du -sh ~/.cache 2>/dev/null
+    # ── Cache overview ────────────────────────────────────────────────────────
+    __hc_section 686058 "󰪺" "Cache overview"
+    for d in ~/.cache ~/.config ~/.local/share/Trash
+        if test -d $d
+            __hc_val (string replace $HOME "~" $d)":" (du -sh $d 2>/dev/null | cut -f1)
+        end
     end
 
-    if test -d ~/.config
-        du -sh ~/.config 2>/dev/null
-    end
-
-    if test -d ~/.local/share/Trash
-        du -sh ~/.local/share/Trash 2>/dev/null
-    end
-
-    __hc_section "󰛟 Network:"
+    # ── Network ───────────────────────────────────────────────────────────────
+    __hc_section 6a96b0 "󰛟" "Network"
     if command -q nmcli
-        nmcli -t -f DEVICE,TYPE,STATE connection show --active 2>/dev/null | string replace -a ":" "  "
+        nmcli -t -f DEVICE,TYPE,STATE connection show --active 2>/dev/null \
+            | awk -F: '{printf "  %-16s%-12s%s\n", $1, $2, $3}'
     else
-        ip -brief addr
+        ip -brief addr | awk '{printf "  %-16s%s\n", $1, $3}'
     end
 
-    __hc_section "󰔏 Temperatures:"
+    # ── Temperatures ──────────────────────────────────────────────────────────
+    __hc_section 6a96b0 "󰔏" "Temperatures"
     if command -q sensors
         sensors | rg -i "tctl|edge|composite|junction|temp" || sensors
     else
-        echo "sensors not installed."
+        __hc_none "sensors not installed."
     end
 
+    # ── Done ──────────────────────────────────────────────────────────────────
     echo ""
-    set_color green
-    echo "✅ Health check complete."
-    set_color normal
-
+    set_color 909090; printf "  ────────────────────────────────────────────────────\n"; set_color normal
+    set_color 6aab7a; echo "  ✓ Health check complete."; set_color normal
     echo ""
-    set_color brblack
-    read -P "Press Enter to exit..."
-    set_color normal
+    read -p 'set_color 686058; echo -n "  Press Enter to exit..."; set_color normal' __discard
 end
