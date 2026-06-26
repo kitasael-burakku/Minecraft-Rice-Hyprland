@@ -1,168 +1,100 @@
-// CachyOS · Kitasan / Goldship Fastfetch
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-
-  "logo": {
-    "source": "cachyos",
-    "type": "builtin",
-    "padding": {
-      "top": 3,
-      "left": 1
-    }
-  },
-
-  "display": {
-    "separator": " → ",
-    "constants": [
-      "────────────────────────────────────────"
-    ]
-  },
+  "logo": { "source": "cachyos", "type": "builtin", "padding": { "top": 3, "left": 1 } },
+  "display": { "separator": " → " },
 
   "modules": [
     {
-      "type": "custom",
-      "format": "{#90}╭─ System ─────────────────────────────╮"
-    },
-
-    {
       "type": "command",
-      "key": "{#91} User",
+      "key":  "{#73} User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
     {
       "type": "command",
-      "key": "{#91}󰌢 Host",
-      "text": "test -n \"$(hostnamectl --pretty)\" && hostnamectl --pretty || hostname",
+      "key":  "{#73}󰌢 Host",
+      "text": "hostnamectl --pretty 2>/dev/null || hostname",
       "format": "{result}"
     },
-    {
-      "type": "datetime",
-      "key": "{#91}󰃭 Date",
-      "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}  [{weekday}] [UTC{offset-from-utc}]"
-    },
-
-    {
-      "type": "custom",
-      "format": "{#90}├─ OS ─────────────────────────────────╯"
-    },
-
+    "break",
     {
       "type": "os",
-      "key": "{#93} OS",
-      "format": "{pretty-name} [{arch}]"
+      "key":    "{#73} OS",
+      "format": "{pretty-name}  {#30}[{arch}]"
     },
     {
       "type": "kernel",
-      "key": "{#93}├ Kernel"
+      "key":    "{#116}├ Kernel",
+      "format": "{sysname}  {#30}[v{release}]"
     },
     {
       "type": "packages",
-      "key": "{#93}├󰏖 Packages"
+      "key":    "{#116}├󰏖 Packages",
+      "format": "{all}"
     },
     {
       "type": "shell",
-      "key": "{#93}└ Shell"
+      "key":    "{#116}└ Shell",
+      "format": "{pretty-name}  {#30}[v{version}]"
     },
-
     "break",
-
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Desktop ────────────────────────────╮"
-    },
-
-    {
-      "type": "de",
-      "key": "{#94} DE"
-    },
     {
       "type": "wm",
-      "key": "{#94}├󱂬 WM"
-    },
-    {
-      "type": "lm",
-      "key": "{#94}├󰧨 Login"
+      "key":    "{#73}󱂬 WM",
+      "format": "{pretty-name}"
     },
     {
       "type": "terminal",
-      "key": "{#94}├ Terminal"
+      "key":    "{#116}├ Terminal",
+      "format": "{pretty-name}  {#30}[{version}]"
     },
     {
       "type": "terminalfont",
-      "key": "{#94}├ Font"
-    },
-    {
-      "type": "icons",
-      "key": "{#94}├󰀻 Icons"
+      "key":    "{#116}├ Font",
+      "format": "{name}  {#30}[{size}]"
     },
     {
       "type": "wallpaper",
-      "key": "{#94}└󰸉 Wallpaper"
+      "key":    "{#116}└󰸉 Wallpaper"
     },
-
     "break",
-
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Hardware ───────────────────────────╮"
-    },
-
     {
       "type": "host",
-      "key": "{#92}󰌢 PC"
+      "key":    "{#73}󰌢 PC"
     },
     {
       "type": "cpu",
-      "key": "{#92}├󰻠 CPU",
+      "key":    "{#116}├󰻠 CPU",
       "showPeCoreCount": true,
       "temp": true,
-      "format": "{name} [{core-types}] [{freq-max}]"
+      "format": "{name}  {#30}[{core-types}] [{freq-max}]"
     },
     {
       "type": "gpu",
-      "key": "{#92}├󰍛 GPU",
+      "key":    "{#116}├󰍛 GPU",
       "detectionMethod": "auto",
       "driverSpecific": true,
-      "format": "{name} [{type}]"
+      "format": "Radeon RX 7600  {#30}[{type}]"
     },
     {
       "type": "memory",
-      "key": "{#92}├󰑭 Memory",
-      "format": "{used} / {total} ({percentage})"
-    },
-    {
-      "type": "swap",
-      "key": "{#92}├󰓡 Swap",
-      "format": "{used} / {total} ({percentage})"
+      "key":    "{#116}├󰑭 Memory",
+      "format": "{used} / {total}  {#30}({percentage})"
     },
     {
       "type": "disk",
-      "key": "{#92}├ Disk",
-      "format": "{size-used} / {size-total} ({size-percentage})"
-    },
-    {
-      "type": "display",
-      "key": "{#92}├󰍹 Display"
+      "key":    "{#116}├ Disk",
+      "format": "{size-used} / {size-total}  {#30}({size-percentage})"
     },
     {
       "type": "uptime",
-      "key": "{#92}└󰅐 Uptime"
+      "key":    "{#116}└󰅐 Uptime",
+      "format": "{?days}{days}d {?}{hours}h {minutes}m"
     },
-
     "break",
-
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Colors ─────────────────────────────╮"
-    },
     {
       "type": "colors",
       "symbol": "circle"
-    },
-    {
-      "type": "custom",
-      "format": "{#90}╰──────────────────────────────────────╯"
     }
   ]
 }

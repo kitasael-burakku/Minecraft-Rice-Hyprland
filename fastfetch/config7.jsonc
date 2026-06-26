@@ -1,165 +1,100 @@
 {
-    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-    "logo": {
-      "source":"~/.config/fastfetch/fastfetchlogo/HyprMc.png",
-      "type": "kitty-direct",
-      "width": 45,
-      "height": 20,
-      "padding": {
-        "top": 1
-      }
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": { "source": "~/.config/fastfetch/fastfetchlogo/HyprMc.png", "type": "kitty-direct", "width": 45, "height": 20, "padding": { "top": 1 } },
+  "display": { "separator": " → " },
+
+  "modules": [
+    {
+      "type": "command",
+      "key":  "{#114} User",
+      "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
+      "format": "{result}"
     },
-    "display": {
-        "separator": " -> ",
-        "constants": [
-            "──────────────────────────────"
-        ]
+    {
+      "type": "command",
+      "key":  "{#114}󰌢 Host",
+      "text": "hostnamectl --pretty 2>/dev/null || hostname",
+      "format": "{result}"
     },
-    "modules": [
-        {
-            "type": "custom",
-            "format": "┌{$1}{$1}┐",
-            "outputColor": "90"
-        },
-        {
-            "type": "title",
-            "keyWidth": 10
-        },
-
-        {
-            "type": "command",
-            "key": " User",
-            "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
-            "format": "{result}"
-        },
-
-        {
-            "type": "command",
-            "key": "󰌢 Host",
-            "keyColor":"magenta",
-            "text":"hostnamectl --pretty",
-            "format": "{result}"
-        },
-        
-        {
-            "type": "custom",
-            "format": "└{$1}{$1}┘",
-            "outputColor": "90"
-        },
-        {
-            "type": "custom",
-            "format": " {#90}  {#31}  {#32}  {#33}  {#34}  {#35}  {#36}  {#37}  {#38}  {#39}       {#38}  {#37}  {#36}  {#35}  {#34}  {#33}  {#32}  {#31}  {#90}"
-        },
-        {
-            "type": "custom",
-            "format": "┌{$1}{$1}┐",
-            "outputColor": "90"
-        },
-        {
-            "type": "os",
-            "key": "{icon} OS",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "kernel",
-            "key": "│ ├",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "packages",
-            "key": "│ ├󰏖",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "shell",
-            "key": "│ └",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "wm",
-            "key": " DE/WM",
-            "keyColor": "blue"
-        },
-        {
-            "type": "lm",
-            "key": "│ ├󰧨",
-            "keyColor": "blue"
-        },
-        {
-            "type": "wmtheme",
-            "key": "│ ├󰉼",
-            "keyColor": "blue"
-        },
-        {
-            "type": "icons",
-            "key": "│ ├󰀻",
-            "keyColor": "blue"
-        },
-        {
-            "type": "terminal",
-            "key": "│ ├",
-            "keyColor": "blue"
-        },
-        {
-            "type": "wallpaper",
-            "key": "│ └󰸉",
-            "keyColor": "blue"
-        },
-        {
-            "type": "host",
-            "key": "󰌢 PC",
-            "keyColor": "green"
-        },
-        {
-            "type": "cpu",
-            "key": "│ ├󰻠",
-            "keyColor": "green"
-        },
-        {
-            "type": "gpu",
-            "key": "│ ├󰍛",
-            "keyColor": "green"
-        },
-        {
-            "type": "disk",
-            "key": "│ ├",
-            "keyColor": "green"
-        },
-        {
-            "type": "memory",
-            "key": "│ ├󰑭",
-            "keyColor": "green"
-        },
-        {
-            "type": "swap",
-            "key": "│ ├󰓡",
-            "keyColor": "green"
-        },
-        {
-            "type": "uptime",
-            "key": "│ ├󰅐",
-            "keyColor": "green"
-        },
-        {
-            "type": "display",
-            "key": "│ └󰍹",
-            "keyColor": "green"
-        },
-
-        {
-            "type": "player",
-            "key": "│ ├󰥠",
-            "keyColor": "cyan"
-        },
-        {
-            "type": "custom",
-            "format": "└{$1}{$1}┘",
-            "outputColor": "90"
-        },
-        "break",
-        {
-            "type": "custom",
-            "format": " {#90}  {#31}  {#32}  {#33}  {#34}  {#35}  {#36}  {#37}  {#38}  {#39}       {#38}  {#37}  {#36}  {#35}  {#34}  {#33}  {#32}  {#31}  {#90}"
-        }
-    ]
+    "break",
+    {
+      "type": "os",
+      "key":    "{#114} OS",
+      "format": "{pretty-name}  {#65}[{arch}]"
+    },
+    {
+      "type": "kernel",
+      "key":    "{#71}├ Kernel",
+      "format": "{sysname}  {#65}[v{release}]"
+    },
+    {
+      "type": "packages",
+      "key":    "{#71}├󰏖 Packages",
+      "format": "{all}"
+    },
+    {
+      "type": "shell",
+      "key":    "{#71}└ Shell",
+      "format": "{pretty-name}  {#65}[v{version}]"
+    },
+    "break",
+    {
+      "type": "wm",
+      "key":    "{#114}󱂬 WM",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "terminal",
+      "key":    "{#71}├ Terminal",
+      "format": "{pretty-name}  {#65}[{version}]"
+    },
+    {
+      "type": "terminalfont",
+      "key":    "{#71}├ Font",
+      "format": "{name}  {#65}[{size}]"
+    },
+    {
+      "type": "wallpaper",
+      "key":    "{#71}└󰸉 Wallpaper"
+    },
+    "break",
+    {
+      "type": "host",
+      "key":    "{#114}󰌢 PC"
+    },
+    {
+      "type": "cpu",
+      "key":    "{#71}├󰻠 CPU",
+      "showPeCoreCount": true,
+      "temp": true,
+      "format": "{name}  {#65}[{core-types}] [{freq-max}]"
+    },
+    {
+      "type": "gpu",
+      "key":    "{#71}├󰍛 GPU",
+      "detectionMethod": "auto",
+      "driverSpecific": true,
+      "format": "Radeon RX 7600  {#65}[{type}]"
+    },
+    {
+      "type": "memory",
+      "key":    "{#71}├󰑭 Memory",
+      "format": "{used} / {total}  {#65}({percentage})"
+    },
+    {
+      "type": "disk",
+      "key":    "{#71}├ Disk",
+      "format": "{size-used} / {size-total}  {#65}({size-percentage})"
+    },
+    {
+      "type": "uptime",
+      "key":    "{#71}└󰅐 Uptime",
+      "format": "{?days}{days}d {?}{hours}h {minutes}m"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
+  ]
 }

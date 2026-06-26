@@ -40,4 +40,4 @@ fish/functions/RPS.exe.fish
 
 # ── IA ───────────────────────────────────────────────────────
 CLAUDE.md
-.claude
+.claudefish/conf.d/local.fish

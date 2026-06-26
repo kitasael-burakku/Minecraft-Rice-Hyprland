@@ -1,166 +1,100 @@
-// Silent Orbit - LFS inspired fastfetch
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-
-  "logo": {
-    "source": "lfs",
-    "type": "builtin",
-    "padding": {
-      "top": 1,
-      "left": 1
-    }
-  },
-
-  "display": {
-    "separator": "",
-    "constants": [
-      "\u001b[90m│                                                            │\u001b[60D\u001b[39m"
-    ]
-  },
+  "logo": { "source": "lfs", "type": "builtin", "padding": { "top": 1, "left": 1 } },
+  "display": { "separator": " → " },
 
   "modules": [
     {
-      "type": "custom",
-      "key": "{#90}╭ System ─────╮",
-      "format": "{#90}╭ Silent Orbit / Linux From Scratch Ghost ───────────────────╮"
-    },
-
-    {
       "type": "command",
-      "key": "{#90}│{#92} User        {#90}│",
+      "key":  "{#74} User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
-      "format": "{$1}{result}"
+      "format": "{result}"
     },
-
-    {
-      "type": "datetime",
-      "key": "{#90}│ {#93}Datetime    {#90}│",
-      "format": "{$1}{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}  {#2}[{weekday}] [W{week}] [UTC{offset-from-utc}]"
-    },
-
     {
       "type": "command",
-      "key": "{#90}│ {#93}Host        {#90}│",
-      "text": "hostnamectl --pretty",
-      "format": "{$1}{result}"
+      "key":  "{#74}󰌢 Host",
+      "text": "hostnamectl --pretty 2>/dev/null || hostname",
+      "format": "{result}"
     },
-
-    {
-      "type": "host",
-      "key": "{#90}│ {#93}Machine     {#90}│",
-      "format": "{$1}{name}  {#2}{version}"
-    },
-
+    "break",
     {
       "type": "os",
-      "key": "{#90}│ {#93}OS          {#90}│",
-      "format": "{$1}{?pretty-name}{pretty-name}{?}{/pretty-name}{name}{/} {codename}  {#2}[{arch}]"
+      "key":    "{#74} OS",
+      "format": "{pretty-name}  {#24}[{arch}]"
     },
-
     {
       "type": "kernel",
-      "key": "{#90}│ {#93}Kernel      {#90}│",
-      "format": "{$1}{sysname}  {#2}[v{release}]"
+      "key":    "{#110}├ Kernel",
+      "format": "{sysname}  {#24}[v{release}]"
     },
-
     {
-      "type": "uptime",
-      "key": "{#90}│ {#93}Uptime      {#90}│",
-      "format": "{$1}{?days}{days} Days + {?}{hours}:{minutes}:{seconds}"
+      "type": "packages",
+      "key":    "{#110}├󰏖 Packages",
+      "format": "{all}"
     },
-
-    {
-      "type": "custom",
-      "key": "{#90}├ Hardware ───╯",
-      "format": "{#90}├────────────────────────────────────────────────────────────╮"
-    },
-
-    {
-      "type": "cpu",
-      "key": "{#90}│ {#91}CPU         {#90}│",
-      "showPeCoreCount": true,
-      "temp": true,
-      "format": "{$1}{name}  {#2}[C:{core-types}] [{freq-max}]"
-    },
-
-    {
-      "type": "gpu",
-      "key": "{#90}│ {#91}GPU         {#90}│",
-      "detectionMethod": "auto",
-      "driverSpecific": true,
-      "format": "{$1}{name}  {#2}[{type}]"
-    },
-
-    {
-      "type": "memory",
-      "key": "{#90}│ {#91}Memory      {#90}│",
-      "format": "{$1}{used} / {total} ({percentage})"
-    },
-
-    {
-      "type": "disk",
-      "key": "{#90}│ {#91}Disk        {#90}│",
-      "format": "{$1}{size-used} / {size-total} ({size-percentage})"
-    },
-
-    {
-      "type": "custom",
-      "key": "{#90}├ Desktop ────╯",
-      "format": "{#90}├────────────────────────────────────────────────────────────╮"
-    },
-
-    {
-      "type": "de",
-      "key": "{#90}│ {#94}DE/WM       {#90}│",
-      "format": "{$1}{pretty-name}"
-    },
-
-    {
-      "type": "wm",
-      "key": "{#90}│ {#94}Compositor  {#90}│",
-      "format": "{$1}{pretty-name}"
-    },
-
-    {
-      "type": "terminal",
-      "key": "{#90}│ {#95}Terminal    {#90}│",
-      "format": "{$1}{pretty-name}  {#2}[{version}] [PID:{pid}]"
-    },
-
-    {
-      "type": "terminalfont",
-      "key": "{#90}│ {#95}Font        {#90}│",
-      "format": "{$1}{name}  {#2}[{size}]"
-    },
-
     {
       "type": "shell",
-      "key": "{#90}│ {#95}Shell       {#90}│",
-      "format": "{$1}{pretty-name}  {#2}[v{version}] [PID:{pid}]"
+      "key":    "{#110}└ Shell",
+      "format": "{pretty-name}  {#24}[v{version}]"
     },
-
-    {
-      "type": "custom",
-      "key": "{#90}╰─────────────╯",
-      "format": "{#90}╰────────────────────────────────────────────────────────────╯"
-    },
-
     "break",
-
     {
-        "type": "custom",
-        "key": " ",
-        "format": "{#90}╭ Colors ───────────────────────────────────────────────────────────────────╮"
-      },
-      {
-        "type": "custom",
-        "format": "{#90}│ {#40}    {#41}    {#42}    {#43}    {#44}    {#45}    {#46}    {#47}    {#}                                          {#90}│"
-      },
-
-      {
-        "type": "custom",
-        "format": "{#90}╰───────────────────────────────────────────────────────────────────────────╯"
-      }
-
+      "type": "wm",
+      "key":    "{#74}󱂬 WM",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "terminal",
+      "key":    "{#110}├ Terminal",
+      "format": "{pretty-name}  {#24}[{version}]"
+    },
+    {
+      "type": "terminalfont",
+      "key":    "{#110}├ Font",
+      "format": "{name}  {#24}[{size}]"
+    },
+    {
+      "type": "wallpaper",
+      "key":    "{#110}└󰸉 Wallpaper"
+    },
+    "break",
+    {
+      "type": "host",
+      "key":    "{#74}󰌢 PC"
+    },
+    {
+      "type": "cpu",
+      "key":    "{#110}├󰻠 CPU",
+      "showPeCoreCount": true,
+      "temp": true,
+      "format": "{name}  {#24}[{core-types}] [{freq-max}]"
+    },
+    {
+      "type": "gpu",
+      "key":    "{#110}├󰍛 GPU",
+      "detectionMethod": "auto",
+      "driverSpecific": true,
+      "format": "Radeon RX 7600  {#24}[{type}]"
+    },
+    {
+      "type": "memory",
+      "key":    "{#110}├󰑭 Memory",
+      "format": "{used} / {total}  {#24}({percentage})"
+    },
+    {
+      "type": "disk",
+      "key":    "{#110}├ Disk",
+      "format": "{size-used} / {size-total}  {#24}({size-percentage})"
+    },
+    {
+      "type": "uptime",
+      "key":    "{#110}└󰅐 Uptime",
+      "format": "{?days}{days}d {?}{hours}h {minutes}m"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle"
+    }
   ]
 }
