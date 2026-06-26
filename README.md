@@ -6,6 +6,9 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 
 > You can do whatever you want with this dotfile — if you don't want to install or use a configuration, you simply don't have to copy it.
 
+> 🚫 **No theme selector, no matugen, no pywal.**
+> The color palette is hardcoded and intentional. This setup has one vibe and commits to it.
+
 ---
 
 ## Screenshots
