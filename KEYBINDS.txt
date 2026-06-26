@@ -1,7 +1,7 @@
 KEYBINDS
 ========
 
-Main modifier: SUPER
+Main modifier: SUPER (Tecla Windows / Options)
 
 
 APPS
@@ -12,7 +12,7 @@ SUPER + E                  Open File manager
 SUPER + B                  Open Browser
 SUPER + Space              Open Launcher
 SUPER + A                  Open/close SwayNC
-SUPER + SHIFT + W          Open Wallpaper selector (Rofi)
+SUPER + W                  Open Wallpaper selector (Rofi)
 SUPER + T                  Open Music Player
 SUPER + O                  Open OBS
 SUPER + ALT + M 	       Reload Terminal-Bg (Cava)
@@ -36,7 +36,6 @@ SUPER + Delete             hyprshutdown (fallback: Exit Hyprland)
 SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      Open btop
-SUPER + W                  Reload Waybar
 SUPER + CTRL + H 	       Open Hyprland config in VsCodium
 
 CLIPBOARD / COLOR

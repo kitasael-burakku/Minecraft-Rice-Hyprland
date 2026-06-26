@@ -27,23 +27,25 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     # looks right everywhere. Fish also approximates hex to the closest palette
     # color on its own, but the explicit fallback keeps things predictable.
     if test "$COLORTERM" = truecolor -o "$COLORTERM" = 24bit
-        set -g __kb_border  909090   # stone gray      (kitty color3)
-        set -g __kb_muted   7a7a76   # shadow stone    (fish comment)
-        set -g __kb_accent  4ec9c3   # diamond cyan    (kitty color26)
-        set -g __kb_section caa46a   # wheat amber     (kitty color16)
-        set -g __kb_key     e6e6e6   # snow white      (kitty foreground)
-        set -g __kb_desc    c7c7c7   # stone light     (kitty color11)
-        set -g __kb_error   d63a3a   # redstone red    (kitty color25)
+        # Truecolor: Paleta Cyberpunk-Minimalista de alto contraste
+        set -g __kb_border  404040   # Gris oscuro sólido para delimitar la caja sin brillar de más
+        set -g __kb_muted   6f6f6f   # Texto secundario/líneas sutiles
+        set -g __kb_accent  00f5d4   # Neón Cyan Eléctrico (para prompts, contadores y estados)
+        set -g __kb_section ff007f   # Neón Magenta/Pink (para los títulos de secciones detectados por awk)
+        set -g __kb_key     ffffff   # Blanco puro brillante (para que las combinaciones de teclas salten a la vista)
+        set -g __kb_desc    e6e6e6   # Blanco suave/Plata (para la descripción de lo que hace la tecla)
+        set -g __kb_error   ff3333   # Rojo neón puro (para fallas o advertencias)
     else
-        set -g __kb_border  white
+        # Fallback estándar: Colores ANSI brillantes nativos
+        set -g __kb_border  brblack
         set -g __kb_muted   brblack
         set -g __kb_accent  cyan
-        set -g __kb_section yellow
+        set -g __kb_section magenta
         set -g __kb_key     white
         set -g __kb_desc    brwhite
         set -g __kb_error   red
     end
-
+    
     # ── Settings ─────────────────────────────────────────────────────────────
     set -l width 74
     set -l page 1
@@ -232,7 +234,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         __kb_text $width $__kb_muted "Hyprland Control Manual"
         __kb_mid $width
         __kb_raw $width "  Page  : $page / $total"
-        __kb_raw $width "  Mod   : SUPER"
+        __kb_raw $width "  Mod   : SUPER (Tecla Windows/Options)"
         __kb_mid $width
         __kb_text $width $__kb_section "$section"
         __kb_mid $width

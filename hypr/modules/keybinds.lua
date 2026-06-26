@@ -32,7 +32,7 @@ hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(Programs.menu))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t"))
 
 -- Wallpaper picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(Programs.wallpaper))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 
 -- Spotify
 hl.bind(mainMod .. "+ T", hl.dsp.exec_cmd(Programs.music))
@@ -103,7 +103,7 @@ hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " -e btop"))
 
 -- Reload Waybar
-hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
+-- hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
 
 -- Open Hyprland config in VsCodium
 hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
