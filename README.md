@@ -113,7 +113,8 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | Hyprlock | Lock screen |
 | SwayNC | Notification center |
 | Wlogout | Session menu |
-| mpvpaper | Animated wallpaper |
+| mpvpaper | Video wallpaper (loops mp4/mkv/webm/mov) |
+| awww | Static image wallpaper (replaces swww) |
 | cava | Audio visualizer — includes config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
 | glava | Alternative visualizer, optionally used in Hyprlock scripts |
 | terminal-bg | Animated background inside the terminal (launches cava in noncurses mode) |
@@ -207,9 +208,8 @@ yay -S \
   vscodium-bin \
   cava \
   glava \
-  swww \
-  matugen \
-  awww
+  awww \
+  matugen
 ```
 
 > If you don't use CachyOS you can download Zen-Browser from AUR packages:
@@ -219,7 +219,7 @@ yay -S zen-browser-bin
 
 ## IMPORTANT: IF YOU INSTALL THINGS FROM THE AUR, CAREFULLY REVIEW WHAT WILL BE INSTALLED.
 
-`awww` is an optional fallback inside `wallpaper_rofi.sh` if you don't have `swww`; it's not required if you already have `swww` installed.
+`awww` is the image wallpaper backend used by this rice. `swww` is **not used** — `awww` replaced it entirely. Install `awww` from the AUR.
 
 **Marked as to verify:**
 
@@ -228,7 +228,7 @@ yay -S zen-browser-bin
 - `glava`: optionally used in Hyprlock scripts if Spotify is playing.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: install or replace according to your system.
 - `obs`, `brave`, `vscodium`: personal applications tied to keybinds, not requirements of the base environment.
-- `swww`: required by the Rofi wallpaper selector (`rofi/scripts/wallpaper_rofi.sh`) to apply images. Check the exact package name in AUR for your system. `matugen` is only needed if you build the theme selector described in [External Additions](#external-additions).
+- `awww`: required by the Rofi wallpaper selector to apply static images. `swww` is not used in this rice — `awww` replaced it. `matugen` is only needed if you build the theme selector described in [External Additions](#external-additions).
 
 ---
 
@@ -282,6 +282,26 @@ cp starship.toml ~/.config/starship.toml
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
+
+### Wallpapers
+
+Video wallpapers are **not included** in this repo due to file size limits. Place your own video wallpapers here:
+
+```bash
+mkdir -p ~/Videos/wallpapersvideo
+# Place your .mp4 .mkv .mov .webm files here
+```
+
+For static image wallpapers, the ones used in this rice come from [NischalDawadi/Wallpapers](https://github.com/NischalDawadi/Wallpapers). Full credit to the original author.
+
+```bash
+mkdir -p ~/Pictures
+git clone https://github.com/NischalDawadi/Wallpapers.git ~/Pictures/Wallpapers
+```
+
+> The wallpaper picker expects videos in `~/Videos/wallpapersvideo/` and images in `~/Pictures/Wallpapers/`. Both paths can be overridden by exporting `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` before launching the picker.
+
+---
 
 Give execution permissions to the scripts:
 
@@ -385,7 +405,7 @@ Both can be overridden by exporting the variable before the launcher runs.
 
 **Applying wallpapers:**
 - Video formats → relaunches `mpvpaper` with `--loop-file --hwdec=auto`
-- Image formats → `swww img` with transition (or `awww` as fallback)
+- Image formats → `awww img` with transition
 
 **Themes:**
 - Type selector uses `rofi/wallpaper-type-select.rasi` (compact list, inherits Ship Gray style from `style-4.rasi`)
@@ -428,7 +448,7 @@ If you end up building it, this is a good place to document how you set it up.
 Beyond aliases and external tool integrations, Fish includes custom functions invocable as commands:
 
 - `sysupdate` — updates pacman and AUR (yay) in one pass, with animated output. This is the same thing that runs when you click the `custom/updates` module in Waybar.
-- `quickcache` — quick cleanup of known app caches (Brave, Spotify, Electron, etc.), with confirmation before deleting.
+- `quickcache` — quick cleanup of known app caches (browser, Spotify, Electron, etc.) — browser detection is automatic, only cleans what's actually installed, with confirmation before deleting.
 - `checktrash` / `cleantrash` — the first only reports what can be cleaned (orphan packages, caches, trash); the second actually cleans it, with confirmation.
 - `checkerrors` — diagnoses failed services, journalctl errors (including Hyprland/portals), and recent coredumps. Read-only, changes nothing.
 - `healthcheck` — the most complete check: system, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, network, and temperatures.
@@ -444,11 +464,11 @@ Beyond aliases and external tool integrations, Fish includes custom functions in
 At minimum, review before using:
 
 - `hypr/hyprlock.conf` — change `$hyprlockDir` to your real path (`/home/your-username/.config/hyprlock`).
-- `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft2.mp4` to yours.
+- `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft3.mp4` to yours.
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
 - `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
 - `hypr/modules/programs.lua` — change `kitty`, `thunar`, or the launcher if you use other apps.
-- `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, screenshot paths, and commands you don't use.
+- `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
 - `waybar/config.jsonc` — change `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
 - `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/1.png` if you use a different wallpaper.
 - `wlogout/style.css` — the six icon paths (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) are written as absolute paths to my user; change them to yours.
@@ -467,7 +487,7 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 
 ## Scripts and Commands Used in This Rice
 
-- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `swww`, `awww`, `matugen`
+- **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `awww`, `matugen`
 - **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`, `glava`
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
 - **System:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
