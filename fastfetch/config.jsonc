@@ -6,20 +6,20 @@
   "modules": [
     {
       "type": "command",
-      "key":  "{#102} User",
+      "key":  "User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
     {
       "type": "command",
-      "key":  "{#102}󰌢 Host",
+      "key":  "󰌢 Host",
       "text": "hostnamectl --pretty 2>/dev/null || hostname",
       "format": "{result}"
     },
     "break",
     {
       "type": "os",
-      "key":    "{#102} OS",
+      "key":    "OS",
       "format": "{pretty-name}  {#60}[{arch}]"
     },
     {
@@ -40,7 +40,7 @@
     "break",
     {
       "type": "wm",
-      "key":    "{#102}󱂬 WM",
+      "key":    "󱂬 WM",
       "format": "{pretty-name}"
     },
     {
@@ -60,7 +60,7 @@
     "break",
     {
       "type": "host",
-      "key":    "{#102}󰌢 PC"
+      "key":    "󰌢 PC"
     },
     {
       "type": "cpu",
