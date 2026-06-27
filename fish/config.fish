@@ -64,12 +64,10 @@ if status is-interactive
     
     starship init fish | source
    
-    thefuck --alias | source
+    command -q thefuck; and thefuck --alias | source
 
     fastfetch
 end
 
 # Created by pipx / local user binaries
 fish_add_path "$HOME/.local/bin"
-
-
