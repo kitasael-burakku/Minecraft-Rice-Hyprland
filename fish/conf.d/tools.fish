@@ -25,3 +25,18 @@ alias jerrors="journalctl -b -p 3 --no-pager"
 # ── Hardware & Monitoring ────────────────────────────────
 alias disks="lsblk -f"
 alias temps="watch -n 2 sensors"
+
+# ── Software Config ──────────────────────────────────────
+alias ecswaync="codium ~/.config/swaync"
+alias echypr="codium ~/.config/hypr"
+alias ecwaybar="codium ~/.config/waybar"
+
+alias eckitty="codium ~/.config/kitty"
+alias echyprlock="codium ~/.config/hyprlock"
+alias ecrofi="codium ~/.config/rofi"
+alias ecwlogout="codium ~/.config/wlogout"
+
+alias eccava="codium ~/.config/cava"
+alias ecfastfetch="codium ~/.config/fastfetch"
+alias ecstarship="codium ~/.config/starship.toml"
+alias ecscripts="codium ~/.config/scripts"

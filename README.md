@@ -445,59 +445,13 @@ If you end up building it, this is a good place to document how you set it up.
 
 ## Fish Functions
 
-### Aliases
-
-The shell includes two sets of aliases defined in `fish/conf.d/tools.fish` and `fish/conf.d/local.fish` (personal, gitignored):
-
-**CLI replacements** — modern tools mapped to familiar names:
-
-| Alias | Replaces | Notes |
-|---|---|---|
-| `cat` | `bat` | Plain style, no paging |
-| `less` | `bat` | With paging |
-| `grep` | `ripgrep` | Faster search |
-| `ls` / `ll` / `la` | `eza` | Icons + directory-first |
-| `move` / `copy` / `copyr` | `mv` / `cp` / `cp -r` | Interactive + verbose |
-| `remove` / `remover` | `rm` / `rm -r` | Interactive + verbose |
-
-**System maintenance:**
-
-| Alias | Does |
-|---|---|
-| `mirrors` | Refreshes mirrorlist via reflector (fastest 20 HTTPS mirrors) |
-| `fixkeys` | Reinstalls archlinux-keyring |
-| `failed` / `userfailed` | Lists failed systemd services |
-| `jerrors` | Shows boot errors from journalctl (priority 3) |
-| `disks` | `lsblk -f` — disk layout with filesystems |
-| `temps` | Live sensor watch every 2s |
-
-**Config shortcuts** — open a config folder directly in VSCodium:
-
-```fish
-ecfish      ecwaybar    echypr      ecswaync
-eckitty     echyprlock  ecrofi      ecwlogout
-eccava      ecfastfetch ecstarship  ecscripts
-```
-
-**Personal / projects** (in `local.fish`, not tracked):
-
-```fish
-dotfiles    # cd to dotfiles repo
-dotbackup   # run the interactive backup script
-game        # cd to ProjectRPS dev folder
-docs        # cd to notes folder
-letters     # toilet -f mono12 (ASCII art for videos)
-```
-
-### Functions
-
 Beyond aliases and external tool integrations, Fish includes custom functions invocable as commands:
 
 - `sysupdate` — updates pacman and AUR (yay) in one pass, with animated output. This is the same thing that runs when you click the `custom/updates` module in Waybar.
 - `quickcache` — quick cleanup of known app caches (browser, Spotify, Electron, etc.) — browser detection is automatic, only cleans what's actually installed, with confirmation before deleting.
 - `checktrash` / `cleantrash` — the first only reports what can be cleaned (orphan packages, caches, trash); the second actually cleans it, with confirmation.
 - `checkerrors` — diagnoses failed services, journalctl errors (including Hyprland/portals), and recent coredumps. Read-only, changes nothing.
-- `healthcheck` — the most complete check: system, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, network, and temperatures.
+- `healthcheck` — quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention.
 - `keybinds` — opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window.
 - `fastfetch` (the function, not the binary) — randomly picks one of the presets in `fastfetch/config*.jsonc`, avoiding repeating the same one twice in a row.
 
