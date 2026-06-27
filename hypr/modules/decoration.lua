@@ -55,26 +55,20 @@ hl.config({
             enabled  = true,
             size     = 5,
             passes   = 2,
-
             ignore_opacity    = true,
             new_optimizations = true,
-
-            xray = true,
-
             noise      = 0.010,
-            contrast   = 0.9,
-            brightness = 1,
-
+            contrast   = 0.8,   -- bajado de 0.9
+            brightness = 1.1,   -- subido de 1.0
             vibrancy          = 0.08,
             vibrancy_darkness = 0.06,
-
             special = true,
-
             popups                    = true,
             popups_ignorealpha        = 0.20,
             input_methods             = true,
             input_methods_ignorealpha = 0.20,
         },
+
     },
 
     animations = {

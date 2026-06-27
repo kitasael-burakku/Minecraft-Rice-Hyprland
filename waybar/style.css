@@ -4,7 +4,7 @@
 
 * {
     all: unset;
-    font-size: 14px;
+    font-size: 15px;
     font-family: "JetBrainsMono Nerd Font";
 }
 
@@ -26,7 +26,7 @@ window#waybar {
     border-bottom: 2px solid rgba(176, 190, 197, 0.40);
     border-radius: 14px;
     margin: 6px 3px;
-    padding: 3px 12px;
+    padding: 4px 13px;
     transition: all 300ms ease-in-out;
 }
 
@@ -51,7 +51,7 @@ window#waybar {
     margin: 0 3px;
     padding: 0 9px;
     border-radius: 999px;
-    min-width: 12px;
+    min-width: 13px;
     background: rgba(5, 5, 5, 0.18);
     border: 1px solid rgba(176, 190, 197, 0.08);
     border-bottom: 2px solid rgba(117, 117, 117, 0.12);
@@ -175,7 +175,7 @@ tooltip label {
     border: none;
     border-bottom: none;
     margin: 0;
-    padding: 3px 8px;
+    padding: 4px 9px;
     min-height: 0;
 }
 
@@ -183,7 +183,7 @@ tooltip label {
 .modules-center #workspaces, 
 .modules-center #idle_inhibitor, 
 .modules-center #tray {
-    padding: 3px 8px;
+    padding: 4px 9px;
 }
 
 .modules-center #workspaces {
@@ -219,9 +219,9 @@ tooltip label {
     border-bottom: none;
 
     margin: 0;
-    padding: 3px 8px;
+    padding: 4px 9px;
 
-    min-width: 14px;
+    min-width: 15px;
     min-height: 0;
 }
 
@@ -244,12 +244,12 @@ tooltip label {
     border: none;
     border-bottom: none;
     margin: 0;
-    padding: 3px 8px;
+    padding: 4px 9px;
     min-height: 0;
 }
 
 #custom-playerctl {
-    font-size: 16px;
+    font-size: 17px;
     padding-left: 10px;
 }
 
@@ -258,7 +258,7 @@ tooltip label {
 #custom-playerctl.Stopped  { color: #686058; }
 
 #custom-playerlabel {
-    font-size: 12px;
+    font-size: 13px;
     padding-right: 10px;
 }
 

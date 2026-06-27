@@ -286,3 +286,62 @@ hl.window_rule({
     rounding       = 18,
     rounding_power = 4,
 })
+
+-- Special workspace (scratchpad)
+hl.workspace_rule({
+    workspace = "special:magic",
+    gaps_out  = 0,
+    gaps_in   = 0,
+})
+
+hl.window_rule({
+    name  = "special-magic-anim",
+    match = {
+        workspace = "special:magic",
+    },
+    animation = "slidevert",
+})
+
+
+------------
+--- APPS ---
+------------
+hl.window_rule({
+    name  = "spotify-float",
+    match = {
+        class = "^(Spotify|spotify)$",
+    },
+    float  = true,
+    center = true,
+    size   = "1100 700",
+})
+
+hl.window_rule({
+    name  = "btop-float",
+    match = {
+        class = "^(kitty)$",
+        title = "^(btop)$",
+    },
+    float  = true,
+    center = true,
+    size   = "1000 600",
+
+    opacity = "0.8 override 0.7 override",
+})
+
+hl.window_rule({
+    name  = "obs-workspace",
+    match = {
+        class = "^(com.obsproject.Studio)$",
+    },
+    workspace = "9",
+})
+
+hl.window_rule({
+    name  = "kitty-float-opacity",
+    match = {
+        class = "^(kitty)$",
+        float = true,
+    },
+    opacity = "0.8 override 0.7 override",
+})

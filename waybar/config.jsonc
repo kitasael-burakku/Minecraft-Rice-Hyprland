@@ -1,4 +1,5 @@
 {
+    "height": 34,
     "spacing": 1,
     "margin-top": 5,
     
@@ -25,23 +26,23 @@
     ],
 
     "hyprland/window": {
-    "format": "󰣇 {title}",
-    "max-length": 30,
-    "separate-outputs": true,
-    "rewrite": {
-         "^.*Mozilla Firefox.*$": "  Firefox",
-         "^.*Zen Browser.*$":     "󰈹  Zen",
-         "^.*Spotify.*$":         "  Spotify",
-         "^.*fish.*$":            "  Terminal",
-         "^.*Thunar.*$":          "󰉋  Files",
-         "^.*Discord.*$":         "󰙯  Discord",
-         "^.*VSCodium.*$":        "󰨞  VSCodium",
-         "^.*Steam.*$":           "󰓓  Steam",
-         "^.*OBS.*$":             "󰐻  OBS Studio",
-         "^.*btop.*$":            "󰍛  Btop",
-         "^.*Goverlay.*$":        "󰊖  GOverlay",
-         "^.*keybinds.*$":        "󰌌  Keybinds",
-         "^.*sysupdate.*$":       "󰚰  Sysupdate"
+        "format": "󰣇 {title}",
+        "max-length": 30,
+        "separate-outputs": true,
+        "rewrite": {
+            "^.*Mozilla Firefox.*$": "󰈹  Firefox",
+            "^.*Zen Browser.*$":     "󰈹  Zen",
+            "^.*Spotify.*$":         "󰓇  Spotify",
+            "^.*fish.*$":            "󰞀  Terminal",
+            "^.*Thunar.*$":          "󰉋  Files",
+            "^.*Discord.*$":         "󰙯  Discord",
+            "^.*VSCodium.*$":        "󰨞  VSCodium",
+            "^.*Steam.*$":           "󰓓  Steam",
+            "^.*OBS.*$":             "󰐻  OBS Studio",
+            "^.*btop.*$":            "󰍛  Btop",
+            "^.*Goverlay.*$":        "󰊖  GOverlay",
+            "^.*keybinds.*$":        "󰌌  Keybinds",
+            "^.*sysupdate.*$":       "󰚰  Sysupdate"
         }
     },
 
@@ -73,7 +74,7 @@
         "format-bluetooth": "󰂯 {volume}%",
         "format-muted": "󰖁 Muted",
         "format-icons": {
-            "default": ["", " "]
+            "default": ["󰕿", "󰖀", "󰕾"]
         },
         "scroll-step": 1,
         "on-click": "pavucontrol",
@@ -83,14 +84,14 @@
 
     "cpu": {
         "interval": 10,
-        "format": " {usage}%",
+        "format": "󰍛 {usage}%",
         "max-length": 10,
         "tooltip": false
     },
 
     "memory": {
         "interval": 30,
-        "format": " {percentage}%",
+        "format": " {percentage}%",
         "max-length": 10,
         "tooltip": true,
         "tooltip-format": " Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
@@ -108,14 +109,14 @@
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀 Wired",
         "format-disconnected": "󰈂 Disconnected",
-        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%", // Corregido formato visual
+        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%",
         "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
         "tooltip-format-disconnected": "Disconnected",
         "on-click": "nm-connection-editor"
     },
 
     "tray": {
-        "icon-size": 14,
+        "icon-size": 15,
         "spacing": 10
     },
 
@@ -133,7 +134,7 @@
         "interval": 10,
         "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
         "format": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""], // Iconos dinámicos según el calor
+        "format-icons": ["󱃃", "󰔏", "󱃂"],
         "tooltip": true,
         "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
         "critical-threshold": 80
@@ -150,7 +151,7 @@
     },
 
     "custom/power": {
-        "format": "",
+        "format": "󰐥",
         "tooltip": true,
         "tooltip-format": "Power menu",
         "on-click": "~/.config/waybar/scripts/power-menu.sh"

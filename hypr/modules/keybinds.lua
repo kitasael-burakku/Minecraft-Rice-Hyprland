@@ -100,7 +100,7 @@ hl.bind(mainMod .. "+ ESCAPE", hl.dsp.exec_cmd(home .. "/.config/wlogout/scripts
 hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprlock"))
 
 -- System monitor (btop)
-hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " -e btop"))
+hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title btop -e btop"))
 
 -- Reload Waybar
  hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
