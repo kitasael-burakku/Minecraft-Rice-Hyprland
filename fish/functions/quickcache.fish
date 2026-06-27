@@ -147,13 +147,12 @@ function quickcache --description "Quick safe cache cleanup with animated confir
                 set_color a85a48; echo "  ✘ Skipping unsafe path: $target"; set_color normal
                 continue
             end
-            switch "$target_real"
-                case "$HOME/.cache/"\\* "$HOME/.codex/.tmp"
-                    set_color 686058; printf "  Removing %-40s" (string replace $HOME "~" $target_real); set_color normal
-                    rm -rf -- "$target_real"
-                    set_color 6aab7a; echo "done"; set_color normal
-                case '*'
-                    set_color a85a48; echo "  ✘ Refusing unsafe path: $target_real"; set_color normal
+            if string match -q -- "$HOME/.cache/*" "$target_real"; or test "$target_real" = "$HOME/.codex/.tmp"
+                set_color 686058; printf "  Removing %-40s" (string replace $HOME "~" $target_real); set_color normal
+                rm -rf -- "$target_real"
+                set_color 6aab7a; echo "done"; set_color normal
+            else
+                set_color a85a48; echo "  ✘ Refusing unsafe path: $target_real"; set_color normal
             end
         end
     end
