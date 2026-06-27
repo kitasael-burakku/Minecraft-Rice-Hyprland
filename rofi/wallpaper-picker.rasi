@@ -1,5 +1,5 @@
 /* =====================================================
-   WALLPAPER PICKER — Kitasan Glass (Grid Edition v3)
+   WALLPAPER PICKER — Kitasan Glass Refinado (Fila única)
    ===================================================== */
 
 configuration {
@@ -7,122 +7,130 @@ configuration {
 }
 
 * {
-    font: "JetBrainsMono Nerd Font Propo 10";
-    bg-main:     #1e1e1ecc;
-    bg-glass:    #1a1a1a99;
-    bg-hover:    #404040cc;
-    bg-selected: #b0bec533; 
+    font:           "JetBrainsMono Nerd Font Propo 11";
 
-    fg:          #e6e6e6;
-    fg-soft:     #d8d8d8;
-    fg-muted:    #909090;
-    fg-dim:      #6f6f6f;
+    bg-main:        #1a1a1adc;
+    bg-glass:       #141414aa;
+    bg-hover:       #383838cc;
+    bg-selected:    #b0bec530;
 
-    border:       #b8c5cc66;
-    border-soft:  #6f6f6f55;
-    border-hover: #b8c5ccaa;
-    accent:       #f7f7f7;
-    accent-muted: #b8c5cc;
+    fg:             #ececec;
+    fg-soft:        #d8d8d8;
+    fg-muted:       #909090;
+    fg-dim:         #5a5a5a;
+
+    border:         #b8c5cc55;
+    border-soft:    #6f6f6f40;
+    border-hover:   #b8c5cc99;
+
+    accent:         #f0f0f0;
+    accent-muted:   #b8c5cc;
 
     background-color: transparent;
     text-color: @fg;
 }
 
 window {
-    transparency: "real";
-    location: center;
-    anchor: center;
-    width: 1180px;
-    border-radius: 20px;
+    transparency:   "real";
+    location:       center;
+    anchor:         center;
+    width:          1180px;
+    border-radius:  20px;
     background-color: @bg-main;
-    border: 1px;
-    border-color: @border;
+    border:         1px;
+    border-color:   @border;
 }
 
 mainbox {
-    spacing: 20px;
-    padding: 30px;
-    children: [ "inputbar", "listview", "message" ];
+    spacing:        18px;
+    padding:        26px;
+    min-height:     220px;
+    children:       [ "inputbar", "listview", "message" ];
 }
 
+/* ── Search bar ───────────────────────────────────── */
 inputbar {
-    spacing: 12px;
-    padding: 14px 18px;
-    border-radius: 12px;
+    spacing:        12px;
+    padding:        13px 17px;
+    border-radius:  12px;
     background-color: @bg-glass;
-    border: 1px;
-    border-color: @border-soft;
-    children: [ "prompt", "entry" ];
+    border:         1px;
+    border-color:   @border-soft;
+    children:       [ "prompt", "entry" ];
 }
 
 prompt {
-    text-color: @accent-muted;
-    font: "JetBrainsMono Nerd Font Propo Bold 12";
+    text-color:     @accent-muted;
+    font:           "JetBrainsMono Nerd Font Propo Bold 12";
 }
 
 entry {
-    text-color: @fg;
-    placeholder: "Buscar fondo de pantalla...";
+    text-color:     @fg;
+    placeholder:    "Buscar fondo de pantalla...";
     placeholder-color: @fg-dim;
+    cursor:         text;
 }
 
+/* ── Fila única dinámica ──────────────────────────── */
+
 listview {
-    columns: 4;
-    lines: 2;
-    cycle: true;
-    dynamic: true;
-    scrollbar: false;
-    layout: vertical;
-    fixed-height: true; /* Previene deformación si un título es muy largo */
-    fixed-columns: true;
-    spacing: 18px;
-    margin: 4px 0px;
+    columns:        6;
+    lines:          1;
+    cycle:          true;
+    fixed-height:   false;
+    dynamic:        true;
+    fixed-columns:  false;
+    scrollbar:      false;
+    layout:         vertical;
+    spacing:        12px;
+    margin:         4px 0px;
 }
 
 element {
-    orientation: vertical;
-    padding: 12px;
-    spacing: 8px;
-    border-radius: 14px; /* Ajuste armónico con la ventana externa */
+    orientation:    vertical;
+    padding:        8px;
+    spacing:        8px;
+    border-radius:  13px;
     background-color: @bg-glass;
-    text-color: @fg-muted;
-    border: 1px;
-    border-color: @border-soft;
+    text-color:     @fg-muted;
+    border:         1px;
+    border-color:   @border-soft;
+    cursor:         pointer;
 }
 
 element normal.normal,
 element alternate.normal {
     background-color: @bg-glass;
-    text-color: @fg-muted;
-    border-color: @border-soft;
+    text-color:     @fg-muted;
+    border-color:   @border-soft;
 }
 
 element selected.normal {
     background-color: @bg-selected;
-    text-color: @fg;
-    border: 1px; /* 1px constante para eliminar el molesto "parpadeo/salto" físico */
-    border-color: @border-hover;
+    text-color:     @fg;
+    border:         1px;
+    border-color:   @border-hover;
 }
 
 element selected.active,
 element selected.urgent {
     background-color: @bg-hover;
-    text-color: @accent;
-    border: 1px;
-    border-color: @border-hover;
+    text-color:     @accent;
+    border:         1px;
+    border-color:   @border-hover;
 }
 
 element-icon {
-    size: 230px; /* Máximo aprovechamiento horizontal de tus thumbnails */
-    border-radius: 10px; /* Principio de radio anidado perfecto (Padre 14px - Hijo 10px) */
+    size:           155px;
+    border-radius:  9px;
     background-color: transparent;
 }
 
 element-text {
     horizontal-align: 0.5;
-    vertical-align: 0.5;
-    text-color: inherit;
-    font: "JetBrainsMono Nerd Font Propo 10"; /* Fuente unificada */
+    vertical-align:   0.5;
+    text-color:       inherit;
+    font:             "JetBrainsMono Nerd Font Propo 9";
 }
 
 message {
@@ -130,12 +138,12 @@ message {
 }
 
 textbox {
-    padding: 12px 16px;
-    border-radius: 12px;
+    padding:        11px 16px;
+    border-radius:  12px;
     background-color: @bg-glass;
-    text-color: @fg-soft;
+    text-color:     @fg-soft;
     vertical-align: 0.5;
     horizontal-align: 0.5;
-    border: 1px;
-    border-color: @border-soft;
+    border:         1px;
+    border-color:   @border-soft;
 }

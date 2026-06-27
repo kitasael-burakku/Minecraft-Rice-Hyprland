@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  wallpaper_rofi.sh  —  selector de tipo (nivel 0, modi interno)
+#  generate-thumbs.sh — genera thumbnails para el wallpaper picker
+#  Imágenes : convert (ImageMagick)
+#  Videos   : ffmpegthumbnailer
 # ============================================================================
 
 set -u
@@ -8,43 +10,64 @@ set -u
 WALLPAPER_DIR_VIDEO="${WALLPAPER_DIR_VIDEO:-$HOME/Videos/wallpapersvideo}"
 WALLPAPER_DIR_IMG="${WALLPAPER_DIR_IMG:-$HOME/Pictures/Wallpapers}"
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"
-GEN_SCRIPT="${GEN_SCRIPT:-$HOME/.config/rofi/scripts/generate-thumbs.sh}"
-LOG="/tmp/rofi-wallpaper.log"
+THUMB_SIZE="${THUMB_SIZE:-320}"   # ancho del thumbnail en píxeles
+LOG="/tmp/rofi-wallpaper-gen.log"
 
 mkdir -p "$THUMB_DIR"
 
-# OPTIMIZACIÓN: Disparar la generación anticipada INMEDIATAMENTE al abrir Rofi
-if [ "${ROFI_RETV:-0}" = "0" ] && [ -x "$GEN_SCRIPT" ]; then
-    nohup bash "$GEN_SCRIPT" >/tmp/rofi-wallpaper-gen.log 2>&1 &
-    disown
+generated=0
+skipped=0
+errors=0
+
+process_image() {
+    local src="$1"
+    local thumb="$THUMB_DIR/$(basename "$src").jpg"
+
+    [ -f "$thumb" ] && { skipped=$((skipped + 1)); return 0; }
+
+    convert "$src[0]" \
+        -thumbnail "${THUMB_SIZE}x" \
+        -quality 85 \
+        "$thumb" >>"$LOG" 2>&1 \
+    && generated=$((generated + 1)) \
+    || { echo "$(date) ERROR imagen: $src" >> "$LOG"; errors=$((errors + 1)); }
+}
+
+process_video() {
+    local src="$1"
+    local thumb="$THUMB_DIR/$(basename "$src").jpg"
+
+    [ -f "$thumb" ] && { skipped=$((skipped + 1)); return 0; }
+
+    ffmpegthumbnailer \
+        -i "$src" \
+        -o "$thumb" \
+        -s "$THUMB_SIZE" \
+        -q 8 \
+        -t 10% \
+        >>"$LOG" 2>&1 \
+    && generated=$((generated + 1)) \
+    || { echo "$(date) ERROR video: $src" >> "$LOG"; errors=$((errors + 1)); }
+}
+
+echo "$(date) === generate-thumbs START ===" >> "$LOG"
+
+# ── Imágenes ──────────────────────────────────────────────────────────────────
+if [ -d "$WALLPAPER_DIR_IMG" ]; then
+    shopt -s nullglob nocaseglob
+    for f in "$WALLPAPER_DIR_IMG"/*.{jpg,jpeg,png,webp,gif}; do
+        [ -f "$f" ] && process_image "$f"
+    done
+    shopt -u nullglob nocaseglob
 fi
 
-if [ "${ROFI_RETV:-0}" = "1" ]; then
-    chosen="${1:-}"
-    echo "$(date) TIPO ELEGIDO: $chosen" >> "$LOG"
-
-    case "$chosen" in
-        *"Video"*)
-            src_dir="$WALLPAPER_DIR_VIDEO"
-            prompt_label="󰎁  Video"
-            ;;
-        *"Imagen"*)
-            src_dir="$WALLPAPER_DIR_IMG"
-            prompt_label="󰉏  Imagen"
-            ;;
-        *)
-            echo "$(date) ERROR: tipo desconocido '$chosen'" >> "$LOG"
-            exit 1
-            ;;
-    esac
-
-    # Guardar las variables de estado e instrucciones para el wrapper externo
-    printf '%s\t%s' "$src_dir" "$prompt_label" > /tmp/rofi-wallpaper-next
-
-    exit 0
+# ── Videos ────────────────────────────────────────────────────────────────────
+if [ -d "$WALLPAPER_DIR_VIDEO" ]; then
+    shopt -s nullglob nocaseglob
+    for f in "$WALLPAPER_DIR_VIDEO"/*.{mp4,mkv,mov,webm}; do
+        [ -f "$f" ] && process_video "$f"
+    done
+    shopt -u nullglob nocaseglob
 fi
 
-echo -en "\0prompt\x1fWallpaper\n"
-echo -en "\0no-custom\x1ftrue\n"
-echo -en "󰎁  Video\0icon\x1fvideo-x-generic\n"
-echo -en "󰉏  Imagen\0icon\x1fimage-x-generic\n"
+echo "$(date) === generate-thumbs END | generados=$generated saltados=$skipped errores=$errors ===" >> "$LOG"

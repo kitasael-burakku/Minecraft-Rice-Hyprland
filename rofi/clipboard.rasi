@@ -1,5 +1,5 @@
 /* =====================================================
-   CLIPBOARD — Kitasan Glass
+   CLIPBOARD — Kitasan Glass Refinado
    ===================================================== */
 
 configuration {
@@ -7,23 +7,23 @@ configuration {
 }
 
 * {
-    font: "JetBrainsMono Nerd Font Propo 10";
+    font:           "JetBrainsMono Nerd Font Propo 11";
 
-    bg-main:      #1e1e1ecc;
-    bg-glass:     #1a1a1a99;
-    bg-selected:  #b0bec526;
-    bg-hover:     #404040cc;
+    bg-main:        #1a1a1adc;
+    bg-glass:       #141414aa;
+    bg-selected:    #b0bec52a;
+    bg-hover:       #383838cc;
 
-    fg:           #e6e6e6;
-    fg-muted:     #909090;
-    fg-dim:       #6f6f6f;
+    fg:             #ececec;
+    fg-muted:       #909090;
+    fg-dim:         #5a5a5a;
 
-    border:       #b8c5cc66;
-    border-soft:  #6f6f6f55;
-    border-hover: #b8c5ccaa;
+    border:         #b8c5cc55;
+    border-soft:    #6f6f6f40;
+    border-hover:   #b8c5cc99;
 
-    accent:       #f7f7f7;
-    accent-muted: #b8c5cc;
+    accent:         #f0f0f0;
+    accent-muted:   #b8c5cc;
 
     background-color: transparent;
     text-color: @fg;
@@ -48,17 +48,11 @@ mainbox {
     children:         [ "inputbar", "listbox" ];
 }
 
-listbox {
-    spacing:          12px;
-    padding:          16px 20px 20px 20px;
-    background-color: transparent;
-    children:         [ "listview", "message" ];
-}
-
+/* ── Header ───────────────────────────────────────── */
 inputbar {
     spacing:          10px;
-    padding:          14px 20px;
-    background-color: #111111cc;
+    padding:          14px 18px;
+    background-color: #111111bb;
     border:           0px 0px 1px 0px;
     border-color:     @border-soft;
     text-color:       @fg;
@@ -69,7 +63,7 @@ prompt {
     expand:           false;
     str:              "󰅇";
     padding:          8px 12px;
-    border-radius:    100%;
+    border-radius:    10px;
     background-color: @bg-glass;
     border:           1px;
     border-color:     @border-soft;
@@ -80,7 +74,7 @@ prompt {
 entry {
     expand:           true;
     padding:          8px 14px;
-    border-radius:    100%;
+    border-radius:    10px;
     background-color: @bg-glass;
     border:           1px;
     border-color:     @border-soft;
@@ -90,23 +84,31 @@ entry {
     placeholder-color: @fg-dim;
 }
 
-listview {
-    columns:      1;
-    lines:        12;
-    cycle:        true;
-    dynamic:      true;
-    scrollbar:    false;
-    layout:       vertical;
-    fixed-height: true;
-    spacing:      4px;
+/* ── Lista dinámica ───────────────────────────────── */
+listbox {
+    spacing:          10px;
+    padding:          14px 16px 16px 16px;
     background-color: transparent;
-    text-color:   @fg;
+    children:         [ "listview", "message" ];
+}
+
+listview {
+    columns:          1;
+    lines:            10;         /* máximo */
+    cycle:            true;
+    fixed-height:     false;      /* se encoge si hay pocos items */
+    dynamic:          true;       /* se ajusta al filtrar */
+    scrollbar:        false;
+    layout:           vertical;
+    spacing:          3px;
+    background-color: transparent;
+    text-color:       @fg;
 }
 
 element {
-    padding:          8px 12px;
+    padding:          9px 13px;
     spacing:          10px;
-    border-radius:    100%;
+    border-radius:    10px;
     border:           1px;
     border-color:     transparent;
     background-color: transparent;
@@ -141,7 +143,7 @@ message {
 
 textbox {
     padding:          10px 14px;
-    border-radius:    100%;
+    border-radius:    10px;
     background-color: @bg-glass;
     text-color:       @fg-muted;
     vertical-align:   0.5;

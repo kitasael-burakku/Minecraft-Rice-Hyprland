@@ -6,7 +6,7 @@
   "modules": [
     {
       "type": "command",
-      "key":  "{#141} User",
+      "key":  "{#141}User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },

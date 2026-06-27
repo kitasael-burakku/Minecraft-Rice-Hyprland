@@ -1,4 +1,4 @@
-/*****----- Lanzador Kitasan Glass -----*****/
+/*****----- Lanzador Kitasan Glass — Refinado -----*****/
 configuration {
     modi:                       "drun,run,filebrowser,window";
     show-icons:                 true;
@@ -7,22 +7,22 @@ configuration {
 }
 
 * {
-    font:                       "JetBrainsMono Nerd Font Propo 10";
+    font:                       "JetBrainsMono Nerd Font Propo 11";
 
-    bg-main:                    #1e1e1ecc;
-    bg-glass:                   #1a1a1a99;
-    bg-hover:                   #404040cc;
-    bg-selected:                #b0bec540;
+    bg-main:                    #1a1a1adc;
+    bg-glass:                   #141414aa;
+    bg-hover:                   #383838cc;
+    bg-selected:                #b0bec53a;
 
-    fg:                         #e6e6e6;
+    fg:                         #ececec;
     fg-muted:                   #909090;
-    fg-dim:                     #6f6f6f;
+    fg-dim:                     #5a5a5a;
 
-    border-col:                 #b8c5cc66;
-    border-soft:                #6f6f6f55;
-    border-hover:               #b8c5ccaa;
+    border-col:                 #b8c5cc55;
+    border-soft:                #6f6f6f40;
+    border-hover:               #b8c5cc99;
 
-    accent:                     #f7f7f7;
+    accent:                     #f0f0f0;
     accent-muted:               #b8c5cc;
 
     background-color:           transparent;
@@ -32,8 +32,8 @@ window {
     transparency:               "real";
     location:                   center;
     anchor:                     center;
-    width:                      500px;
-    border-radius:              16px;
+    width:                      520px;
+    border-radius:              18px;
     border:                     1px;
     border-color:               @border-col;
     background-color:           @bg-main;
@@ -45,23 +45,22 @@ mainbox {
     children:                   [ "inputbar", "listbox" ];
 }
 
-/* ── Inputbar con imagen de fondo ────────────────────────── */
+/* ── Inputbar con banner ──────────────────────────── */
 inputbar {
     spacing:                    10px;
-    /* padding-top grande = empuja el search al fondo de la imagen */
-    padding:                    160px 16px 12px 16px;
+    padding:                    148px 18px 14px 18px;
     background-image:           url("~/.config/rofi/assets/sidebar.png", width);
     background-color:           transparent;
     border:                     0px 0px 1px 0px;
     border-color:               @border-soft;
-    border-radius:              16px 16px 0px 0px;
+    border-radius:              18px 18px 0px 0px;
     children:                   [ "textbox-prompt-colon", "entry" ];
 }
 
 textbox-prompt-colon {
     expand:                     false;
     str:                        "󰍉";
-    padding:                    8px 12px;
+    padding:                    9px 13px;
     border-radius:              10px;
     background-color:           @bg-glass;
     border:                     1px;
@@ -71,7 +70,7 @@ textbox-prompt-colon {
 
 entry {
     expand:                     true;
-    padding:                    8px 14px;
+    padding:                    9px 15px;
     border-radius:              10px;
     background-color:           @bg-glass;
     border:                     1px;
@@ -79,30 +78,41 @@ entry {
     text-color:                 @fg;
     placeholder:                "Buscar aplicaciones...";
     placeholder-color:          @fg-dim;
+    cursor:                     text;
 }
 
-/* ── Lista ───────────────────────────────────────────────── */
+/* ── Lista dinámica ───────────────────────────────── */
 listbox {
-    spacing:                    10px;
-    padding:                    16px;
+    spacing:                    8px;
+    padding:                    14px;
     children:                   [ "listview" ];
 }
 
 listview {
     columns:                    1;
-    lines:                      7;
+    lines:                      8;            /* máximo visible */
     cycle:                      true;
-    fixed-height:               true;
-    spacing:                    4px;
+    fixed-height:               false;        /* se encoge si hay pocos resultados */
+    dynamic:                    true;         /* se ajusta al filtrar */
+    scrollbar:                  false;
+    spacing:                    3px;
 }
 
 element {
-    padding:                    10px 14px;
+    padding:                    9px 14px;
     spacing:                    12px;
     border-radius:              10px;
     border:                     1px;
     border-color:               transparent;
     text-color:                 @fg-muted;
+    cursor:                     pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color:           transparent;
+    text-color:                 @fg-muted;
+    border-color:               transparent;
 }
 
 element selected.normal {
@@ -112,7 +122,7 @@ element selected.normal {
 }
 
 element-icon {
-    size:                       24px;
+    size:                       22px;
     text-color:                 inherit;
 }
 

@@ -1,5 +1,5 @@
 /* =====================================================
-   WALLPAPER TYPE SELECTOR — Kitasan Glass
+   WALLPAPER TYPE SELECTOR — Kitasan Glass Refinado
    ===================================================== */
 
 configuration {
@@ -7,118 +7,128 @@ configuration {
 }
 
 * {
-    font:                       "JetBrainsMono Nerd Font Propo 10";
-    bg-main:                    #1e1e1ecc;
-    bg-glass:                   #1a1a1a99;
-    bg-hover:                   #404040cc;
-    bg-selected:                #b0bec540; /* 25% de opacidad para mejor contraste */
+    font:           "JetBrainsMono Nerd Font Propo 11";
 
-    fg:                         #e6e6e6;
-    fg-soft:                    #d8d8d8;
-    fg-muted:                   #909090;
-    fg-dim:                     #6f6f6f;
+    bg-main:        #1a1a1adc;
+    bg-glass:       #141414aa;
+    bg-hover:       #383838cc;
+    bg-selected:    #b0bec53a;
 
-    border-col:                 #b8c5cc66;
-    border-soft:                #6f6f6f55;
-    border-hover:               #b8c5ccaa;
+    fg:             #ececec;
+    fg-soft:        #d8d8d8;
+    fg-muted:       #909090;
+    fg-dim:         #5a5a5a;
 
-    accent:                     #f7f7f7;
-    accent-muted:               #b8c5cc;
+    border-col:     #b8c5cc55;
+    border-soft:    #6f6f6f40;
+    border-hover:   #b8c5cc99;
 
-    background-color:           transparent;
-    text-color:                 @fg;
+    accent:         #f0f0f0;
+    accent-muted:   #b8c5cc;
+
+    background-color: transparent;
+    text-color: @fg;
 }
 
 window {
-    transparency:               "real";
-    location:                   center;
-    anchor:                     center;
-    fullscreen:                 false;
-    width:                      440px;
-    border-radius:              20px;
-    border:                     1px;
-    border-color:               @border-col;
-    background-color:           @bg-main;
+    transparency:   "real";
+    location:       center;
+    anchor:         center;
+    fullscreen:     false;
+    width:          440px;
+    border-radius:  20px;
+    border:         1px;
+    border-color:   @border-col;
+    background-color: @bg-main;
 }
 
 mainbox {
-    spacing:                    0px;
-    padding:                    0px;
-    children:                   [ "inputbar", "listbox" ];
+    spacing:        0px;
+    padding:        0px;
+    children:       [ "inputbar", "listbox" ];
 }
 
-listbox {
-    spacing:                    16px;
-    padding:                    20px;
-    children:                   [ "listview" ];
-}
-
+/* ── Banner + search ──────────────────────────────── */
 inputbar {
-    spacing:                    12px;
-    padding:                    80px 30px 24px 30px; /* Sostiene tu banner perfectamente */
-    background-image:           url("~/.config/rofi/assets/sidebar.png", width);
-    orientation:                horizontal;
-    children:                   [ "textbox-prompt-colon", "entry" ];
+    spacing:        12px;
+    padding:        80px 28px 22px 28px;
+    background-image: url("~/.config/rofi/assets/sidebar.png", width);
+    border:         0px 0px 1px 0px;
+    border-color:   @border-soft;
+    border-radius:  20px 20px 0px 0px;
+    orientation:    horizontal;
+    children:       [ "textbox-prompt-colon", "entry" ];
 }
 
 textbox-prompt-colon {
-    expand:                     false;
-    str:                        "󰋫";
-    padding:                    12px 15px;
-    border-radius:              12px;
+    expand:         false;
+    str:            "󰋫";
+    padding:        11px 14px;
+    border-radius:  11px;
     background-color: @bg-glass;
-    border:                     1px;
-    border-color:               @border-soft;
-    text-color:                 @accent-muted;
-    font:                       "JetBrainsMono Nerd Font Propo Bold 12";
+    border:         1px;
+    border-color:   @border-soft;
+    text-color:     @accent-muted;
+    font:           "JetBrainsMono Nerd Font Propo Bold 12";
 }
 
 entry {
-    expand:                     true;
-    padding:                    12px 18px;
-    border-radius:              12px;
-    background-color:           @bg-glass;
-    border:                     1px;
-    border-color:               @border-soft;
-    text-color:                 @fg;
-    placeholder:                "Tipo de wallpaper...";
-    placeholder-color:          @fg-dim;
+    expand:         true;
+    padding:        11px 16px;
+    border-radius:  11px;
+    background-color: @bg-glass;
+    border:         1px;
+    border-color:   @border-soft;
+    text-color:     @fg;
+    placeholder:    "Tipo de wallpaper...";
+    placeholder-color: @fg-dim;
+    cursor:         text;
+}
+
+/* ── Lista — solo 2 opciones, sin dinamismo innecesario */
+listbox {
+    spacing:        14px;
+    padding:        18px;
+    children:       [ "listview" ];
 }
 
 listview {
-    columns:                    1;
-    lines:                      2;
-    cycle:                      false;
-    fixed-height:               true;
-    spacing:                    8px;
+    columns:        1;
+    lines:          2;
+    cycle:          false;
+    fixed-height:   true;   /* siempre son 2 opciones */
+    scrollbar:      false;
+    spacing:        8px;
 }
 
 element {
-    spacing:                    12px;
-    padding:                    12px 16px;
-    border-radius:              12px; /* Corregido 100% -> curva limpia y simétrica */
-    border:                     1px;
-    border-color:               transparent;
-    text-color:                 @fg-muted;
+    spacing:        12px;
+    padding:        13px 16px;
+    border-radius:  12px;
+    border:         1px;
+    border-color:   transparent;
+    text-color:     @fg-muted;
+    cursor:         pointer;
 }
 
 element normal.normal,
 element alternate.normal {
-    background-color:           transparent;
-    text-color:                 @fg-muted;
-    border-color:               transparent;
+    background-color: transparent;
+    text-color:     @fg-muted;
+    border-color:   transparent;
 }
 
 element selected.normal {
-    background-color:           @bg-selected;
-    text-color:                 @fg;
-    border-color:               @border-hover;
+    background-color: @bg-selected;
+    text-color:     @fg;
+    border-color:   @border-hover;
 }
 
 element-icon {
-    size:                       24px;
+    size:           24px;
 }
 
 element-text {
-    vertical-align:             0.5;
+    vertical-align: 0.5;
+    text-color:     inherit;
 }

@@ -13,7 +13,7 @@
     "break",
     {
       "type": "command",
-      "key":  "{#31} User",
+      "key":  "{#31}User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
