@@ -9,9 +9,9 @@ alias ll="eza -lah --icons --group-directories-first"
 alias la="eza -a --icons --group-directories-first"
 alias move="mv -iv"
 alias copy="cp -iv"
-alias copyall="cp -riv"
+alias copyr="cp -riv"
 alias remove="rm -iv"
-alias removeall="rm -riv"
+alias remover="rm -riv"
 
 # ── System Maintenance ───────────────────────────────────
 alias mirrors="sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist"
