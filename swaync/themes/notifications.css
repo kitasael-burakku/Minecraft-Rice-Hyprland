@@ -1,0 +1,224 @@
+/* ============================================================
+   Swaync — Floating Notifications
+   ============================================================ */
+
+:root {
+  --bg-base:       rgba(26, 26, 26, 0.60);
+  --bg-hover:      rgba(64, 64, 64, 0.85);
+  --bg-action:     rgba(117, 117, 117, 0.15);
+  --bg-progress:   rgba(117, 117, 117, 0.20);
+
+  --border-base:   rgba(176, 190, 197, 0.40);
+  --border-dim:    rgba(176, 190, 197, 0.22);
+  --border-hover:  rgba(176, 190, 197, 0.55);
+  --border-bottom: rgba(176, 190, 197, 0.40);
+
+  --red:           #ff5252;
+  --border-red:    rgba(255, 82, 82, 0.28);
+  --border-red-b:  rgba(255, 82, 82, 0.35);
+  --bg-red-hover:  rgba(255, 82, 82, 0.12);
+  --bg-red-active: rgba(255, 82, 82, 0.24);
+
+  --text-primary:  #f5f5f5;
+  --text-body:     #d1d1d1;
+  --text-muted:    #8a8a8a;
+  --text-active:   #050505;
+
+  --radius-card:   18px;
+  --radius-body:   16px;
+  --radius-action: 10px;
+  --radius-close:  8px;
+  --radius-pill:   99px;
+
+  --shadow-card:
+    0 2px 10px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  --transition: 300ms ease-in-out;
+}
+
+* {
+  all: unset;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
+}
+
+.notification-row {
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Card shell ─────────────────────────────────────────── */
+
+.floating-notifications.background
+.notification-row
+.notification-background {
+  background:    var(--bg-base);
+  border:        1px solid var(--border-base);
+  border-bottom: 2px solid var(--border-bottom);
+  border-radius: var(--radius-card);
+  margin:        16px;
+  padding:       0;
+  box-shadow:    var(--shadow-card);
+  transition:    background var(--transition), border-color var(--transition);
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background:hover {
+  background:          var(--bg-hover);
+  border-color:        rgba(176, 190, 197, 0.30);
+  border-bottom-color: var(--border-hover);
+}
+
+/* ── Notification body ──────────────────────────────────── */
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification {
+  padding:       8px;
+  border-radius: var(--radius-body);
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification
+.notification-content {
+  margin: 8px;
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification
+> *:last-child
+> * {
+  min-height: 3.4em;
+}
+
+/* ── Critical ───────────────────────────────────────────── */
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification.critical {
+  border:        1px solid var(--border-red);
+  border-bottom: 2px solid var(--border-red-b);
+  box-shadow:    inset 0 0 10px rgba(255, 82, 82, 0.08);
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification.critical
+.summary {
+  color: var(--red);
+}
+
+/* ── Actions ────────────────────────────────────────────── */
+
+.notification-action {
+  background:    var(--bg-base);
+  color:         var(--text-body);
+  border-radius: var(--radius-action);
+  margin:        6px;
+  padding:       8px 12px;
+  border:        1px solid var(--border-dim);
+  transition:    background var(--transition), color var(--transition),
+                 border-color var(--transition);
+}
+
+.notification-action:hover {
+  background:   var(--bg-action);
+  color:        var(--text-primary);
+  border-color: var(--border-base);
+}
+
+.notification-action:active {
+  background: var(--border-base);
+  color:      var(--text-active);
+}
+
+/* ── Images ─────────────────────────────────────────────── */
+
+.image {
+  border-radius: var(--radius-action);
+  margin:        6px 12px 6px 0;
+}
+
+/* ── Typography ─────────────────────────────────────────── */
+
+.summary {
+  color:          var(--text-primary);
+  font-weight:    800;
+  font-size:      1rem;
+  letter-spacing: 0.02em;
+}
+
+.body {
+  color:     var(--text-body);
+  font-size: 0.8rem;
+}
+
+.time,
+.app-name {
+  color: var(--text-muted);
+}
+
+/* ── Close button ───────────────────────────────────────── */
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.close-button {
+  margin:        6px;
+  padding:       4px;
+  border-radius: var(--radius-close);
+  background:    transparent;
+  color:         var(--text-muted);
+  border:        1px solid transparent;
+  transition:    background var(--transition), color var(--transition),
+                 border-color var(--transition);
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.close-button:hover {
+  background:   var(--bg-red-hover);
+  color:        var(--red);
+  border-color: var(--border-red);
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.close-button:active {
+  background: var(--bg-red-active);
+  color:      var(--text-primary);
+}
+
+/* ── Progress ───────────────────────────────────────────── */
+
+progressbar,
+progress,
+trough {
+  border-radius: var(--radius-pill);
+}
+
+trough {
+  background: var(--bg-progress);
+}
+
+.notification.low progress,
+.notification.normal progress {
+  background: rgba(176, 190, 197, 0.75);
+}
+
+.notification.critical progress {
+  background: var(--red);
+}

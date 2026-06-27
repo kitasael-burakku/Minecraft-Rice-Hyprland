@@ -1,0 +1,375 @@
+/* ============================================================
+   Swaync — Control Center
+   ============================================================ */
+
+:root {
+  --bg-base:       rgba(26, 26, 26, 0.60);
+  --bg-dark:       rgba(5, 5, 5, 0.76);
+  --bg-hover:      rgba(64, 64, 64, 0.85);
+  --bg-hover-dim:  rgba(64, 64, 64, 0.72);
+  --bg-action:     rgba(117, 117, 117, 0.15);
+  --bg-progress:   rgba(117, 117, 117, 0.20);
+
+  --border-base:   rgba(176, 190, 197, 0.40);
+  --border-mid:    rgba(176, 190, 197, 0.28);
+  --border-dim:    rgba(176, 190, 197, 0.24);
+  --border-low:    rgba(176, 190, 197, 0.20);
+  --border-hover:  rgba(176, 190, 197, 0.35);
+  --border-bottom: rgba(176, 190, 197, 0.30);
+  --border-btm-hv: rgba(176, 190, 197, 0.45);
+
+  --red:           #ff5252;
+  --border-red:    rgba(255, 82, 82, 0.28);
+  --border-red-b:  rgba(255, 82, 82, 0.35);
+  --bg-red-hover:  rgba(255, 82, 82, 0.12);
+  --bg-red-active: rgba(255, 82, 82, 0.24);
+
+  --text-primary:  #f5f5f5;
+  --text-body:     #d1d1d1;
+  --text-muted:    #8a8a8a;
+  --text-base:     #e0e0e0;
+  --text-active:   #050505;
+
+  --radius-outer:  24px;
+  --radius-card:   16px;
+  --radius-widget: 14px;
+  --radius-button: 10px;
+  --radius-close:  8px;
+  --radius-image:  10px;
+  --radius-pill:   99px;
+
+  --shadow-base: 0 2px 10px rgba(0, 0, 0, 0.30);
+  --shadow-dim:  0 2px 10px rgba(0, 0, 0, 0.20);
+
+  --transition: 300ms ease-in-out;
+}
+
+* {
+  all: unset;
+  color:       var(--text-base);
+  font-size:   14px;
+  font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
+}
+
+.blank-window {
+  background: transparent;
+}
+
+/* ── Control center shell ───────────────────────────────── */
+
+.control-center {
+  background:    var(--bg-base);
+  border-radius: var(--radius-outer);
+  border:        1px solid var(--border-base);
+  box-shadow:    var(--shadow-base);
+  margin:        18px;
+  padding:       12px;
+}
+
+/* ── Notifications ──────────────────────────────────────── */
+
+.control-center .notification-row .notification-background {
+  background:    var(--bg-base);
+  border-radius: var(--radius-card);
+  margin:        6px 0;
+  padding:       4px;
+  border:        1px solid var(--border-dim);
+  border-bottom: 2px solid var(--border-bottom);
+  transition:    background var(--transition), border-color var(--transition);
+}
+
+.control-center .notification-row .notification-background:hover {
+  background:          var(--bg-hover-dim);
+  border-color:        rgba(176, 190, 197, 0.30);
+  border-bottom-color: var(--border-btm-hv);
+}
+
+.control-center
+.notification-row
+.notification-background
+.notification.critical {
+  background:    rgba(26, 26, 26, 0.72);
+  border-radius: var(--radius-card);
+  border:        1px solid var(--border-red);
+  border-bottom: 2px solid var(--border-red-b);
+  color:         var(--red);
+}
+
+.control-center .notification-content {
+  margin:  6px;
+  padding: 8px 6px 2px 2px;
+}
+
+/* ── Icons & images ─────────────────────────────────────── */
+
+.notification-icon {
+  min-width:  48px;
+  min-height: 48px;
+  margin:     10px 16px 10px 0;
+}
+
+.notification-icon image,
+.notification-icon box,
+.notification-icon picture {
+  -gtk-icon-size: 48px;
+}
+
+.image {
+  min-width:     64px;
+  min-height:    64px;
+  border-radius: var(--radius-image);
+  margin:        6px 12px 6px 0;
+}
+
+/* ── Close button ───────────────────────────────────────── */
+
+.close-button {
+  background:    transparent;
+  border-radius: var(--radius-close);
+  color:         var(--text-muted);
+  margin:        0;
+  padding:       4px;
+  transition:    background var(--transition), color var(--transition);
+}
+
+.close-button:hover {
+  background: var(--bg-red-hover);
+  color:      var(--red);
+}
+
+.close-button:active {
+  background: var(--bg-red-active);
+  color:      var(--text-primary);
+}
+
+/* ── Progress ───────────────────────────────────────────── */
+
+progressbar,
+progress,
+trough {
+  border-radius: var(--radius-pill);
+}
+
+progressbar {
+  background: var(--bg-progress);
+}
+
+progress {
+  background: rgba(176, 190, 197, 0.70);
+}
+
+/* ── Notification groups ────────────────────────────────── */
+
+.notification-group {
+  margin: 2px 8px;
+}
+
+.notification-group-headers {
+  font-weight:    bold;
+  font-size:      1.25rem;
+  color:          var(--text-body);
+  letter-spacing: 2px;
+}
+
+.notification-group-icon {
+  color: var(--text-body);
+}
+
+.notification-group-collapse-button,
+.notification-group-close-all-button {
+  background:    transparent;
+  color:         var(--text-body);
+  margin:        4px;
+  border-radius: var(--radius-close);
+  padding:       4px;
+  transition:    background var(--transition);
+}
+
+.notification-group-collapse-button:hover,
+.notification-group-close-all-button:hover {
+  background: var(--bg-action);
+}
+
+/* ── Title widget ───────────────────────────────────────── */
+
+.widget-title {
+  font-size:   1.2em;
+  margin:      6px;
+  color:       var(--text-body);
+  font-weight: 700;
+}
+
+.widget-title button {
+  background:    var(--bg-base);
+  border-radius: var(--radius-button);
+  padding:       4px 16px;
+  border:        1px solid var(--border-mid);
+  color:         var(--text-body);
+  transition:    background var(--transition), border-color var(--transition),
+                 color var(--transition);
+}
+
+.widget-title button:hover {
+  background:   var(--bg-hover);
+  border-color: var(--border-hover);
+  color:        var(--text-primary);
+}
+
+.widget-title button:active {
+  background: var(--border-base);
+  color:      var(--text-active);
+}
+
+/* ── DND widget ─────────────────────────────────────────── */
+
+.widget-dnd {
+  margin:    6px;
+  font-size: 1.2rem;
+  color:     var(--text-body);
+}
+
+.widget-dnd > switch {
+  background:    var(--bg-base);
+  border-radius: var(--radius-pill);
+  box-shadow:    none;
+  padding:       3px;
+  border:        1px solid var(--border-mid);
+  transition:    background var(--transition);
+}
+
+.widget-dnd > switch:hover {
+  background: rgba(64, 64, 64, 0.65);
+}
+
+.widget-dnd > switch:checked {
+  background: rgba(176, 190, 197, 0.40);
+}
+
+.widget-dnd > switch:checked:hover {
+  background: rgba(176, 190, 197, 0.50);
+}
+
+.widget-dnd > switch slider {
+  background:    var(--text-primary);
+  border-radius: var(--radius-pill);
+}
+
+/* ── Button grid widget ─────────────────────────────────── */
+
+.widget-buttons-grid {
+  font-size:     x-large;
+  padding:       6px 2px;
+  margin:        6px;
+  border-radius: var(--radius-widget);
+  background:    var(--bg-base);
+  border:        1px solid var(--border-dim);
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  margin:        4px 10px;
+  padding:       6px 12px;
+  background:    transparent;
+  border-radius: var(--radius-button);
+  color:         var(--text-body);
+  transition:    background var(--transition), color var(--transition);
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  background: var(--bg-action);
+  color:      var(--text-primary);
+}
+
+/* ── MPRIS widget ───────────────────────────────────────── */
+
+.widget-mpris {
+  background:    var(--bg-base);
+  border-radius: var(--radius-widget);
+  color:         var(--text-base);
+  margin:        10px 6px;
+  padding:       4px;
+  border:        1px solid var(--border-low);
+  border-bottom: 2px solid rgba(176, 190, 197, 0.28);
+  box-shadow:    var(--shadow-dim);
+}
+
+.widget-mpris-player {
+  background:    var(--bg-dark);
+  border-radius: var(--radius-widget);
+  padding:       6px 10px;
+  margin:        4px;
+  min-height:    64px;
+}
+
+.widget-mpris-album-art {
+  min-width:     52px;
+  min-height:    52px;
+  border-radius: var(--radius-image);
+  margin-right:  10px;
+}
+
+.widget-mpris > box > button {
+  border-radius: var(--radius-pill);
+}
+
+.widget-mpris button {
+  color:      rgba(209, 209, 209, 0.60);
+  min-width:  20px;
+  min-height: 20px;
+  padding:    2px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.widget-mpris button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color:      var(--text-primary);
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  font-size:   0.92rem;
+  color:       var(--text-primary);
+}
+
+.widget-mpris-subtitle {
+  font-weight: 500;
+  font-size:   0.72rem;
+  color:       var(--text-muted);
+}
+
+picture.mpris-background {
+  opacity: 0;
+}
+
+/* ── Volume widget ──────────────────────────────────────── */
+
+.widget-volume {
+  background:    var(--bg-base);
+  color:         var(--text-base);
+  padding:       8px;
+  margin:        6px;
+  border-radius: 12px;
+  border:        1px solid var(--border-dim);
+}
+
+.widget-volume trough {
+  background:    var(--bg-progress);
+  border-radius: var(--radius-pill);
+  min-height:    8px;
+}
+
+.widget-volume highlight {
+  background:    rgba(176, 190, 197, 0.75);
+  border-radius: var(--radius-pill);
+}
+
+.widget-volume slider {
+  background:    var(--text-primary);
+  border-radius: var(--radius-pill);
+  min-width:     12px;
+  min-height:    12px;
+}
+
+.widget-volume label {
+  color:        var(--text-body);
+  margin-right: 10px;
+}
