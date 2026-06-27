@@ -82,7 +82,7 @@ SCRATCHPAD
 ----------
 
 SUPER + S                  Toggle scratchpad
-SUPER + SHIFT + S          Move window to scratchpad
+SUPER + SHIFT + S          Move window to/from scratchpad (toggle)
 
 
 MEDIA

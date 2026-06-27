@@ -169,7 +169,18 @@ end
 hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
 
 -- Move window to scratchpad
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + SHIFT + S", function()
+    local win = hl.get_active_window()
+    if not win then return end
+
+    if win.workspace.special then
+        -- está en special, regresarla al workspace activo
+        hl.dispatch(hl.dsp.window.move({ workspace = "e+0" }))
+    else
+        -- está en workspace normal, mandarla al special
+        hl.dispatch(hl.dsp.window.move({ workspace = "special:magic" }))
+    end
+end)
 
 -----------------------------
 ----        MEDIA         ----
