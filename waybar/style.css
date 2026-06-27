@@ -233,3 +233,34 @@ tooltip label {
 
     text-shadow: 0 0 8px rgba(255, 82, 82, 0.35);
 }
+
+/* -----------------------------------
+   PLAYER
+----------------------------------- */
+
+#custom-playerctl,
+#custom-playerlabel {
+    background: transparent;
+    border: none;
+    border-bottom: none;
+    margin: 0;
+    padding: 3px 8px;
+    min-height: 0;
+}
+
+#custom-playerctl {
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+#custom-playerctl.Playing  { color: #6aab7a; }
+#custom-playerctl.Paused   { color: #686058; }
+#custom-playerctl.Stopped  { color: #686058; }
+
+#custom-playerlabel {
+    font-size: 12px;
+    padding-right: 10px;
+}
+
+#custom-playerlabel.Playing { color: #e0e0e0; }
+#custom-playerlabel.Paused  { color: #686058; }

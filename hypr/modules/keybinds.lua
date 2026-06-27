@@ -103,7 +103,7 @@ hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprlock"))
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " -e btop"))
 
 -- Reload Waybar
--- hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
+ hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch_waybar.sh"))
 
 -- Open Hyprland config in VsCodium
 hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
