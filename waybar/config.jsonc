@@ -1,20 +1,19 @@
 {
-    "height": 34,
     "spacing": 1,
-    "margin-top": 5,
+    "margin-top": 6,
     
     "modules-left": [
-        "disk",
         "pulseaudio",
-        "clock",
+        "pulseaudio/slider",
         "custom/playerctl",
-        "custom/playerlabel"
+        "custom/playerlabel",
+        "clock"
     ],
     "modules-center": [
         "hyprland/window",
         "hyprland/workspaces",
-        "idle_inhibitor",
-        "tray"
+        "wlr/taskbar",
+        "idle_inhibitor"
     ],
     "modules-right": [
         "custom/updates",
@@ -22,6 +21,7 @@
         "temperature",
         "cpu",
         "memory",
+        "disk",
         "custom/power"
     ],
 
@@ -33,7 +33,7 @@
             "^.*Mozilla Firefox.*$": "󰈹  Firefox",
             "^.*Zen Browser.*$":     "󰈹  Zen",
             "^.*Spotify.*$":         "󰓇  Spotify",
-            "^.*fish.*$":            "󰞀  Terminal",
+            "^.*fish.*$":            "  Terminal",
             "^.*Thunar.*$":          "󰉋  Files",
             "^.*Discord.*$":         "󰙯  Discord",
             "^.*VSCodium.*$":        "󰨞  VSCodium",
@@ -44,6 +44,12 @@
             "^.*keybinds.*$":        "󰌌  Keybinds",
             "^.*sysupdate.*$":       "󰚰  Sysupdate"
         }
+    },
+
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 150,
+        "orientation": "horizontal"
     },
 
     "clock": {
@@ -66,6 +72,21 @@
         },
         "persistent-workspaces": {
             "*": 5
+        }
+    },
+
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 20,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "on-click-right": "minimize",
+        "sort-by-app-id": true,
+        "ignore-list": ["kitty"],
+        "app_ids-mapping": {
+            "zen-alpha": "firefox",
+            "zen-beta":  "firefox"
         }
     },
 
@@ -99,10 +120,11 @@
 
     "disk": {
         "interval": 30,
-        "format": "󰋊 {used}/{total}",
+        "format": "󰋊 {percentage_used}%",
         "path": "/",
+        "tooltip": true,
         "unit": "GB",
-        "tooltip-format": " Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
+        "tooltip-format": "     Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
     },
 
     "network": {
@@ -115,14 +137,9 @@
         "on-click": "nm-connection-editor"
     },
 
-    "tray": {
-        "icon-size": 15,
-        "spacing": 10
-    },
-
     "custom/updates": {
         "exec": "~/.config/waybar/scripts/updates.sh",
-        "interval": 60,
+        "interval": 30,
         "signal": 8,
         "return-type": "json",
         "on-click": "kitty fish -lc 'sysupdate; pkill -RTMIN+8 waybar; read -P \"Press Enter to exit\"'",
@@ -163,6 +180,7 @@
         "max-length": 36,
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
         "on-click": "playerctl play-pause",
+        "tooltip":false,
         "format-icons": {
             "Playing": "󰏥",
             "Paused": "󰐌",
@@ -177,6 +195,7 @@
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
         "on-click": "playerctl previous",
         "on-click-middle": "playerctl play-pause",
-        "on-click-right": "playerctl next"
+        "on-click-right": "playerctl next",
+        "tooltip":false
     }
 }
