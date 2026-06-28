@@ -97,6 +97,24 @@ OS: CachyOS
 
 This configuration was developed and tested on this hardware. Some parts depend specifically on AMD.
 
+>> 🚫 **Laptop support**
+
+>> Minecraft Rice Hyprland is primarily developed and tested on desktop hardware.
+
+>> While most components should work on laptops, laptop-specific functionality is currently outside the project's scope.
+
+>> This includes features such as:
+
+>> Battery management
+>> Brightness controls
+>> Power profiles
+>> Laptop function keys
+>> Touchpad gestures beyond the included configuration
+>> Vendor-specific utilities
+>> Suspend/resume tuning
+
+>> Contributions adding optional laptop support are welcome.
+
 ---
 
 ## Tools used
