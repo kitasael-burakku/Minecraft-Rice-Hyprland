@@ -218,14 +218,6 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name  = "obs-workspace",
-    match = {
-        class = "^(com.obsproject.Studio)$",
-    },
-    workspace = "9",
-})
-
-hl.window_rule({
     name  = "kitty-float-opacity",
     match = {
         class = "^(kitty)$",
