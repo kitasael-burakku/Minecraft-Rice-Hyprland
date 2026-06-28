@@ -36,6 +36,7 @@ SUPER + Delete             hyprshutdown (fallback: Exit Hyprland)
 SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      Open btop
+SHIFT + Escape             Open Bottom 
 SUPER + CTRL + H 	       Open Hyprland config in VsCodium
 
 CLIPBOARD / COLOR

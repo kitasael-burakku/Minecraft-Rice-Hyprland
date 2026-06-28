@@ -135,6 +135,18 @@ hl.layer_rule({
     animation = "popin",
 })
 
+-- Wlogout 
+hl.layer_rule({
+    name  = "wlogout",
+    match = {
+        namespace = "logout_dialog",
+    },
+
+    blur = true,
+    ignore_alpha=0.5,
+    animation = "slide",
+})
+
 --------------------------
 ---- WORKSPACE RULES ----
 --------------------------

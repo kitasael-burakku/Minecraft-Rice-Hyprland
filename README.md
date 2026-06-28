@@ -207,7 +207,7 @@ sudo pacman -S \
   jq curl imagemagick libnotify ffmpeg \
   pacman-contrib reflector fzf bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd\
-  thefuck
+  thefuck bottom
 ```
 
 > If you use CachyOS you can download Zen-Browser from pacman packages:
