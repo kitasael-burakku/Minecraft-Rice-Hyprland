@@ -4,11 +4,7 @@
 
   "logo": {
     "source": "cachyos",
-    "type": "builtin",
-    "padding": {
-      "top": 3,
-      "left": 1
-    }
+    "type": "builtin"
   },
 
   "display": {
