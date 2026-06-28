@@ -96,31 +96,6 @@ hl.window_rule({
 })
 
 --------------------
----- ANIMACIONES ----
---------------------
-
--- Ventanas flotantes: popin para sentirse más natural al abrir
-hl.window_rule({
-    name  = "float-anim-popin",
-    match = {
-        float = true,
-        class = "negative:^(mpv|cava-float|rofi)$",
-    },
-
-    animation = "popin 75%",
-})
-
--- Ventanas tiled: slide suave (por defecto ya lo tienen pero lo fijamos)
-hl.window_rule({
-    name  = "tiled-anim-slide",
-    match = {
-        float = false,
-    },
-
-    animation = "slide",
-})
-
---------------------
 ---- LAYER RULES ----
 --------------------
 
@@ -132,23 +107,7 @@ hl.layer_rule({
     },
 
     blur = true,
-})
-
-hl.layer_rule({
-    name  = "swaync-control-alpha",
-    match = {
-        namespace = "swaync-control-center",
-    },
-
     ignore_alpha = 0.5,
-})
-
-hl.layer_rule({
-    name  = "swaync-control-animation",
-    match = {
-        namespace = "swaync-control-center",
-    },
-
     animation = "slide",
 })
 
@@ -160,43 +119,8 @@ hl.layer_rule({
     },
 
     blur = true,
-})
-
-hl.layer_rule({
-    name  = "swaync-window-alpha",
-    match = {
-        namespace = "swaync-notification-window",
-    },
-
     ignore_alpha = 0.5,
-})
-
-hl.layer_rule({
-    name  = "swaync-window-animation",
-    match = {
-        namespace = "swaync-notification-window",
-    },
-
     animation = "slide",
-})
-
--- Logout dialog
-hl.layer_rule({
-    name  = "logout-blur",
-    match = {
-        namespace = "logout_dialog",
-    },
-
-    blur = true,
-})
-
-hl.layer_rule({
-    name  = "logout-animation",
-    match = {
-        namespace = "logout_dialog",
-    },
-
-    animation = "slide 50%",
 })
 
 -- Rofi
@@ -207,42 +131,6 @@ hl.layer_rule({
     },
 
     blur = true,
-})
-
-hl.layer_rule({
-    name  = "rofi-alpha",
-    match = {
-        namespace = "rofi",
-    },
-
-    ignore_alpha = 0.5,
-})
-
-hl.layer_rule({
-    name  = "rofi-animation",
-    match = {
-        namespace = "rofi",
-    },
-
-    animation = "popin 50%",
-})
-
--- Waybar
-hl.layer_rule({
-    name  = "waybar-blur",
-    match = {
-        namespace = "waybar",
-    },
-
-    blur = true,
-})
-
-hl.layer_rule({
-    name  = "waybar-alpha",
-    match = {
-        namespace = "waybar",
-    },
-
     ignore_alpha = 0.5,
 })
 

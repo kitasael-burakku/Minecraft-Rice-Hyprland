@@ -48,44 +48,30 @@ mainbox {
     children:       [ "inputbar", "listbox" ];
 }
 
-/* ── Banner + search ──────────────────────────────── */
+/* ── Banner ───────────────────────────────────────── */
 inputbar {
-    spacing:        12px;
+    spacing:        0px;
     padding:        80px 28px 22px 28px;
     background-image: url("~/.config/rofi/assets/sidebar.png", width);
     border:         0px 0px 1px 0px;
     border-color:   @border-soft;
     border-radius:  20px 20px 0px 0px;
     orientation:    horizontal;
-    children:       [ "textbox-prompt-colon", "entry" ];
+    children:       [ "textbox-title" ];
 }
 
-textbox-prompt-colon {
-    expand:         false;
-    str:            "󰋫";
-    padding:        11px 14px;
-    border-radius:  11px;
-    background-color: @bg-glass;
-    border:         1px;
-    border-color:   @border-soft;
-    text-color:     @accent-muted;
-    font:           "JetBrainsMono Nerd Font Propo Bold 12";
-}
-
-entry {
+textbox-title {
     expand:         true;
+    str:            "󰋫 Select wallpaper type";
     padding:        11px 16px;
     border-radius:  11px;
     background-color: @bg-glass;
     border:         1px;
     border-color:   @border-soft;
-    text-color:     @fg;
-    placeholder:    "Tipo de wallpaper...";
-    placeholder-color: @fg-dim;
-    cursor:         text;
+    text-color:     @fg-muted;
+    font:           "JetBrainsMono Nerd Font Propo 11";
 }
 
-/* ── Lista — solo 2 opciones, sin dinamismo innecesario */
 listbox {
     spacing:        14px;
     padding:        18px;
