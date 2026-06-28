@@ -30,6 +30,7 @@ alias temps="watch -n 2 sensors"
 alias ecswaync="codium ~/.config/swaync"
 alias echypr="codium ~/.config/hypr"
 alias ecwaybar="codium ~/.config/waybar"
+alias ecfish="codium ~/.config/fish" 
 
 alias eckitty="codium ~/.config/kitty"
 alias echyprlock="codium ~/.config/hyprlock"
