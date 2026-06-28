@@ -13,7 +13,7 @@
 "cssPriority": "user",
 
 /* ── Dimensions ──────────────────────────────────────── */
-"control-center-width": 350,
+"control-center-width": 360,
 "control-center-margin-top": 15,
 "control-center-margin-bottom": 15,
 "control-center-margin-right": 0,
@@ -38,7 +38,7 @@
 "notification-inline-replies": true,
 "relative-timestamps": true,
 "notification-2fa-action": false,
-"text-empty": "zzz...",
+"text-empty": "Zzz... (Silence SwayNC is sleeping)",
 
 /* ── Notification visibility rules ──────────────────── */
 "notification-visibility": {
@@ -66,6 +66,7 @@
       "max-lines": 1,
       "text": "ゴールドシップ は 通知センター を 破壊した ✦"
     },
+    
     "mpris": {
       "autohide": true,
       "show-album-art": "when-available",
@@ -79,8 +80,6 @@
       "show-per-app-label": false,
       "expand-per-app": false,
       "empty-list-label": "No active outputs",
-      "expand-button-label": "󰅀",
-      "collapse-button-label": "󰅃",
       "animation-type": "slide_down",
       "animation-duration": 200
     },

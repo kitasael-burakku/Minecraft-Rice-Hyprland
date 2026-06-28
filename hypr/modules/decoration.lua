@@ -11,16 +11,11 @@ hl.config({
         gaps_in  = 15,
         gaps_out = 30,
 
-        border_size = 1,
+        border_size = 2,
 
         col = {
-            active_border = {
-                colors = {
-                    "rgba(c6c6c655)",
-                },
-            },
-
-            inactive_border = "rgba(00000022)",
+            active_border = "rgba(ffffff33)",
+            inactive_border = "rgba(ffffff0a)",
         },
 
         resize_on_border         = true,
@@ -34,45 +29,40 @@ hl.config({
 
     decoration = {
         rounding       = 14,
-        rounding_power = 4,
+        rounding_power = 2.5,
 
         active_opacity   = 0.9,
         inactive_opacity = 0.8,
         fullscreen_opacity = 0.95,
 
-        dim_inactive = true,
-        dim_strength = 0.06,
-
         shadow = {
             enabled      = true,
-            range        = 10,
-            render_power = 2,
-            -- offset por defecto { 0, 0 }, sin desplazamiento
-            color        = 0xee121212,
+            range        = 20,
+            render_power = 3,
+            color        = 0x99000000,
+            offset       = "0 4", 
         },
 
         blur = {
             enabled  = true,
-            size     = 5,
+            size     = 7,
             passes   = 2,
+
             ignore_opacity    = true,
             new_optimizations = true,
-            noise      = 0.010,
-            contrast   = 0.8,   -- bajado de 0.9
-            brightness = 1.1,   -- subido de 1.0
-            vibrancy          = 0.08,
-            vibrancy_darkness = 0.06,
+
+            xray = false,
+
             special = true,
-            popups                    = true,
-            popups_ignorealpha        = 0.20,
+
+            vibrancy =0.18,
+            vibrancy_darkness = 0.0,
             input_methods             = true,
             input_methods_ignorealpha = 0.20,
         },
-
     },
 
     animations = {
         enabled = true,
-        -- Curvas y animaciones definidas en animations.lua
     },
 })

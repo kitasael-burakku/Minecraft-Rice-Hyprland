@@ -132,6 +132,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.5,
+    animation = "popin",
 })
 
 --------------------------
@@ -214,14 +215,5 @@ hl.window_rule({
     center = true,
     size   = "1000 600",
 
-    opacity = "0.8 override 0.7 override",
-})
-
-hl.window_rule({
-    name  = "kitty-float-opacity",
-    match = {
-        class = "^(kitty)$",
-        float = true,
-    },
-    opacity = "0.8 override 0.7 override",
+    -- opacity = "0.8 override 0.7 override",
 })
