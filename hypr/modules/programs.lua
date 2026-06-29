@@ -8,7 +8,7 @@
 -- Set programs that you use
 Programs = {
     terminal    = "kitty",
-    fileManager = "thunar",
+    fileManager = "nautilus",
     menu        = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/launcher.sh",
     browser     = "zen-browser",
     music       = "spotify-launcher",
