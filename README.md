@@ -203,7 +203,7 @@ sudo pacman -S \
   networkmanager network-manager-applet \
   bluez bluez-utils blueman \
   wl-clipboard cliphist grim slurp swappy \
-  thunar btop udiskie polkit-kde-agent \
+  nautilus btop udiskie polkit-kde-agent \
   jq curl imagemagick libnotify ffmpeg \
   pacman-contrib reflector fzf bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd\
@@ -521,7 +521,7 @@ At minimum, review before using:
 - `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft3.mp4` to yours.
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
 - `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
-- `hypr/modules/programs.lua` — change `kitty`, `thunar`, or the launcher if you use other apps.
+- `hypr/modules/programs.lua` — change `kitty`, `nautilus`, or the launcher if you use other apps.
 - `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
 - `waybar/config.jsonc` — change `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
 - `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/1.png` if you use a different wallpaper.
