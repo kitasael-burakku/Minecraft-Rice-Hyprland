@@ -7,7 +7,7 @@ configuration {
 }
 
 * {
-    font:           "JetBrainsMono Nerd Font Propo 11";
+    font:           "JetBrainsMono Nerd Font Propo 12";
 
     bg-main:        #1a1a1adc;
     bg-glass:       #141414aa;
@@ -66,7 +66,7 @@ prompt {
 
 entry {
     text-color:     @fg;
-    placeholder:    "Buscar fondo de pantalla...";
+    placeholder:    "Find you wallpaper...";
     placeholder-color: @fg-dim;
     cursor:         text;
 }
@@ -75,8 +75,8 @@ entry {
 
 listview {
     columns:        6;
-    lines:          1;
-    cycle:          true;
+    lines:          2;
+    cycle:          false;
     fixed-height:   false;
     dynamic:        true;
     fixed-columns:  false;

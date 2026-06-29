@@ -107,7 +107,7 @@ hl.layer_rule({
     },
 
     blur = true,
-    ignore_alpha = 0.5,
+    ignore_alpha = 0.4,
     animation = "slide",
 })
 
@@ -119,7 +119,7 @@ hl.layer_rule({
     },
 
     blur = true,
-    ignore_alpha = 0.5,
+    ignore_alpha = 0.4,
     animation = "slide",
 })
 
@@ -131,7 +131,7 @@ hl.layer_rule({
     },
 
     blur = true,
-    ignore_alpha = 0.5,
+    ignore_alpha = 0.9,
     animation = "popin",
 })
 

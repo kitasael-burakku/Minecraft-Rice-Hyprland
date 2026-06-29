@@ -54,7 +54,6 @@
     "label",
     "mpris",
     "volume",
-    "inhibitors",
     "title",
     "dnd",
     "notifications"
@@ -82,12 +81,6 @@
       "empty-list-label": "No active outputs",
       "animation-type": "slide_down",
       "animation-duration": 200
-    },
-
-    "inhibitors": {
-      "text": "Inhibidores",
-      "clear-all-button": true,
-      "button-text": "Limpiar 󰎟 "
     },
 
     "title": {

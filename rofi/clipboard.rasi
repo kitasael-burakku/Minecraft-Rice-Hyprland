@@ -80,7 +80,7 @@ entry {
     border-color:     @border-soft;
     text-color:       @fg;
     cursor:           text;
-    placeholder:      "Buscar en historial...";
+    placeholder:      "Search History...";
     placeholder-color: @fg-dim;
 }
 

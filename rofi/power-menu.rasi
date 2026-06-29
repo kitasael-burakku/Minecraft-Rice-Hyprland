@@ -7,7 +7,7 @@ configuration {
 }
 
 * {
-    font:           "DepartureMono Nerd Font 12";
+    font:           "JetBrainsMono Nerd Font 13";
 
     bg:             #1a1a1adc;
     bg-glass:       #141414aa;
@@ -62,11 +62,11 @@ inputbar {
 
 prompt {
     text-color:       @accent-muted;
-    font:             "DepartureMono Nerd Font 13";
+    font:             "JetBrainsMono Nerd Font 13";
 }
 
 entry {
-    placeholder:      "Confirma con Enter...";
+    placeholder:      "Enter to confirm...";
     placeholder-color: @fg-dim;
     text-color:       @fg;
     background-color: transparent;
@@ -78,7 +78,7 @@ listview {
     columns:          1;
     spacing:          8px;
     cycle:            true;
-    fixed-height:     true;   /* el power menu siempre muestra las 5 opciones */
+    fixed-height:     true;
     scrollbar:        false;
     background-color: transparent;
 }

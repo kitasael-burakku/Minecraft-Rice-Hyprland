@@ -104,7 +104,7 @@ hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title 
 hl.bind("SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title bottom -e btm"))
 
 -- Reload Waybar & SwayNc
--- hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch.sh"))
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch.sh"))
 
 -- Open Hyprland config in VsCodium
 hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))

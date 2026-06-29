@@ -31,7 +31,7 @@ SYSTEM
 
 SUPER + F1		           Keybind Viewer
 SUPER + F2		           Update System
-SUPER + R		           Launch Game
+SUPER + SHIFT + R		   Reload Waybar and SwayNC
 SUPER + Delete             hyprshutdown (fallback: Exit Hyprland)
 SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
