@@ -87,9 +87,6 @@ hl.bind(mainMod .. "+ F1", hl.dsp.exec_cmd("kitty --title keybinds -e fish -c ke
 -- Update System
 hl.bind(mainMod .. "+ F2", hl.dsp.exec_cmd("kitty --title sysupdate -e fish -c sysupdate"))
 
--- Launch Game
-hl.bind(mainMod .. "+ R", hl.dsp.exec_cmd("kitty --title RPS.exe -e fish -c RPS.exe"))
-
 -- Exit Hyprland
 hl.bind(mainMod .. " + delete", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 
