@@ -35,7 +35,7 @@
     {
       "type": "datetime",
       "key": "{#91}󰃭 Date",
-      "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}  [{weekday}] [UTC{offset-from-utc}]"
+      "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}]"
     },
 
     {
@@ -120,7 +120,7 @@
       "key": "{#92}├󰍛 GPU",
       "detectionMethod": "auto",
       "driverSpecific": false,
-      "format": "{name} [{type}]"
+      "format": "{name}"
     },
     {
       "type": "memory",
@@ -139,7 +139,8 @@
     },
     {
       "type": "display",
-      "key": "{#92}├󰍹 Display"
+      "key": "{#92}├󰍹 Display",
+      "format": "{name} {width}x{height}[{refresh-rate}Hz]"
     },
     {
       "type": "uptime",

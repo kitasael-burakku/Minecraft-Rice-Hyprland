@@ -47,6 +47,13 @@
       "format": "{name}  {#94}[{freq-max}]"
     },
     {
+      "type": "gpu",
+      "key":    "{#244}├󰍛 GPU",
+      "detectionMethod": "auto",
+      "driverSpecific": false,
+      "format": "{vendor} {name}"
+    },
+    {
       "type": "memory",
       "key":    "{#136}├󰑭 Memory",
       "format": "{used} / {total}  {#94}({percentage})"

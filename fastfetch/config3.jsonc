@@ -71,10 +71,10 @@
     },
     {
       "type": "gpu",
-      "key":    "{#111}├󰍛 GPU",
+      "key":    "{#244}├󰍛 GPU",
       "detectionMethod": "auto",
-      "driverSpecific": true,
-      "format": "Radeon RX 7600  {#60}[{type}]"
+      "driverSpecific": false,
+      "format": "{vendor} {name}"
     },
     {
       "type": "memory",
