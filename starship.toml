@@ -121,8 +121,8 @@ format = "[└ 󰔚 $duration]($style) "
 
 # ── Prompt Character ───────────────────────────────────────────
 [character]
-success_symbol = "      [❯](fg:#e8e8e8)"
-error_symbol =   "      [❯](fg:#b85c50)"
+success_symbol = "[❯](fg:#e8e8e8)"
+error_symbol =   "[❯](fg:#b85c50)"
 
 # ── Status (Errores) ───────────────────────────────────────────
 [status]

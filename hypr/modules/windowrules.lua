@@ -191,18 +191,12 @@ hl.window_rule({
 -- Special workspace (scratchpad)
 hl.workspace_rule({
     workspace = "special:magic",
-    gaps_out  = 0,
-    gaps_in   = 0,
-})
+    gaps_out  = 10,
+    gaps_in   = 20,
+    border_size = 0,
 
-hl.window_rule({
-    name  = "special-magic-anim",
-    match = {
-        workspace = "special:magic",
-    },
-    animation = "slidevert",
+    animation = "popin",
 })
-
 
 ------------
 --- APPS ---

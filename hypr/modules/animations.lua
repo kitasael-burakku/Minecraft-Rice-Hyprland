@@ -29,27 +29,27 @@ hl.animation({ leaf="global",  enabled=true, speed=6.5, bezier="velvetOut" })
 hl.animation({ leaf="border",  enabled=true, speed=8.2, bezier="silkEase"  })
 
 -- ─── Windows ────────────────────────────────────────────────
-hl.animation({ leaf="windows",     enabled=true, speed=5.2, spring="windowSettle"})
-hl.animation({ leaf="windowsIn",   enabled=true, speed=4.6, spring="windowBirth",  style="popin 88%" })
-hl.animation({ leaf="windowsOut",  enabled=true, speed=3.8, bezier="snapClose",  style="popin 25%" })
-hl.animation({ leaf="windowsMove", enabled=true, speed=7.4, spring="windowGlide" })
+hl.animation({ leaf="windows",     enabled=true, speed=4.2, spring="windowSettle" })
+hl.animation({ leaf="windowsIn",   enabled=true, speed=3.8, spring="windowBirth",  style="popin 88%" })
+hl.animation({ leaf="windowsOut",  enabled=true, speed=3.0, bezier="snapClose",    style="popin 25%" })
+hl.animation({ leaf="windowsMove", enabled=true, speed=6.0, spring="windowGlide"  })
 
 -- ─── Fades ──────────────────────────────────────────────────
-hl.animation({ leaf="fade",    enabled=true, speed=1.4, bezier="breathe"   })
-hl.animation({ leaf="fadeIn",  enabled=true, speed=1.1, bezier="velvetIn"  })
-hl.animation({ leaf="fadeOut", enabled=true, speed=0.7, bezier="ghostFade" })
+hl.animation({ leaf="fade",    enabled=true, speed=1.8, bezier="breathe"   })
+hl.animation({ leaf="fadeIn",  enabled=true, speed=1.4, bezier="velvetIn"  })
+hl.animation({ leaf="fadeOut", enabled=true, speed=1.0, bezier="ghostFade" })
 
 -- ─── Layers ─────────────────────────────────────────────────
-hl.animation({ leaf="layers",        enabled=true, speed=4.4, bezier="velvetOut"})
-hl.animation({ leaf="layersIn",      enabled=true, speed=3.6, bezier="silkEase",   style="slide bot" })
+hl.animation({ leaf="layers",        enabled=true, speed=4.4, bezier="velvetOut" })
+hl.animation({ leaf="layersIn",      enabled=true, speed=3.6, bezier="silkEase",  style="slide bot" })
 hl.animation({ leaf="layersOut",     enabled=true, speed=2.8, bezier="snapClose", style="slide bot" })
-hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.0, bezier="velvetIn" })
-hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.8, bezier="ghostFade"})
+hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.0, bezier="velvetIn"  })
+hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.8, bezier="ghostFade" })
 
 -- ─── Workspaces ─────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=5.6, spring="floorLift", style="slidefadevert 20%" })
-hl.animation({ leaf="workspacesIn",  enabled=true, speed=5.0, bezier="snapDrift", style="slidefadevert 20%" })
-hl.animation({ leaf="workspacesOut", enabled=true, speed=5.6, bezier="velvetOut", style="slidefadevert 20%" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=4.4, spring="floorLift", style="slidefadevert 20%" })
+hl.animation({ leaf="workspacesIn",  enabled=true, speed=4.0, bezier="snapDrift", style="slidefadevert 20%" })
+hl.animation({ leaf="workspacesOut", enabled=true, speed=4.4, bezier="velvetOut", style="slidefadevert 20%" })
 
 -- ─── Zoom ───────────────────────────────────────────────────
 hl.animation({ leaf="zoomFactor", enabled=true, speed=6.8, bezier="silkEase" })
