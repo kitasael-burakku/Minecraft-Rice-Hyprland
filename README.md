@@ -122,8 +122,8 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | Tool | Function |
 |---|---|
 | Hyprland (Lua) | Modular window manager |
-| Waybar | Status bar |
-| Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), and decorative power menu |
+| Waybar | Status bar with taskbar (`wlr/taskbar`), inline audio slider (`pulseaudio/slider`), and media player controls |
+| Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), decorative power menu, and window switcher with minimize/restore (`ALT + TAB`) |
 | matugen | Optional dynamic theming — the reload script is ready to use it but it's not connected to Hypr/Waybar in this rice, see [External Additions](#external-additions) |
 | Kitty | Terminal |
 | Fish + Starship | Shell with custom prompt — includes `starship.toml` with "Floating Stone Bubbles" theme (Minecraft shader palette) |
@@ -148,10 +148,11 @@ This configuration was developed and tested on this hardware. Some parts depend 
 ## Features
 
 - Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name "Velvet Motion" (`animations.lua`).
+- Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, StarShip prompt, and SwayNC — desaturated acentos (cyan `#7ab8b8`, azul gris `#8098a8`, rojo apagado `#b85c50`, arena `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
 - Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, and animated terminal background with cava.
 - Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + SHIFT + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Optional dynamic theming via matugen is disabled by default — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
-- Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu.
-- Rofi as application launcher, clipboard history selector, and decorative power menu (the different font in that menu is intentional, to make it stand out; the actual session is handled by Wlogout).
+- Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu. Includes a `wlr/taskbar` with app icons in the center bubble, and an inline `pulseaudio/slider` for quick volume control.
+- Rofi as application launcher, clipboard history selector, decorative power menu (the different font in that menu is intentional; the actual session is handled by Wlogout), and window switcher (`ALT + TAB`) — lists all open windows with minimize/restore: click an active window to minimize it to `special:minimized`, click a minimized one to restore it to the current workspace.
 - Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
 - Fish with Starship, "Minecraft Overworld" palette applied to shell syntax, random rotation between 9 Fastfetch presets, modern aliases, and custom maintenance/diagnostic functions plus an interactive keybind viewer — see [Fish Functions](#fish-functions).
 - cava with custom config (pipewire, noncurses, 60fps), three swappable themes (`agua`, `solarized_dark`, `tricolor`) and six custom GLSL shaders for visual mode.
@@ -172,11 +173,11 @@ This configuration was developed and tested on this hardware. Some parts depend 
 ├── cava/               # Config, GLSL shaders and themes for the audio visualizer
 ├── docs/screenshots/   # Rice screenshots
 ├── fastfetch/          # jsonc configs, logos and visual presets
-├── fish/               # config.fish, functions, aliases and Fish shell themes
+├── fish/               # config.fish, functions/ (including dotbackup.fish), aliases and Fish shell themes
 ├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
 ├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
 ├── kitty/              # Kitty configuration and colors
-├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), and power menu
+├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), power menu, and window switcher (window-switcher.sh + window-switcher.rasi)
 ├── scripts/            # Personal scripts (terminal-bg-cava.sh)
 ├── starship.toml       # Starship config (prompt), goes in ~/.config/starship.toml
 ├── swaync/             # Notification center config, styles, icons and theme
@@ -508,6 +509,7 @@ Beyond aliases and external tool integrations, Fish includes custom functions in
 - `healthcheck` — quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention.
 - `keybinds` — opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window.
 - `fastfetch` (the function, not the binary) — randomly picks one of the presets in `fastfetch/config*.jsonc`, avoiding repeating the same one twice in a row.
+- `dotbackup` — interactive backup script. See [Dotbackup](#dotbackup) for full details.
 
 > ⚠️ `keybinds` depends on `KEYBINDS.txt` maintaining an exact format: section header in UPPERCASE, a line of only dashes below it, and entries as `KEY    Description` with at least two spaces between columns. If you edit that file manually, respect the format or the viewer will stop recognizing sections.
 
@@ -521,7 +523,8 @@ At minimum, review before using:
 - `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft3.mp4` to yours.
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
 - `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
-- `hypr/modules/programs.lua` — change `kitty`, `nautilus`, or the launcher if you use other apps.
+- `hypr/modules/programs.lua` — change `kitty`, `nautilus`, the launcher, or `windowswitcher` command if you use other apps or a different Rofi theme path.
+- `rofi/scripts/window-switcher.sh` — the `MINIMIZED_WS` variable defaults to `special:minimized`; change it if you use a different special workspace name.
 - `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
 - `waybar/config.jsonc` — change `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
 - `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/1.png` if you use a different wallpaper.
@@ -714,3 +717,34 @@ I prefer:
 - Learning over automating.
 
 If this repository helps you learn something about Linux, Hyprland, Waybar, Fish, or dotfiles, then it has already fulfilled its purpose.
+
+---
+
+## Dotbackup
+
+`fish/functions/dotbackup.fish` is an interactive backup script that syncs your dotfiles to the local repo and pushes to GitHub. Run it as a command:
+
+```fish
+dotbackup
+```
+
+**What it does:**
+
+1. Safety checks — verifies correct branch (`main`) and remote before doing anything.
+2. Syncs all tracked config folders to the repo using `rsync --delete` (or `cp` as fallback).
+3. Creates a local `.tar.gz` snapshot in `~/.cache/dotbackup-snapshots/` before committing (only if there are changes).
+4. Shows a diff summary (new, modified, deleted files) and optionally a full `git diff`.
+5. Asks to open `README.md` in your editor before committing.
+6. Asks for a commit message (with a default timestamp-based one).
+7. Asks separately to commit and to push — you can commit locally without pushing.
+8. Keeps only the last 5 snapshots, deleting older ones automatically.
+
+**Tracked folders** (edit `config_dirs` at the top of the script to add/remove):
+
+```
+cava  fastfetch  fish  hypr  hyprlock  kitty  rofi  swaync  waybar  wlogout  scripts
+```
+
+Plus `starship.toml` and `~/Documents/KEYBINDS.txt`.
+
+> The script is designed to run as a Fish function, not sourced. If you run it with `source`, the internal `__dotbackup_sync_dir` function will persist in the session — use the alias or call it directly instead.

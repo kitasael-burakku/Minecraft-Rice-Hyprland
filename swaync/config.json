@@ -1,47 +1,40 @@
 {
-  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "right",
+  "positionY": "top",
+  "cssPriority": "user",
+  "ignore-gtk-theme": true,
 
-  /* ── Compatibility ───────────────────────────────────── */
-"ignore-gtk-theme": true,
-"layer-shell-cover-screen": false,
 
-/* ── Position ────────────────────────────────────────── */
-"positionX": "right",
-"positionY": "bottom",
-"layer": "top",
-"control-center-layer": "top",
-"cssPriority": "user",
+  "control-center-width": 360,
+  "control-center-margin-top": 15,
+  "control-center-margin-bottom": 15,
+  "control-center-margin-right": 0,
+  "control-center-margin-left": 15,
+  "notification-window-width": 360,
+  "notification-icon-size": 48,
+  "notification-body-image-height": 160,
+  "notification-body-image-width": 200,
+  "fit-to-screen": true,
 
-/* ── Dimensions ──────────────────────────────────────── */
-"control-center-width": 360,
-"control-center-margin-top": 15,
-"control-center-margin-bottom": 15,
-"control-center-margin-right": 0,
-"control-center-margin-left": 15,
-"notification-window-width": 360,
-"notification-body-image-height": 150,
-"notification-body-image-width": 300,
 
-/* ── Timeouts (seconds) ──────────────────────────────── */
-"timeout": 4,
-"timeout-low": 2,
-"timeout-critical": 0,
+  "timeout": 4,
+  "timeout-low": 5,
+  "timeout-critical": 6,
 
-/* ── Behaviour ───────────────────────────────────────── */
-"keyboard-shortcuts": true,
-"image-visibility": "when-available",
-"transition-time": 200,
-"hide-on-clear": false,
-"hide-on-action": true,
-"script-fail-notify": true,
-"notification-grouping": true,
-"notification-inline-replies": true,
-"relative-timestamps": true,
-"notification-2fa-action": false,
-"text-empty": "Zzz... (Silence SwayNC is sleeping)",
 
-/* ── Notification visibility rules ──────────────────── */
-"notification-visibility": {
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+  "hide-on-clear": false,
+  "hide-on-action": true,
+  "script-fail-notify": true,
+  "notification-grouping": true,
+  "notification-inline-replies": true,
+  "relative-timestamps": true,
+  "notification-2fa-action": false,
+  "text-empty": "Zzz... (Silence SwayNC is sleeping)",
+
+  "notification-visibility": {
     "spotify-low-muted": {
       "state": "muted",
       "urgency": "Low",
@@ -49,8 +42,7 @@
     }
   },
 
-/* ── Widget order ────────────────────────────────────── */
-"widgets": [
+  "widgets": [
     "label",
     "mpris",
     "volume",
@@ -59,16 +51,16 @@
     "notifications"
   ],
 
-/* ── Widget config ───────────────────────────────────── */
-"widget-config": {
+  "widget-config": {
     "label": {
       "max-lines": 1,
       "text": "ゴールドシップ は 通知センター を 破壊した ✦"
     },
-    
+
     "mpris": {
-      "autohide": true,
-      "show-album-art": "when-available",
+      "image-size": 96,
+      "image-radius": 4,
+      "blacklist":["playerctld"],
       "loop-carousel": true
     },
 
