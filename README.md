@@ -19,6 +19,9 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 ### Rofi + SwayNC
 ![Rofi-Swaync](docs/screenshots/rofi.jpg)
 
+### Window  Switcher
+![Rofi-Window-switcher](docs/screenshots/window-minimiser.jpg)
+
 ### Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/wallpaper-picker.jpg)
 
