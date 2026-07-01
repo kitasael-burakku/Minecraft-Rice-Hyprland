@@ -53,7 +53,7 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
 fi
 
 # ── Listado inicial ───────────────────────────────────────────────────────────
-echo -en "\0prompt\x1f󰖯  Ventanas\n"
+echo -en "\0prompt\x1f󰖯  Windows\n"
 echo -en "\0no-custom\x1ftrue\n"
 echo -en "\0markup-rows\x1ftrue\n"
 

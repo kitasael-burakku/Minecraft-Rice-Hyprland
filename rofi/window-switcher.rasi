@@ -80,7 +80,7 @@ entry {
     border-color:     @border-soft;
     text-color:       @fg;
     cursor:           text;
-    placeholder:      "Buscar ventana...";
+    placeholder:      "Find your window...";
     placeholder-color: @fg-dim;
 }
 
