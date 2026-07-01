@@ -108,7 +108,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.4,
-    animation = "slide",
+    animation = "slide right",
 })
 
 -- Notification Window
@@ -120,7 +120,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.4,
-    animation = "slide",
+    animation = "popin 85%",
 })
 
 -- Rofi
@@ -132,7 +132,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.9,
-    animation = "popin",
+    animation = "popin 80%",
 })
 
 -- Wlogout 
@@ -144,7 +144,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha=0.5,
-    animation = "slide",
+    animation = "fade",
 })
 
 --------------------------

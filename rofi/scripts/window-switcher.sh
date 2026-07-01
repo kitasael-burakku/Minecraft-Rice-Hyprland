@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# ============================================================================
+#  window-switcher.sh — ALT+TAB style con minimize/restore via rofi
+#  Click en ventana activa   → minimizar
+#  Click en ventana minimizada → restaurar y enfocar
+# ============================================================================
+
+MINIMIZED_WS="special:minimized"
+LOG="/tmp/rofi-winswitcher.log"
+
+get_icon() {
+    local class="$1"
+    # Busca el .desktop file y extrae el Icon=
+    local desktop_file
+    desktop_file="$(find /usr/share/applications ~/.local/share/applications 2>/dev/null \
+        -iname "${class}.desktop" -o -iname "${class,,}.desktop" 2>/dev/null \
+        | head -n1)"
+
+    if [ -n "$desktop_file" ]; then
+        grep -m1 '^Icon=' "$desktop_file" | cut -d= -f2
+    else
+        echo "$class"
+    fi
+}
+
+# ── Callback: el usuario eligió una entrada ───────────────────────────────────
+if [ "${ROFI_RETV:-0}" = "1" ]; then
+    chosen="$1"
+    address="$(echo "$chosen" | grep -oP '(?<=addr:)[a-fx0-9]+')"
+
+    if [ -z "$address" ]; then
+        echo "$(date) ERROR: no se pudo extraer address de: $chosen" >> "$LOG"
+        exit 1
+    fi
+
+    ws="$(hyprctl -j clients | jq -r --arg addr "$address" \
+        '.[] | select(.address == $addr) | .workspace.name')"
+
+    echo "$(date) CHOSEN: $chosen | address: $address | ws: $ws" >> "$LOG"
+
+    if [ "$ws" = "$MINIMIZED_WS" ]; then
+        # Restaurar: mover al workspace activo y enfocar
+        active_ws="$(hyprctl -j activeworkspace | jq -r '.id')"
+        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$active_ws\", window = \"address:$address\" }))" >/dev/null 2>&1
+        sleep 0.05
+        hyprctl eval "hl.dispatch(hl.dsp.window.focus({ window = \"address:$address\" }))" >/dev/null 2>&1
+    else
+        # Minimizar
+        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$MINIMIZED_WS\", follow = false, window = \"address:$address\" }))" >/dev/null 2>&1
+    fi
+
+    exit 0
+fi
+
+# ── Listado inicial ───────────────────────────────────────────────────────────
+echo -en "\0prompt\x1f󰖯  Ventanas\n"
+echo -en "\0no-custom\x1ftrue\n"
+echo -en "\0markup-rows\x1ftrue\n"
+
+# Primero las activas, luego las minimizadas
+while IFS=$'\t' read -r address class title ws; do
+    [ -z "$address" ] && continue
+    [ "$class" = "" ] && continue
+
+    icon="$(get_icon "$class")"
+
+    if [ "$ws" = "$MINIMIZED_WS" ]; then
+        # Minimizada — label con indicador
+        label="<span alpha='60%'>󰘲  $title</span>  <span size='small' alpha='40%'>addr:$address</span>"
+    else
+        # Activa
+        label="  $title  <span size='small' alpha='40%'>addr:$address</span>"
+    fi
+
+    echo -en "${label}\0icon\x1f${icon}\n"
+
+done < <(hyprctl -j clients | jq -r \
+    'sort_by(.workspace.name == "special:minimized") |
+     .[] | "\(.address)\t\(.class)\t\(.title)\t\(.workspace.name)"')

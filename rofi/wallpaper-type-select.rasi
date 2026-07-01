@@ -12,19 +12,19 @@ configuration {
     bg-main:        #1a1a1adc;
     bg-glass:       #141414aa;
     bg-hover:       #383838cc;
-    bg-selected:    #b0bec53a;
+    bg-selected:    #7ab8b81a;
 
-    fg:             #ececec;
+    fg:             #e8e8e8;
     fg-soft:        #d8d8d8;
     fg-muted:       #909090;
     fg-dim:         #5a5a5a;
 
-    border-col:     #b8c5cc55;
+    border-col:     #7ab8b855;
     border-soft:    #6f6f6f40;
-    border-hover:   #b8c5cc99;
+    border-hover:   #7ab8b899;
 
-    accent:         #f0f0f0;
-    accent-muted:   #b8c5cc;
+    accent:         #e8e8e8;
+    accent-muted:   #8098a8;
 
     background-color: transparent;
     text-color: @fg;

@@ -1,9 +1,10 @@
 /* =====================================================
-   CLIPBOARD — Kitasan Glass Refinado
+   WINDOW SWITCHER — Kitasan Glass
    ===================================================== */
 
 configuration {
-    show-icons: false;
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
 }
 
 * {
@@ -11,18 +12,21 @@ configuration {
 
     bg-main:        #1a1a1adc;
     bg-glass:       #141414aa;
-    bg-selected:    #7ab8b81a;
     bg-hover:       #383838cc;
+    bg-selected:    #7ab8b81a;
+    bg-minimized:   #b85c501a;
 
     fg:             #e8e8e8;
+    fg-soft:        #d8d8d8;
     fg-muted:       #909090;
     fg-dim:         #5a5a5a;
 
-    border:         #7ab8b840;
+    border-col:     #7ab8b855;
     border-soft:    #6f6f6f40;
     border-hover:   #7ab8b899;
 
     accent:         #e8e8e8;
+    accent-cyan:    #7ab8b8;
     accent-muted:   #8098a8;
 
     background-color: transparent;
@@ -33,18 +37,16 @@ window {
     transparency:     "real";
     location:         center;
     anchor:           center;
-    width:            560px;
+    width:            580px;
     border-radius:    20px;
     border:           1px;
-    border-color:     @border;
+    border-color:     @border-col;
     background-color: @bg-main;
-    cursor:           "default";
 }
 
 mainbox {
     spacing:          0px;
     padding:          0px;
-    background-color: transparent;
     children:         [ "inputbar", "listbox" ];
 }
 
@@ -52,23 +54,21 @@ mainbox {
 inputbar {
     spacing:          10px;
     padding:          14px 18px;
-    background-color: #111111bb;
+    background-color: #0a0a0abb;
     border:           0px 0px 1px 0px;
     border-color:     @border-soft;
-    text-color:       @fg;
     children:         [ "prompt", "entry" ];
 }
 
 prompt {
     expand:           false;
-    str:              "󰅇";
     padding:          8px 12px;
     border-radius:    10px;
     background-color: @bg-glass;
     border:           1px;
     border-color:     @border-soft;
-    text-color:       @accent-muted;
-    font:             "JetBrainsMono Nerd Font Propo Bold 12";
+    text-color:       @accent-cyan;
+    font:             "JetBrainsMono Nerd Font Propo Bold 13";
 }
 
 entry {
@@ -80,63 +80,80 @@ entry {
     border-color:     @border-soft;
     text-color:       @fg;
     cursor:           text;
-    placeholder:      "Search History...";
+    placeholder:      "Buscar ventana...";
     placeholder-color: @fg-dim;
 }
 
-/* ── Lista dinámica ───────────────────────────────── */
+/* ── Lista ────────────────────────────────────────── */
 listbox {
     spacing:          10px;
     padding:          14px 16px 16px 16px;
-    background-color: transparent;
     children:         [ "listview", "message" ];
 }
 
 listview {
     columns:          1;
-    lines:            10;         /* máximo */
+    lines:            8;
     cycle:            true;
-    fixed-height:     false;      /* se encoge si hay pocos items */
-    dynamic:          true;       /* se ajusta al filtrar */
+    fixed-height:     false;
+    dynamic:          true;
     scrollbar:        false;
-    layout:           vertical;
-    spacing:          3px;
+    spacing:          4px;
     background-color: transparent;
-    text-color:       @fg;
 }
 
 element {
-    padding:          9px 13px;
-    spacing:          10px;
-    border-radius:    10px;
+    padding:          10px 14px;
+    spacing:          12px;
+    border-radius:    11px;
     border:           1px;
     border-color:     transparent;
     background-color: transparent;
     text-color:       @fg-muted;
     cursor:           pointer;
+    orientation:      horizontal;
 }
 
+/* Ventana activa — normal */
 element normal.normal,
 element alternate.normal {
     background-color: transparent;
-    text-color:       @fg-muted;
+    text-color:       @fg-soft;
     border-color:     transparent;
 }
 
+/* Ventana seleccionada */
 element selected.normal {
     background-color: @bg-selected;
     text-color:       @fg;
     border-color:     @border-hover;
 }
 
-element-text {
-    background-color: transparent;
-    text-color:       inherit;
-    cursor:           inherit;
-    vertical-align:   0.5;
-    horizontal-align: 0.0;
+/* Ventana urgente (minimizada en rofi urgent state) */
+element normal.urgent,
+element alternate.urgent {
+    background-color: @bg-minimized;
+    text-color:       @fg-muted;
+    border-color:     rgba(184, 92, 80, 0.25);
 }
 
+element selected.urgent {
+    background-color: @bg-minimized;
+    text-color:       #d47a6e;
+    border-color:     #b85c5099;
+}
+
+element-icon {
+    size:             22px;
+    vertical-align:   0.5;
+}
+
+element-text {
+    vertical-align:   0.5;
+    text-color:       inherit;
+}
+
+/* ── Message (empty state) ────────────────────────── */
 message {
     background-color: transparent;
 }

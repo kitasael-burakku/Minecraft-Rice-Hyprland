@@ -71,6 +71,8 @@ hl.bind("+ CTRL + ALT + V", function()
     end
 end)
 
+hl.bind("ALT + TAB", hl.dsp.exec_cmd(Programs.windowswitcher))
+
 -- Fullscreen mode 1
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 1 }))
 
