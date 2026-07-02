@@ -1,6 +1,6 @@
 {
   "positionX": "right",
-  "positionY": "top",
+  "positionY": "bottom",
   "cssPriority": "user",
   "ignore-gtk-theme": true,
 
@@ -58,7 +58,7 @@
     },
 
     "mpris": {
-      "image-size": 96,
+      "image-size": 80,
       "image-radius": 4,
       "blacklist":["playerctld"],
       "loop-carousel": true
@@ -66,8 +66,8 @@
 
     "volume": {
       "label": "󰕾",
-      "show-per-app": true,
-      "show-per-app-icon": true,
+      "show-per-app": false,
+      "show-per-app-icon": false,
       "show-per-app-label": false,
       "expand-per-app": false,
       "empty-list-label": "No active outputs",
