@@ -150,7 +150,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 
 ## Features
 
-- Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name "Velvet Motion" (`animations.lua`).
+- Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name " 流 水   ·   R Y Ū S U I   M O T I O N " (`animations.lua`).
 - Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, StarShip prompt, and SwayNC — desaturated acentos (cyan `#7ab8b8`, azul gris `#8098a8`, rojo apagado `#b85c50`, arena `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
 - Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, and animated terminal background with cava.
 - Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + SHIFT + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Optional dynamic theming via matugen is disabled by default — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
@@ -383,7 +383,7 @@ Key files:
 - `hypr/modules/environment.lua` — Wayland, Qt, Electron, and AMD environment variables.
 - `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Colors are hardcoded (not read from matugen).
 - `hypr/modules/layout.lua` — configuration for the three layouts (dwindle, master, scrolling); the active default is `scrolling`. Can be hot-swapped with `SUPER + SHIFT + D/M/O`.
-- `hypr/modules/animations.lua` — custom curves and springs system ("Velvet Motion") for windows, fades, layers, workspaces, and zoom.
+- `hypr/modules/animations.lua` — custom curves and springs system (" 流 水   ·   R Y Ū S U I   M O T I O N ") for windows, fades, layers, workspaces, and zoom.
 - `hypr/modules/windowrules.lua` — window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout, Waybar).
 - `hypr/modules/misc.lua` — miscellaneous settings, includes disabling Hyprland's random wallpaper/logo.
 
