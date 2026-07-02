@@ -19,7 +19,7 @@ window#waybar {
 
 #clock, #cpu, #memory, #disk, #network, #pulseaudio, 
 #tray, #workspaces, #window, #custom-updates, 
-#temperature, #idle_inhibitor, #custom-power {
+#temperature, #idle_inhibitor, #custom-power, #taskbar {
     color: #e8e8e8;
     background: rgba(26, 26, 26, 0.60);
     border: 1px solid rgba(176, 190, 197, 0.40);
@@ -165,7 +165,6 @@ tooltip label {
 .modules-center #workspaces,
 .modules-center #taskbar,
 .modules-center #idle_inhibitor,
-.modules-center #tray,
 .modules-right #custom-updates,
 .modules-right #network,
 .modules-right #temperature,

@@ -1,55 +1,66 @@
---    _____         .__                __  .__                      
---   /  _  \   ____ |__| _____ _____ _/  |_|__| ____   ____   ______
---  /  /_\  \ /    \|  |/     \\__  \\   __\  |/  _ \ /    \ /  ___/
--- /    |    \   |  \  |  Y Y  \/ __ \|  | |  (  <_> )   |  \\___ \ 
--- \____|__  /___|  /__|__|_|  (____  /__| |__|\____/|___|  /____  >
---         \/     \/         \/     \/                    \/     \/ 
-
+--  ██▀███ ▓██   ██▓ █    ██   ██████  █    ██  ██▓
+-- ▓██ ▒ ██▒▒██  ██▒ ██  ▓██▒▒██    ▒  ██  ▓██▒▓██▒
+-- ▓██ ░▄█ ▒ ▒██ ██░▓██  ▒██░░ ▓██▄   ▓██  ▒██░▒██▒
+-- ▒██▀▀█▄   ░ ▐██▓░▓▓█  ░██░  ▒   ██▒▓▓█  ░██░░██░
+-- ░██▓ ▒██▒ ░ ██▒▓░▒▒█████▓ ▒██████▒▒▒▒█████▓ ░██░
+-- ░ ▒▓ ░▒▓░  ██▒▒▒ ░▒▓▒ ▒ ▒ ▒ ▒▓▒ ▒ ░░▒▓▒ ▒ ▒ ░▓
 -- ╔═══════════════════════════════════════════════════════════╗
--- ║                V E L V E T   M O T I O N                  ║
+-- ║           流 水   ·   R Y Ū S U I   M O T I O N           ║
+-- ║        agua sobre vidrio · flowing water on glass         ║
 -- ╚═══════════════════════════════════════════════════════════╝
 
 -- ─── Bézier curves ──────────────────────────────────────────
-hl.curve("velvetOut",   { type="bezier", points={{0.08,0.96},{0.16,1.00}} })
-hl.curve("velvetIn",    { type="bezier", points={{0.32,0.00},{0.14,0.98}} })
-hl.curve("silkEase",    { type="bezier", points={{0.16,0.06},{0.20,1.00}} })
-hl.curve("breathe",     { type="bezier", points={{0.24,0.00},{0.52,1.00}} })
-hl.curve("snapDrift",   { type="bezier", points={{0.04,0.84},{0.14,1.00}} })
-hl.curve("snapClose",   { type="bezier", points={{1.0,0.90},{1.0,0.10}} })
-hl.curve("ghostFade",   { type="bezier", points={{0.00,0.00},{0.72,1.00}} })
+-- ryuOut       : expo-out — entra rápido, aterriza como gota
+hl.curve("ryuOut",     { type="bezier", points={{0.16,1.00},{0.30,1.00}} })
+-- currentIn    : expo-in suave — arranca lento, gana corriente
+hl.curve("currentIn",  { type="bezier", points={{0.32,0.00},{0.18,1.00}} })
+-- meniscus     : smooth simétrico — para bordes y detalles
+hl.curve("meniscus",   { type="bezier", points={{0.25,0.10},{0.25,1.00}} })
+-- stillWater   : ease-in-out sereno — fades de reposo
+hl.curve("stillWater", { type="bezier", points={{0.37,0.00},{0.63,1.00}} })
+-- undertow     : ease-in — acelera hacia afuera (cierres)
+hl.curve("undertow",   { type="bezier", points={{0.40,0.00},{0.85,0.55}} })
+-- ripple       : out con micro-overshoot — acentos de UI
+hl.curve("ripple",     { type="bezier", points={{0.20,1.08},{0.32,1.00}} })
+-- dissolve     : disolución — fadeOut que se desvanece acelerando
+hl.curve("dissolve",   { type="bezier", points={{0.45,0.00},{0.80,0.85}} })
 
 -- ─── Springs ────────────────────────────────────────────────
-hl.curve("windowSettle",{ type="spring", mass=1, stiffness=110, dampening=26 })
-hl.curve("windowBirth", { type="spring", mass=1, stiffness=130, dampening=20 })
-hl.curve("windowGlide", { type="spring", mass=1, stiffness=200, dampening=34 })
-hl.curve("floorLift",   { type="spring", mass=1, stiffness=125, dampening=28 })
+-- glassSettle  : reposo con micro-overshoot orgánico
+hl.curve("glassSettle", { type="spring", mass=1, stiffness=140, dampening=24 })
+-- glassBirth   : nacimiento vivo, un solo rebote sutil
+hl.curve("glassBirth",  { type="spring", mass=1, stiffness=165, dampening=19 })
+-- glassGlide   : desplazamiento casi crítico — rápido, cero wobble
+hl.curve("glassGlide",  { type="spring", mass=1, stiffness=230, dampening=36 })
+-- tideLift     : marea — workspaces que suben y se asientan
+hl.curve("tideLift",    { type="spring", mass=1, stiffness=135, dampening=27 })
 
 -- ─── Global ─────────────────────────────────────────────────
-hl.animation({ leaf="global",  enabled=true, speed=6.5, bezier="velvetOut" })
-hl.animation({ leaf="border",  enabled=true, speed=8.2, bezier="silkEase"  })
+hl.animation({ leaf="global",  enabled=true, speed=6.0, bezier="ryuOut"   })
+hl.animation({ leaf="border",  enabled=true, speed=8.0, bezier="meniscus" })
 
 -- ─── Windows ────────────────────────────────────────────────
-hl.animation({ leaf="windows",     enabled=true, speed=4.2, spring="windowSettle" })
-hl.animation({ leaf="windowsIn",   enabled=true, speed=3.8, spring="windowBirth",  style="popin 88%" })
-hl.animation({ leaf="windowsOut",  enabled=true, speed=3.0, bezier="snapClose",    style="popin 25%" })
-hl.animation({ leaf="windowsMove", enabled=true, speed=6.0, spring="windowGlide"  })
+hl.animation({ leaf="windows",     enabled=true, speed=4.0, spring="glassSettle"                    })
+hl.animation({ leaf="windowsIn",   enabled=true, speed=3.6, spring="glassBirth",  style="popin 87%" })
+hl.animation({ leaf="windowsOut",  enabled=true, speed=2.6, bezier="undertow",    style="popin 82%" })
+hl.animation({ leaf="windowsMove", enabled=true, speed=5.6, spring="glassGlide"                     })
 
 -- ─── Fades ──────────────────────────────────────────────────
-hl.animation({ leaf="fade",    enabled=true, speed=1.8, bezier="breathe"   })
-hl.animation({ leaf="fadeIn",  enabled=true, speed=1.4, bezier="velvetIn"  })
-hl.animation({ leaf="fadeOut", enabled=true, speed=1.0, bezier="ghostFade" })
+hl.animation({ leaf="fade",    enabled=true, speed=1.8, bezier="stillWater" })
+hl.animation({ leaf="fadeIn",  enabled=true, speed=1.5, bezier="ryuOut"     })
+hl.animation({ leaf="fadeOut", enabled=true, speed=1.1, bezier="dissolve"   })
 
 -- ─── Layers ─────────────────────────────────────────────────
-hl.animation({ leaf="layers",        enabled=true, speed=4.4, bezier="velvetOut" })
-hl.animation({ leaf="layersIn",      enabled=true, speed=3.6, bezier="silkEase",  style="slide bot" })
-hl.animation({ leaf="layersOut",     enabled=true, speed=2.8, bezier="snapClose", style="slide bot" })
-hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.0, bezier="velvetIn"  })
-hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.8, bezier="ghostFade" })
+hl.animation({ leaf="layers",        enabled=true, speed=4.2, bezier="ryuOut"                      })
+hl.animation({ leaf="layersIn",      enabled=true, speed=3.4, bezier="ripple",   style="slide bot" })
+hl.animation({ leaf="layersOut",     enabled=true, speed=2.6, bezier="undertow", style="slide bot" })
+hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.2, bezier="currentIn"                   })
+hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.9, bezier="dissolve"                    })
 
 -- ─── Workspaces ─────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=4.4, spring="floorLift", style="slidefadevert 20%" })
-hl.animation({ leaf="workspacesIn",  enabled=true, speed=4.0, bezier="snapDrift", style="slidefadevert 20%" })
-hl.animation({ leaf="workspacesOut", enabled=true, speed=4.4, bezier="velvetOut", style="slidefadevert 20%" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=4.4, spring="tideLift",  style="slidefadevert" })
+hl.animation({ leaf="workspacesIn",  enabled=true, speed=4.0, bezier="ryuOut",    style="slidefadevert" })
+hl.animation({ leaf="workspacesOut", enabled=true, speed=4.0, bezier="undertow",  style="slidefadevert" })
 
 -- ─── Zoom ───────────────────────────────────────────────────
-hl.animation({ leaf="zoomFactor", enabled=true, speed=6.8, bezier="silkEase" })
+hl.animation({ leaf="zoomFactor", enabled=true, speed=6.4, bezier="meniscus" })
