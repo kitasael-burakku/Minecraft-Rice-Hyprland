@@ -12,13 +12,13 @@
   --bg-progress:    rgba(90, 90, 90, 0.28);
 
   /* ── Bordes — cyan Kitasan ───────────────────────────── */
-  --border-base:    rgba(122, 184, 184, 0.30);
-  --border-mid:     rgba(122, 184, 184, 0.20);
-  --border-dim:     rgba(122, 184, 184, 0.14);
-  --border-low:     rgba(122, 184, 184, 0.10);
-  --border-hover:   rgba(122, 184, 184, 0.50);
-  --border-bottom:  rgba(122, 184, 184, 0.22);
-  --border-btm-hv:  rgba(122, 184, 184, 0.45);
+  --border-base:    rgba(228, 236, 236, 0.3);
+  --border-mid:     rgba(188, 189, 189, 0.2);
+  --border-dim:     rgba(175, 182, 182, 0.14);
+  --border-low:     rgba(130, 132, 132, 0.1);
+  --border-hover:   rgba(231, 239, 239, 0.5);
+  --border-bottom:  rgba(105, 110, 110, 0.22);
+  --border-btm-hv:  rgba(88, 91, 91, 0.45);
 
   /* ── Rojo apagado ────────────────────────────────────── */
   --red:            #b85c50;
@@ -171,7 +171,7 @@ progressbar {
 }
 
 progress {
-  background: rgba(122, 184, 184, 0.65);
+  background: rgba(183, 183, 183, 0.65);
 }
 
 /* ── Notification groups ────────────────────────────────── */
@@ -276,7 +276,7 @@ progress {
 /* ── MPRIS widget ───────────────────────────────────────── */
 
 .widget-mpris {
-  background:    var(--bg-dark);
+  background:    transparent;
   border-radius: var(--radius-widget);
   color:         var(--text-base);
   margin:        8px 6px;
@@ -287,7 +287,7 @@ progress {
 }
 
 .widget-mpris-player {
-  background:    rgba(5, 5, 5, 0.60);
+  background:    transparent;
   border-radius: var(--radius-widget);
   padding:       8px 10px;
   margin:        4px;
@@ -337,8 +337,8 @@ picture.mpris-background {
 /* ── Volume widget ──────────────────────────────────────── */
 
 .widget-volume {
-  background:    var(--bg-dark);
-  color:         var(--text-base);
+  background:    transparent;
+  color:         #ffffff;
   padding:       10px;
   margin:        6px;
   border-radius: var(--radius-widget);
@@ -352,7 +352,7 @@ picture.mpris-background {
 }
 
 .widget-volume highlight {
-  background:    rgba(122, 184, 184, 0.70);
+  background:    rgba(147, 151, 151, 0.7);
   border-radius: var(--radius-pill);
 }
 
