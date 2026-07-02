@@ -71,6 +71,7 @@ hl.bind("+ CTRL + ALT + V", function()
     end
 end)
 
+-- Window shitcher
 hl.bind("ALT + TAB", hl.dsp.exec_cmd(Programs.windowswitcher))
 
 -- Fullscreen mode 1
@@ -96,7 +97,7 @@ hl.bind(mainMod .. " + delete", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/n
 hl.bind(mainMod .. "+ ESCAPE", hl.dsp.exec_cmd(home .. "/.config/wlogout/scripts/launch_wlogout.sh"))
 
 -- Lock screen
-hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprlock"))
+hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd(Programs.lockscreen))
 
 -- System monitor (btop)
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title btop -e btop"))
@@ -104,9 +105,6 @@ hl.bind("SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title bottom 
 
 -- Reload Waybar & SwayNc
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch.sh"))
-
--- Open Hyprland config in VsCodium
-hl.bind(mainMod .. " + CTRL + H", hl.dsp.exec_cmd("vscodium ~/.config/hypr"))
 
 -----------------------------
 ----   CLIPBOARD / COLOR  ----
@@ -221,5 +219,3 @@ hl.bind(mainMod .. "+ SHIFT + M", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 
 -- Scrolling layout
 hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "scrolling" } })']]))
-
-

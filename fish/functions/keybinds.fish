@@ -425,7 +425,7 @@ function __keybinds_prepare_window
     command -q jq; or return 0
 
     # Floating window size — keep in sync with the centring maths below.
-    set -l win_w 685
+    set -l win_w 590
     set -l win_h 1000
 
     set -g __kb_window_addr (hyprctl activewindow -j | jq -r '.address')
