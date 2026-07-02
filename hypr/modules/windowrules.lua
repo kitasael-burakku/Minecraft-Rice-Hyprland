@@ -120,7 +120,6 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.4,
-    animation = "popin 85%",
 })
 
 -- Rofi
@@ -132,7 +131,6 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.9,
-    animation = "popin 80%",
 })
 
 -- Wlogout 
@@ -144,7 +142,6 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha=0.5,
-    animation = "fade",
 })
 
 --------------------------
@@ -194,8 +191,6 @@ hl.workspace_rule({
     gaps_out  = 10,
     gaps_in   = 20,
     border_size = 0,
-
-    animation = "popin",
 })
 
 ------------
