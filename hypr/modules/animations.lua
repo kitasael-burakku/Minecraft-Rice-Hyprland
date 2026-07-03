@@ -4,10 +4,9 @@
 -- ▒██▀▀█▄   ░ ▐██▓░▓▓█  ░██░  ▒   ██▒▓▓█  ░██░░██░
 -- ░██▓ ▒██▒ ░ ██▒▓░▒▒█████▓ ▒██████▒▒▒▒█████▓ ░██░
 -- ░ ▒▓ ░▒▓░  ██▒▒▒ ░▒▓▒ ▒ ▒ ▒ ▒▓▒ ▒ ░░▒▓▒ ▒ ▒ ░▓
--- ╔═══════════════════════════════════════════════════════════╗
--- ║           流 水   ·   R Y Ū S U I   M O T I O N           ║
--- ║        agua sobre vidrio · flowing water on glass         ║
--- ╚═══════════════════════════════════════════════════════════╝
+--
+-- ║   流 水   ·   R Y Ū S U I   M O T I O N                    
+-- ║        agua sobre vidrio · flowing water on glsass
 
 -- ─── Bézier curves ──────────────────────────────────────────
 -- ryuOut       : expo-out — entra rápido, aterriza como gota
@@ -58,9 +57,7 @@ hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.2, bezier="currentIn"
 hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.9, bezier="dissolve"                    })
 
 -- ─── Workspaces ─────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=4.4, spring="tideLift",  style="slidefadevert 12%" })
-hl.animation({ leaf="workspacesIn",  enabled=true, speed=4.0, bezier="ryuOut",    style="slidefadevert 12%" })
-hl.animation({ leaf="workspacesOut", enabled=true, speed=4.0, bezier="undertow",  style="slidefadevert 12%" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=4.0, spring="tideLift",  style="slidefadevert 10%" })
 
 -- ─── Zoom ───────────────────────────────────────────────────
 hl.animation({ leaf="zoomFactor", enabled=true, speed=6.4, bezier="meniscus" })

@@ -1,21 +1,3 @@
-# ══════════════════════════════════════════════════════
-#  STARSHIP · Kitasan Glass · Universal Dark
-#  Paleta: colors.conf Kitasan Glass
-# ══════════════════════════════════════════════════════
-#
-#  color0  #111111   color8  #5a5a5a
-#  color1  #b85c50   color9  #d47a6e   ← rojo apagado
-#  color2  #7a9080   color10 #9ab0a0   ← sage
-#  color3  #a89878   color11 #c8b898   ← arena
-#  color4  #607888   color12 #8098a8   ← azul gris
-#  color5  #887888   color13 #a898a8   ← malva
-#  color6  #8ab0b8   color14 #b0d0d8   ← cyan
-#  color7  #d8d8d8   color15 #f0f0f0
-#  color27 #7ab8b8   ← cyan puro (acento)
-#  color21 #2e3238   ← deepslate (fondos bloque derecho)
-#  color19 #2e3e4e   ← azul oscuro selección
-# ══════════════════════════════════════════════════════
-
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
@@ -159,15 +141,14 @@ format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[❯](fg:#7ab8b8 bold)"
-error_symbol   = "[❯](fg:#b85c50 bold)"
-vimcmd_symbol  = "[❮](fg:#7a9080 bold)"
+success_symbol = "[ -->](fg:#7ab8b8 bold)"
+error_symbol   = "[ x](fg:#b85c50 bold)"
 
 # ── Status (solo cuando hay error) ──────────────────────────────
 [status]
 disabled = false
 style = "fg:#b85c50 bold"
-format = "[󰅚 $status ]($style)"
+format = "[󰅚 $status]($style)"
 
 # ── Módulos deshabilitados ───────────────────────────────────────
 [package]
