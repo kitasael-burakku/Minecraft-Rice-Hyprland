@@ -15,7 +15,6 @@ SUPER + A                  Open/close SwayNC
 SUPER + W                  Open Wallpaper selector (Rofi)
 SUPER + T                  Open Music Player
 SUPER + O                  Open OBS
-SUPER + ALT + M 	       Reload Terminal-Bg (Cava)
 
 WINDOWS
 -------
@@ -37,7 +36,6 @@ SUPER + Escape             Open Wlogout
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      Open btop
 SHIFT + Escape             Open Bottom 
-SUPER + CTRL + H 	       Open Hyprland config in VsCodium
 ALT + SHIFT                Change the keyboard layout
 
 CLIPBOARD / COLOR

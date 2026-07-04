@@ -1,12 +1,14 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Se agregó el inicio del bloque derecho [] directamente en el formato principal
 format = """
 $status\
+$os\
 ${custom.user_pretty}\
 ${custom.hostname_pretty}\
-$os\
 $directory\
 $fill\
+[](fg:#2e3238)\
 $git_branch\
 $git_status\
 $python\
@@ -22,30 +24,16 @@ $character\
 command_timeout = 500
 add_newline = false
 
-# ── Fill ────────────────────────────────────────────────────────
+# ── Fill (Relleno central limpio) ────────────────────────────────
 [fill]
 symbol = " "
 
-# ── Usuario ─────────────────────────────────────────────────────
-[custom.user_pretty]
-disabled = false
-command = "echo $USER_PRETTY"
-when = "test -n \"$USER_PRETTY\""
-style = "bg:#2e3e4e fg:#b0d0d8 bold"
-format = "[▌]($style)[$output]($style)"
-
-# ── Hostname ────────────────────────────────────────────────────
-[custom.hostname_pretty]
-command = "hostnamectl --pretty 2>/dev/null || hostname"
-when = "true"
-style = "bg:#1e2e38 fg:#8098a8"
-format = "[ 󰍹 $output]($style)"
-
-# ── OS ──────────────────────────────────────────────────────────
+# ── OS (Inicio del bloque izquierdo) ────────────────────────────
 [os]
-disabled = true
+disabled = false
 style = "bg:#1a2430 fg:#7ab8b8"
-format = "[ $symbol ]($style)"
+# Usamos  para un borde redondeado y suave al inicio
+format = "[](fg:#1a2430)[ $symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
@@ -62,12 +50,30 @@ Gentoo      = "󰣨"
 Alpine      = ""
 Unknown     = "󰌽"
 
+# ── Usuario ─────────────────────────────────────────────────────
+[custom.user_pretty]
+disabled = false
+command = "echo $USER_PRETTY"
+when = "test -n \"$USER_PRETTY\""
+style = "bg:#2e3e4e fg:#b0d0d8 bold"
+# Transición de flecha del color del OS al color del Usuario
+format = "[](bg:#2e3e4e fg:#1a2430)[ $output ]($style)"
+
+# ── Hostname ────────────────────────────────────────────────────
+[custom.hostname_pretty]
+command = "hostnamectl --pretty 2>/dev/null || hostname"
+when = "true"
+style = "bg:#1e2e38 fg:#8098a8"
+# Transición del color del Usuario al color del Hostname
+format = "[](bg:#1e2e38 fg:#2e3e4e)[ 󰍹 $output ]($style)"
+
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
 style = "bg:#2e3238 fg:#c8b898 bold"
-format = "[ $path]($style)[▌](fg:#2e3238)"
+# Transición al color del directorio y cierre de la cinta izquierda con  hacia el fondo
+format = "[](bg:#2e3238 fg:#1e2e38)[ $path ]($style)[](fg:#2e3238 bg:none) "
 home_symbol = "󱂵 ホーム"
-read_only = " 読取専用"
+read_only = "  読取専用"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -88,7 +94,8 @@ truncation_symbol = "…/"
 symbol = "󰊢"
 style = "bg:#2e3238 fg:#d8d8d8 bold"
 truncation_length = 18
-format = "[▌](fg:#2e3238)[ $symbol $branch ]($style)"
+# Se elimina el separador manual aquí; el formato principal ya maneja la apertura
+format = "[ $symbol $branch ]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
 [git_status]
@@ -130,7 +137,8 @@ format = "[$symbol $version ]($style)"
 [custom.right_cap]
 command = "echo"
 when = "true"
-format = "[▌](fg:#2e3238 bg:none)"
+# Cierra el bloque de lenguajes/git con un borde redondeado simétrico
+format = "[](fg:#2e3238 bg:none)"
 
 # ── Duración del comando ─────────────────────────────────────────
 [cmd_duration]
@@ -141,24 +149,21 @@ format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ -->](fg:#7ab8b8 bold)"
-error_symbol   = "[ x](fg:#b85c50 bold)"
+success_symbol = "[ 󰁔](fg:#7ab8b8 bold)"
+error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 
-# ── Status (solo cuando hay error) ──────────────────────────────
+# ── Status (Error previo) ────────────────────────────────────────
 [status]
 disabled = false
 style = "fg:#b85c50 bold"
-format = "[󰅚 $status]($style)"
+format = "[󰅚 $status ]($style)"
 
 # ── Módulos deshabilitados ───────────────────────────────────────
 [package]
 disabled = true
-
 [memory_usage]
 disabled = true
-
 [time]
 disabled = true
-
 [line_break]
 disabled = false

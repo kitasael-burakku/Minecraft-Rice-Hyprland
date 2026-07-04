@@ -40,9 +40,6 @@ hl.bind(mainMod .. "+ T", hl.dsp.exec_cmd(Programs.music))
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
 
--- Reload Terminal-Bg (Cava)
-hl.bind(mainMod .. " + ALT + M", hl.dsp.exec_cmd(home .. "/.config/scripts/terminal-bg-cava.sh"))
-
 -----------------------------
 ----      WINDOWS         ----
 -----------------------------

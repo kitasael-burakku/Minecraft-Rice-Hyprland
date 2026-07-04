@@ -29,7 +29,4 @@ hl.on("hyprland.start", function()
 
     -- Udiskie
     hl.exec_cmd("udiskie --tray &")
-
-    -- Terminal 
-    hl.exec_cmd(home .. "/.config/scripts/terminal-bg-cava.sh &")
 end)

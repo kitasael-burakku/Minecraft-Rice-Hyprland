@@ -31,8 +31,8 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 ### Image Wallpaper Picker
 ![Wallpaper-picker](docs/screenshots/Image_wallpaperpicker.jpg)
 
-### Terminal with animated background
-![Terminal-bg](docs/screenshots/keybinds.jpg)
+### Keybinds And Btop
+![Keybinds](docs/screenshots/keybinds.jpg)
 
 ### Hyprlock
 ![Hyprlock](docs/screenshots/hyprlock.jpg)
@@ -138,13 +138,11 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | awww | Static image wallpaper (replaces swww) |
 | cava | Audio visualizer — includes config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
 | glava | Alternative visualizer, optionally used in Hyprlock scripts |
-| terminal-bg | Animated background inside the terminal (launches cava in noncurses mode) |
 | Qylock | Minecraft-style SDDM theme |
 | MINEGRUB | Minecraft-style GRUB theme |
 
 > Qylock: https://github.com/Darkkal44/qylock
 > MINEGRUB: https://github.com/Lxtharia/minegrub-theme
-> terminal-bg (DaarcyDev): https://github.com/DaarcyDev/terminal-bg
 
 ---
 
@@ -152,7 +150,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 
 - Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name " 流 水   ·   R Y Ū S U I   M O T I O N " (`animations.lua`).
 - Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, StarShip prompt, and SwayNC — desaturated acentos (cyan `#7ab8b8`, azul gris `#8098a8`, rojo apagado `#b85c50`, arena `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
-- Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, and animated terminal background with cava.
+- Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, and udiskie.
 - Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + SHIFT + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Optional dynamic theming via matugen is disabled by default — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
 - Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu. Includes a `wlr/taskbar` with app icons in the center bubble, and an inline `pulseaudio/slider` for quick volume control.
 - Rofi as application launcher, clipboard history selector, decorative power menu (the different font in that menu is intentional; the actual session is handled by Wlogout), and window switcher (`ALT + TAB`) — lists all open windows with minimize/restore: click an active window to minimize it to `special:minimized`, click a minimized one to restore it to the current workspace.
@@ -176,12 +174,11 @@ This configuration was developed and tested on this hardware. Some parts depend 
 ├── cava/               # Config, GLSL shaders and themes for the audio visualizer
 ├── docs/screenshots/   # Rice screenshots
 ├── fastfetch/          # jsonc configs, logos and visual presets
-├── fish/               # config.fish, functions/ (including dotbackup.fish), aliases and Fish shell themes
+├── fish/               # config.fish, functions, aliases and Fish shell themes
 ├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
 ├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
 ├── kitty/              # Kitty configuration and colors
 ├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), power menu, and window switcher (window-switcher.sh + window-switcher.rasi)
-├── scripts/            # Personal scripts (terminal-bg-cava.sh)
 ├── starship.toml       # Starship config (prompt), goes in ~/.config/starship.toml
 ├── swaync/             # Notification center config, styles, icons and theme
 ├── waybar/             # Waybar config, CSS and scripts
@@ -271,7 +268,6 @@ cp -r \
   ~/.config/hyprlock \
   ~/.config/swaync \
   ~/.config/wlogout \
-  ~/.config/scripts \
   ~/backup-configs 2>/dev/null
 ```
 
@@ -298,7 +294,7 @@ Copy the folders you want to use:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout scripts cava ~/.config/
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava ~/.config/
 cp starship.toml ~/.config/starship.toml
 
 mkdir -p ~/Documents
@@ -333,7 +329,6 @@ chmod +x ~/.config/rofi/launcher.sh
 chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/*.sh
-chmod +x ~/.config/scripts/terminal-bg-cava.sh
 chmod +x ~/.config/rofi/scripts/*.sh
 ```
 
@@ -441,7 +436,7 @@ The keybind in `hypr/modules/programs.lua` calls `wallpaper_launcher.sh` directl
 
 The `cava/` folder includes three components:
 
-- **`config`** — configures cava with pipewire method, noncurses output at 60fps in mono mode (averaged). This is the config used by `scripts/terminal-bg-cava.sh` for the animated terminal background.
+- **`config`** — configures cava with pipewire method, noncurses output at 60fps in mono mode (averaged).
 - **`themes/`** — three color palettes: `agua` (blues), `solarized_dark`, and `tricolor`. To activate a theme, copy its contents into the `[color]` block of `cava/config`.
 - **`shaders/`** — six GLSL shaders for cava's visual mode: `bar_spectrum.frag`, `eye_of_phi.frag`, `northern_lights.frag`, `spectrogram.frag`, `winamp_line_style_spectrum.frag`, and `pass_through.vert`. To use them, enable the `ngl` method in the `[output]` section of `cava/config` and point `shader` to the path of the `.frag` you want.
 
@@ -512,7 +507,6 @@ Beyond aliases and external tool integrations, Fish includes custom functions in
 - `healthcheck` — quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention.
 - `keybinds` — opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window.
 - `fastfetch` (the function, not the binary) — randomly picks one of the presets in `fastfetch/config*.jsonc`, avoiding repeating the same one twice in a row.
-- `dotbackup` — interactive backup script. See [Dotbackup](#dotbackup) for full details.
 
 > ⚠️ `keybinds` depends on `KEYBINDS.txt` maintaining an exact format: section header in UPPERCASE, a line of only dashes below it, and entries as `KEY    Description` with at least two spaces between columns. If you edit that file manually, respect the format or the viewer will stop recognizing sections.
 
@@ -692,7 +686,6 @@ Manual installation requires more work, but teaches you much more about how the 
 - The Rofi wallpaper selector (`rofi/scripts/wallpaper_launcher.sh` + `wallpaper_rofi.sh` + `wallpaper_grid.sh`) is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via `/tmp/rofi-wallpaper-next`. Replaces the previous Quickshell-based version.
 - [matugen](https://github.com/InioX/matugen) is the dynamic theming tool that the wallpaper selector's reload script is prepared to use, but it's not connected in this rice — see [External Additions](#external-additions).
 - Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
-- terminal-bg was created by [DaarcyDev](https://www.youtube.com/@DaarcyDev).
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted.
 - Nerd Fonts and JetBrains Mono Nerd Font belong to their respective authors.
@@ -722,32 +715,3 @@ I prefer:
 If this repository helps you learn something about Linux, Hyprland, Waybar, Fish, or dotfiles, then it has already fulfilled its purpose.
 
 ---
-
-## Dotbackup
-
-`fish/functions/dotbackup.fish` is an interactive backup script that syncs your dotfiles to the local repo and pushes to GitHub. Run it as a command:
-
-```fish
-dotbackup
-```
-
-**What it does:**
-
-1. Safety checks — verifies correct branch (`main`) and remote before doing anything.
-2. Syncs all tracked config folders to the repo using `rsync --delete` (or `cp` as fallback).
-3. Creates a local `.tar.gz` snapshot in `~/.cache/dotbackup-snapshots/` before committing (only if there are changes).
-4. Shows a diff summary (new, modified, deleted files) and optionally a full `git diff`.
-5. Asks to open `README.md` in your editor before committing.
-6. Asks for a commit message (with a default timestamp-based one).
-7. Asks separately to commit and to push — you can commit locally without pushing.
-8. Keeps only the last 5 snapshots, deleting older ones automatically.
-
-**Tracked folders** (edit `config_dirs` at the top of the script to add/remove):
-
-```
-cava  fastfetch  fish  hypr  hyprlock  kitty  rofi  swaync  waybar  wlogout  scripts
-```
-
-Plus `starship.toml` and `~/Documents/KEYBINDS.txt`.
-
-> The script is designed to run as a Fish function, not sourced. If you run it with `source`, the internal `__dotbackup_sync_dir` function will persist in the session — use the alias or call it directly instead.
