@@ -294,3 +294,20 @@ tooltip label {
     border-radius: 999px;
     background: #7ab8b8;
 }
+
+/* -----------------------------------
+   TASKBAR (Espaciado de íconos)
+----------------------------------- */
+#taskbar button {
+    margin: 0 2px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: transparent;
+    transition: all 300ms ease-in-out;
+}
+
+#taskbar button:hover {
+    /* Fondo sutil al pasar el mouse, similar al de tus workspaces */
+    background: rgba(117, 117, 117, 0.16); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
