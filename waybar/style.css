@@ -156,7 +156,7 @@ tooltip label {
 
 /* -----------------------------------
    INNER BUBBLE MODULES RESET
------------------------------------ */
+----------------------------- */
 
 .modules-left #pulseaudio,
 .modules-left #pulseaudio-slider,
@@ -239,6 +239,11 @@ tooltip label {
    PLAYER
 ----------------------------------- */
 
+#custom-playerlabel:hover {
+    color: #e8e8e8;
+    text-shadow: 0 0 6px rgba(122, 184, 184, 0.30);
+}
+
 #custom-playerctl,
 #custom-playerlabel {
     background: transparent;
@@ -255,8 +260,8 @@ tooltip label {
 }
 
 #custom-playerctl.Playing  { color: #7ab8b8; }
-#custom-playerctl.Paused   { color: #5a5248; }
-#custom-playerctl.Stopped  { color: #5a5248; }
+#custom-playerctl.Paused   { color: #b85c50; }
+#custom-playerctl.Stopped  { color: #b85c50; }
 
 #custom-playerlabel {
     font-size: 13px;
@@ -264,7 +269,8 @@ tooltip label {
 }
 
 #custom-playerlabel.Playing { color: #d8d8d8; }
-#custom-playerlabel.Paused  { color: #5a5248; }
+#custom-playerlabel.Paused  { color: #b85c50; }
+#custom-playerlabel.Stopped { color: #b85c50; }
 
 /* Experiment */
 #pulseaudio-slider {
@@ -311,3 +317,9 @@ tooltip label {
     background: rgba(117, 117, 117, 0.16); 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
+
+/* -----------------------------------
+   Custom Updates
+----------------------------------- */
+#custom-updates.updated  { color: #7a9080; }
+#custom-updates.critical { color: #b85c50; }

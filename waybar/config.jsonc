@@ -142,7 +142,7 @@
         "interval": 30,
         "signal": 8,
         "return-type": "json",
-        "on-click": "kitty fish -lc 'sysupdate; pkill -RTMIN+8 waybar; read -P \"Press Enter to exit\"'",
+        "on-click": "kitty fish -lc 'sysupdate; read -P \"Press Enter to exit\"'; pkill -RTMIN+8 waybar",
         "format": "{}",
         "tooltip": true
     },
