@@ -127,3 +127,22 @@ window#waybar {
     color: #e8e8e8;
     text-shadow: 0 0 8px rgba(184, 92, 80, 0.6);
 }
+
+/* -----------------------------------
+   TOOLTIPS (Cajitas Flotantes Corregidas)
+----------------------------------- */
+
+tooltip {
+    background: rgba(20, 20, 20, 0.80);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* El secreto es darle formato directo al contenedor del texto */
+tooltip label {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    color: #e8e8e8;
+    padding: 8px 12px; /* Aquí le devolvemos el aire interno */
+}
