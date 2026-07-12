@@ -48,7 +48,7 @@ window#waybar {
     color: rgba(255, 255, 255, 0.25);
     margin: 0 4px;
     padding: 0 4px;
-    transition: all 250ms ease;
+    transition: all 250ms ease-in-out;
 }
 
 #workspaces button:hover {
@@ -86,16 +86,16 @@ window#waybar {
 }
 
 #custom-updates { color: #c0a878; }
-#network { color: #a1b0b8; }
-#cpu { color: #8cb0c0; }
-#memory { color: #a890b0; }
-#disk { color: #90a890; }
-#temperature { color: #d0a090; }
+#network { color: #ffffff; }
+#cpu { color: #ffffff; }
+#memory { color: #ffffff; }
+#disk { color: #ffffff; }
+#temperature { color: #ffffff; }
 
 #pulseaudio.muted,
 #network.disconnected,
 #temperature.critical {
-    color: #b85c50;
+    color: #fc1d00;
 }
 
 /* -----------------------------------
@@ -119,7 +119,7 @@ window#waybar {
 ----------------------------------- */
 
 #custom-power {
-    color: #d47a6e;
+    color: #ff1e00;
     font-weight: bold;
 }
 
@@ -165,4 +165,26 @@ tooltip label {
     color: #b0becc;
     padding-left: 2px;
     margin-left: 0;
+}
+
+/* -----------------------------------
+   ESTADOS DE ACTUALIZACIÓN Y ALERTAS
+----------------------------------- */
+
+/* Cuando no hay actualizaciones: un turquesa suave o verde brillante que resalte */
+#custom-updates.updated  { 
+    color: #8cd0bc; 
+    font-weight: bold;
+}
+
+/* Cuando hay pocas actualizaciones pendientes */
+#custom-updates.pending  { 
+    color: #e0b070; 
+    font-weight: bold;
+}
+
+/* Cuando se acumulan más de 50 paquetes: color coral/alerta */
+#custom-updates.critical { 
+    color: #ff1e00; 
+    font-weight: bold;
 }
