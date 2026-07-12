@@ -44,3 +44,6 @@ CLAUDE.md
 
 # ── Personal Alias ───────────────────────────────────────────
 fish/conf.d/local.fish
+
+# ── Maly Completions ─────────────────────────────────────────
+fish/completions/maly.fish

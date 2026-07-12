@@ -1,6 +1,8 @@
 {
-    "spacing": 1,
+    "spacing": 0,       // Subido de 4 a 8 para estirar el espacio entre widgets
     "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
     
     "modules-left": [
         "pulseaudio",
@@ -27,22 +29,22 @@
 
     "hyprland/window": {
         "format": "󰣇 {title}",
-        "max-length": 30,
+        "max-length": 25,
         "separate-outputs": true,
         "rewrite": {
-            "^.*Mozilla Firefox.*$": "󰈹  Firefox",
-            "^.*Zen Browser.*$":     "󰈹  Zen",
-            "^.*Spotify.*$":         "󰓇  Spotify",
-            "^.*fish.*$":            "  Terminal",
-            "^.*Thunar.*$":          "󰉋  Files",
-            "^.*Discord.*$":         "󰙯  Discord",
-            "^.*VSCodium.*$":        "󰨞  VSCodium",
-            "^.*Steam.*$":           "󰓓  Steam",
-            "^.*OBS.*$":             "󰐻  OBS Studio",
-            "^.*btop.*$":            "󰍛  Btop",
-            "^.*Goverlay.*$":        "󰊖  GOverlay",
-            "^.*keybinds.*$":        "󰌌  Keybinds",
-            "^.*sysupdate.*$":       "󰚰  Sysupdate"
+            "^.*Mozilla Firefox.*$": "󰈹 Firefox",
+            "^.*Zen Browser.*$":     "󰈹 Zen",
+            "^.*Spotify.*$":         "󰓇 Spotify",
+            "^.*fish.*$":            " Terminal",
+            "^.*Thunar.*$":          "󰉋 Files",
+            "^.*Discord.*$":         "󰙯 Discord",
+            "^.*VSCodium.*$":        "󰨞 VSCodium",
+            "^.*Steam.*$":           "󰓓 Steam",
+            "^.*OBS.*$":             "󰐻 OBS Studio",
+            "^.*btop.*$":            "󰍛 Btop",
+            "^.*Goverlay.*$":        "󰊖 GOverlay",
+            "^.*keybinds.*$":        "󰌌 Keybinds",
+            "^.*sysupdate.*$":       "󰚰 Sysupdate"
         }
     },
 
@@ -63,12 +65,8 @@
         "format": "{icon}",
         "on-click": "activate",
         "format-icons": {
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "active": "󰊠"
+            "active": "󰊠",
+            "default": "•"
         },
         "persistent-workspaces": {
             "*": 5
@@ -77,7 +75,7 @@
 
     "wlr/taskbar": {
         "format": "{icon}",
-        "icon-size": 22,
+        "icon-size": 18,
         "tooltip-format": "{title}",
         "on-click": "activate",
         "on-click-middle": "close",
@@ -97,64 +95,48 @@
         "format-icons": {
             "default": ["󰕿", "󰖀", "󰕾"]
         },
-        "scroll-step": 1,
+        "scroll-step": 2,
         "on-click": "pavucontrol",
-        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "ignored-sinks": ["Easy Effects Sink"]
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
     },
 
     "cpu": {
-        "interval": 10,
-        "format": "󰍛 {usage}%",
-        "max-length": 10,
-        "tooltip": false
+        "interval": 5,
+        "format": "󰍛 {usage}%"
     },
 
     "memory": {
-        "interval": 30,
-        "format": " {percentage}%",
-        "max-length": 10,
-        "tooltip": true,
-        "tooltip-format": " Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
+        "interval": 10,
+        "format": " {percentage}%"
     },
 
     "disk": {
         "interval": 30,
         "format": "󰋊 {percentage_used}%",
-        "path": "/",
-        "tooltip": true,
-        "unit": "GB",
-        "tooltip-format": "     Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
+        "path": "/"
     },
 
     "network": {
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀 Wired",
-        "format-disconnected": "󰈂 Disconnected",
-        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%",
-        "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
-        "tooltip-format-disconnected": "Disconnected",
+        "format-disconnected": "󰈂",
         "on-click": "nm-connection-editor"
     },
 
     "custom/updates": {
         "exec": "~/.config/waybar/scripts/updates.sh",
-        "interval": 30,
+        "interval": 60,
         "signal": 8,
         "return-type": "json",
         "on-click": "kitty fish -lc 'sysupdate; read -P \"Press Enter to exit\"'; pkill -RTMIN+8 waybar",
-        "format": "{}",
-        "tooltip": true
+        "format": "{}"
     },
 
     "temperature": {
-        "interval": 10,
-        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
+        "interval": 4,
         "format": "{icon} {temperatureC}°C",
         "format-icons": ["󱃃", "󰔏", "󱃂"],
-        "tooltip": true,
-        "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
-        "critical-threshold": 80
+        "critical-threshold": 75
     },
 
     "idle_inhibitor": {
@@ -162,40 +144,11 @@
         "format-icons": {
             "activated": "󰈈",
             "deactivated": "󰈉"
-        },
-        "tooltip-format-activated": "Idle inhibitor: active",
-        "tooltip-format-deactivated": "Idle inhibitor: inactive"
+        }
     },
 
     "custom/power": {
         "format": "󰐥",
-        "tooltip": true,
-        "tooltip-format": "Power menu",
         "on-click": "~/.config/waybar/scripts/power-menu.sh"
-    },
-
-    "custom/playerctl": {
-        "format": "{icon}",
-        "return-type": "json",
-        "max-length": 36,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
-        "on-click": "playerctl play-pause",
-        "tooltip":false,
-        "format-icons": {
-            "Playing": "󰏥",
-            "Paused": "󰐌",
-            "Stopped": "󰐍"
-        }
-    },
-
-    "custom/playerlabel": {
-        "format": "{}",
-        "return-type": "json",
-        "max-length": 36,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
-        "on-click": "playerctl previous",
-        "on-click-middle": "playerctl play-pause",
-        "on-click-right": "playerctl next",
-        "tooltip":false
     }
 }

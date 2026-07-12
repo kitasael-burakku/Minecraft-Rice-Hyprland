@@ -57,7 +57,7 @@ hl.animation({ leaf="fadeLayersIn",  enabled=true, speed=1.2, bezier="currentIn"
 hl.animation({ leaf="fadeLayersOut", enabled=true, speed=0.9, bezier="dissolve"                    })
 
 -- ─── Workspaces ─────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=4.0, spring="tideLift",  style="slidefadevert 10%" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=4.0, spring="tideLift",  style="slidefadevert 25%" })
 
 -- ─── Zoom ───────────────────────────────────────────────────
 hl.animation({ leaf="zoomFactor", enabled=true, speed=6.4, bezier="meniscus" })

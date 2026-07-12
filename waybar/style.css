@@ -1,101 +1,96 @@
 /* =====================================================
-   WAYBAR
+   WAYBAR - REFINED GLASS RICE
 ===================================================== */
 
 * {
     all: unset;
-    font-size: 15px;
-    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
 }
 
 window#waybar {
     background: transparent;
-    color: #e8e8e8;
 }
 
 /* -----------------------------------
-   BASE CAPSULE (fallback / standalone)
+   CÁPSULAS PRINCIPALES (Islas)
 ----------------------------------- */
 
+.modules-left,
+.modules-center,
+.modules-right {
+    background: rgba(26, 26, 26, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    margin: 6px 4px;
+    padding: 4px 10px;
+}
+
+/* -----------------------------------
+   SEPARACIÓN REAL ENTRE WIDGETS
+----------------------------------- */
+
+/* Forzamos margen a todos los módulos internos para que no se peguen */
 #clock, #cpu, #memory, #disk, #network, #pulseaudio, 
-#tray, #workspaces, #window, #custom-updates, 
-#temperature, #idle_inhibitor, #custom-power, #taskbar {
-    color: #e8e8e8;
-    background: rgba(26, 26, 26, 0.60);
-    border: 1px solid rgba(176, 190, 197, 0.40);
-    border-bottom: 2px solid rgba(176, 190, 197, 0.40);
-    border-radius: 14px;
-    margin: 6px 3px;
-    padding: 4px 13px;
-    transition: all 300ms ease-in-out;
-}
-
-#clock:hover, #cpu:hover, #memory:hover, #disk:hover, 
-#network:hover, #pulseaudio:hover, #custom-updates:hover, 
-#temperature:hover {
-    background: rgba(64, 64, 64, 0.85);
-    border-color: rgba(128, 152, 168, 0.30);
-    border-bottom-color: #b85c50;
+#workspaces, #window, #custom-updates, #temperature, 
+#idle_inhibitor, #custom-power, #taskbar, #pulseaudio-slider,
+#custom-playerctl, #custom-playerlabel {
+    margin: 0 7px; 
+    padding: 0;
 }
 
 /* -----------------------------------
-   WORKSPACES (standalone)
+   WORKSPACES & TASKBAR (Centro)
 ----------------------------------- */
-
-#workspaces {
-    padding: 1px 4px;
-}
 
 #workspaces button {
-    color: rgba(255, 255, 255, 0.28);
-    margin: 0 3px;
-    padding: 0 9px;
-    border-radius: 999px;
-    min-width: 13px;
-    background: rgba(5, 5, 5, 0.18);
-    border: 1px solid rgba(176, 190, 197, 0.08);
-    border-bottom: 2px solid rgba(117, 117, 117, 0.12);
-    transition: all 300ms ease-in-out;
+    color: rgba(255, 255, 255, 0.25);
+    margin: 0 4px;
+    padding: 0 4px;
+    transition: all 250ms ease;
 }
 
 #workspaces button:hover {
     color: #e8e8e8;
-    background: rgba(117, 117, 117, 0.16);
-    border-color: rgba(128, 152, 168, 0.20);
-    border-bottom-color: rgba(138, 176, 168, 0.45);
 }
 
 #workspaces button.active {
     color: #7ab8b8;
-    background: rgba(122, 184, 184, 0.10);
-    border-color: rgba(122, 184, 184, 0.28);
-    border-bottom-color: #7ab8b8;
-    text-shadow: 0 0 8px rgba(122, 184, 184, 0.35);
+    text-shadow: 0 0 6px rgba(122, 184, 184, 0.5);
 }
 
-#workspaces button.urgent {
-    color: #e8e8e8;
-    background: rgba(184, 92, 80, 0.14);
-    border: 1px solid rgba(184, 92, 80, 0.32);
-    border-bottom: 2px solid #b85c50;
-    text-shadow: 0 0 6px rgba(184, 92, 80, 0.30);
+#taskbar button {
+    margin: 0 4px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    transition: all 200ms ease;
+}
+
+#taskbar button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#taskbar button.active {
+    background: rgba(122, 184, 184, 0.12);
+    border-bottom: 2px solid #7ab8b8;
 }
 
 /* -----------------------------------
-   TOOLTIP & STATES
+   HARDWARE & ESTADOS (Colores limpios)
 ----------------------------------- */
 
-tooltip {
-    color: #5a5a5a;
-    background: rgba(26, 26, 26, 0.60);
-    border: 1px solid rgba(128, 152, 168, 0.40);
-    border-radius: 25px;
-}
-
-tooltip label {
-    padding: 8px 12px;
+#clock {
+    font-weight: 700;
     color: #e8e8e8;
 }
+
+#custom-updates { color: #c0a878; }
+#network { color: #a1b0b8; }
+#cpu { color: #8cb0c0; }
+#memory { color: #a890b0; }
+#disk { color: #90a890; }
+#temperature { color: #d0a090; }
 
 #pulseaudio.muted,
 #network.disconnected,
@@ -103,223 +98,32 @@ tooltip label {
     color: #b85c50;
 }
 
-#pulseaudio.muted,
-#network.disconnected {
-    border-color: rgba(184, 92, 80, 0.20);
-    border-bottom-color: rgba(184, 92, 80, 0.45);
-}
-
-#temperature.critical {
-    border-bottom-color: rgba(184, 92, 80, 0.55);
-}
-
-#clock {
-    font-weight: 700;
-    color: #d8d8d8;
-    letter-spacing: 0.03em;
-}
-
-#custom-updates {
-    color: #c0a878;
-    font-weight: 700;
-}
-
-#idle_inhibitor.activated {
-    color: #b0d0d8;
-    border-bottom-color: #7ab8b8;
-    background: rgba(122, 184, 184, 0.10);
-}
-
-/* =====================================================
-   BUBBLE CONTAINERS (LEFT, CENTER, RIGHT)
-===================================================== */
-
-.modules-left,
-.modules-center,
-.modules-right {
-    background: rgba(26, 26, 26, 0.60);
-    border: 1px solid rgba(176, 190, 197, 0.40);
-    border-bottom: 2px solid rgba(176, 190, 197, 0.40);
-    border-radius: 16px;
-    margin: 6px 3px;
-    padding: 0 6px;
-    transition: all 300ms ease-in-out;
-}
-
-.modules-left:hover,
-.modules-center:hover,
-.modules-right:hover {
-    background: rgba(64, 64, 64, 0.72);
-    border-color: rgba(128, 152, 168, 0.30);
-    border-bottom-color: rgba(122, 184, 184, 0.45);
-}
-
 /* -----------------------------------
-   INNER BUBBLE MODULES RESET
------------------------------ */
-
-.modules-left #pulseaudio,
-.modules-left #pulseaudio-slider,
-.modules-left #clock,
-.modules-center #window,
-.modules-center #workspaces,
-.modules-center #taskbar,
-.modules-center #idle_inhibitor,
-.modules-right #custom-updates,
-.modules-right #network,
-.modules-right #temperature,
-.modules-right #cpu,
-.modules-right #memory,
-.modules-right #disk,
-.modules-right #custom-power {
-    background: transparent;
-    border: none;
-    border-bottom: none;
-    margin: 0;
-    padding: 4px 9px;
-    min-height: 0;
-}
-
-.modules-center #window, 
-.modules-center #workspaces, 
-.modules-center #idle_inhibitor, 
-.modules-center #tray {
-    padding: 4px 9px;
-}
-
-.modules-center #workspaces {
-    padding: 1px 6px;
-}
-
-.modules-center #workspaces button {
-    margin: 0 2px;
-}
-
-/* ----------------------------------
-   WORKSPACE SPACING ONLY
+   SLIDER DE VOLUMEN
 ----------------------------------- */
-
-#workspaces button {
-    margin: 0 2px;
-}
-
-#workspaces button:not(:first-child) {
-    box-shadow: -1px 0 0 rgba(128, 152, 168, 0.08);
-}
-
-/* -----------------------------------
-   POWER
------------------------------------ */
-
-#custom-power {
-    color: #d47a6e;
-    font-weight: 700;
-
-    background: transparent;
-    border: none;
-    border-bottom: none;
-
-    margin: 0;
-    padding: 4px 9px;
-
-    min-width: 15px;
-    min-height: 0;
-}
-
-#custom-power:hover {
-    color: #e8e8e8;
-
-    background: rgba(184, 92, 80, 0.10);
-    border-radius: 999px;
-
-    text-shadow: 0 0 8px rgba(184, 92, 80, 0.35);
-}
-
-/* -----------------------------------
-   PLAYER
------------------------------------ */
-
-#custom-playerlabel:hover {
-    color: #e8e8e8;
-    text-shadow: 0 0 6px rgba(122, 184, 184, 0.30);
-}
-
-#custom-playerctl,
-#custom-playerlabel {
-    background: transparent;
-    border: none;
-    border-bottom: none;
-    margin: 0;
-    padding: 4px 9px;
-    min-height: 0;
-}
-
-#custom-playerctl {
-    font-size: 17px;
-    padding-left: 10px;
-}
-
-#custom-playerctl.Playing  { color: #7ab8b8; }
-#custom-playerctl.Paused   { color: #b85c50; }
-#custom-playerctl.Stopped  { color: #b85c50; }
-
-#custom-playerlabel {
-    font-size: 13px;
-    padding-right: 10px;
-}
-
-#custom-playerlabel.Playing { color: #d8d8d8; }
-#custom-playerlabel.Paused  { color: #b85c50; }
-#custom-playerlabel.Stopped { color: #b85c50; }
-
-/* Experiment */
-#pulseaudio-slider {
-    padding: 0 6px;
-    margin: 0;
-}
-
-#pulseaudio-slider slider {
-    min-height: 0px;
-    min-width: 0px;
-    opacity: 0;
-    background-image: none;
-    border: none;
-    box-shadow: none;
-}
 
 #pulseaudio-slider trough {
     min-height: 4px;
-    min-width: 80px;
+    min-width: 65px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(128, 152, 168, 0.15);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 #pulseaudio-slider highlight {
-    min-width: 6px;
     border-radius: 999px;
     background: #7ab8b8;
 }
 
 /* -----------------------------------
-   TASKBAR (Espaciado de íconos)
+   BOTÓN APAGADO
 ----------------------------------- */
-#taskbar button {
-    margin: 0 2px;
-    padding: 0 4px;
-    border-radius: 8px;
-    background: transparent;
-    transition: all 300ms ease-in-out;
+
+#custom-power {
+    color: #d47a6e;
+    font-weight: bold;
 }
 
-#taskbar button:hover {
-    /* Fondo sutil al pasar el mouse, similar al de tus workspaces */
-    background: rgba(117, 117, 117, 0.16); 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+#custom-power:hover {
+    color: #e8e8e8;
+    text-shadow: 0 0 8px rgba(184, 92, 80, 0.6);
 }
-
-/* -----------------------------------
-   Custom Updates
------------------------------------ */
-#custom-updates.updated  { color: #7a9080; }
-#custom-updates.critical { color: #b85c50; }
