@@ -150,5 +150,30 @@
     "custom/power": {
         "format": "󰐥",
         "on-click": "~/.config/waybar/scripts/power-menu.sh"
+    },
+
+    "custom/playerctl": {
+        "format": "{icon}",
+        "return-type": "json",
+        "max-length": 36,
+        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "on-click": "playerctl play-pause",
+        "tooltip": false,
+        "format-icons": {
+            "Playing": "󰏥 ",
+            "Paused": "󰐌 ",
+            "Stopped": "󰐍 "
+        }
+    },
+
+    "custom/playerlabel": {
+        "format": "{}",
+        "return-type": "json",
+        "max-length": 36,
+        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "on-click": "playerctl previous",
+        "on-click-middle": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "tooltip": false
     }
 }

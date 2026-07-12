@@ -146,3 +146,23 @@ tooltip label {
     color: #e8e8e8;
     padding: 8px 12px; /* Aquí le devolvemos el aire interno */
 }
+
+/* -----------------------------------
+   REPRODUCTOR DE MÚSICA (PLAYERCTL)
+----------------------------------- */
+
+#custom-playerctl {
+    font-size: 16px;
+    padding-right: 2px; /* Un poco más cerca de su etiqueta */
+    margin-right: 0;
+}
+
+#custom-playerctl.Playing { color: #7ab8b8; }
+#custom-playerctl.Paused, #custom-playerctl.Stopped { color: rgba(255, 255, 255, 0.3); }
+
+#custom-playerlabel {
+    font-size: 12px;
+    color: #b0becc;
+    padding-left: 2px;
+    margin-left: 0;
+}
