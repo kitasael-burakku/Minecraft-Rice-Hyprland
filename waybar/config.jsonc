@@ -125,7 +125,7 @@
     "network": {
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀 Wired",
-        "format-disconnected": "󰈂",
+        "format-disconnected": "󰈂 Disconnected",
         "on-click": "nm-connection-editor"
     },
 
