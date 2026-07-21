@@ -34,8 +34,8 @@ hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t"))
 -- Wallpaper picker
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 
--- Spotify
-hl.bind(mainMod .. "+ T", hl.dsp.exec_cmd(Programs.music))
+-- Music 
+hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))

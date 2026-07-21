@@ -110,7 +110,7 @@
         "format": " {percentage}%",
         "max-length": 10,
         "tooltip": true,
-        "tooltip-format": " Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
+        "tooltip-format": "     Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
     },
 
     "disk": {
@@ -121,21 +121,25 @@
         "unit": "GB",
         "tooltip-format": "     Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
     },
-    
+
     "network": {
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀 Wired",
         "format-disconnected": "󰈂 Disconnected",
+        "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%",
+        "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
+        "tooltip-format-disconnected": "Disconnected",
         "on-click": "nm-connection-editor"
     },
 
     "custom/updates": {
         "exec": "~/.config/waybar/scripts/updates.sh",
-        "interval": 60,
+        "interval": 30,
         "signal": 8,
         "return-type": "json",
         "on-click": "kitty fish -lc 'sysupdate; read -P \"Press Enter to exit\"'; pkill -RTMIN+8 waybar",
-        "format": "{}"
+        "format": "{}",
+        "tooltip": true
     },
 
     "temperature": {
@@ -144,6 +148,7 @@
         "hwmon-path-abs": "/sys/class/hwmon", 
         "input-filename": "temp1_input",
         "format": "{icon} {temperatureC}°C",
+        "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
         "format-icons": ["󱃃", "󰔏", "󱃂"],
         "critical-threshold": 75
     },
@@ -153,11 +158,14 @@
         "format-icons": {
             "activated": "󰈈",
             "deactivated": "󰈉"
-        }
+        },
+        "tooltip-format-activated": "Idle inhibitor: active",
+        "tooltip-format-deactivated": "Idle inhibitor: inactive"
     },
 
     "custom/power": {
         "format": "󰐥",
+        "tooltip": false,
         "on-click": "~/.config/waybar/scripts/power-menu.sh"
     },
 

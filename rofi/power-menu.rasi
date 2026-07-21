@@ -1,5 +1,5 @@
 /* =====================================================
-   POWER MENU — Kitasan Glass Refinado
+   POWER MENU — Kitasan Glass Refinado Monocromático
    ===================================================== */
 
 configuration {
@@ -9,23 +9,24 @@ configuration {
 * {
     font:           "JetBrainsMono Nerd Font 13";
 
-    bg:             #1a1a1adc;
-    bg-glass:       #141414aa;
-    bg-hover:       #383838cc;
+    bg:             #121212dc;
+    bg-glass:       #1a1a1aaa;
+    bg-hover:       #2c2c2ccc;
 
-    fg:             #e8e8e8;
-    fg-muted:       #909090;
+    fg:             #ffffff;
+    fg-muted:       #a0a0a0;
     fg-dim:         #5a5a5a;
 
-    border:         #7ab8b840;
-    border-soft:    #6f6f6f40;
-    border-hover:   #7ab8b899;
+    border:         #ffffff25;
+    border-soft:    #ffffff12;
+    border-hover:   #ffffff60;
 
-    accent:         #e8e8e8;
-    accent-muted:   #8098a8;
+    accent:         #ffffff;
+    accent-muted:   #8a8a8a;
 
-    danger:         #b85c50;
-    danger-bg:      #b85c501a;
+    /* Reemplazo monocromático para elementos urgentes/peligro */
+    danger-bg:      #ffffff15;
+    danger-fg:      #ffffff;
 
     background-color: transparent;
     text-color: @fg;
@@ -49,27 +50,25 @@ mainbox {
     children:         [ "inputbar", "listview" ];
 }
 
-/* ── Header ───────────────────────────────────────── */
+/* ── Header (Estilo de wallpaper-type-select) ─────── */
 inputbar {
+    padding:          0px;
+    spacing:          0px;
+    background-color: transparent;
+    orientation:      horizontal;
+    children:         [ "textbox-title" ];
+}
+
+textbox-title {
+    expand:           true;
+    str:              "Enter to select";
     padding:          12px 16px;
-    spacing:          10px;
     border-radius:    14px;
     background-color: @bg-glass;
     border:           1px;
     border-color:     @border-soft;
-    children:         [ "prompt", "entry" ];
-}
-
-prompt {
-    text-color:       @accent-muted;
+    text-color:       @fg-muted;
     font:             "JetBrainsMono Nerd Font 13";
-}
-
-entry {
-    placeholder:      "Enter to confirm...";
-    placeholder-color: @fg-dim;
-    text-color:       @fg;
-    background-color: transparent;
 }
 
 /* ── Lista — se ajusta a las 5 opciones exactas ───── */
@@ -78,7 +77,9 @@ listview {
     columns:          1;
     spacing:          8px;
     cycle:            true;
-    fixed-height:     true;
+    fixed-height:   false;
+    dynamic:        true;
+    fixed-columns:  false;
     scrollbar:        false;
     background-color: transparent;
 }
@@ -108,12 +109,11 @@ element selected.normal {
     border-color:     @border-hover;
 }
 
-/* Opción de apagado resaltada en rojo al seleccionar */
 element selected.urgent {
     background-color: @danger-bg;
-    text-color:       @danger;
+    text-color:       @danger-fg;
     border:           1px;
-    border-color:     @danger;
+    border-color:     @accent;
 }
 
 element-text {

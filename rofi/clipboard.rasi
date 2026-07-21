@@ -1,5 +1,5 @@
 /* =====================================================
-   CLIPBOARD — Kitasan Glass Refinado
+   CLIPBOARD — Kitasan Glass Refinado Monocromático
    ===================================================== */
 
 configuration {
@@ -9,21 +9,21 @@ configuration {
 * {
     font:           "JetBrainsMono Nerd Font Propo 11";
 
-    bg-main:        #1a1a1adc;
-    bg-glass:       #141414aa;
-    bg-selected:    #7ab8b81a;
-    bg-hover:       #383838cc;
+    bg-main:        #121212dc;
+    bg-glass:       #1a1a1aaa;
+    bg-selected:    #ffffff0c;
+    bg-hover:       #2c2c2ccc;
 
-    fg:             #e8e8e8;
-    fg-muted:       #909090;
+    fg:             #ffffff;
+    fg-muted:       #a0a0a0;
     fg-dim:         #5a5a5a;
 
-    border:         #7ab8b840;
-    border-soft:    #6f6f6f40;
-    border-hover:   #7ab8b899;
+    border:         #ffffff30;
+    border-soft:    #ffffff15;
+    border-hover:   #ffffff50;
 
-    accent:         #e8e8e8;
-    accent-muted:   #8098a8;
+    accent:         #ffffff;
+    accent-muted:   #8a8a8a;
 
     background-color: transparent;
     text-color: @fg;
@@ -52,7 +52,7 @@ mainbox {
 inputbar {
     spacing:          10px;
     padding:          14px 18px;
-    background-color: #111111bb;
+    background-color: #0c0c0cbb;
     border:           0px 0px 1px 0px;
     border-color:     @border-soft;
     text-color:       @fg;

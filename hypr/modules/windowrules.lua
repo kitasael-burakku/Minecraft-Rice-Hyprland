@@ -131,6 +131,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.9,
+    animation = "popin 65%"
 })
 
 -- Wlogout 
@@ -204,17 +205,4 @@ hl.window_rule({
     float  = true,
     center = true,
     size   = "1100 700",
-})
-
-hl.window_rule({
-    name  = "btop-float",
-    match = {
-        class = "^(kitty)$",
-        title = "^(btop)$",
-    },
-    float  = true,
-    center = true,
-    size   = "1000 600",
-
-    -- opacity = "0.8 override 0.7 override",
 })

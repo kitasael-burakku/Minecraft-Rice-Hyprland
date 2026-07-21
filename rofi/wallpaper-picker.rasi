@@ -1,5 +1,5 @@
 /* =====================================================
-   WALLPAPER PICKER — Kitasan Glass Refinado (Fila única)
+   WALLPAPER PICKER — Kitasan Glass Monocromático (Fila única)
    ===================================================== */
 
 configuration {
@@ -9,22 +9,22 @@ configuration {
 * {
     font:           "JetBrainsMono Nerd Font Propo 12";
 
-    bg-main:        #1a1a1adc;
-    bg-glass:       #141414aa;
-    bg-hover:       #383838cc;
-    bg-selected:    #7ab8b81a;
+    bg-main:        #121212dc;
+    bg-glass:       #1a1a1aaa;
+    bg-hover:       #2c2c2ccc;
+    bg-selected:    #ffffff0c;
 
-    fg:             #e8e8e8;
-    fg-soft:        #d8d8d8;
-    fg-muted:       #909090;
+    fg:             #ffffff;
+    fg-soft:        #e0e0e0;
+    fg-muted:       #a0a0a0;
     fg-dim:         #5a5a5a;
 
-    border:         #7ab8b840;
-    border-soft:    #6f6f6f40;
-    border-hover:   #7ab8b899;
+    border:         #ffffff25;
+    border-soft:    #ffffff12;
+    border-hover:   #ffffff50;
 
-    accent:         #e8e8e8;
-    accent-muted:   #8098a8;
+    accent:         #ffffff;
+    accent-muted:   #8a8a8a;
 
     background-color: transparent;
     text-color: @fg;
@@ -66,13 +66,12 @@ prompt {
 
 entry {
     text-color:     @fg;
-    placeholder:    "Find you wallpaper...";
+    placeholder:    "Find your wallpaper...";
     placeholder-color: @fg-dim;
     cursor:         text;
 }
 
 /* ── Fila única dinámica ──────────────────────────── */
-
 listview {
     columns:        6;
     lines:          2;

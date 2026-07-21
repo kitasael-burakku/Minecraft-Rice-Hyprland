@@ -36,11 +36,13 @@ hl.config({
         fullscreen_opacity = 0.95,
 
         shadow = {
-            enabled      = true,
-            range        = 20,
+            enabled = true,
+            range = 20,
             render_power = 3,
-            color        = 0x99000000,
-            offset       = "0 4", 
+            sharp = false,
+            color = "rgba(0,0,0,0.55)",
+            offset = { 0, 5 },
+            scale = 1.0,
         },
 
         blur = {

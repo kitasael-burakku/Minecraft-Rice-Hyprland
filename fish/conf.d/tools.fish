@@ -3,7 +3,6 @@ zoxide init fish | source
 # ── Modern CLI Replacements ──────────────────────────────
 alias cat="bat --style=plain --paging=never"
 alias less="bat"
-alias grep="rg"
 alias ls="eza --icons --group-directories-first"
 alias ll="eza -lah --icons --group-directories-first"
 alias la="eza -a --icons --group-directories-first"
