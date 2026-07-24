@@ -1,0 +1,4 @@
+/* Kitasan Glass — acento dinámico de Waybar. Generado por matugen.
+   Estático de referencia: ~/.config/waybar/colors.static.css */
+@define-color accent      {{colors.primary.default.hex}};
+@define-color accent-gold {{colors.tertiary.default.hex}};

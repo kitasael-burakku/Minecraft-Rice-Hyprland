@@ -1,0 +1,46 @@
+# ~/.config/matugen/config.toml
+# Kitasan Glass — theming dinámico por wallpaper ("Balanceado":
+# fondos + acento siguen el wallpaper; semánticos y bordes quedan fijos).
+#
+# Invocado como: matugen image <frame-o-imagen> -m dark -t scheme-tonal-spot
+# vía ~/.config/rofi/scripts/matugen_reload.sh (gateado por el sentinel
+# ~/.config/matugen/enabled — apagado por defecto).
+#
+# A propósito NO hay [config.wallpaper]: el wallpaper lo siguen manejando
+# awww/mpvpaper/wallpaper_grid.sh, matugen solo genera colores.
+
+# prefer = "saturation" evita el prompt interactivo de matugen cuando una
+# imagen tiene varios colores candidatos igual de dominantes — necesario
+# porque esto se invoca desde un script en background, sin terminal.
+[config]
+prefer = "saturation"
+
+[templates.rofi]
+input_path  = '~/.config/matugen/templates/rofi-colors.rasi'
+output_path = '~/.config/rofi/colors.rasi'
+# sin post_hook: rofi se relanza por invocación, recoge colores solo
+
+[templates.waybar]
+input_path  = '~/.config/matugen/templates/waybar-colors.css'
+output_path = '~/.config/waybar/colors.css'
+post_hook   = 'pkill -SIGUSR2 waybar || true'
+
+[templates.kitty]
+input_path  = '~/.config/matugen/templates/kitty-colors.conf'
+output_path = '~/.config/kitty/colors/colors.conf'
+post_hook   = 'killall -SIGUSR1 kitty 2>/dev/null || true'
+
+[templates.wlogout]
+input_path  = '~/.config/matugen/templates/wlogout-colors.css'
+output_path = '~/.config/wlogout/colors.css'
+# sin post_hook: wlogout se relanza por invocación
+
+[templates.hyprlock]
+input_path  = '~/.config/matugen/templates/hyprlock-colors.conf'
+output_path = '~/.config/hyprlock/colors.conf'
+# sin post_hook: hyprlock se relanza por invocación (cada bloqueo es un proceso nuevo)
+
+[templates.hypr_live]
+input_path  = '~/.config/matugen/templates/hypr-colors.sh'
+output_path = '~/.config/hypr/dynamic-colors.sh'
+post_hook   = 'bash ~/.config/hypr/dynamic-colors.sh'

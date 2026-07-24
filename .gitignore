@@ -15,6 +15,7 @@ fastfetch/.last_fastfetch
 fastfetch/.fastfetch_bag
 fish/fish_variables
 fish/keybinds_lang
+matugen/enabled
 
 # ── Funciones locales (no parte del rice) ────────────────────
 fish/functions/dotbackup.fish

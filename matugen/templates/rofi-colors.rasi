@@ -1,0 +1,31 @@
+/* =====================================================
+   KITASAN GLASS — paleta compartida de rofi (dinámica)
+   Generado por matugen — no editar a mano.
+   Estático de referencia: ~/.config/rofi/colors.static.rasi
+   ===================================================== */
+
+* {
+    bg-main:        {{colors.background.default.hex}}cc;
+    bg-glass:       {{colors.surface_container.default.hex}}aa;
+    bg-hover:       {{colors.surface_container_high.default.hex}}cc;
+    bg-selected:    #ffffff10;
+    bg-active:      {{colors.primary.default.hex}}1f;
+    bg-urgent:      {{colors.error.default.hex}}2a;
+    bg-minimized:   #ffffff10;
+
+    danger-bg:      {{colors.error.default.hex}}22;
+    danger-fg:      {{colors.on_error_container.default.hex}};
+
+    fg:             {{colors.on_surface.default.hex}};
+    fg-soft:        {{colors.on_surface_variant.default.hex}};
+    fg-muted:       {{colors.secondary.default.hex}};
+    fg-dim:         {{colors.outline.default.hex}};
+
+    border:         #ffffff28;
+    border-soft:    #ffffff14;
+    border-hover:   #ffffff55;
+    border-urgent:  {{colors.error.default.hex}}60;
+
+    accent:         {{colors.primary.default.hex}};
+    accent-muted:   {{colors.tertiary.default.hex}};
+}
