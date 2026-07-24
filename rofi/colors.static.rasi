@@ -1,0 +1,31 @@
+/* =====================================================
+   KITASAN GLASS — paleta compartida de rofi
+   Piedra/cálida, con acento teal y bordes en blanco/alpha.
+   Importar con: @import "~/.config/rofi/colors.rasi"
+   ===================================================== */
+
+* {
+    bg-main:        #0d0d0dcc;
+    bg-glass:       #1a1a1aaa;
+    bg-hover:       #26221fcc;
+    bg-selected:    #ffffff10;
+    bg-active:      #7ab8b81f;
+    bg-urgent:      #b85c502a;
+    bg-minimized:   #ffffff10;
+
+    danger-bg:      #b85c5022;
+    danger-fg:      #f2b8ab;
+
+    fg:             #e8e8e8;
+    fg-soft:        #d8d8d8;
+    fg-muted:       #b8a888;
+    fg-dim:         #6a6a62;
+
+    border:         #ffffff28;
+    border-soft:    #ffffff14;
+    border-hover:   #ffffff55;
+    border-urgent:  #b85c5060;
+
+    accent:         #7ab8b8;
+    accent-muted:   #c8b898;
+}

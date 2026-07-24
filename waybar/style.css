@@ -2,6 +2,8 @@
    WAYBAR - REFINED GLASS RICE
 ===================================================== */
 
+@import "colors.css";
+
 * {
     all: unset;
     font-size: 14px;
@@ -56,8 +58,8 @@ window#waybar {
 }
 
 #workspaces button.active {
-    color: #7ab8b8;
-    text-shadow: 0 0 6px rgba(122, 184, 184, 0.5);
+    color: @accent;
+    text-shadow: 0 0 6px alpha(@accent, 0.5);
 }
 
 #taskbar button {
@@ -72,7 +74,7 @@ window#waybar {
 }
 
 #taskbar button.active {
-    background: rgba(122, 184, 184, 0.12);
+    background: alpha(@accent, 0.12);
     border-bottom: 2px solid rgba(255, 255, 255, 0.348);
 }
 
@@ -85,7 +87,7 @@ window#waybar {
     color: #e8e8e8;
 }
 
-#custom-updates { color: #c0a878; }
+#custom-updates { color: @accent-gold; }
 #network { color: #ffffff; }
 #cpu { color: #ffffff; }
 #memory { color: #ffffff; }
@@ -111,7 +113,7 @@ window#waybar {
 
 #pulseaudio-slider highlight {
     border-radius: 999px;
-    background: #7ab8b8;
+    background: @accent;
 }
 
 /* -----------------------------------
@@ -157,7 +159,7 @@ tooltip label {
     margin-right: 0;
 }
 
-#custom-playerctl.Playing { color: #7ab8b8; }
+#custom-playerctl.Playing { color: @accent; }
 #custom-playerctl.Paused, #custom-playerctl.Stopped { color: rgba(216, 37, 37, 0.468); }
 
 #custom-playerlabel {
