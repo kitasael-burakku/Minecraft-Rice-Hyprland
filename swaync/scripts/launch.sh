@@ -7,5 +7,14 @@ command -v swaync >/dev/null 2>&1 || {
     exit 127
 }
 
-pkill -x swaync 2>/dev/null || true
-swaync &
+if pgrep -x swaync >/dev/null 2>&1; then
+    # Ya está corriendo: recargar config/estilo en caliente en vez de matarlo,
+    # así un reload de Waybar (SUPER+SHIFT+R) no descarta notificaciones en
+    # el instante del kill+relanzamiento.
+    if command -v swaync-client >/dev/null 2>&1; then
+        swaync-client -R  >/dev/null 2>&1 || true
+        swaync-client -rs >/dev/null 2>&1 || true
+    fi
+else
+    swaync &
+fi

@@ -13,7 +13,7 @@ SUPER + B                  Open Browser
 SUPER + Space              Open Launcher
 SUPER + A                  Open/close SwayNC
 SUPER + W                  Open Wallpaper selector (Rofi)
-SUPER + T                  Open Music Player
+SUPER + M                  Open Music Player
 SUPER + O                  Open OBS
 
 WINDOWS
