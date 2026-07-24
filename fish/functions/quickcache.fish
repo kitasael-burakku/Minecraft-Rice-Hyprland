@@ -15,48 +15,15 @@ function quickcache --description "Quick safe cache cleanup with animated confir
         echo ""
     end
 
-    # ── Box helpers ───────────────────────────────────────────────────────────
     set -l W 52
-
-    function __qc_top -a w
-        set_color 909090
-        printf "  ┌"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┐\n"
-        set_color normal
-    end
-    function __qc_mid -a w
-        set_color 909090
-        printf "  ├"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┤\n"
-        set_color normal
-    end
-    function __qc_bot -a w
-        set_color 909090
-        printf "  └"; for i in (seq 1 (math "$w - 2")); printf "─"; end; printf "┘\n"
-        set_color normal
-    end
-    function __qc_row -a w color text
-        set -l inner (math "$w - 2")
-        set -l len (string length --visible "$text")
-        set -l left (math "max(0, floor(($inner - $len) / 2))")
-        set -l right (math "max(0, $inner - $len - $left)")
-        set_color 909090; printf "  │"; printf "%*s" $left ""
-        set_color $color; printf "%s" "$text"
-        set_color 909090; printf "%*s│\n" $right ""
-        set_color normal
-    end
-    function __qc_section -a color icon text
-        echo ""
-        set_color $color
-        printf "  ── %s %s\n" "$icon" "$text"
-        set_color normal
-    end
 
     # ── Banner ────────────────────────────────────────────────────────────────
     echo ""
-    __qc_top $W
-    __qc_row $W ffffff "󰪺  Quick Cache Cleanup"
-    __qc_mid $W
-    __qc_row $W 686058 "Safe removal of regenerable cache folders"
-    __qc_bot $W
+    _rui_top $W
+    _rui_row $W ffffff "󰪺  Quick Cache Cleanup"
+    _rui_mid $W
+    _rui_row $W 686058 "Safe removal of regenerable cache folders"
+    _rui_bot $W
     echo ""
 
     # ── Browser detection ─────────────────────────────────────────────────────
@@ -137,7 +104,7 @@ function quickcache --description "Quick safe cache cleanup with animated confir
         return 0
     end
 
-    __qc_section 6a96b0 "󰆴" "Removing cache folders"
+    _rui_section_plain 6a96b0 "󰆴" "Removing cache folders"
     echo ""
 
     for target in $targets
@@ -159,7 +126,7 @@ function quickcache --description "Quick safe cache cleanup with animated confir
 
     # ── Cliphist ──────────────────────────────────────────────────────────────
     if type -q cliphist
-        __qc_section bd7fd4 "󰅇" "Cliphist"
+        _rui_section_plain bd7fd4 "󰅇" "Cliphist"
         set_color 686058
         __quickcache_type "  Clears clipboard history stored by cliphist." 0.012
         set_color normal
@@ -175,7 +142,7 @@ function quickcache --description "Quick safe cache cleanup with animated confir
 
     # ── npm ───────────────────────────────────────────────────────────────────
     if type -q npm
-        __qc_section 6aab7a "" "npm cache"
+        _rui_section_plain 6aab7a "" "npm cache"
         set_color 686058
         __quickcache_type "  Clears npm download cache." 0.012
         set_color normal

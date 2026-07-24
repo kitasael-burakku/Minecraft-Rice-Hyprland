@@ -1,33 +1,16 @@
 /* =====================================================
-   POWER MENU — Kitasan Glass Refinado Monocromático
+   POWER MENU — Kitasan Glass
    ===================================================== */
 
 configuration {
     show-icons: false;
 }
 
+@import "~/.config/rofi/colors.rasi"
+
 * {
     font:           "JetBrainsMono Nerd Font 13";
-
-    bg:             #121212dc;
-    bg-glass:       #1a1a1aaa;
-    bg-hover:       #2c2c2ccc;
-
-    fg:             #ffffff;
-    fg-muted:       #a0a0a0;
-    fg-dim:         #5a5a5a;
-
-    border:         #ffffff25;
-    border-soft:    #ffffff12;
-    border-hover:   #ffffff60;
-
-    accent:         #ffffff;
-    accent-muted:   #8a8a8a;
-
-    /* Reemplazo monocromático para elementos urgentes/peligro */
-    danger-bg:      #ffffff15;
-    danger-fg:      #ffffff;
-
+    bg:             @bg-main;
     background-color: transparent;
     text-color: @fg;
 }

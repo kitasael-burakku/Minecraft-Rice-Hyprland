@@ -1,5 +1,5 @@
 {
-    "spacing": 0,       // Subido de 4 a 8 para estirar el espacio entre widgets
+    "spacing": 2,       // Subido de 4 a 8 para estirar el espacio entre widgets
     "margin-top": 6,
     "margin-left": 10,
     "margin-right": 10,
@@ -173,7 +173,7 @@
         "format": "{icon}",
         "return-type": "json",
         "max-length": 36,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "exec": "~/.config/waybar/scripts/playerctl-read.sh",
         "on-click": "playerctl play-pause",
         "tooltip": false,
         "format-icons": {
@@ -187,7 +187,7 @@
         "format": "{}",
         "return-type": "json",
         "max-length": 36,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "exec": "~/.config/waybar/scripts/playerctl-read.sh",
         "on-click": "playerctl previous",
         "on-click-middle": "playerctl play-pause",
         "on-click-right": "playerctl next",

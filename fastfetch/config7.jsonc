@@ -1,18 +1,24 @@
+// HyprMc · Fastfetch
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": { "source": "~/.config/fastfetch/fastfetchlogo/HyprMc.png", "type": "kitty-direct", "width": 45, "height": 20},
-  "display": { "separator": " → " },
+  "display": { "separator": " ⛏ " },
 
   "modules": [
     {
+      "type": "custom",
+      "format": "{#114}― Diamonds & Dotfiles ―"
+    },
+    "break",
+    {
       "type": "command",
-      "key":  "{#114}User",
+      "key":  "{#114}Player",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
     {
       "type": "command",
-      "key":  "{#114}󰌢 Host",
+      "key":  "{#114}󰌢 World",
       "text": "hostnamectl --pretty 2>/dev/null || hostname",
       "format": "{result}"
     },
@@ -60,35 +66,35 @@
     "break",
     {
       "type": "host",
-      "key":    "{#114}󰌢 PC"
+      "key":    "{#114}󰌢 Base"
     },
     {
       "type": "cpu",
-      "key":    "{#71}├󰻠 CPU",
+      "key":    "{#71}├󰻠 Redstone",
       "showPeCoreCount": true,
       "temp": true,
       "format": "{name}  {#65}[{core-types}] [{freq-max}]"
     },
     {
       "type": "gpu",
-      "key":    "{#244}├󰍛 GPU",
+      "key":    "{#244}├󰍛 Render",
       "detectionMethod": "auto",
       "driverSpecific": false,
       "format": "{vendor} {name}"
     },
     {
       "type": "memory",
-      "key":    "{#71}├󰑭 Memory",
+      "key":    "{#71}├󰑭 Inventory",
       "format": "{used} / {total}  {#65}({percentage})"
     },
     {
       "type": "disk",
-      "key":    "{#71}├ Disk",
+      "key":    "{#71}├ Chest",
       "format": "{size-used} / {size-total}  {#65}({size-percentage})"
     },
     {
       "type": "uptime",
-      "key":    "{#71}└󰅐 Uptime",
+      "key":    "{#71}└󰅐 Playtime",
       "format": "{?days}{days}d {?}{hours}h {minutes}m"
     },
     "break",

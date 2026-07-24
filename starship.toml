@@ -140,7 +140,7 @@ format = "[](fg:#2e3238 bg:none)"
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "fg:#fffff italic"
+style = "fg:#ffffff italic"
 format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────

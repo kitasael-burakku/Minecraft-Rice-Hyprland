@@ -7,20 +7,22 @@
 
 local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
+local wait_for_hyprland = home .. "/.config/hypr/scripts/wait-for-hyprland.sh"
+
 hl.on("hyprland.start", function()
-   
+
     -- Fondo de pantalla
     hl.exec_cmd("awww-daemon &")
-    hl.exec_cmd("sleep 0.5 && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. home .. "/Videos/wallpapersvideo/minecraft.mp4 &")
-    
+    hl.exec_cmd(wait_for_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. home .. "/Videos/Wallpapers/minecraft.mp4 &")
+
     -- Entorno
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
     hl.exec_cmd("systemctl --user start hyprland-session.service")
-   
+
     -- UI y Daemons
     hl.exec_cmd("hyprctl setcursor Future-black-cursors 24")
     hl.exec_cmd(home .. "/.config/waybar/scripts/launch.sh &")
-    hl.exec_cmd("sleep 2 && hypridle &")
+    hl.exec_cmd(wait_for_hyprland .. " && hypridle &")
     hl.exec_cmd("test -x /usr/lib/polkit-kde-authentication-agent-1 && /usr/lib/polkit-kde-authentication-agent-1 &")
 
     -- Clipboard
@@ -29,4 +31,5 @@ hl.on("hyprland.start", function()
 
     -- Udiskie
     hl.exec_cmd("udiskie --tray &")
+
 end)

@@ -19,10 +19,10 @@ window#waybar {
 .modules-left,
 .modules-center,
 .modules-right {
-    background: rgba(26, 26, 26, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
+    background: rgba(26, 26, 26, 0.588);
+    border: 1px solid rgba(26, 26, 26, 0.588);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.666);
+    border-radius: 18px;
     margin: 6px 4px;
     padding: 4px 10px;
 }
@@ -73,7 +73,7 @@ window#waybar {
 
 #taskbar button.active {
     background: rgba(122, 184, 184, 0.12);
-    border-bottom: 2px solid #7ab8b8;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.348);
 }
 
 /* -----------------------------------
@@ -158,11 +158,11 @@ tooltip label {
 }
 
 #custom-playerctl.Playing { color: #7ab8b8; }
-#custom-playerctl.Paused, #custom-playerctl.Stopped { color: rgba(255, 255, 255, 0.3); }
+#custom-playerctl.Paused, #custom-playerctl.Stopped { color: rgba(216, 37, 37, 0.468); }
 
 #custom-playerlabel {
     font-size: 12px;
-    color: #b0becc;
+    color: rgba(255, 255, 255, 0.666);
     padding-left: 2px;
     margin-left: 0;
 }
@@ -173,13 +173,13 @@ tooltip label {
 
 /* Cuando no hay actualizaciones: un turquesa suave o verde brillante que resalte */
 #custom-updates.updated  { 
-    color: #8cd0bc; 
+    color: #00ff26; 
     font-weight: bold;
 }
 
 /* Cuando hay pocas actualizaciones pendientes */
 #custom-updates.pending  { 
-    color: #e0b070; 
+    color: #e09d70; 
     font-weight: bold;
 }
 

@@ -1,18 +1,24 @@
+// Kitasan Black · Fastfetch
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": { "source": "~/.config/fastfetch/fastfetchlogo/kitasan.png", "type": "kitty-direct", "width": 30, "height": 18},
-  "display": { "separator": " → " },
+  "display": { "separator": " ➜ " },
 
   "modules": [
     {
+      "type": "custom",
+      "format": "{#244}― Elegant Front Runner ―"
+    },
+    "break",
+    {
       "type": "command",
-      "key":  "User",
+      "key":  "Trainer",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
     {
       "type": "command",
-      "key":  "󰌢 Host",
+      "key":  "󰌢 Stable",
       "text": "hostnamectl --pretty 2>/dev/null || hostname",
       "format": "{result}"
     },
@@ -60,35 +66,35 @@
     "break",
     {
       "type": "host",
-      "key":    "󰌢 PC"
+      "key":    "󰌢 Body"
     },
     {
       "type": "cpu",
-      "key":    "{#244}├󰻠 CPU",
+      "key":    "{#244}├󰻠 Power",
       "showPeCoreCount": true,
       "temp": true,
       "format": "{name}  {#60}[{core-types}] [{freq-max}]"
     },
     {
       "type": "gpu",
-      "key":    "{#244}├󰍛 GPU",
+      "key":    "{#244}├󰍛 Speed",
       "detectionMethod": "auto",
       "driverSpecific": false,
       "format": "{vendor} {name}"
     },
     {
       "type": "memory",
-      "key":    "{#244}├󰑭 Memory",
+      "key":    "{#244}├󰑭 Wisdom",
       "format": "{used} / {total}  {#60}({percentage})"
     },
     {
       "type": "disk",
-      "key":    "{#244}├ Disk",
+      "key":    "{#244}├ Stamina",
       "format": "{size-used} / {size-total}  {#60}({size-percentage})"
     },
     {
       "type": "uptime",
-      "key":    "{#244}└󰅐 Uptime",
+      "key":    "{#244}└󰅐 Guts",
       "format": "{?days}{days}d {?}{hours}h {minutes}m"
     },
     "break",

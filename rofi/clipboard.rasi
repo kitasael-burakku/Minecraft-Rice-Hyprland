@@ -1,30 +1,15 @@
 /* =====================================================
-   CLIPBOARD — Kitasan Glass Refinado Monocromático
+   CLIPBOARD — Kitasan Glass
    ===================================================== */
 
 configuration {
     show-icons: false;
 }
 
+@import "~/.config/rofi/colors.rasi"
+
 * {
     font:           "JetBrainsMono Nerd Font Propo 11";
-
-    bg-main:        #121212dc;
-    bg-glass:       #1a1a1aaa;
-    bg-selected:    #ffffff0c;
-    bg-hover:       #2c2c2ccc;
-
-    fg:             #ffffff;
-    fg-muted:       #a0a0a0;
-    fg-dim:         #5a5a5a;
-
-    border:         #ffffff30;
-    border-soft:    #ffffff15;
-    border-hover:   #ffffff50;
-
-    accent:         #ffffff;
-    accent-muted:   #8a8a8a;
-
     background-color: transparent;
     text-color: @fg;
 }

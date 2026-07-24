@@ -5,7 +5,7 @@
 
 set -u
 
-SRC_DIR="${WALLPAPER_SRC_DIR:-$HOME/Videos/wallpapersvideo}"
+SRC_DIR="${WALLPAPER_SRC_DIR:-$HOME/Videos/Wallpapers}"
 PROMPT_LABEL="${WALLPAPER_PROMPT:-󰎁  Video}"
 
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"

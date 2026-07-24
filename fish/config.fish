@@ -6,55 +6,57 @@ function fastfetch
 
     set -l base "$HOME/.config/fastfetch"
 
-    # Probabilidades ponderadas (legendarias)
+    # Configuración y pesos
     set -l weighted \
-        "$base/config.jsonc:10" \
-        "$base/config2.jsonc:8" \
-        "$base/config3.jsonc:8" \
+        "$base/config.jsonc:12" \
+        "$base/config2.jsonc:10" \
+        "$base/config3.jsonc:7" \
         "$base/config4.jsonc:5" \
-        "$base/config5.jsonc:4" \
-        "$base/config6.jsonc:3" \
-        "$base/config7.jsonc:2.5" \
-        "$base/config8.jsonc:1.5" \
-        "$base/config9.jsonc:1.1"
+        "$base/config5.jsonc:3" \
+        "$base/config6.jsonc:2" \
+        "$base/config7.jsonc:1" \
+        "$base/config8.jsonc:0.5" \
+        "$base/config9.jsonc:0.25"
 
-    set -l pool
+    set -l bag_file "$base/.fastfetch_bag"
 
-    # Construir pool ponderado
-    for item in $weighted
-        set -l file (string split ":" $item)[1]
-        set -l weight (string split ":" $item)[2]
+    # Si la bolsa no existe o está vacía, crearla
+    if not test -s "$bag_file"
+        set -l bag
 
-        # Multiplica por 2 para soportar 0.5
-        set -l repeats (math "$weight * 2")
+        for item in $weighted
+            set -l file (string split ":" $item)[1]
+            set -l weight (string split ":" $item)[2]
 
-        for i in (seq $repeats)
-            set pool $pool $file
+            # Multiplicador para convertir decimales en enteros
+            set -l repeats (math "ceil($weight * 8)")
+
+            for i in (seq $repeats)
+                set bag $bag $file
+            end
         end
+
+        # Mezclar la bolsa
+        set -l shuffled
+        while test (count $bag) -gt 0
+            set -l idx (random 1 (count $bag))
+            set shuffled $shuffled $bag[$idx]
+            set -e bag[$idx]
+        end
+
+        printf "%s\n" $shuffled > "$bag_file"
     end
 
-    set -l count (count $pool)
+    # Leer la bolsa
+    set -l bag (cat "$bag_file")
 
-    if test $count -eq 0
-        command fastfetch
-        return
-    end
+    # Tomar el primero
+    set -l selected $bag[1]
 
-    set -l idx_file "$base/.last_fastfetch"
-    set -l last ""
+    # Eliminar el primero
+    set bag $bag[2..]
 
-    if test -f "$idx_file"
-        set last (string trim < "$idx_file")
-    end
-
-    set -l selected $pool[(random 1 $count)]
-
-    # Evitar repetición consecutiva
-    while test "$selected" = "$last"
-        set selected $pool[(random 1 $count)]
-    end
-
-    printf "%s\n" "$selected" > "$idx_file"
+    printf "%s\n" $bag > "$bag_file"
 
     command fastfetch --config "$selected"
 end

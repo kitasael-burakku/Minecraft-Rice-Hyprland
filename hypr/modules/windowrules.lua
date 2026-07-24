@@ -124,14 +124,14 @@ hl.layer_rule({
 
 -- Rofi
 hl.layer_rule({
-    name  = "rofi-blur",
+    name  = "rofi",
     match = {
         namespace = "rofi",
     },
 
     blur = true,
     ignore_alpha = 0.9,
-    animation = "popin 65%"
+    animation = "slide 20%"
 })
 
 -- Wlogout 

@@ -1,30 +1,19 @@
-/*****----- Lanzador Kitasan Glass Monocromático -----*****/
+/*****----- Lanzador Kitasan Glass -----*****/
 configuration {
     modi:                       "drun,run,filebrowser,window";
     show-icons:                 true;
-    display-drun:               "󰀻 ";
+    display-drun:               "󰀻";
+    display-run:                "󰆍";
+    display-filebrowser:        "󰉋";
+    display-window:             "󰖲";
     drun-display-format:        "{name}";
+    window-format:              "{w} · {c} · {t}";
 }
+
+@import "~/.config/rofi/colors.rasi"
 
 * {
     font:                       "JetBrainsMono Nerd Font Propo 11";
-
-    bg-main:                    #121212dc;
-    bg-glass:                   #1a1a1aaa;
-    bg-hover:                   #2c2c2ccc;
-    bg-selected:                #ffffff0c;
-
-    fg:                         #ffffff;
-    fg-muted:                   #a0a0a0;
-    fg-dim:                     #5a5a5a;
-
-    border-col:                 #ffffff25;
-    border-soft:                #ffffff12;
-    border-hover:               #ffffff50;
-
-    accent:                     #ffffff;
-    accent-muted:               #8a8a8a;
-
     background-color:           transparent;
 }
 
@@ -35,7 +24,7 @@ window {
     width:                      520px;
     border-radius:              18px;
     border:                     1px;
-    border-color:               @border-col;
+    border-color:               @border;
     background-color:           @bg-main;
 }
 
@@ -45,7 +34,6 @@ mainbox {
     children:                   [ "inputbar", "listbox" ];
 }
 
-/* ── Inputbar sin banner (Imagen eliminada y padding ajustado) ── */
 inputbar {
     spacing:                    10px;
     padding:                    18px 18px 14px 18px;
@@ -75,7 +63,7 @@ entry {
     border:                     1px;
     border-color:               @border-soft;
     text-color:                 @fg;
-    placeholder:                "Buscar aplicaciones...";
+    placeholder:                "Search Apps...";
     placeholder-color:          @fg-dim;
     cursor:                     text;
 }
@@ -84,15 +72,15 @@ entry {
 listbox {
     spacing:                    8px;
     padding:                    14px;
-    children:                   [ "listview" ];
+    children:                   [ "message", "listview", "mode-switcher" ];
 }
 
 listview {
     columns:                    1;
-    lines:                      8;            /* máximo visible */
+    lines:                      8;
     cycle:                      true;
-    fixed-height:               false;        /* se encoge si hay pocos resultados */
-    dynamic:                    true;         /* se ajusta al filtrar */
+    fixed-height:               false;
+    dynamic:                    true;
     scrollbar:                  false;
     spacing:                    3px;
 }
@@ -120,6 +108,32 @@ element selected.normal {
     border-color:               @border-hover;
 }
 
+element normal.active,
+element alternate.active {
+    background-color:           @bg-active;
+    text-color:                 @fg-muted;
+    border-color:               transparent;
+}
+
+element selected.active {
+    background-color:           @bg-selected;
+    text-color:                 @fg;
+    border-color:               @border-hover;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:           @bg-urgent;
+    text-color:                 @fg;
+    border-color:               @border-urgent;
+}
+
+element selected.urgent {
+    background-color:           @bg-urgent;
+    text-color:                 @fg;
+    border-color:               @border-urgent;
+}
+
 element-icon {
     size:                       22px;
     text-color:                 inherit;
@@ -128,4 +142,53 @@ element-icon {
 element-text {
     text-color:                 inherit;
     vertical-align:             0.5;
+}
+
+/* ── Cambio de modo (drun/run/filebrowser/window) ──── */
+mode-switcher {
+    spacing:                    8px;
+    background-color:           transparent;
+    text-color:                 @fg-muted;
+}
+
+button {
+    padding:                    8px;
+    border-radius:              10px;
+    background-color:           @bg-glass;
+    border:                     1px;
+    border-color:               @border-soft;
+    text-color:                 @fg-muted;
+    cursor:                     pointer;
+}
+
+button selected {
+    background-color:           @bg-selected;
+    border-color:               @border-hover;
+    text-color:                 @fg;
+}
+
+/* ── Mensajes / errores ───────────────────────────── */
+message {
+    background-color:           transparent;
+    padding:                    0px 14px;
+}
+
+textbox {
+    padding:                    9px 14px;
+    border-radius:              10px;
+    background-color:           @bg-glass;
+    border:                     1px;
+    border-color:               @border-soft;
+    text-color:                 @fg;
+    vertical-align:             0.5;
+    horizontal-align:           0.0;
+}
+
+error-message {
+    padding:                    14px;
+    border-radius:              10px;
+    background-color:           @bg-main;
+    border:                     1px;
+    border-color:               @border-soft;
+    text-color:                 @fg;
 }

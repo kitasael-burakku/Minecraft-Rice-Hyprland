@@ -1,4 +1,4 @@
-// CachyOS · Kitasan / Goldship Fastfetch
+// CachyOS · Fastfetch
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
@@ -22,7 +22,7 @@
 
     {
       "type": "command",
-      "key": "{#91} User",
+      "key": "{#91} User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
       "format": "{result}"
     },
@@ -45,12 +45,12 @@
 
     {
       "type": "os",
-      "key": "{#93} OS",
+      "key": "{#93} OS",
       "format": "{pretty-name} [{arch}]"
     },
     {
       "type": "kernel",
-      "key": "{#93}├ Kernel"
+      "key": "{#93}├ Kernel"
     },
     {
       "type": "packages",
@@ -58,7 +58,7 @@
     },
     {
       "type": "shell",
-      "key": "{#93}└ Shell"
+      "key": "{#93}└ Shell"
     },
 
     "break",
@@ -70,7 +70,7 @@
 
     {
       "type": "de",
-      "key": "{#94} DE"
+      "key": "{#94} DE"
     },
     {
       "type": "wm",
@@ -82,11 +82,11 @@
     },
     {
       "type": "terminal",
-      "key": "{#94}├ Terminal"
+      "key": "{#94}├ Terminal"
     },
     {
       "type": "terminalfont",
-      "key": "{#94}├ Font"
+      "key": "{#94}├ Font"
     },
     {
       "type": "icons",
@@ -134,7 +134,7 @@
     },
     {
       "type": "disk",
-      "key": "{#92}├ Disk",
+      "key": "{#92}├ Disk",
       "format": "{size-used} / {size-total} ({size-percentage})"
     },
     {
