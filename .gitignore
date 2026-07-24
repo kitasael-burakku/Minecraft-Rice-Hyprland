@@ -12,6 +12,7 @@
 # ── Generados / estado local ─────────────────────────────────
 fastfetch/.last_idx
 fastfetch/.last_fastfetch
+fastfetch/.fastfetch_bag
 fish/fish_variables
 fish/keybinds_lang
 
