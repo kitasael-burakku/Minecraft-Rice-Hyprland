@@ -21,8 +21,8 @@
 set -u
 
 WALL="${1:-}"
-LOG="/tmp/matugen-reload.log"
-FRAME="/tmp/matugen-frame.png"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/matugen-reload.log"
+FRAME="${XDG_RUNTIME_DIR:-/tmp}/matugen-frame.png"
 
 MATUGEN_CONFIG="${MATUGEN_CONFIG:-$HOME/.config/matugen/config.toml}"
 MATUGEN_SENTINEL="${MATUGEN_SENTINEL:-$HOME/.config/matugen/enabled}"

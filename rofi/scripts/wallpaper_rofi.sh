@@ -9,8 +9,8 @@ WALLPAPER_DIR_VIDEO="${WALLPAPER_DIR_VIDEO:-$HOME/Videos/Wallpapers}"
 WALLPAPER_DIR_IMG="${WALLPAPER_DIR_IMG:-$HOME/Pictures/Wallpapers}"
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"
 GEN_SCRIPT="${GEN_SCRIPT:-$HOME/.config/rofi/scripts/generate-thumbs.sh}"
-LOG="/tmp/rofi-wallpaper.log"
-NEXT_FILE="/tmp/rofi-wallpaper-next"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper.log"
+NEXT_FILE="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next"
 
 mkdir -p "$THUMB_DIR"
 
@@ -45,8 +45,12 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
             ;;
     esac
 
-    if [ -x "$GEN_SCRIPT" ]; then
-        nohup bash "$GEN_SCRIPT" >/tmp/rofi-wallpaper-gen.log 2>&1 &
+    # Solo relanzar el generador de thumbnails si hay wallpapers más nuevos
+    # que el último escaneo completo — evita ~137 fork+exec de "basename" en
+    # cada apertura del picker cuando no cambió nada (caso común).
+    MARKER="$THUMB_DIR/.last-scan"
+    if [ -x "$GEN_SCRIPT" ] && { [ ! -f "$MARKER" ] || find "$WALLPAPER_DIR_VIDEO" "$WALLPAPER_DIR_IMG" -newer "$MARKER" -print -quit 2>/dev/null | grep -q .; }; then
+        nohup bash "$GEN_SCRIPT" >"${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-gen.log" 2>&1 &
         disown
     fi
 

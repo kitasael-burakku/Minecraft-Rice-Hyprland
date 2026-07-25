@@ -8,7 +8,7 @@
 #  Flujo:
 #    1) Limpia estado anterior
 #    2) Abre rofi nivel 0 (selector Video/Imagen) y ESPERA a que cierre
-#    3) Lee /tmp/rofi-wallpaper-next para saber qué abrir
+#    3) Lee $XDG_RUNTIME_DIR/rofi-wallpaper-next para saber qué abrir
 #    4) Abre rofi nivel 1 (grid de thumbs) y ESPERA a que cierre
 # ============================================================================
 
@@ -16,6 +16,7 @@ set -u
 
 ROFI_DIR="${ROFI_DIR:-$HOME/.config/rofi}"
 SCRIPTS_DIR="$ROFI_DIR/scripts"
+NEXT_FILE="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next"
 
 # Matar rofi si ya hay uno abierto (toggle)
 if pgrep -x rofi >/dev/null; then
@@ -23,7 +24,7 @@ if pgrep -x rofi >/dev/null; then
     exit 0
 fi
 
-rm -f /tmp/rofi-wallpaper-next
+rm -f "$NEXT_FILE"
 
 # ── Nivel 0: selector de tipo — bloqueante, espera a que cierre ──────────────
 rofi \
@@ -32,11 +33,11 @@ rofi \
     -theme "$ROFI_DIR/wallpaper-type-select.rasi"
 
 # rofi cerró — leer qué eligió el usuario
-[ -f /tmp/rofi-wallpaper-next ] || exit 0
+[ -f "$NEXT_FILE" ] || exit 0
 
-src_dir="$(cut -f1 /tmp/rofi-wallpaper-next)"
-prompt_label="$(cut -f2 /tmp/rofi-wallpaper-next)"
-rm -f /tmp/rofi-wallpaper-next
+src_dir="$(cut -f1 "$NEXT_FILE")"
+prompt_label="$(cut -f2 "$NEXT_FILE")"
+rm -f "$NEXT_FILE"
 
 [ -z "$src_dir" ] && exit 0
 

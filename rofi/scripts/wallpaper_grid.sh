@@ -11,7 +11,7 @@ PROMPT_LABEL="${WALLPAPER_PROMPT:-󰎁  Video}"
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"
 RELOAD_SCRIPT="${RELOAD_SCRIPT:-$HOME/.config/rofi/scripts/matugen_reload.sh}"
 MONITOR="${WALLPAPER_MONITOR:-}"
-LOG="/tmp/rofi-wallpaper.log"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper.log"
 
 display_name() {
     local f="$1"
@@ -32,10 +32,10 @@ apply_wallpaper() {
             sleep 0.1
             if [ -n "$MONITOR" ]; then
                 nohup mpvpaper -o "no-audio --loop-file --hwdec=auto" "$MONITOR" "$target" \
-                    >/tmp/mpvpaper.log 2>&1 &
+                    >"${XDG_RUNTIME_DIR:-/tmp}/mpvpaper.log" 2>&1 &
             else
                 nohup mpvpaper -o "no-audio --loop-file --hwdec=auto" '*' "$target" \
-                    >/tmp/mpvpaper.log 2>&1 &
+                    >"${XDG_RUNTIME_DIR:-/tmp}/mpvpaper.log" 2>&1 &
             fi
             disown
             ;;
@@ -75,7 +75,7 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
     apply_wallpaper "$target" || exit 1
 
     if [ -x "$RELOAD_SCRIPT" ]; then
-        nohup bash "$RELOAD_SCRIPT" "$target" >/tmp/rofi-wallpaper-reload.log 2>&1 &
+        nohup bash "$RELOAD_SCRIPT" "$target" >"${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-reload.log" 2>&1 &
         disown
     fi
 

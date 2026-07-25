@@ -21,7 +21,7 @@
 
   {
       "label": "shutdown",
-      "action": "systemctl poweroff",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl poweroff' '¿Apagar?'",
       "text": "",
       "keybind": "s"
   },
@@ -35,7 +35,7 @@
 
   {
       "label": "reboot",
-      "action": "systemctl reboot",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl reboot' '¿Reiniciar?'",
       "text": "",
       "keybind": "r"
   }

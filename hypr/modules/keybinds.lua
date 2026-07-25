@@ -34,7 +34,10 @@ hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t"))
 -- Wallpaper picker
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 
--- Music 
+-- Toggle theming dinámico (matugen)
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
+
+-- Music
 hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 
 -- OBS Studio

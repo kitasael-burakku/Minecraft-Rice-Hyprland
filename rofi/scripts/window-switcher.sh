@@ -6,7 +6,7 @@
 # ============================================================================
 
 MINIMIZED_WS="special:minimized"
-LOG="/tmp/rofi-winswitcher.log"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-winswitcher.log"
 
 get_icon() {
     local class="$1"

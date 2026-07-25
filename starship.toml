@@ -33,7 +33,7 @@ symbol = " "
 # ── OS (Inicio del bloque izquierdo) ────────────────────────────
 [os]
 disabled = false
-style = "bg:#221a14 fg:#ffb77a"
+style = "bg:#221a14 fg:#ffb77d"
 format = "[](fg:#221a14)[ $symbol ]($style)"
 
 [os.symbols]
@@ -56,7 +56,7 @@ Unknown     = "󰌽"
 disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#261e18 fg:#ffb77a bold"
+style = "bg:#261e18 fg:#ffb77d bold"
 format = "[](bg:#261e18 fg:#221a14)[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ format = "[](bg:#261e18 fg:#261e18)[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:#261e18 fg:#c4cb97 bold"
+style = "bg:#261e18 fg:#c5cb96 bold"
 format = "[](bg:#261e18 fg:#261e18)[ $path ]($style)[](fg:#261e18 bg:none) "
 home_symbol = "󱂵 ホーム"
 read_only = "  読取専用"
@@ -114,22 +114,22 @@ deleted    = "󰍶 "
 # ── Lenguajes (cada uno a un rol distinto para conservar variedad) ──────
 [python]
 symbol = ""
-style = "bg:#261e18 fg:#e0e7b1 bold"
+style = "bg:#261e18 fg:#e1e7b0 bold"
 format = "[$symbol $version ]($style)"
 
 [nodejs]
 symbol = ""
-style = "bg:#261e18 fg:#ffdcc2 bold"
+style = "bg:#261e18 fg:#ffdcc3 bold"
 format = "[$symbol $version ]($style)"
 
 [rust]
 symbol = ""
-style = "bg:#261e18 fg:#e3c0a5 bold"
+style = "bg:#261e18 fg:#e3c0a6 bold"
 format = "[$symbol $version ]($style)"
 
 [golang]
 symbol = ""
-style = "bg:#261e18 fg:#ffdcc2 bold"
+style = "bg:#261e18 fg:#ffdcc3 bold"
 format = "[$symbol $version ]($style)"
 
 # ── Cierre bloque derecho ────────────────────────────────────────
@@ -148,7 +148,7 @@ format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ 󰁔](fg:#ffb77a bold)"
+success_symbol = "[ 󰁔](fg:#ffb77d bold)"
 # Semántico (error) — queda fijo.
 error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 

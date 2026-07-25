@@ -8,24 +8,24 @@
     bg-main:        #19120ccc;
     bg-glass:       #261e18aa;
     bg-hover:       #312822cc;
-    bg-selected:    #ffb77a10;
-    bg-active:      #ffb77a1f;
+    bg-selected:    #ffb77d10;
+    bg-active:      #ffb77d1f;
     bg-urgent:      #ffb4ab2a;
-    bg-minimized:   #ffb77a10;
+    bg-minimized:   #ffb77d10;
 
     danger-bg:      #ffb4ab22;
     danger-fg:      #ffdad6;
 
     fg:             #efe0d6;
     fg-soft:        #d6c3b6;
-    fg-muted:       #e3c0a5;
+    fg-muted:       #e3c0a6;
     fg-dim:         #9e8e82;
 
-    border:         #ffb77a28;
-    border-soft:    #ffb77a14;
-    border-hover:   #ffb77a55;
+    border:         #ffb77d28;
+    border-soft:    #ffb77d14;
+    border-hover:   #ffb77d55;
     border-urgent:  #ffb4ab60;
 
-    accent:         #ffb77a;
-    accent-muted:   #c4cb97;
+    accent:         #ffb77d;
+    accent-muted:   #c5cb96;
 }

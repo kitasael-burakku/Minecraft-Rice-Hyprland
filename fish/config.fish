@@ -66,7 +66,13 @@ if status is-interactive
 
     starship init fish | source
 
-    command -q thefuck; and thefuck --alias | source
+    if command -q thefuck
+        function fuck --description "Carga thefuck recién en el primer uso (arranque instantáneo)"
+            functions -e fuck
+            thefuck --alias | source
+            fuck $argv
+        end
+    end
 
 end
 

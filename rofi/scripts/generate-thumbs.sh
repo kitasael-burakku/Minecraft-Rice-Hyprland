@@ -11,7 +11,7 @@ WALLPAPER_DIR_VIDEO="${WALLPAPER_DIR_VIDEO:-$HOME/Videos/Wallpapers}"
 WALLPAPER_DIR_IMG="${WALLPAPER_DIR_IMG:-$HOME/Pictures/Wallpapers}"
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"
 THUMB_SIZE="${THUMB_SIZE:-320}"   # ancho del thumbnail en píxeles
-LOG="/tmp/rofi-wallpaper-gen.log"
+LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-gen.log"
 
 mkdir -p "$THUMB_DIR"
 
@@ -71,3 +71,7 @@ if [ -d "$WALLPAPER_DIR_VIDEO" ]; then
 fi
 
 echo "$(date) === generate-thumbs END | generados=$generated saltados=$skipped errores=$errors ===" >> "$LOG"
+
+# Marca de "último escaneo completo" — wallpaper_rofi.sh la usa para saltarse
+# el escaneo por completo cuando no hay wallpapers nuevos desde la última vez.
+touch "$THUMB_DIR/.last-scan"
