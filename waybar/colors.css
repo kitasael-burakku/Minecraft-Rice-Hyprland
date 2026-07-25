@@ -1,4 +1,5 @@
-/* Kitasan Glass — paleta estática (baseline para restaurar si se apaga matugen) */
-@define-color accent      #7ab8b8;
-@define-color accent-gold #c8b898;
-@define-color bg          #1a1a1a;
+/* Kitasan Glass — acento + fondo dinámicos de Waybar. Generado por matugen.
+   Estático de referencia: ~/.config/waybar/colors.static.css */
+@define-color accent      #ffb77a;
+@define-color accent-gold #c4cb97;
+@define-color bg          #261e18;

@@ -1,6 +1,7 @@
-/* Kitasan Glass — acento estático de SwayNC (baseline para restaurar si se apaga matugen) */
+/* Kitasan Glass — acento dinámico de SwayNC. Generado por matugen.
+   Estático de referencia: ~/.config/swaync/colors.static.css */
 :root {
-  --accent:      #7ab8b8;
-  --accent-35:   rgba(122, 184, 184, 0.35);
-  --accent-45:   rgba(122, 184, 184, 0.45);
+  --accent:    #ffb77a;
+  --accent-35: #FFB77A59;
+  --accent-45: #FFB77A73;
 }

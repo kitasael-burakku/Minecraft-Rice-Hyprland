@@ -31,7 +31,7 @@ symbol = " "
 # ── OS (Inicio del bloque izquierdo) ────────────────────────────
 [os]
 disabled = false
-style = "bg:#1e2226 fg:#7ab8b8"  # matugen:accent
+style = "bg:#1e2226 fg:#ffb77a"  # matugen:accent
 format = "[](fg:#1e2226)[ $symbol ]($style)"
 
 [os.symbols]
@@ -54,7 +54,7 @@ Unknown     = "󰌽"
 disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#2e3238 fg:#7ab8b8 bold"  # matugen:accent
+style = "bg:#2e3238 fg:#ffb77a bold"  # matugen:accent
 format = "[](bg:#2e3238 fg:#1e2226)[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ format = "[](bg:#2e3238 fg:#2e3238)[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:#2e3238 fg:#c8b898 bold"  # matugen:gold
+style = "bg:#2e3238 fg:#c4cb97 bold"  # matugen:gold
 format = "[](bg:#2e3238 fg:#2e3238)[ $path ]($style)[](fg:#2e3238 bg:none) "
 home_symbol = "󱂵 ホーム"
 read_only = "  読取専用"
@@ -145,7 +145,7 @@ format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ 󰁔](fg:#7ab8b8 bold)"  # matugen:accent
+success_symbol = "[ 󰁔](fg:#ffb77a bold)"  # matugen:accent
 error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 
 # ── Status (Error previo) ────────────────────────────────────────

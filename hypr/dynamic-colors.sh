@@ -14,7 +14,7 @@
 hyprctl eval 'hl.config({
   general = {
     col = {
-      active_border   = { colors = {"rgba(ffffff33)", "rgba(ffb3b566)"}, angle = 45 },
+      active_border   = { colors = {"rgba(ffffff33)", "rgba(ffb77a66)"}, angle = 45 },
       inactive_border = "rgba(ffffff0a)",
     },
   },
