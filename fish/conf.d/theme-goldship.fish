@@ -1,58 +1,63 @@
 # ~/.config/fish/conf.d/theme-goldship.fish
-# Kitasan · Glass Universal · Fish shell theme
-# Paleta: Kitasan Glass · Universal Dark
+# Kitasan · Glass Universal · Fish shell theme (dinámico)
+# Generado por matugen — no editar a mano.
+# Estático de referencia: ~/.config/fish/theme-goldship.static.fish
+#
+# Limitación real: fish solo lee conf.d/ al ARRANCAR una shell — no hay
+# señal de reload en caliente como en kitty/waybar. Las terminales ya
+# abiertas se quedan con los colores viejos hasta que abrís una nueva.
 
 # ── Syntax: core ──────────────────────────────────────────────
-set -g fish_color_normal          e8e8e8          # foreground base
-set -g fish_color_command         f0f0f0          # blanco brillante — comandos
-set -g fish_color_builtin         c8b898          # arena cálida — echo, set, read…
-set -g fish_color_keyword         d47a6e          # rojo apagado claro — for, if, while…
-set -g fish_color_end             7a7a7a          # stone gray — ; y newline
-set -g fish_color_error           b85c50          # rojo apagado — errores
+set -g fish_color_normal          e3e3d8
+set -g fish_color_command         b7d085
+set -g fish_color_builtin         a0d0c8
+set -g fish_color_keyword         c2caab
+set -g fish_color_end             8f9284
+set -g fish_color_error           b85c50
 
 # ── Syntax: argumentos & operadores ───────────────────────────
-set -g fish_color_param           d8d8d8          # gris claro — argumentos
-set -g fish_color_option          8098a8          # azul gris claro — --flags
-set -g fish_color_operator        b0d0d8          # cyan claro — = + - * | &
-set -g fish_color_redirection     607888          # azul gris oscuro — > >> |
-set -g fish_color_escape          e8e8e8          # foreground — \n \t \"
-set -g fish_color_quote           d8c098          # arena clara — "strings"
+set -g fish_color_param           c6c8b9
+set -g fish_color_option          8f9284
+set -g fish_color_operator        dee6c6
+set -g fish_color_redirection     45483d
+set -g fish_color_escape          e3e3d8
+set -g fish_color_quote           bcece4
 
 # ── Syntax: estructura ────────────────────────────────────────
-set -g fish_color_comment         7a6e64          # gris cálido oscuro — # comentarios
-set -g fish_color_bracket         b0d0d8          # cyan claro — () [] {}
+set -g fish_color_comment         8f9284
+set -g fish_color_bracket         dee6c6
 
 # ── Paths ─────────────────────────────────────────────────────
-set -g fish_color_valid_path      e8e8e8 --underline
-set -g fish_color_cwd             d8d8d8          # gris claro — directorio actual
-set -g fish_color_cwd_root        d47a6e          # rojo apagado claro — root
+set -g fish_color_valid_path      e3e3d8 --underline
+set -g fish_color_cwd             c6c8b9
+set -g fish_color_cwd_root        c2caab
 
 # ── Autosuggestions & historial ───────────────────────────────
-set -g fish_color_autosuggestion  5a5a5a          # color8 — ghost text
-set -g fish_color_history_current e8e8e8 --bold
-set -g fish_color_cancel          b85c50          # rojo apagado — Ctrl-C
+set -g fish_color_autosuggestion  45483d
+set -g fish_color_history_current e3e3d8 --bold
+set -g fish_color_cancel          b85c50
 
 # ── Search & selection ────────────────────────────────────────
-set -g fish_color_search_match    e8e8e8 --background=1e2e38
-set -g fish_color_selection       e8e8e8 --background=2e3238
-set -g fish_color_match           c8b898          # arena cálida — brackets coincidentes
+set -g fish_color_search_match    e3e3d8 --background=292b23
+set -g fish_color_selection       e3e3d8 --background=1e2019
+set -g fish_color_match           a0d0c8
 
 # ── Prompt: user & host ───────────────────────────────────────
-set -g fish_color_user            e8e8e8
-set -g fish_color_host            8098a8          # azul gris claro — hostname
-set -g fish_color_host_remote     d8c098          # arena clara — SSH
+set -g fish_color_user            e3e3d8
+set -g fish_color_host            8f9284
+set -g fish_color_host_remote     bcece4
 
 # ── Prompt: status ────────────────────────────────────────────
-set -g fish_color_status          b85c50          # rojo apagado — exit code
+set -g fish_color_status          b85c50
 
 # ── Completions pager ─────────────────────────────────────────
-set -g fish_pager_color_progress              5a5a5a
-set -g fish_pager_color_prefix                e8e8e8
-set -g fish_pager_color_completion            d8d8d8
-set -g fish_pager_color_description           8098a8          # azul gris claro
-set -g fish_pager_color_secondary             7a7a7a
+set -g fish_pager_color_progress              45483d
+set -g fish_pager_color_prefix                e3e3d8
+set -g fish_pager_color_completion            c6c8b9
+set -g fish_pager_color_description           8f9284
+set -g fish_pager_color_secondary             45483d
 
-set -g fish_pager_color_selected_background   --background=2e3238
-set -g fish_pager_color_selected_prefix       e8e8e8
-set -g fish_pager_color_selected_completion   e8e8e8
-set -g fish_pager_color_selected_description  c8b898          # arena cálida
+set -g fish_pager_color_selected_background   --background=1e2019
+set -g fish_pager_color_selected_prefix       e3e3d8
+set -g fish_pager_color_selected_completion   e3e3d8
+set -g fish_pager_color_selected_description  a0d0c8
