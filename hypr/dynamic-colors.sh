@@ -13,8 +13,8 @@
 hyprctl eval 'hl.config({
   general = {
     col = {
-      active_border   = { colors = {"rgba(ffb77dcc)", "rgba(e3c0a699)"}, angle = 45 },
-      inactive_border = "rgba(ffb77d0f)",
+      active_border   = { colors = {"rgba(ffb688cc)", "rgba(e5bfa899)"}, angle = 45 },
+      inactive_border = "rgba(ffb6880f)",
     },
   },
 })' >/dev/null 2>&1 || true

@@ -1,20 +1,21 @@
-/* Kitasan Glass — acento estático de SwayNC (baseline para restaurar si se apaga matugen) */
+/* Kitasan Glass — acento + bordes dinámicos de SwayNC. Generado por matugen.
+   Estático de referencia: ~/.config/swaync/colors.static.css */
 :root {
-  --accent:      #7ab8b8;
-  --accent-35:   rgba(122, 184, 184, 0.35);
-  --accent-45:   rgba(122, 184, 184, 0.45);
+  --accent:    #ffb688;
+  --accent-35: #FFB68859;
+  --accent-45: #FFB68873;
 
-  --border-base:   rgba(230, 236, 236, 0.30);
-  --border-mid:    rgba(190, 190, 190, 0.20);
-  --border-dim:    rgba(180, 182, 182, 0.14);
-  --border-low:    rgba(130, 132, 132, 0.10);
-  --border-hover:  rgba(232, 239, 239, 0.50);
-  --border-bottom: rgba(105, 110, 110, 0.22);
-  --border-btm-hv: rgba(150, 155, 155, 0.45);
+  --border-base:   #FFB6884D;
+  --border-mid:    #FFB68833;
+  --border-dim:    #FFB68824;
+  --border-low:    #FFB6881A;
+  --border-hover:  #FFB68880;
+  --border-bottom: #FFB68838;
+  --border-btm-hv: #FFB68873;
 
-  --red:           #b85c50;
-  --border-red:    rgba(184, 92, 80, 0.30);
-  --border-red-b:  rgba(184, 92, 80, 0.45);
-  --bg-red-hover:  rgba(184, 92, 80, 0.12);
-  --bg-red-active: rgba(184, 92, 80, 0.22);
+  --red:           #ffb4ab;
+  --border-red:    #FFB4AB4D;
+  --border-red-b:  #FFB4AB73;
+  --bg-red-hover:  #FFB4AB1F;
+  --bg-red-active: #FFB4AB38;
 }
