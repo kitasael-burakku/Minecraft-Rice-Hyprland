@@ -44,3 +44,13 @@ output_path = '~/.config/hyprlock/colors.conf'
 input_path  = '~/.config/matugen/templates/hypr-colors.sh'
 output_path = '~/.config/hypr/dynamic-colors.sh'
 post_hook   = 'bash ~/.config/hypr/dynamic-colors.sh'
+
+[templates.swaync]
+input_path  = '~/.config/matugen/templates/swaync-colors.css'
+output_path = '~/.config/swaync/colors.css'
+post_hook   = 'swaync-client -rs >/dev/null 2>&1 || true'
+
+[templates.dynamic_hex]
+input_path  = '~/.config/matugen/templates/dynamic-hex.sh'
+output_path = '~/.config/matugen/dynamic-hex.sh'
+post_hook   = 'bash ~/.config/rofi/scripts/matugen_patch_starship.sh'

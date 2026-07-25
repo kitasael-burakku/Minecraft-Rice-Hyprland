@@ -1,6 +1,8 @@
 /* ============================================================
-   SwayNC — Control Center · Kitasan Glass (Neutral)
+   SwayNC — Control Center · Kitasan Glass
    ============================================================ */
+
+@import "../colors.css";
 
 :root {
   /* ── Fondos ──────────────────────────────────────────── */
@@ -228,7 +230,7 @@ progress {
 
 .widget-title button:hover {
   background:   var(--bg-hover);
-  border-color: var(--border-hover);
+  border-color: var(--accent);
   color:        var(--text-primary);
 }
 
@@ -260,12 +262,12 @@ progress {
 }
 
 .widget-dnd > switch:checked {
-  background:   rgba(230, 236, 236, 0.35);
+  background:   var(--accent-35);
   border-color: var(--border-base);
 }
 
 .widget-dnd > switch:checked:hover {
-  background:   rgba(230, 236, 236, 0.45);
+  background:   var(--accent-45);
 }
 
 .widget-dnd > switch slider {
@@ -315,7 +317,7 @@ progress {
 
 .widget-mpris button:hover {
   background: rgba(255, 255, 255, 0.08);
-  color:      var(--text-primary);
+  color:      var(--accent);
 }
 
 .widget-mpris-title {

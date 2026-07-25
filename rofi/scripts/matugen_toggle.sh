@@ -13,6 +13,7 @@ set -u
 SENTINEL="$HOME/.config/matugen/enabled"
 RELOAD_SCRIPT="$HOME/.config/rofi/scripts/matugen_reload.sh"
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
+PATCH_STARSHIP="$HOME/.config/rofi/scripts/matugen_patch_starship.sh"
 
 restore_static() {
     cp "$HOME/.config/rofi/colors.static.rasi"      "$HOME/.config/rofi/colors.rasi"        2>/dev/null || true
@@ -20,9 +21,12 @@ restore_static() {
     cp "$HOME/.config/wlogout/colors.static.css"     "$HOME/.config/wlogout/colors.css"       2>/dev/null || true
     cp "$HOME/.config/hyprlock/colors.static.conf"   "$HOME/.config/hyprlock/colors.conf"     2>/dev/null || true
     cp "$HOME/.config/kitty/colors/colors.static.conf" "$HOME/.config/kitty/colors/colors.conf" 2>/dev/null || true
+    cp "$HOME/.config/swaync/colors.static.css"      "$HOME/.config/swaync/colors.css"        2>/dev/null || true
     [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"
+    [ -x "$PATCH_STARSHIP" ] && bash "$PATCH_STARSHIP" "$HOME/.config/matugen/dynamic-hex.static.sh"
     pkill -SIGUSR2 waybar 2>/dev/null || true
     killall -SIGUSR1 kitty 2>/dev/null || true
+    command -v swaync-client >/dev/null 2>&1 && swaync-client -rs >/dev/null 2>&1 || true
 }
 
 current_wallpaper() {

@@ -21,8 +21,8 @@ window#waybar {
 .modules-left,
 .modules-center,
 .modules-right {
-    background: rgba(26, 26, 26, 0.588);
-    border: 1px solid rgba(26, 26, 26, 0.588);
+    background: alpha(@bg, 0.588);
+    border: 1px solid alpha(@bg, 0.588);
     border-bottom: 2px solid rgba(255, 255, 255, 0.666);
     border-radius: 18px;
     margin: 6px 4px;
@@ -135,7 +135,7 @@ window#waybar {
 ----------------------------------- */
 
 tooltip {
-    background: rgba(20, 20, 20, 0.80);
+    background: alpha(@bg, 0.80);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);

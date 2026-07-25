@@ -1,0 +1,6 @@
+/* Kitasan Glass — acento estático de SwayNC (baseline para restaurar si se apaga matugen) */
+:root {
+  --accent:      #7ab8b8;
+  --accent-35:   rgba(122, 184, 184, 0.35);
+  --accent-45:   rgba(122, 184, 184, 0.45);
+}

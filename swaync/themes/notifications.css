@@ -1,6 +1,8 @@
 /* ============================================================
-   SwayNC — Floating Notifications · Kitasan Glass (Neutral)
+   SwayNC — Floating Notifications · Kitasan Glass
    ============================================================ */
+
+@import "../colors.css";
 
 :root {
   /* ── Fondos ──────────────────────────────────────────── */
@@ -143,7 +145,7 @@
 .notification-action:hover {
   background:   var(--bg-action);
   color:        var(--text-primary);
-  border-color: var(--border-base);
+  border-color: var(--accent);
 }
 
 .notification-action:active {
