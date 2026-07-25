@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-THUMB=/tmp/hyde-mpris
-THUMB_BLURRED=/tmp/hyde-mpris-blurred
+THUMB="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-thumb"
+META_CACHE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-meta.cache"
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 --title | --arturl | --artist | --position | --length | --album | --source"
+    echo "Usage: $0 --title | --artist | --position | --length | --album | --status | --source"
     exit 1
 fi
 
@@ -15,25 +15,24 @@ for cmd in playerctl curl magick pkill; do
     }
 done
 
-# Function to get metadata using playerctl
+# Function to get metadata using playerctl (usado solo por los flags que no
+# pasan por el caché compartido: --position, --length, --album)
 get_metadata() {
     key=$1
     playerctl metadata --format "{{ $key }}" 2>/dev/null
-    
-
 }
 
 # Function to determine the source and return an icon and text
 get_source_info() {
-    trackid=$(get_metadata "mpris:trackid")
+    local trackid="$1"
     if [[ "$trackid" == *"firefox"* ]]; then
         echo -e "Firefox 󰈹"
     elif [[ "$trackid" == *"spotify"* ]]; then
-        echo -e "Spotify "
+        echo -e "Spotify "
     elif [[ "$trackid" == *"chromium"* ]]; then
-        echo -e "Chrome "
+        echo -e "Chrome "
     elif [[ "$trackid" == *"YoutubeMusic"* ]]; then
-        echo -e "YouTubeMusic "
+        echo -e "YouTubeMusic "
     else
         echo ""
     fi
@@ -62,9 +61,10 @@ convert_position() {
     printf "%d:%02d" $minutes $remaining_seconds
 }
 
-# Function to fetch album art and create blurred version
+# Function to fetch album art (se dispara solo cuando el caché de metadata
+# se refresca de verdad, no en cada invocación del script)
 fetch_thumb() {
-    artUrl=$(playerctl -p spotify metadata --format '{{mpris:artUrl}}') 
+    artUrl=$(playerctl -p spotify metadata --format '{{mpris:artUrl}}' 2>/dev/null)
     [[ -z "$artUrl" ]] && return 0
     [[ -f "${THUMB}.inf" && "${artUrl}" = "$(cat "${THUMB}.inf")" ]] && return 0
 
@@ -72,36 +72,57 @@ fetch_thumb() {
 
     curl -so "${THUMB}.png" "$artUrl"
     magick "${THUMB}.png" -quality 50 "${THUMB}.png"
-    # Create blurred version
+    # Avisa a hyprlock para que relea el thumbnail actualizado
     pkill -USR2 hyprlock 2>/dev/null || true
 }
 
-# Run fetch_thumb function in the background
-{ fetch_thumb ;} || { rm -f "${THUMB}"* && exit 1;} &
+# --title/--artist/--source comparten un solo caché de metadata con ventana
+# de frescura de 3s: layout.conf dispara los tres cada 3000ms, así que sin
+# esto cada tick hacía 3 llamadas separadas a playerctl (más 3 fetch_thumb
+# redundantes en background). Con el caché, solo la primera llamada del
+# tick consulta playerctl de verdad; las otras dos leen el resultado.
+load_metadata() {
+    local mtime age
+    if [ -f "$META_CACHE" ]; then
+        mtime=$(stat -c %Y "$META_CACHE" 2>/dev/null || echo 0)
+        age=$(( $(date +%s) - mtime ))
+    else
+        age=999
+    fi
+
+    if [ "$age" -ge 3 ]; then
+        local title artist trackid
+        title=$(playerctl metadata --format "{{ xesam:title }}" 2>/dev/null)
+        artist=$(playerctl metadata --format "{{ xesam:artist }}" 2>/dev/null)
+        trackid=$(playerctl metadata --format "{{ mpris:trackid }}" 2>/dev/null)
+        {
+            printf 'TITLE=%q\n' "$title"
+            printf 'ARTIST=%q\n' "$artist"
+            printf 'TRACKID=%q\n' "$trackid"
+        } > "$META_CACHE"
+        fetch_thumb &
+    fi
+
+    # shellcheck disable=SC1090
+    source "$META_CACHE" 2>/dev/null
+}
 
 # Parse the argument
 case "$1" in
 --title)
-    title=$(get_metadata "xesam:title")
-    if [ -z "$title" ]; then
+    load_metadata
+    if [ -z "$TITLE" ]; then
         echo ""
     else
-        echo "${title:0:50}" # Limit the output to 50 characters
+        echo "${TITLE:0:50}" # Limit the output to 50 characters
     fi
     ;;
-# --arturl)
-#     fetch_thumb & # Run fetch_thumb in the background
-#     url=$(get_metadata "mpris:artUrl")
-#     if [[ "$(playerctl -p status)" != "Playing"  ]]; then
-#           rm -f /tmp/hyde-mpris*
-#     fi
-#      ;;
 --artist)
-    artist=$(get_metadata "xesam:artist")
-    if [ -z "$artist" ]; then
+    load_metadata
+    if [ -z "$ARTIST" ]; then
         echo ""
     else
-        echo "${artist:0:50}" # Limit the output to 50 characters
+        echo "${ARTIST:0:50}" # Limit the output to 50 characters
     fi
     ;;
 --position)
@@ -147,10 +168,11 @@ case "$1" in
     fi
     ;;
 --source)
-    get_source_info
+    load_metadata
+    get_source_info "$TRACKID"
     ;;
 *)
     echo "Invalid option: $1"
-    echo "Usage: $0 --title | --arturl | --artist | --position | --length | --album | --source" ; exit 1
+    echo "Usage: $0 --title | --artist | --position | --length | --album | --status | --source" ; exit 1
     ;;
 esac

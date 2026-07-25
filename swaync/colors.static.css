@@ -17,4 +17,18 @@
   --border-red-b:  rgba(184, 92, 80, 0.45);
   --bg-red-hover:  rgba(184, 92, 80, 0.12);
   --bg-red-active: rgba(184, 92, 80, 0.22);
+
+  --bg-base:      rgba(24, 24, 24, 0.74);
+  --bg-dark:      rgba(10, 10, 10, 0.82);
+  --bg-hover:     rgba(48, 48, 48, 0.88);
+  --bg-hover-dim: rgba(42, 42, 42, 0.75);
+  --bg-action:    rgba(255, 255, 255, 0.06);
+  --bg-progress:  rgba(90, 90, 90, 0.28);
+
+  --text-primary: #f0f0f0;
+  --text-body:    #c8c8c8;
+  --text-muted:   #7a7a7a;
+  --text-base:    #d8d8d8;
+  --text-active:  #0a0a0a;
+  --text-accent:  #e8e8e8;
 }

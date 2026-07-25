@@ -18,4 +18,18 @@
   --border-red-b:  {{colors.error.default.hex_alpha | set_alpha: 0.45}};
   --bg-red-hover:  {{colors.error.default.hex_alpha | set_alpha: 0.12}};
   --bg-red-active: {{colors.error.default.hex_alpha | set_alpha: 0.22}};
+
+  --bg-base:      {{colors.surface_container.default.hex_alpha | set_alpha: 0.74}};
+  --bg-dark:      {{colors.surface_container_lowest.default.hex_alpha | set_alpha: 0.82}};
+  --bg-hover:     {{colors.surface_container_high.default.hex_alpha | set_alpha: 0.88}};
+  --bg-hover-dim: {{colors.surface_container_high.default.hex_alpha | set_alpha: 0.75}};
+  --bg-action:    {{colors.on_surface.default.hex_alpha | set_alpha: 0.06}};
+  --bg-progress:  {{colors.outline_variant.default.hex_alpha | set_alpha: 0.28}};
+
+  --text-primary: {{colors.on_surface.default.hex}};
+  --text-body:    {{colors.on_surface_variant.default.hex}};
+  --text-muted:   {{colors.outline.default.hex}};
+  --text-base:    {{colors.on_surface_variant.default.hex}};
+  --text-active:  {{colors.on_primary.default.hex}};
+  --text-accent:  {{colors.on_surface.default.hex}};
 }

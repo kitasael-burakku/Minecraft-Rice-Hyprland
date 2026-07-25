@@ -54,7 +54,7 @@ window#waybar {
 }
 
 #workspaces button:hover {
-    color: #e8e8e8;
+    color: @fg;
 }
 
 #workspaces button.active {
@@ -84,20 +84,20 @@ window#waybar {
 
 #clock {
     font-weight: 700;
-    color: #e8e8e8;
+    color: @fg;
 }
 
 #custom-updates { color: @accent-gold; }
-#network { color: #ffffff; }
-#cpu { color: #ffffff; }
-#memory { color: #ffffff; }
-#disk { color: #ffffff; }
-#temperature { color: #ffffff; }
+#network { color: @fg; }
+#cpu { color: @fg; }
+#memory { color: @fg; }
+#disk { color: @fg; }
+#temperature { color: @fg; }
 
 #pulseaudio.muted,
 #network.disconnected,
 #temperature.critical {
-    color: #fc1d00;
+    color: @red;
 }
 
 /* -----------------------------------
@@ -121,12 +121,12 @@ window#waybar {
 ----------------------------------- */
 
 #custom-power {
-    color: #ff1e00;
+    color: @red;
     font-weight: bold;
 }
 
 #custom-power:hover {
-    color: #e8e8e8;
+    color: @fg;
     text-shadow: 0 0 8px rgba(184, 92, 80, 0.6);
 }
 
@@ -145,7 +145,7 @@ tooltip {
 tooltip label {
     font-family: "JetBrainsMono Nerd Font", sans-serif;
     font-size: 13px;
-    color: #e8e8e8;
+    color: @fg;
     padding: 8px 12px; /* Aquí le devolvemos el aire interno */
 }
 
@@ -186,7 +186,7 @@ tooltip label {
 }
 
 /* Cuando se acumulan más de 50 paquetes: color coral/alerta */
-#custom-updates.critical { 
-    color: #ff1e00; 
+#custom-updates.critical {
+    color: @red;
     font-weight: bold;
 }
