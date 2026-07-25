@@ -1,6 +1,7 @@
 # ~/.config/matugen/config.toml
-# Kitasan Glass — theming dinámico por wallpaper ("Balanceado":
-# fondos + acento siguen el wallpaper; semánticos y bordes quedan fijos).
+# Kitasan Glass — theming dinámico por wallpaper. Todo sigue al wallpaper
+# (fondos, acentos, bordes, starship, fish) salvo los colores semánticos
+# (error/crítico) que quedan fijos a propósito.
 #
 # Invocado como: matugen image <frame-o-imagen> -m dark -t scheme-tonal-spot
 # vía ~/.config/rofi/scripts/matugen_reload.sh (gateado por el sentinel
@@ -50,7 +51,13 @@ input_path  = '~/.config/matugen/templates/swaync-colors.css'
 output_path = '~/.config/swaync/colors.css'
 post_hook   = 'swaync-client -rs >/dev/null 2>&1 || true'
 
-[templates.dynamic_hex]
-input_path  = '~/.config/matugen/templates/dynamic-hex.sh'
-output_path = '~/.config/matugen/dynamic-hex.sh'
-post_hook   = 'bash ~/.config/rofi/scripts/matugen_patch_starship.sh'
+[templates.starship]
+input_path  = '~/.config/matugen/templates/starship.toml'
+output_path = '~/.config/starship.toml'
+# sin post_hook: starship relee su config en cada render de prompt, solo
+
+[templates.fish]
+input_path  = '~/.config/matugen/templates/theme-goldship.fish'
+output_path = '~/.config/fish/conf.d/theme-goldship.fish'
+# sin post_hook posible: fish solo lee conf.d/ al arrancar la shell, no hay
+# señal de reload en caliente — las terminales nuevas ya lo recogen solas

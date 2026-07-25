@@ -8,10 +8,10 @@
     bg-main:        {{colors.background.default.hex}}cc;
     bg-glass:       {{colors.surface_container.default.hex}}aa;
     bg-hover:       {{colors.surface_container_high.default.hex}}cc;
-    bg-selected:    #ffffff10;
+    bg-selected:    {{colors.primary.default.hex}}10;
     bg-active:      {{colors.primary.default.hex}}1f;
     bg-urgent:      {{colors.error.default.hex}}2a;
-    bg-minimized:   #ffffff10;
+    bg-minimized:   {{colors.primary.default.hex}}10;
 
     danger-bg:      {{colors.error.default.hex}}22;
     danger-fg:      {{colors.on_error_container.default.hex}};
@@ -21,9 +21,9 @@
     fg-muted:       {{colors.secondary.default.hex}};
     fg-dim:         {{colors.outline.default.hex}};
 
-    border:         #ffffff28;
-    border-soft:    #ffffff14;
-    border-hover:   #ffffff55;
+    border:         {{colors.primary.default.hex}}28;
+    border-soft:    {{colors.primary.default.hex}}14;
+    border-hover:   {{colors.primary.default.hex}}55;
     border-urgent:  {{colors.error.default.hex}}60;
 
     accent:         {{colors.primary.default.hex}};

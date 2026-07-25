@@ -1,7 +1,15 @@
-/* Kitasan Glass — acento dinámico de SwayNC. Generado por matugen.
+/* Kitasan Glass — acento + bordes dinámicos de SwayNC. Generado por matugen.
    Estático de referencia: ~/.config/swaync/colors.static.css */
 :root {
   --accent:    {{colors.primary.default.hex}};
   --accent-35: {{colors.primary.default.hex_alpha | set_alpha: 0.35}};
   --accent-45: {{colors.primary.default.hex_alpha | set_alpha: 0.45}};
+
+  --border-base:   {{colors.primary.default.hex_alpha | set_alpha: 0.30}};
+  --border-mid:    {{colors.primary.default.hex_alpha | set_alpha: 0.20}};
+  --border-dim:    {{colors.primary.default.hex_alpha | set_alpha: 0.14}};
+  --border-low:    {{colors.primary.default.hex_alpha | set_alpha: 0.10}};
+  --border-hover:  {{colors.primary.default.hex_alpha | set_alpha: 0.50}};
+  --border-bottom: {{colors.primary.default.hex_alpha | set_alpha: 0.22}};
+  --border-btm-hv: {{colors.primary.default.hex_alpha | set_alpha: 0.45}};
 }

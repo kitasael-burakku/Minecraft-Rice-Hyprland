@@ -27,8 +27,8 @@ button {
     margin: 20px;
     padding: 14px;
     border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid alpha(@accent, 0.10);
+    border-bottom: 2px solid alpha(@accent, 0.14);
     outline: none;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.030),
@@ -52,7 +52,7 @@ button:focus {
     background-size: 32%;
     margin: 11px;
     border-radius: 48px;
-    border-color: rgba(255, 255, 255, 0.26);
+    border-color: alpha(@accent, 0.26);
     border-bottom-color: alpha(@accent, 0.50);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.070),
@@ -69,7 +69,7 @@ button:active {
     background-size: 23%;
     margin: 18px;
     border-radius: 36px;
-    border-color: rgba(255, 255, 255, 0.14);
+    border-color: alpha(@accent, 0.14);
     border-bottom-color: alpha(@accent, 0.20);
     box-shadow:
         inset 0 4px 16px rgba(0, 0, 0, 0.46),
@@ -80,7 +80,7 @@ button:active {
    SELECTED / KEYBOARD FOCUS
 ========================= */
 button:focus {
-    border-color: rgba(245, 245, 245, 0.24);
+    border-color: alpha(@accent, 0.24);
     border-bottom-color: alpha(@accent, 0.60);
 }
 

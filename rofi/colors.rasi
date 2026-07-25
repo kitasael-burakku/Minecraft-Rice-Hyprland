@@ -1,31 +1,31 @@
 /* =====================================================
-   KITASAN GLASS — paleta compartida de rofi (dinámica)
-   Generado por matugen — no editar a mano.
-   Estático de referencia: ~/.config/rofi/colors.static.rasi
+   KITASAN GLASS — paleta compartida de rofi
+   Piedra/cálida, con acento teal y bordes en blanco/alpha.
+   Importar con: @import "~/.config/rofi/colors.rasi"
    ===================================================== */
 
 * {
-    bg-main:        #19120ccc;
-    bg-glass:       #261e18aa;
-    bg-hover:       #312822cc;
-    bg-selected:    #ffffff10;
-    bg-active:      #ffb77a1f;
-    bg-urgent:      #ffb4ab2a;
-    bg-minimized:   #ffffff10;
+    bg-main:        #0d0d0dcc;
+    bg-glass:       #1a1a1aaa;
+    bg-hover:       #26221fcc;
+    bg-selected:    #7ab8b810;
+    bg-active:      #7ab8b81f;
+    bg-urgent:      #b85c502a;
+    bg-minimized:   #7ab8b810;
 
-    danger-bg:      #ffb4ab22;
-    danger-fg:      #ffdad6;
+    danger-bg:      #b85c5022;
+    danger-fg:      #f2b8ab;
 
-    fg:             #efe0d6;
-    fg-soft:        #d6c3b6;
-    fg-muted:       #e3c0a5;
-    fg-dim:         #9e8e82;
+    fg:             #e8e8e8;
+    fg-soft:        #d8d8d8;
+    fg-muted:       #b8a888;
+    fg-dim:         #6a6a62;
 
-    border:         #ffffff28;
-    border-soft:    #ffffff14;
-    border-hover:   #ffffff55;
-    border-urgent:  #ffb4ab60;
+    border:         #7ab8b828;
+    border-soft:    #7ab8b814;
+    border-hover:   #7ab8b855;
+    border-urgent:  #b85c5060;
 
-    accent:         #ffb77a;
-    accent-muted:   #c4cb97;
+    accent:         #7ab8b8;
+    accent-muted:   #c8b898;
 }

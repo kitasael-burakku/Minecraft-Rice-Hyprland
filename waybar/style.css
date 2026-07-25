@@ -23,7 +23,7 @@ window#waybar {
 .modules-right {
     background: alpha(@bg, 0.588);
     border: 1px solid alpha(@bg, 0.588);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.666);
+    border-bottom: 2px solid alpha(@accent, 0.666);
     border-radius: 18px;
     margin: 6px 4px;
     padding: 4px 10px;
@@ -75,7 +75,7 @@ window#waybar {
 
 #taskbar button.active {
     background: alpha(@accent, 0.12);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.348);
+    border-bottom: 2px solid alpha(@accent, 0.348);
 }
 
 /* -----------------------------------
@@ -136,7 +136,7 @@ window#waybar {
 
 tooltip {
     background: alpha(@bg, 0.80);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid alpha(@accent, 0.12);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }

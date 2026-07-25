@@ -1,4 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
+# Generado por matugen — no editar a mano.
+# Estático de referencia: ~/.config/starship.static.toml
 
 # Se agregó el inicio del bloque derecho [] directamente en el formato principal
 format = """
@@ -8,7 +10,7 @@ ${custom.user_pretty}\
 ${custom.hostname_pretty}\
 $directory\
 $fill\
-[](fg:#2e3238)\
+[](fg:{{colors.surface_container.default.hex}})\
 $git_branch\
 $git_status\
 $python\
@@ -31,8 +33,8 @@ symbol = " "
 # ── OS (Inicio del bloque izquierdo) ────────────────────────────
 [os]
 disabled = false
-style = "bg:#1e2226 fg:#8ab0b8"
-format = "[](fg:#1e2226)[ $symbol ]($style)"
+style = "bg:{{colors.surface_container_low.default.hex}} fg:{{colors.primary.default.hex}}"
+format = "[](fg:{{colors.surface_container_low.default.hex}})[ $symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
@@ -54,20 +56,20 @@ Unknown     = "󰌽"
 disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#2e3238 fg:#b0d0d8 bold"
-format = "[](bg:#2e3238 fg:#1e2226)[ $output ]($style)"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.primary.default.hex}} bold"
+format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
 [custom.hostname_pretty]
 command = "hostnamectl --pretty 2>/dev/null || hostname"
 when = "true"
-style = "bg:#2e3238 fg:#8098a8"
-format = "[](bg:#2e3238 fg:#2e3238)[ 󰍹 $output ]($style)"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.outline.default.hex}}"
+format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container.default.hex}})[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:#2e3238 fg:#c8b898 bold"
-format = "[](bg:#2e3238 fg:#2e3238)[ $path ]($style)[](fg:#2e3238 bg:none) "
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.tertiary.default.hex}} bold"
+format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container.default.hex}})[ $path ]($style)[](fg:{{colors.surface_container.default.hex}} bg:none) "
 home_symbol = "󱂵 ホーム"
 read_only = "  読取専用"
 truncation_length = 3
@@ -88,14 +90,15 @@ truncation_symbol = "…/"
 # ── Git branch ──────────────────────────────────────────────────
 [git_branch]
 symbol = "󰊢"
-style = "bg:#2e3238 fg:#d8d8d8 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_surface_variant.default.hex}} bold"
 truncation_length = 18
 # Se elimina el separador manual aquí; el formato principal ya maneja la apertura
 format = "[ $symbol $branch ]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
+# Semántico (conflictos/cambios) — queda fijo, no sigue al wallpaper.
 [git_status]
-style = "bg:#2e3238 fg:#b85c50 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:#b85c50 bold"
 format = "[$all_status$ahead_behind ]($style)"
 conflicted = "󰞇 "
 ahead      = "⇡${count}"
@@ -108,25 +111,25 @@ staged     = "󰐗 "
 renamed    = "󰕚 "
 deleted    = "󰍶 "
 
-# ── Lenguajes ───────────────────────────────────────────────────
+# ── Lenguajes (cada uno a un rol distinto para conservar variedad) ──────
 [python]
 symbol = ""
-style = "bg:#2e3238 fg:#c8b898 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_tertiary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [nodejs]
 symbol = ""
-style = "bg:#2e3238 fg:#b0d0d8 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_secondary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [rust]
 symbol = ""
-style = "bg:#2e3238 fg:#d8c098 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.secondary.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [golang]
 symbol = ""
-style = "bg:#2e3238 fg:#9ab0a0 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_primary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 # ── Cierre bloque derecho ────────────────────────────────────────
@@ -134,21 +137,23 @@ format = "[$symbol $version ]($style)"
 command = "echo"
 when = "true"
 # Cierra el bloque de lenguajes/git con un borde redondeado simétrico
-format = "[](fg:#2e3238 bg:none)"
+format = "[](fg:{{colors.surface_container.default.hex}} bg:none)"
 
 # ── Duración del comando ─────────────────────────────────────────
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "fg:#ffffff italic"
+style = "fg:{{colors.on_surface.default.hex}} italic"
 format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ 󰁔](fg:#7ab8b8 bold)"
+success_symbol = "[ 󰁔](fg:{{colors.primary.default.hex}} bold)"
+# Semántico (error) — queda fijo.
 error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 
 # ── Status (Error previo) ────────────────────────────────────────
+# Semántico — queda fijo.
 [status]
 disabled = false
 style = "fg:#b85c50 bold"
