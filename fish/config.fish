@@ -64,7 +64,9 @@ end
 if status is-interactive
     set -g fish_greeting
 
-    starship init fish | source
+    if command -q starship
+        starship init fish | source
+    end
 
     if command -q thefuck
         function fuck --description "Carga thefuck recién en el primer uso (arranque instantáneo)"

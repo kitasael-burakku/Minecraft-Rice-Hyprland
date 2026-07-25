@@ -8,6 +8,13 @@
 local mainMod = "SUPER"
 local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
+-- Defensivo: si programs.lua no cargó (orden de require roto, error de
+-- sintaxis, etc.) esto evita que TODO este archivo tumbe con un error de
+-- "index a nil value" al primer uso de la tabla Programs — en cambio,
+-- solo ese bind puntual queda con un comando vacío en vez de matar el
+-- registro entero de atajos.
+Programs = Programs or {}
+
 local function notify_missing(app)
     return "notify-send 'Missing command' '" .. app .. " is not installed or not in PATH'"
 end

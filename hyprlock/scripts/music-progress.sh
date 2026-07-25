@@ -13,8 +13,8 @@ SPACE_CHAR="—" # Subtle, smooth line character for the bar track
 STATIC_HANDLE="⦿" 
 
 # Cache files
-CACHE_FILE="/tmp/hyprlock_mpris_pos.cache"
-CACHE_ID_FILE="/tmp/hyprlock_mpris_id.cache"
+CACHE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock_mpris_pos.cache"
+CACHE_ID_FILE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock_mpris_id.cache"
 
 # Function to find the currently playing player if 'spotify' isn't available
 find_player() {

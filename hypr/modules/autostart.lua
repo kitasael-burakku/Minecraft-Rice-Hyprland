@@ -22,9 +22,9 @@ hl.on("hyprland.start", function()
     -- una generación porque no pasa por el picker de rofi.
     hl.exec_cmd(wait_hyprland .. " && " .. home .. "/.config/rofi/scripts/matugen_reload.sh '" .. default_wallpaper .. "' &")
 
-    -- Entorno
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
-    hl.exec_cmd("systemctl --user start hyprland-session.service")
+    -- Entorno (encadenado para garantizar el orden: el target de systemd
+    -- depende de que el entorno D-Bus ya esté actualizado)
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE && systemctl --user start hyprland-session.service")
 
     -- UI y Daemons
     hl.exec_cmd("hyprctl setcursor Future-black-cursors 24")

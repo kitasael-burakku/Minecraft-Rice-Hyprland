@@ -1,4 +1,6 @@
-zoxide init fish | source
+if command -q zoxide
+    zoxide init fish | source
+end
 
 # ── Modern CLI Replacements ──────────────────────────────
 alias cat="bat --style=plain --paging=never"
