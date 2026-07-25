@@ -1,15 +1,15 @@
 /* Kitasan Glass — acento + bordes dinámicos de SwayNC. Generado por matugen.
    Estático de referencia: ~/.config/swaync/colors.static.css */
 :root {
-  --accent:    #b7d085;
-  --accent-35: #B7D08559;
-  --accent-45: #B7D08573;
+  --accent:    #ffb77a;
+  --accent-35: #FFB77A59;
+  --accent-45: #FFB77A73;
 
-  --border-base:   #B7D0854D;
-  --border-mid:    #B7D08533;
-  --border-dim:    #B7D08524;
-  --border-low:    #B7D0851A;
-  --border-hover:  #B7D08580;
-  --border-bottom: #B7D08538;
-  --border-btm-hv: #B7D08573;
+  --border-base:   #FFB77A4D;
+  --border-mid:    #FFB77A33;
+  --border-dim:    #FFB77A24;
+  --border-low:    #FFB77A1A;
+  --border-hover:  #FFB77A80;
+  --border-bottom: #FFB77A38;
+  --border-btm-hv: #FFB77A73;
 }

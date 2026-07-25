@@ -5,27 +5,27 @@
    ===================================================== */
 
 * {
-    bg-main:        #12140dcc;
-    bg-glass:       #1e2019aa;
-    bg-hover:       #292b23cc;
-    bg-selected:    #b7d08510;
-    bg-active:      #b7d0851f;
+    bg-main:        #19120ccc;
+    bg-glass:       #261e18aa;
+    bg-hover:       #312822cc;
+    bg-selected:    #ffb77a10;
+    bg-active:      #ffb77a1f;
     bg-urgent:      #ffb4ab2a;
-    bg-minimized:   #b7d08510;
+    bg-minimized:   #ffb77a10;
 
     danger-bg:      #ffb4ab22;
     danger-fg:      #ffdad6;
 
-    fg:             #e3e3d8;
-    fg-soft:        #c6c8b9;
-    fg-muted:       #c2caab;
-    fg-dim:         #8f9284;
+    fg:             #efe0d6;
+    fg-soft:        #d6c3b6;
+    fg-muted:       #e3c0a5;
+    fg-dim:         #9e8e82;
 
-    border:         #b7d08528;
-    border-soft:    #b7d08514;
-    border-hover:   #b7d08555;
+    border:         #ffb77a28;
+    border-soft:    #ffb77a14;
+    border-hover:   #ffb77a55;
     border-urgent:  #ffb4ab60;
 
-    accent:         #b7d085;
-    accent-muted:   #a0d0c8;
+    accent:         #ffb77a;
+    accent-muted:   #c4cb97;
 }

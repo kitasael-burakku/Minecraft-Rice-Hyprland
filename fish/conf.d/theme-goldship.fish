@@ -8,56 +8,56 @@
 # abiertas se quedan con los colores viejos hasta que abrís una nueva.
 
 # ── Syntax: core ──────────────────────────────────────────────
-set -g fish_color_normal          e3e3d8
-set -g fish_color_command         b7d085
-set -g fish_color_builtin         a0d0c8
-set -g fish_color_keyword         c2caab
-set -g fish_color_end             8f9284
+set -g fish_color_normal          efe0d6
+set -g fish_color_command         ffb77a
+set -g fish_color_builtin         c4cb97
+set -g fish_color_keyword         e3c0a5
+set -g fish_color_end             9e8e82
 set -g fish_color_error           b85c50
 
 # ── Syntax: argumentos & operadores ───────────────────────────
-set -g fish_color_param           c6c8b9
-set -g fish_color_option          8f9284
-set -g fish_color_operator        dee6c6
-set -g fish_color_redirection     45483d
-set -g fish_color_escape          e3e3d8
-set -g fish_color_quote           bcece4
+set -g fish_color_param           d6c3b6
+set -g fish_color_option          9e8e82
+set -g fish_color_operator        ffdcc2
+set -g fish_color_redirection     51443b
+set -g fish_color_escape          efe0d6
+set -g fish_color_quote           e0e7b1
 
 # ── Syntax: estructura ────────────────────────────────────────
-set -g fish_color_comment         8f9284
-set -g fish_color_bracket         dee6c6
+set -g fish_color_comment         9e8e82
+set -g fish_color_bracket         ffdcc2
 
 # ── Paths ─────────────────────────────────────────────────────
-set -g fish_color_valid_path      e3e3d8 --underline
-set -g fish_color_cwd             c6c8b9
-set -g fish_color_cwd_root        c2caab
+set -g fish_color_valid_path      efe0d6 --underline
+set -g fish_color_cwd             d6c3b6
+set -g fish_color_cwd_root        e3c0a5
 
 # ── Autosuggestions & historial ───────────────────────────────
-set -g fish_color_autosuggestion  45483d
-set -g fish_color_history_current e3e3d8 --bold
+set -g fish_color_autosuggestion  51443b
+set -g fish_color_history_current efe0d6 --bold
 set -g fish_color_cancel          b85c50
 
 # ── Search & selection ────────────────────────────────────────
-set -g fish_color_search_match    e3e3d8 --background=292b23
-set -g fish_color_selection       e3e3d8 --background=1e2019
-set -g fish_color_match           a0d0c8
+set -g fish_color_search_match    efe0d6 --background=312822
+set -g fish_color_selection       efe0d6 --background=261e18
+set -g fish_color_match           c4cb97
 
 # ── Prompt: user & host ───────────────────────────────────────
-set -g fish_color_user            e3e3d8
-set -g fish_color_host            8f9284
-set -g fish_color_host_remote     bcece4
+set -g fish_color_user            efe0d6
+set -g fish_color_host            9e8e82
+set -g fish_color_host_remote     e0e7b1
 
 # ── Prompt: status ────────────────────────────────────────────
 set -g fish_color_status          b85c50
 
 # ── Completions pager ─────────────────────────────────────────
-set -g fish_pager_color_progress              45483d
-set -g fish_pager_color_prefix                e3e3d8
-set -g fish_pager_color_completion            c6c8b9
-set -g fish_pager_color_description           8f9284
-set -g fish_pager_color_secondary             45483d
+set -g fish_pager_color_progress              51443b
+set -g fish_pager_color_prefix                efe0d6
+set -g fish_pager_color_completion            d6c3b6
+set -g fish_pager_color_description           9e8e82
+set -g fish_pager_color_secondary             51443b
 
-set -g fish_pager_color_selected_background   --background=1e2019
-set -g fish_pager_color_selected_prefix       e3e3d8
-set -g fish_pager_color_selected_completion   e3e3d8
-set -g fish_pager_color_selected_description  a0d0c8
+set -g fish_pager_color_selected_background   --background=261e18
+set -g fish_pager_color_selected_prefix       efe0d6
+set -g fish_pager_color_selected_completion   efe0d6
+set -g fish_pager_color_selected_description  c4cb97

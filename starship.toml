@@ -10,7 +10,7 @@ ${custom.user_pretty}\
 ${custom.hostname_pretty}\
 $directory\
 $fill\
-[](fg:#1e2019)\
+[](fg:#261e18)\
 $git_branch\
 $git_status\
 $python\
@@ -33,8 +33,8 @@ symbol = " "
 # ── OS (Inicio del bloque izquierdo) ────────────────────────────
 [os]
 disabled = false
-style = "bg:#1a1c15 fg:#b7d085"
-format = "[](fg:#1a1c15)[ $symbol ]($style)"
+style = "bg:#221a14 fg:#ffb77a"
+format = "[](fg:#221a14)[ $symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
@@ -56,20 +56,20 @@ Unknown     = "󰌽"
 disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#1e2019 fg:#b7d085 bold"
-format = "[](bg:#1e2019 fg:#1a1c15)[ $output ]($style)"
+style = "bg:#261e18 fg:#ffb77a bold"
+format = "[](bg:#261e18 fg:#221a14)[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
 [custom.hostname_pretty]
 command = "hostnamectl --pretty 2>/dev/null || hostname"
 when = "true"
-style = "bg:#1e2019 fg:#8f9284"
-format = "[](bg:#1e2019 fg:#1e2019)[ 󰍹 $output ]($style)"
+style = "bg:#261e18 fg:#9e8e82"
+format = "[](bg:#261e18 fg:#261e18)[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:#1e2019 fg:#a0d0c8 bold"
-format = "[](bg:#1e2019 fg:#1e2019)[ $path ]($style)[](fg:#1e2019 bg:none) "
+style = "bg:#261e18 fg:#c4cb97 bold"
+format = "[](bg:#261e18 fg:#261e18)[ $path ]($style)[](fg:#261e18 bg:none) "
 home_symbol = "󱂵 ホーム"
 read_only = "  読取専用"
 truncation_length = 3
@@ -90,7 +90,7 @@ truncation_symbol = "…/"
 # ── Git branch ──────────────────────────────────────────────────
 [git_branch]
 symbol = "󰊢"
-style = "bg:#1e2019 fg:#c6c8b9 bold"
+style = "bg:#261e18 fg:#d6c3b6 bold"
 truncation_length = 18
 # Se elimina el separador manual aquí; el formato principal ya maneja la apertura
 format = "[ $symbol $branch ]($style)"
@@ -98,7 +98,7 @@ format = "[ $symbol $branch ]($style)"
 # ── Git status ──────────────────────────────────────────────────
 # Semántico (conflictos/cambios) — queda fijo, no sigue al wallpaper.
 [git_status]
-style = "bg:#1e2019 fg:#b85c50 bold"
+style = "bg:#261e18 fg:#b85c50 bold"
 format = "[$all_status$ahead_behind ]($style)"
 conflicted = "󰞇 "
 ahead      = "⇡${count}"
@@ -114,22 +114,22 @@ deleted    = "󰍶 "
 # ── Lenguajes (cada uno a un rol distinto para conservar variedad) ──────
 [python]
 symbol = ""
-style = "bg:#1e2019 fg:#bcece4 bold"
+style = "bg:#261e18 fg:#e0e7b1 bold"
 format = "[$symbol $version ]($style)"
 
 [nodejs]
 symbol = ""
-style = "bg:#1e2019 fg:#dee6c6 bold"
+style = "bg:#261e18 fg:#ffdcc2 bold"
 format = "[$symbol $version ]($style)"
 
 [rust]
 symbol = ""
-style = "bg:#1e2019 fg:#c2caab bold"
+style = "bg:#261e18 fg:#e3c0a5 bold"
 format = "[$symbol $version ]($style)"
 
 [golang]
 symbol = ""
-style = "bg:#1e2019 fg:#d2ec9f bold"
+style = "bg:#261e18 fg:#ffdcc2 bold"
 format = "[$symbol $version ]($style)"
 
 # ── Cierre bloque derecho ────────────────────────────────────────
@@ -137,18 +137,18 @@ format = "[$symbol $version ]($style)"
 command = "echo"
 when = "true"
 # Cierra el bloque de lenguajes/git con un borde redondeado simétrico
-format = "[](fg:#1e2019 bg:none)"
+format = "[](fg:#261e18 bg:none)"
 
 # ── Duración del comando ─────────────────────────────────────────
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "fg:#e3e3d8 italic"
+style = "fg:#efe0d6 italic"
 format = "[ 󰔚 $duration ]($style)"
 
 # ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ 󰁔](fg:#b7d085 bold)"
+success_symbol = "[ 󰁔](fg:#ffb77a bold)"
 # Semántico (error) — queda fijo.
 error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 
