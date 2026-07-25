@@ -13,7 +13,7 @@ set -g fish_color_command         {{colors.primary.default.hex_stripped}}
 set -g fish_color_builtin         {{colors.tertiary.default.hex_stripped}}
 set -g fish_color_keyword         {{colors.secondary.default.hex_stripped}}
 set -g fish_color_end             {{colors.outline.default.hex_stripped}}
-set -g fish_color_error           b85c50
+set -g fish_color_error           {{colors.error.default.hex_stripped}}
 
 # ── Syntax: argumentos & operadores ───────────────────────────
 set -g fish_color_param           {{colors.on_surface_variant.default.hex_stripped}}
@@ -35,7 +35,7 @@ set -g fish_color_cwd_root        {{colors.secondary.default.hex_stripped}}
 # ── Autosuggestions & historial ───────────────────────────────
 set -g fish_color_autosuggestion  {{colors.outline_variant.default.hex_stripped}}
 set -g fish_color_history_current {{colors.on_surface.default.hex_stripped}} --bold
-set -g fish_color_cancel          b85c50
+set -g fish_color_cancel          {{colors.error.default.hex_stripped}}
 
 # ── Search & selection ────────────────────────────────────────
 set -g fish_color_search_match    {{colors.on_surface.default.hex_stripped}} --background={{colors.surface_container_high.default.hex_stripped}}
@@ -48,7 +48,7 @@ set -g fish_color_host            {{colors.outline.default.hex_stripped}}
 set -g fish_color_host_remote     {{colors.on_tertiary_container.default.hex_stripped}}
 
 # ── Prompt: status ────────────────────────────────────────────
-set -g fish_color_status          b85c50
+set -g fish_color_status          {{colors.error.default.hex_stripped}}
 
 # ── Completions pager ─────────────────────────────────────────
 set -g fish_pager_color_progress              {{colors.outline_variant.default.hex_stripped}}

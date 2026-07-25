@@ -1,4 +1,3 @@
-/* Kitasan Glass — acento/peligro dinámicos de Wlogout. Generado por matugen.
-   Estático de referencia: ~/.config/wlogout/colors.static.css */
-@define-color accent #ffb77d;
-@define-color danger #ffb4ab;
+/* Kitasan Glass — paleta estática (baseline para restaurar si se apaga matugen) */
+@define-color accent #7ab8b8;
+@define-color danger #b85c50;

@@ -14,12 +14,9 @@
   /* ── Bordes: --border-base/dim/hover/bottom
          vienen de ../colors.css (dinámicos con el acento) ── */
 
-  /* ── Rojo apagado (solo crítico) ─────────────────────── */
-  --red:            #b85c50;
-  --border-red:     rgba(184, 92, 80, 0.30);
-  --border-red-b:   rgba(184, 92, 80, 0.45);
-  --bg-red-hover:   rgba(184, 92, 80, 0.12);
-  --bg-red-active:  rgba(184, 92, 80, 0.22);
+  /* ── Rojo crítico: --red/--border-red/--border-red-b/
+         --bg-red-hover/--bg-red-active vienen de ../colors.css
+         (dinámicos, siguen al wallpaper) ── */
 
   /* ── Texto ───────────────────────────────────────────── */
   --text-primary:   #f0f0f0;

@@ -96,9 +96,8 @@ truncation_length = 18
 format = "[ $symbol $branch ]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
-# Semántico (conflictos/cambios) — queda fijo, no sigue al wallpaper.
 [git_status]
-style = "bg:{{colors.surface_container.default.hex}} fg:#b85c50 bold"
+style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.error.default.hex}} bold"
 format = "[$all_status$ahead_behind ]($style)"
 conflicted = "󰞇 "
 ahead      = "⇡${count}"
@@ -149,14 +148,12 @@ format = "[ 󰔚 $duration ]($style)"
 # ── Prompt character ─────────────────────────────────────────────
 [character]
 success_symbol = "[ 󰁔](fg:{{colors.primary.default.hex}} bold)"
-# Semántico (error) — queda fijo.
-error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
+error_symbol   = "[ 󰁔](fg:{{colors.error.default.hex}} bold)"
 
 # ── Status (Error previo) ────────────────────────────────────────
-# Semántico — queda fijo.
 [status]
 disabled = false
-style = "fg:#b85c50 bold"
+style = "fg:{{colors.error.default.hex}} bold"
 format = "[󰅚 $status ]($style)"
 
 # ── Módulos deshabilitados ───────────────────────────────────────
