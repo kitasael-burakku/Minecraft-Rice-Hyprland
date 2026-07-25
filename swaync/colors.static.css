@@ -31,4 +31,7 @@
   --text-base:    #d8d8d8;
   --text-active:  #0a0a0a;
   --text-accent:  #e8e8e8;
+
+  --glow-red:      rgba(184, 92, 80, 0.08);
+  --bg-action-btn: rgba(20, 20, 20, 0.55);
 }

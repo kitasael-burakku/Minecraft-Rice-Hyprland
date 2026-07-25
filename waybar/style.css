@@ -22,7 +22,7 @@ window#waybar {
 .modules-center,
 .modules-right {
     background: alpha(@bg, 0.588);
-    border: 1px solid alpha(@bg, 0.588);
+    border: none;
     border-bottom: 2px solid alpha(@accent, 0.666);
     border-radius: 18px;
     margin: 6px 4px;
@@ -88,11 +88,11 @@ window#waybar {
 }
 
 #custom-updates { color: @accent-gold; }
-#network { color: @fg; }
-#cpu { color: @fg; }
-#memory { color: @fg; }
-#disk { color: @fg; }
-#temperature { color: @fg; }
+#network { color: @net; }
+#cpu { color: @cpu-col; }
+#memory { color: @mem; }
+#disk { color: @disk-col; }
+#temperature { color: @temp; }
 
 #pulseaudio.muted,
 #network.disconnected,

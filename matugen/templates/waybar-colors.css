@@ -5,3 +5,10 @@
 @define-color bg          {{colors.surface_container.default.hex}};
 @define-color fg          {{colors.on_surface.default.hex}};
 @define-color red         {{colors.error.default.hex}};
+
+/* Variedad por módulo (mismo patrón de roles que starship) */
+@define-color net         {{colors.on_primary_container.default.hex}};
+@define-color cpu-col     {{colors.on_secondary_container.default.hex}};
+@define-color mem         {{colors.on_tertiary_container.default.hex}};
+@define-color disk-col    {{colors.secondary.default.hex}};
+@define-color temp        {{colors.on_surface_variant.default.hex}};

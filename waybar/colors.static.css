@@ -4,3 +4,10 @@
 @define-color bg          #1a1a1a;
 @define-color fg          #e8e8e8;
 @define-color red         #b85c50;
+
+/* Variedad por módulo (mismos tonos que starship.static.toml para los roles equivalentes) */
+@define-color net         #9ab0a0;
+@define-color cpu-col     #b0d0d8;
+@define-color mem         #c8b898;
+@define-color disk-col    #d8c098;
+@define-color temp        #d8d8d8;

@@ -88,7 +88,7 @@
 .notification-row
 .notification-background
 .notification.critical {
-  background:    rgba(20, 14, 14, 0.80);
+  background:    var(--bg-dark);
   border-radius: var(--radius-card);
   border:        1px solid var(--border-red);
   border-bottom: 2px solid var(--border-red-b);
@@ -154,7 +154,7 @@ progressbar {
 }
 
 progress {
-  background: rgba(200, 200, 200, 0.65);
+  background: var(--accent);
 }
 
 /* ── Notification groups ────────────────────────────────── */
@@ -335,7 +335,7 @@ picture.mpris-background {
 }
 
 .widget-volume highlight {
-  background:    rgba(210, 210, 210, 0.75);
+  background:    var(--accent);
   border-radius: var(--radius-pill);
 }
 
