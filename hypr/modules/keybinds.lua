@@ -38,7 +38,6 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
 
 -- Music
-hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
@@ -60,7 +59,7 @@ hl.bind("+ CTRL + ALT + V", function()
     end
 
     if not win.floating then
-        local width = monitor.width * 0.5
+        local width = monitor.width * 0.48
         local height = monitor.height * 0.6
 
         hl.dispatch(hl.dsp.window.float({ action = "set" }))

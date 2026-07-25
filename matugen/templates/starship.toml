@@ -10,7 +10,7 @@ ${custom.user_pretty}\
 ${custom.hostname_pretty}\
 $directory\
 $fill\
-[](fg:{{colors.surface_container.default.hex}})\
+[](fg:{{colors.surface_container.default.hex}})\
 $git_branch\
 $git_status\
 $python\
@@ -26,29 +26,28 @@ $character\
 command_timeout = 500
 add_newline = false
 
-# ── Fill (Relleno central limpio) ────────────────────────────────
 [fill]
 symbol = " "
 
-# ── OS (Inicio del bloque izquierdo) ────────────────────────────
+# ── OS ──────────────────────────────────────────────────────────
 [os]
 disabled = false
 style = "bg:{{colors.surface_container_low.default.hex}} fg:{{colors.primary.default.hex}}"
-format = "[](fg:{{colors.surface_container_low.default.hex}})[ $symbol ]($style)"
+format = "[](fg:{{colors.surface_container_low.default.hex}})[ $symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
 CachyOS     = "󰣇"
-Manjaro     = ""
-Fedora      = ""
-Ubuntu      = ""
-Debian      = ""
-NixOS       = ""
-EndeavourOS = ""
+Manjaro     = "󱆅"
+Fedora      = "󰣛"
+Ubuntu      = "󰕈"
+Debian      = "󰣚"
+NixOS       = "󱄅"
+EndeavourOS = ""
 Garuda      = "󰛓"
-openSUSE    = ""
+openSUSE    = ""
 Gentoo      = "󰣨"
-Alpine      = ""
+Alpine      = ""
 Unknown     = "󰌽"
 
 # ── Usuario ─────────────────────────────────────────────────────
@@ -57,21 +56,21 @@ disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.primary.default.hex}} bold"
-format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $output ]($style)"
+format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
 [custom.hostname_pretty]
 command = "hostnamectl --pretty 2>/dev/null || hostname"
 when = "true"
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.outline.default.hex}}"
-format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container.default.hex}})[ 󰍹 $output ]($style)"
+format = "[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.tertiary.default.hex}} bold"
-format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container.default.hex}})[ $path ]($style)[](fg:{{colors.surface_container.default.hex}} bg:none) "
+format = "[ $path ]($style)[](fg:{{colors.surface_container.default.hex}} bg:none) "
 home_symbol = "󱂵 ホーム"
-read_only = "  読取専用"
+read_only = " 󰌾 読取専用"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -92,7 +91,6 @@ truncation_symbol = "…/"
 symbol = "󰊢"
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_surface_variant.default.hex}} bold"
 truncation_length = 18
-# Se elimina el separador manual aquí; el formato principal ya maneja la apertura
 format = "[ $symbol $branch ]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
@@ -110,24 +108,24 @@ staged     = "󰐗 "
 renamed    = "󰕚 "
 deleted    = "󰍶 "
 
-# ── Lenguajes (cada uno a un rol distinto para conservar variedad) ──────
+# ── Lenguajes ───────────────────────────────────────────────────
 [python]
-symbol = ""
+symbol = ""
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_tertiary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [nodejs]
-symbol = ""
+symbol = ""
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_secondary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [rust]
-symbol = ""
+symbol = "󱘗"
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.secondary.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
 [golang]
-symbol = ""
+symbol = ""
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_primary_container.default.hex}} bold"
 format = "[$symbol $version ]($style)"
 
@@ -135,28 +133,24 @@ format = "[$symbol $version ]($style)"
 [custom.right_cap]
 command = "echo"
 when = "true"
-# Cierra el bloque de lenguajes/git con un borde redondeado simétrico
-format = "[](fg:{{colors.surface_container.default.hex}} bg:none)"
+format = "[](fg:{{colors.surface_container.default.hex}} bg:none)"
 
-# ── Duración del comando ─────────────────────────────────────────
+# ── Extras ───────────────────────────────────────────────────────
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
 style = "fg:{{colors.on_surface.default.hex}} italic"
 format = "[ 󰔚 $duration ]($style)"
 
-# ── Prompt character ─────────────────────────────────────────────
 [character]
 success_symbol = "[ 󰁔](fg:{{colors.primary.default.hex}} bold)"
 error_symbol   = "[ 󰁔](fg:{{colors.error.default.hex}} bold)"
 
-# ── Status (Error previo) ────────────────────────────────────────
 [status]
 disabled = false
 style = "fg:{{colors.error.default.hex}} bold"
 format = "[󰅚 $status ]($style)"
 
-# ── Módulos deshabilitados ───────────────────────────────────────
 [package]
 disabled = true
 [memory_usage]

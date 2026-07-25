@@ -1,8 +1,5 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-# Generado por matugen — no editar a mano.
-# Estático de referencia: ~/.config/starship.static.toml
 
-# Se agregó el inicio del bloque derecho [] directamente en el formato principal
 format = """
 $status\
 $os\
@@ -10,7 +7,7 @@ ${custom.user_pretty}\
 ${custom.hostname_pretty}\
 $directory\
 $fill\
-[](fg:#261e19)\
+[](fg:#2e3238)\
 $git_branch\
 $git_status\
 $python\
@@ -26,29 +23,28 @@ $character\
 command_timeout = 500
 add_newline = false
 
-# ── Fill (Relleno central limpio) ────────────────────────────────
 [fill]
 symbol = " "
 
-# ── OS (Inicio del bloque izquierdo) ────────────────────────────
+# ── OS ──────────────────────────────────────────────────────────
 [os]
 disabled = false
-style = "bg:#221a15 fg:#ffb688"
-format = "[](fg:#221a15)[ $symbol ]($style)"
+style = "bg:#1e2226 fg:#8ab0b8"
+format = "[](fg:#1e2226)[ $symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
 CachyOS     = "󰣇"
-Manjaro     = ""
-Fedora      = ""
-Ubuntu      = ""
-Debian      = ""
-NixOS       = ""
-EndeavourOS = ""
+Manjaro     = "󱆅"
+Fedora      = "󰣛"
+Ubuntu      = "󰕈"
+Debian      = "󰣚"
+NixOS       = "󱄅"
+EndeavourOS = ""
 Garuda      = "󰛓"
-openSUSE    = ""
+openSUSE    = ""
 Gentoo      = "󰣨"
-Alpine      = ""
+Alpine      = ""
 Unknown     = "󰌽"
 
 # ── Usuario ─────────────────────────────────────────────────────
@@ -56,22 +52,22 @@ Unknown     = "󰌽"
 disabled = false
 command = "echo $USER_PRETTY"
 when = "test -n \"$USER_PRETTY\""
-style = "bg:#261e19 fg:#ffb688 bold"
-format = "[](bg:#261e19 fg:#221a15)[ $output ]($style)"
+style = "bg:#2e3238 fg:#b0d0d8 bold"
+format = "[](bg:#2e3238 fg:#1e2226)[ $output ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
 [custom.hostname_pretty]
 command = "hostnamectl --pretty 2>/dev/null || hostname"
 when = "true"
-style = "bg:#261e19 fg:#9f8d83"
-format = "[](bg:#261e19 fg:#261e19)[ 󰍹 $output ]($style)"
+style = "bg:#2e3238 fg:#8098a8"
+format = "[ 󰍹 $output ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:#261e19 fg:#caca93 bold"
-format = "[](bg:#261e19 fg:#261e19)[ $path ]($style)[](fg:#261e19 bg:none) "
+style = "bg:#2e3238 fg:#c8b898 bold"
+format = "[ $path ]($style)[](fg:#2e3238 bg:none) "
 home_symbol = "󱂵 ホーム"
-read_only = "  読取専用"
+read_only = " 󰌾 読取専用"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -90,14 +86,13 @@ truncation_symbol = "…/"
 # ── Git branch ──────────────────────────────────────────────────
 [git_branch]
 symbol = "󰊢"
-style = "bg:#261e19 fg:#d7c3b8 bold"
+style = "bg:#2e3238 fg:#d8d8d8 bold"
 truncation_length = 18
-# Se elimina el separador manual aquí; el formato principal ya maneja la apertura
 format = "[ $symbol $branch ]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
 [git_status]
-style = "bg:#261e19 fg:#ffb4ab bold"
+style = "bg:#2e3238 fg:#b85c50 bold"
 format = "[$all_status$ahead_behind ]($style)"
 conflicted = "󰞇 "
 ahead      = "⇡${count}"
@@ -110,53 +105,49 @@ staged     = "󰐗 "
 renamed    = "󰕚 "
 deleted    = "󰍶 "
 
-# ── Lenguajes (cada uno a un rol distinto para conservar variedad) ──────
+# ── Lenguajes ───────────────────────────────────────────────────
 [python]
-symbol = ""
-style = "bg:#261e19 fg:#e6e6ad bold"
+symbol = ""
+style = "bg:#2e3238 fg:#c8b898 bold"
 format = "[$symbol $version ]($style)"
 
 [nodejs]
-symbol = ""
-style = "bg:#261e19 fg:#ffdbc7 bold"
+symbol = ""
+style = "bg:#2e3238 fg:#b0d0d8 bold"
 format = "[$symbol $version ]($style)"
 
 [rust]
-symbol = ""
-style = "bg:#261e19 fg:#e5bfa8 bold"
+symbol = "󱘗"
+style = "bg:#2e3238 fg:#d8c098 bold"
 format = "[$symbol $version ]($style)"
 
 [golang]
-symbol = ""
-style = "bg:#261e19 fg:#ffdbc7 bold"
+symbol = ""
+style = "bg:#2e3238 fg:#9ab0a0 bold"
 format = "[$symbol $version ]($style)"
 
 # ── Cierre bloque derecho ────────────────────────────────────────
 [custom.right_cap]
 command = "echo"
 when = "true"
-# Cierra el bloque de lenguajes/git con un borde redondeado simétrico
-format = "[](fg:#261e19 bg:none)"
+format = "[](fg:#2e3238 bg:none)"
 
-# ── Duración del comando ─────────────────────────────────────────
+# ── Extras ───────────────────────────────────────────────────────
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "fg:#f0dfd7 italic"
+style = "fg:#ffffff italic"
 format = "[ 󰔚 $duration ]($style)"
 
-# ── Prompt character ─────────────────────────────────────────────
 [character]
-success_symbol = "[ 󰁔](fg:#ffb688 bold)"
-error_symbol   = "[ 󰁔](fg:#ffb4ab bold)"
+success_symbol = "[ 󰁔](fg:#7ab8b8 bold)"
+error_symbol   = "[ 󰁔](fg:#b85c50 bold)"
 
-# ── Status (Error previo) ────────────────────────────────────────
 [status]
 disabled = false
-style = "fg:#ffb4ab bold"
+style = "fg:#b85c50 bold"
 format = "[󰅚 $status ]($style)"
 
-# ── Módulos deshabilitados ───────────────────────────────────────
 [package]
 disabled = true
 [memory_usage]

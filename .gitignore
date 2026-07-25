@@ -17,8 +17,20 @@ fish/fish_variables
 fish/keybinds_lang
 matugen/enabled
 
+# ── Colores generados por matugen (fuente: matugen/templates/ +
+#    *.static.* — correr hypr/scripts/apply-static-colors.sh tras
+#    clonar para poblarlos con la paleta estática) ──────────────
+rofi/colors.rasi
+waybar/colors.css
+kitty/colors/colors.conf
+wlogout/colors.css
+hyprlock/colors.conf
+swaync/colors.css
+starship.toml
+fish/conf.d/theme-goldship.fish
+hypr/dynamic-colors.sh
+
 # ── Funciones locales (no parte del rice) ────────────────────
-fish/functions/dotbackup.fish
 fish/functions/RPS.exe.fish
 
 # ── Media pesada ─────────────────────────────────────────────
@@ -47,5 +59,5 @@ CLAUDE.md
 # ── Personal Alias ───────────────────────────────────────────
 fish/conf.d/local.fish
 
-# ── Maly Completions ─────────────────────────────────────────
-fish/completions/maly.fish
+# ── Completions locales (no parte del rice) ──────────────────
+fish/completions/

@@ -6,8 +6,8 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 
 > You can do whatever you want with this dotfile — if you don't want to install or use a configuration, you simply don't have to copy it.
 
-> 🚫 **No theme selector, no matugen, no pywal.**
-> The color palette is hardcoded and intentional. This setup has one vibe and commits to it.
+> 🎨 **Dynamic theming via matugen, off by default.**
+> The base palette ("Kitasan Glass") is hardcoded and intentional — that's what you get on a fresh clone. Toggle `SUPER + SHIFT + W` and it derives a Material You palette from your current wallpaper across every app instead. See [External Additions](#external-additions).
 
 ---
 
@@ -127,7 +127,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | Hyprland (Lua) | Modular window manager |
 | Waybar | Status bar with taskbar (`wlr/taskbar`), inline audio slider (`pulseaudio/slider`), and media player controls |
 | Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), decorative power menu, and window switcher with minimize/restore (`ALT + TAB`) |
-| matugen | Optional dynamic theming — the reload script is ready to use it but it's not connected to Hypr/Waybar in this rice, see [External Additions](#external-additions) |
+| matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, see [External Additions](#external-additions) |
 | Kitty | Terminal |
 | Fish + Starship | Shell with custom prompt — includes `starship.toml` with "Floating Stone Bubbles" theme (Minecraft shader palette) |
 | Fastfetch | System info on terminal open |
@@ -151,7 +151,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Hyprland configuration split into Lua modules inside `hypr/modules/`, including an animation system with curves and springs under the custom name " 流 水   ·   R Y Ū S U I   M O T I O N " (`animations.lua`).
 - Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, StarShip prompt, and SwayNC — desaturated acentos (cyan `#7ab8b8`, azul gris `#8098a8`, rojo apagado `#b85c50`, arena `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
 - Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, and udiskie.
-- Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + SHIFT + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Optional dynamic theming via matugen is disabled by default — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector).
+- Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Applying a wallpaper feeds matugen for dynamic theming when it's enabled — see [Rofi — Wallpaper Selector](#rofi--wallpaper-selector) and [External Additions](#external-additions).
 - Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu. Includes a `wlr/taskbar` with app icons in the center bubble, and an inline `pulseaudio/slider` for quick volume control.
 - Rofi as application launcher, clipboard history selector, decorative power menu (the different font in that menu is intentional; the actual session is handled by Wlogout), and window switcher (`ALT + TAB`) — lists all open windows with minimize/restore: click an active window to minimize it to `special:minimized`, click a minimized one to restore it to the current workspace.
 - Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
@@ -247,7 +247,7 @@ yay -S zen-browser-bin
 - `glava`: optionally used in Hyprlock scripts if Spotify is playing.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: install or replace according to your system.
 - `obs`, `brave`, `vscodium`: personal applications tied to keybinds, not requirements of the base environment.
-- `awww`: required by the Rofi wallpaper selector to apply static images. `swww` is not used in this rice — `awww` replaced it. `matugen` is only needed if you build the theme selector described in [External Additions](#external-additions).
+- `awww`: required by the Rofi wallpaper selector to apply static images. `swww` is not used in this rice — `awww` replaced it. `matugen` is required if you want dynamic theming — see [External Additions](#external-additions); the rest of the rice works fine without it.
 
 ---
 
@@ -294,12 +294,20 @@ Copy the folders you want to use:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava ~/.config/
-cp starship.toml ~/.config/starship.toml
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava matugen ~/.config/
+cp starship.static.toml ~/.config/starship.toml
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
+
+The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/colors.conf`, etc.) aren't in the repo — they're generated. Populate them with the static "Kitasan Glass" baseline:
+
+```bash
+bash ~/.config/hypr/scripts/apply-static-colors.sh
+```
+
+Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [External Additions](#external-additions).
 
 ### Wallpapers
 
@@ -376,7 +384,7 @@ Key files:
 - `hypr/modules/monitors.lua` — automatic output detection, resolution, position, and scale.
 - `hypr/modules/input.lua` — keyboard layout, sensitivity, 3-finger horizontal swipe to switch workspace, and per-device config placeholder.
 - `hypr/modules/environment.lua` — Wayland, Qt, Electron, and AMD environment variables.
-- `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Colors are hardcoded (not read from matugen).
+- `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Border colors are hardcoded here as the static fallback, but get overwritten live via `hyprctl eval` when matugen is enabled — see [External Additions](#external-additions).
 - `hypr/modules/layout.lua` — configuration for the three layouts (dwindle, master, scrolling); the active default is `scrolling`. Can be hot-swapped with `SUPER + SHIFT + D/M/O`.
 - `hypr/modules/animations.lua` — custom curves and springs system (" 流 水   ·   R Y Ū S U I   M O T I O N ") for windows, fades, layers, workspaces, and zoom.
 - `hypr/modules/windowrules.lua` — window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout, Waybar).
@@ -386,10 +394,10 @@ Key files:
 
 ## Rofi — Wallpaper Selector
 
-The wallpaper selector is a two-level Rofi picker built entirely as native Rofi script mode, without depending on any external project. It's tied to `SUPER + SHIFT + W` and orchestrated by a wrapper script that chains two independent Rofi instances:
+The wallpaper selector is a two-level Rofi picker built entirely as native Rofi script mode, without depending on any external project. It's tied to `SUPER + W` and orchestrated by a wrapper script that chains two independent Rofi instances:
 
 ```
-SUPER + SHIFT + W
+SUPER + W
       ↓
 wallpaper_launcher.sh               ← entry point (called from keybind)
       ↓
@@ -409,7 +417,7 @@ applies wallpaper + matugen_reload
 - `rofi/scripts/wallpaper_rofi.sh` — runs as the script mode modi for the type selector. On selection, writes the target directory and prompt label to `/tmp/rofi-wallpaper-next` and exits cleanly.
 - `rofi/scripts/wallpaper_grid.sh` — runs as the script mode modi for the thumbnail grid. Lists wallpapers from the chosen directory with their thumbnails as icons. On selection, applies the wallpaper and calls `matugen_reload.sh`.
 - `rofi/scripts/generate-thumbs.sh` — generates `.jpg` thumbnails for both `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` into `~/.cache/rofi-wallpapers/thumbs`. Runs in the background when the picker opens — never blocks the menu.
-- `rofi/scripts/matugen_reload.sh` — called after applying a wallpaper. Can reload matugen, Hypr, Waybar, Kitty, Cava, SwayNC, and SwayOSD. **All `ENABLE_*` flags are off by default** — see [External Additions](#external-additions).
+- `rofi/scripts/matugen_reload.sh` — called after applying a wallpaper. Gated by the `~/.config/matugen/enabled` sentinel (off by default on a fresh clone); a handful of `ENABLE_*` env vars exist purely for manual testing outside that gate — see [External Additions](#external-additions).
 
 **Directories:**
 
@@ -446,17 +454,29 @@ The `cava/` folder includes three components:
 
 ## External Additions
 
-I'm fairly purist about this: I change wallpapers often (based on mood or time of day), but I don't change my color palette every time I do. That's why `rofi/scripts/matugen_reload.sh` ships with all its `ENABLE_*` variables (`ENABLE_DYNAMIC_COLORS`, `ENABLE_MATUGEN`, `ENABLE_HYPR_RELOAD`, `ENABLE_WAYBAR_RELOAD`, `ENABLE_KITTY_RELOAD`, `ENABLE_CAVA_RELOAD`, `ENABLE_SWAYNC_RELOAD`, `ENABLE_SWAYOSD_RELOAD`) turned off by default.
+I'm fairly purist about this: I change wallpapers often (based on mood or time of day), but I don't always want my color palette to follow. So dynamic theming is a real, fully wired feature — it's just **off by default**. A fresh clone boots with the static "Kitasan Glass" palette until you turn it on.
 
-The script already knows when to run `matugen` and which processes to notify after applying a wallpaper, but the "apply those colors" part isn't wired up in this repo: `hypr/modules/decoration.lua` has colors hardcoded, `waybar/style.css` doesn't import any external color file, and `kitty.conf` uses my own static theme. I didn't build it end-to-end, so I don't document it as if it works.
+**Toggle:** `SUPER + SHIFT + W` runs `rofi/scripts/matugen_toggle.sh`. It flips a sentinel file (`~/.config/matugen/enabled`) and:
+- **Turning on** generates colors right away from whatever wallpaper is currently active (or asks you to pick one, if it can't detect it) and notifies you via `notify-send`.
+- **Turning off** restores the exact static values — bit for bit, no visual drift from the pre-toggle look.
 
-If you want a real theme selector with this, you'd need to:
+**Pipeline:** applying a wallpaper (`SUPER + W`, or the autostart hook seeding colors from the default video wallpaper at login) calls `rofi/scripts/matugen_reload.sh`, which — only if the sentinel is present — runs `matugen` against the current wallpaper (extracting a frame with `ffmpeg` first if it's a video) using the templates and hooks declared in `matugen/config.toml`:
 
-1. Have your own matugen templates pointing to the paths in `HYPR_COLORS_PATH` / `WAYBAR_COLORS_PATH` (or export those variables to wherever they should write).
-2. Make `decoration.lua`, `waybar/style.css`, and `kitty.conf` read those generated files instead of the fixed values they have now.
-3. Enable only the `ENABLE_*` variables that correspond to what you actually wire up.
+| Surface | Output | Reload mechanism |
+|---|---|---|
+| Rofi | `rofi/colors.rasi` | none needed — Rofi re-reads on next launch |
+| Waybar | `waybar/colors.css` | `pkill -SIGUSR2 waybar` (reloads CSS without killing the bar) |
+| Kitty | `kitty/colors/colors.conf` | `killall -SIGUSR1 kitty` |
+| Wlogout | `wlogout/colors.css` | none needed — relaunched per invocation |
+| Hyprlock | `hyprlock/colors.conf` | none needed — each lock is a fresh process |
+| Hyprland borders | `hypr/dynamic-colors.sh` | run through `hyprctl eval` right after being generated (`hyprctl keyword` doesn't work against this Lua config) |
+| SwayNC | `swaync/colors.css` | `swaync-client -rs` |
+| Starship | `starship.toml` | none needed — re-read on every prompt render |
+| Fish | `fish/conf.d/theme-goldship.fish` | none possible — `conf.d/` is only sourced when a shell starts; new terminals pick it up automatically |
 
-If you end up building it, this is a good place to document how you set it up.
+Every generated file has a `*.static.*` counterpart (e.g. `rofi/colors.static.rasi`) that's the source of truth when dynamic theming is off, and what `matugen_toggle.sh` restores when you turn it back off. Semantic colors (errors, critical states) follow the wallpaper too, kept consistent across every surface on purpose.
+
+If you want to adapt this to your own palette instead of matugen's Material You output, edit the templates in `matugen/templates/` and their matching `*.static.*` baseline — everything downstream (hooks, toggle, sentinel) stays the same.
 
 ---
 
@@ -517,7 +537,7 @@ Beyond aliases and external tool integrations, Fish includes custom functions in
 At minimum, review before using:
 
 - `hypr/hyprlock.conf` — change `$hyprlockDir` to your real path (`/home/your-username/.config/hyprlock`).
-- `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/wallpapersvideo/minecraft3.mp4` to yours.
+- `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/Wallpapers/minecraft.mp4` to yours.
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
 - `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
 - `hypr/modules/programs.lua` — change `kitty`, `nautilus`, the launcher, or `windowswitcher` command if you use other apps or a different Rofi theme path.
@@ -684,7 +704,7 @@ Manual installation requires more work, but teaches you much more about how the 
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout, and SwayNC belong to their respective projects.
 - The Rofi wallpaper selector (`rofi/scripts/wallpaper_launcher.sh` + `wallpaper_rofi.sh` + `wallpaper_grid.sh`) is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via `/tmp/rofi-wallpaper-next`. Replaces the previous Quickshell-based version.
-- [matugen](https://github.com/InioX/matugen) is the dynamic theming tool that the wallpaper selector's reload script is prepared to use, but it's not connected in this rice — see [External Additions](#external-additions).
+- [matugen](https://github.com/InioX/matugen) is the dynamic theming engine behind the optional wallpaper-driven color pipeline — see [External Additions](#external-additions).
 - Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted.

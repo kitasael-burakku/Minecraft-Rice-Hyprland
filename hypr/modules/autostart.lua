@@ -7,20 +7,20 @@
 
 local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
-local wait_for_hyprland = home .. "/.config/hypr/scripts/wait-for-hyprland.sh"
+local wait_hyprland = home .. "/.config/hypr/scripts/wait-for-hyprland.sh"
 local default_wallpaper = home .. "/Videos/Wallpapers/minecraft.mp4"
 
 hl.on("hyprland.start", function()
 
     -- Fondo de pantalla
     hl.exec_cmd("awww-daemon &")
-    hl.exec_cmd(wait_for_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. default_wallpaper .. " &")
+    hl.exec_cmd(wait_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. default_wallpaper .. " &")
 
     -- Colores dinámicos (matugen) a partir del wallpaper de arranque —
     -- no-op si el theming dinámico está apagado (matugen_reload.sh chequea
     -- el sentinel solo). Sin esto, el wallpaper por defecto nunca dispara
     -- una generación porque no pasa por el picker de rofi.
-    hl.exec_cmd(wait_for_hyprland .. " && " .. home .. "/.config/rofi/scripts/matugen_reload.sh '" .. default_wallpaper .. "' &")
+    hl.exec_cmd(wait_hyprland .. " && " .. home .. "/.config/rofi/scripts/matugen_reload.sh '" .. default_wallpaper .. "' &")
 
     -- Entorno
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
@@ -29,7 +29,7 @@ hl.on("hyprland.start", function()
     -- UI y Daemons
     hl.exec_cmd("hyprctl setcursor Future-black-cursors 24")
     hl.exec_cmd(home .. "/.config/waybar/scripts/launch.sh &")
-    hl.exec_cmd(wait_for_hyprland .. " && hypridle &")
+    hl.exec_cmd(wait_hyprland .. " && hypridle &")
     hl.exec_cmd("test -x /usr/lib/polkit-kde-authentication-agent-1 && /usr/lib/polkit-kde-authentication-agent-1 &")
 
     -- Clipboard
