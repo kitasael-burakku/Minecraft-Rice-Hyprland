@@ -8,7 +8,7 @@
 local home = os.getenv("HOME") or "/home/kitasa-elburakku"
 
 local wait_hyprland = home .. "/.config/hypr/scripts/wait-for-hyprland.sh"
-local default_wallpaper = home .. "/Videos/Wallpapers/minecraft.mp4"
+local default_wallpaper = home .. "/Videos/Wallpapers/behind-the-market.mp4"
 
 hl.on("hyprland.start", function()
 

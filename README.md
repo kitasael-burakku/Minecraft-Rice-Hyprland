@@ -539,17 +539,14 @@ At minimum, review before using:
 - `hypr/hyprlock.conf` — change `$hyprlockDir` to your real path (`/home/your-username/.config/hyprlock`).
 - `hypr/modules/autostart.lua` — change the animated wallpaper path `~/Videos/Wallpapers/minecraft.mp4` to yours.
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
-- `hypr/modules/input.lua` — the entry `hl.device({ name = "epic-mouse-v1" })` is a placeholder example; change it to the real name of your mouse if you want per-device sensitivity, or remove it.
+- `hypr/modules/input.lua` — mouse and keyboard are configured with real device names (`Logitech G203 LIGHTSYNC Gaming Mouse`, `Shinetek Technology USB Gaming Keyboard`); change them to yours, or remove the `hl.device` blocks if you don't need per-device sensitivity.
 - `hypr/modules/programs.lua` — change `kitty`, `nautilus`, the launcher, or `windowswitcher` command if you use other apps or a different Rofi theme path.
 - `rofi/scripts/window-switcher.sh` — the `MINIMIZED_WS` variable defaults to `special:minimized`; change it if you use a different special workspace name.
 - `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
-- `waybar/config.jsonc` — change `hwmon-path = /sys/class/hwmon/hwmon3/temp1_input` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
-- `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/1.png` if you use a different wallpaper.
-- `wlogout/style.css` — the six icon paths (`lock.png`, `logout.png`, `hibernate.png`, `shutdown.png`, `reboot.png`, `suspend.png`) are written as absolute paths to my user; change them to yours.
+- `hypr/modules/monitors.lua` — fixes output, resolution, position and scale for this machine (`HDMI-A-1`, `1920x1080@200Hz`). This is the one you're most likely to need to change before Hyprland even starts — set it to your own monitor, or switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection.
+- `waybar/config.jsonc` — change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
+- `hyprlock/layouts/layout.conf` — change `~/.config/hyprlock/wallpapers/2.png` if you use a different wallpaper.
 - `fastfetch/config*.jsonc` — change logos, images and presets if you don't want to use the included assets.
-- `swaync/config.json` — change buttons like `blueman-manager`, `nwg-look`, or `nm-connection-editor` if you don't use them.
-
-> `hypr/modules/monitors.lua` uses automatic detection (`output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"`), so it shouldn't need changes in most cases. If you have multiple monitors or a specific configuration, adjust it there.
 
 To find all personal paths at once:
 
