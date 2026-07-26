@@ -1,4 +1,4 @@
-if command -q zoxide
+if status is-interactive; and command -q zoxide
     zoxide init fish | source
 end
 
@@ -40,5 +40,4 @@ alias ecwlogout="codium ~/.config/wlogout && pkill kitty"
 
 alias eccava="codium ~/.config/cava && pkill kitty"
 alias ecfastfetch="codium ~/.config/fastfetch && pkill kitty"
-alias ecstarship="codium ~/.config/starship.toml && pkill kitty"
-alias ecscripts="codium ~/.config/scripts && pkill kitty"
+alias ecstarship="codium ~/.config/matugen/templates/starship.toml ~/.config/starship.static.toml && pkill kitty"

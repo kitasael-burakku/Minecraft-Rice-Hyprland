@@ -26,7 +26,7 @@ kitty/colors/colors.conf
 wlogout/colors.css
 hyprlock/colors.conf
 swaync/colors.css
-starship.toml
+/starship.toml
 fish/conf.d/theme-goldship.fish
 hypr/dynamic-colors.sh
 

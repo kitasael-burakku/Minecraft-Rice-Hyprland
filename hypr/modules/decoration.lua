@@ -23,8 +23,6 @@ hl.config({
         hover_icon_on_border     = true,
 
         allow_tearing = false,
-
-        layout = "scrolling",
     },
 
     decoration = {

@@ -14,7 +14,7 @@ hl.on("hyprland.start", function()
 
     -- Fondo de pantalla
     hl.exec_cmd("awww-daemon &")
-    hl.exec_cmd(wait_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio' '*' " .. default_wallpaper .. " &")
+    hl.exec_cmd(wait_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio --hwdec=auto' '*' " .. default_wallpaper .. " &")
 
     -- Colores dinámicos (matugen) a partir del wallpaper de arranque —
     -- no-op si el theming dinámico está apagado (matugen_reload.sh chequea

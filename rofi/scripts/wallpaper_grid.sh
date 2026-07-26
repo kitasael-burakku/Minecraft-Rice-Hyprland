@@ -88,7 +88,8 @@ echo -en "\0no-custom\x1ftrue\n"
 [ -d "$SRC_DIR" ] || exit 0
 
 shopt -s nullglob nocaseglob
-eval "files=(\"$SRC_DIR\"/*.{mp4,mkv,mov,webm,jpg,jpeg,png,webp,gif})"
+files=("$SRC_DIR"/*.mp4 "$SRC_DIR"/*.mkv "$SRC_DIR"/*.mov "$SRC_DIR"/*.webm \
+       "$SRC_DIR"/*.jpg "$SRC_DIR"/*.jpeg "$SRC_DIR"/*.png "$SRC_DIR"/*.webp "$SRC_DIR"/*.gif)
 for f in "${files[@]}"; do
     [ -f "$f" ] || continue
     base="$(basename "$f")"
