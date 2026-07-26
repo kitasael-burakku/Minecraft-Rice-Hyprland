@@ -3,10 +3,15 @@
 # Configuration
 player="spotify"
 # Reduced bar length for smaller size, as requested.
-BAR_LENGTH=10 
-# Define colors using Pango/HTML for use in Hyprlock's label
-COLOR_PLAYED="#1DB954" # Spotify Green or a nice accent color
-COLOR_REMAINING="#FFFFFF40" # Light gray, slightly transparent
+BAR_LENGTH=10
+# Colores Pango/HTML — valores por defecto (paleta estática "Kitasan Glass"),
+# sobreescritos por music-colors.sh si matugen ya generó uno (dinámico,
+# sigue al wallpaper). Ver matugen/templates/music-progress-colors.sh.
+COLOR_PLAYED="#7ab8b8"
+COLOR_REMAINING="#e8e8e840"
+COLOR_HANDLE="#e8e8e8"
+MUSIC_COLORS="$HOME/.config/hyprlock/scripts/music-colors.sh"
+[ -f "$MUSIC_COLORS" ] && source "$MUSIC_COLORS"
 SPACE_CHAR="—" # Subtle, smooth line character for the bar track
 
 # Handle Character (Static)
@@ -150,7 +155,7 @@ get_status_and_position() {
     if (( progress == BAR_LENGTH )); then
         final_bar="<span foreground=\"$COLOR_PLAYED\">${bar_played}${SPACE_CHAR}</span>"
     else
-        final_bar="<span foreground=\"$COLOR_PLAYED\">$bar_played</span><span foreground=\"#ffffff\">$STATIC_HANDLE</span><span foreground=\"$COLOR_REMAINING\">$bar_remaining</span>"
+        final_bar="<span foreground=\"$COLOR_PLAYED\">$bar_played</span><span foreground=\"$COLOR_HANDLE\">$STATIC_HANDLE</span><span foreground=\"$COLOR_REMAINING\">$bar_remaining</span>"
     fi
 
 

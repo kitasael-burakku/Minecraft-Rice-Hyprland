@@ -40,3 +40,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("udiskie --tray &")
 
 end)
+
+-- ya están declarados para reaccionar a que graphical-session.target pare —
+-- sin esto, nada lo paraba nunca y sobrevivían a la sesión.
+hl.on("hyprland.shutdown", function()
+    hl.exec_cmd("systemctl --user stop graphical-session.target")
+end)

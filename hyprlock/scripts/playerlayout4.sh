@@ -22,6 +22,20 @@ get_metadata() {
     playerctl metadata --format "{{ $key }}" 2>/dev/null
 }
 
+# Escapa markup Pango: title/artist se interpolan crudos en un <span> de
+# hyprlock/layouts/layout.conf, y un título con "&" o "<" (común en pestañas
+# de navegador, ej. "Tom & Jerry") rompe el render sin esto.
+escape_pango() {
+    local s="$1"
+    # "\&" a propósito: en "${var//pat/repl}" bash trata un "&" suelto en
+    # repl como "lo que matcheó" (igual que sed) — sin escaparlo, "&lt;"
+    # se reescribe mal como "<lt;" cuando el patrón es "<".
+    s="${s//&/\&amp;}"
+    s="${s//</\&lt;}"
+    s="${s//>/\&gt;}"
+    echo "$s"
+}
+
 # Function to determine the source and return an icon and text
 get_source_info() {
     local trackid="$1"
@@ -114,7 +128,7 @@ case "$1" in
     if [ -z "$TITLE" ]; then
         echo ""
     else
-        echo "${TITLE:0:50}" # Limit the output to 50 characters
+        escape_pango "${TITLE:0:50}" # Limit the output to 50 characters
     fi
     ;;
 --artist)
@@ -122,7 +136,7 @@ case "$1" in
     if [ -z "$ARTIST" ]; then
         echo ""
     else
-        echo "${ARTIST:0:50}" # Limit the output to 50 characters
+        escape_pango "${ARTIST:0:50}" # Limit the output to 50 characters
     fi
     ;;
 --position)

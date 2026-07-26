@@ -8,6 +8,20 @@
 MINIMIZED_WS="special:minimized"
 LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-winswitcher.log"
 
+# Escapa markup Pango: rofi interpreta $label como markup (markup-rows=true
+# más abajo), y un título de ventana con "&" o "<" (común en pestañas de
+# navegador) rompe la fila sin esto.
+escape_pango() {
+    local s="$1"
+    # "\&" a propósito: en "${var//pat/repl}" bash trata un "&" suelto en
+    # repl como "lo que matcheó" (igual que sed) — sin escaparlo, "&lt;"
+    # se reescribe mal como "<lt;" cuando el patrón es "<".
+    s="${s//&/\&amp;}"
+    s="${s//</\&lt;}"
+    s="${s//>/\&gt;}"
+    echo "$s"
+}
+
 get_icon() {
     local class="$1"
     # Busca el .desktop file y extrae el Icon=
@@ -63,6 +77,7 @@ while IFS=$'\t' read -r address class title ws; do
     [ "$class" = "" ] && continue
 
     icon="$(get_icon "$class")"
+    title="$(escape_pango "$title")"
 
     if [ "$ws" = "$MINIMIZED_WS" ]; then
         # Minimizada — label con indicador

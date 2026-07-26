@@ -29,6 +29,7 @@ swaync/colors.css
 /starship.toml
 fish/conf.d/theme-goldship.fish
 hypr/dynamic-colors.sh
+hyprlock/scripts/music-colors.sh
 
 # ── Funciones locales (no parte del rice) ────────────────────
 fish/functions/RPS.exe.fish
@@ -49,7 +50,13 @@ fish/functions/RPS.exe.fish
 *credentials*
 
 # ── Editor / sistema ─────────────────────────────────────────
+# Excepción: hypr/.vscode/settings.json apunta el LSP de Lua a los stubs
+# oficiales de Hyprland — es lo que hace usable escribir contra la API
+# hl.*, se publica a propósito. El resto de .vscode/ (en cualquier otra
+# carpeta) sigue ignorado.
 .vscode/
+!hypr/.vscode/
+!hypr/.vscode/settings.json
 .idea/
 .DS_Store
 
