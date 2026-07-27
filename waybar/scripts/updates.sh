@@ -2,6 +2,7 @@
 # ============================================================================
 #  updates.sh — contador de actualizaciones para Waybar (pacman + AUR)
 # ============================================================================
+set -o pipefail
 
 CACHE_FILE="${XDG_RUNTIME_DIR:-/tmp}/waybar-updates.cache"
 CACHE_TTL=300  # 5 minutos

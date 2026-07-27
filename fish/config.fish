@@ -20,8 +20,20 @@ function fastfetch
 
     set -l bag_file "$base/.fastfetch_bag"
 
-    # Si la bolsa no existe o está vacía, crearla
-    if not test -s "$bag_file"
+    # Si la bolsa no existe o está vacía (conteo real de entradas no vacías,
+    # no tamaño de archivo: al vaciarse, "printf %s\n $bag" con $bag vacío
+    # igual escribe 1 byte de salto de línea — "test -s" daba falso positivo
+    # de "no vacío", y ademas fish parsea ese byte como una lista de UN
+    # elemento vacío (count=1), no una lista vacía — de ahí que se chequee
+    # también que la primera entrada no sea la cadena vacía).
+    set -l needs_refill 1
+    if test -f "$bag_file"
+        set -l probe (cat "$bag_file")
+        if test (count $probe) -gt 0 -a -n "$probe[1]"
+            set needs_refill 0
+        end
+    end
+    if test "$needs_refill" -eq 1
         set -l bag
 
         for item in $weighted

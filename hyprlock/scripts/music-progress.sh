@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o pipefail
 
 # Configuration
 player="spotify"

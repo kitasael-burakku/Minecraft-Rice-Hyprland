@@ -5,6 +5,7 @@
 #  custom/playerlabel lo leen con `tail -F` en vez de lanzar cada uno su
 #  propio playerctl -a metadata -F (dos procesos escuchando lo mismo).
 # ============================================================================
+set -o pipefail
 
 set -u
 

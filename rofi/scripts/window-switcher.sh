@@ -4,9 +4,11 @@
 #  Click en ventana activa   → minimizar
 #  Click en ventana minimizada → restaurar y enfocar
 # ============================================================================
+set -o pipefail
 
 MINIMIZED_WS="special:minimized"
 LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-winswitcher.log"
+ICON_CACHE_DIR="${XDG_RUNTIME_DIR:-/tmp}/rofi-winswitcher-icons"
 
 # Escapa markup Pango: rofi interpreta $label como markup (markup-rows=true
 # más abajo), y un título de ventana con "&" o "<" (común en pestañas de
@@ -24,17 +26,31 @@ escape_pango() {
 
 get_icon() {
     local class="$1"
+    # Cache por clase en $XDG_RUNTIME_DIR: sin esto, el find sobre los dos
+    # árboles de .desktop corre una vez POR VENTANA en cada apertura de
+    # ALT+TAB. Se limpia solo entre logins (una clase rara vez cambia de
+    # icono entre reinicios).
+    mkdir -p "$ICON_CACHE_DIR"
+    local cache_file="$ICON_CACHE_DIR/$class"
+    if [ -f "$cache_file" ]; then
+        cat "$cache_file"
+        return 0
+    fi
+
     # Busca el .desktop file y extrae el Icon=
-    local desktop_file
+    local desktop_file icon
     desktop_file="$(find /usr/share/applications ~/.local/share/applications 2>/dev/null \
         -iname "${class}.desktop" -o -iname "${class,,}.desktop" 2>/dev/null \
         | head -n1)"
 
     if [ -n "$desktop_file" ]; then
-        grep -m1 '^Icon=' "$desktop_file" | cut -d= -f2
+        icon="$(grep -m1 '^Icon=' "$desktop_file" | cut -d= -f2)"
     else
-        echo "$class"
+        icon="$class"
     fi
+
+    printf '%s' "$icon" > "$cache_file"
+    printf '%s' "$icon"
 }
 
 # ── Callback: el usuario eligió una entrada ───────────────────────────────────

@@ -4,6 +4,7 @@
 # ============================================================================
 
 set -u
+set -o pipefail
 
 SRC_DIR="${WALLPAPER_SRC_DIR:-$HOME/Videos/Wallpapers}"
 PROMPT_LABEL="${WALLPAPER_PROMPT:-󰎁  Video}"

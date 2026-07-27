@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o pipefail
 
 THUMB="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-thumb"
 META_CACHE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-meta.cache"

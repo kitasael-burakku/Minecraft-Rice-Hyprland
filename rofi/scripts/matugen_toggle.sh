@@ -9,6 +9,7 @@
 # ============================================================================
 
 set -u
+set -o pipefail
 
 SENTINEL="$HOME/.config/matugen/enabled"
 RELOAD_SCRIPT="$HOME/.config/rofi/scripts/matugen_reload.sh"

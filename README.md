@@ -137,7 +137,6 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | mpvpaper | Video wallpaper (loops mp4/mkv/webm/mov) |
 | awww | Static image wallpaper (replaces swww) |
 | cava | Audio visualizer — includes config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
-| glava | Alternative visualizer, optionally used in Hyprlock scripts |
 | Qylock | Minecraft-style SDDM theme |
 | MINEGRUB | Minecraft-style GRUB theme |
 
@@ -157,11 +156,10 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Kitty with Fish as shell, custom color theme "Kitasan-Ship Minecraft Edition" (palette of Creeper greens, stone grays, redstone reds), and Fastfetch image support via Kitty's graphics protocol.
 - Fish with Starship, "Minecraft Overworld" palette applied to shell syntax, random rotation between 9 Fastfetch presets, modern aliases, and custom maintenance/diagnostic functions plus an interactive keybind viewer — see [Fish Functions](#fish-functions).
 - cava with custom config (pipewire, noncurses, 60fps), three swappable themes (`agua`, `solarized_dark`, `tricolor`) and six custom GLSL shaders for visual mode.
-- Hyprlock with minimalist layout (clock, date, user, password) and several additional scripts in the repo that are not connected to the current layout (battery, MPRIS, weather, location — available if you want to build your own info-heavy version).
+- Hyprlock with minimalist layout (clock, date, user, password) plus a small MPRIS block (source, title/artist, progress bar) that follows the dynamic color pipeline — see [External Additions](#external-additions).
 - SwayNC with notification center, quick controls, and `goldship` theme.
 - Wlogout with lock, logout, suspend, shutdown, hibernate, and reboot actions — this is the system's real session menu.
 - Hot-swappable Hyprland layout (dwindle / master / scrolling), with `scrolling` as the default.
-- 3-finger horizontal swipe gesture to switch workspaces, configured in `hypr/modules/input.lua`.
 - Shortcuts for screenshots, color picker, multimedia control, floating with auto-resize, Waybar reload, and system tools.
 - The fuck: typo corrector integrated into Fish.
 
@@ -226,7 +224,6 @@ yay -S \
   nwg-look \
   vscodium-bin \
   cava \
-  glava \
   awww \
   matugen
 ```
@@ -244,7 +241,6 @@ yay -S zen-browser-bin
 
 - `hyprland-lua`: this rice uses `hypr/hyprland.lua` with `hl.*` calls, not classic `hyprland.conf`. Verify the correct package or method for your version of Hyprland.
 - `hyprshutdown`: appears as an optional fallback in a keybind.
-- `glava`: optionally used in Hyprlock scripts if Spotify is playing.
 - `Future-black-cursors`, `Colloid-cursors`, SDDM Minecraft, Minegrub: install or replace according to your system.
 - `obs`, `brave`, `vscodium`: personal applications tied to keybinds, not requirements of the base environment.
 - `awww`: required by the Rofi wallpaper selector to apply static images. `swww` is not used in this rice — `awww` replaced it. `matugen` is required if you want dynamic theming — see [External Additions](#external-additions); the rest of the rice works fine without it.
@@ -314,7 +310,7 @@ Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER 
 Video wallpapers are **not included** in this repo due to file size limits. Place your own video wallpapers here:
 
 ```bash
-mkdir -p ~/Videos/wallpapersvideo
+mkdir -p ~/Videos/Wallpapers
 # Place your .mp4 .mkv .mov .webm files here
 ```
 
@@ -325,7 +321,7 @@ mkdir -p ~/Pictures
 git clone https://github.com/NischalDawadi/Wallpapers.git ~/Pictures/Wallpapers
 ```
 
-> The wallpaper picker expects videos in `~/Videos/wallpapersvideo/` and images in `~/Pictures/Wallpapers/`. Both paths can be overridden by exporting `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` before launching the picker.
+> The wallpaper picker expects videos in `~/Videos/Wallpapers/` and images in `~/Pictures/Wallpapers/`. Both paths can be overridden by exporting `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` before launching the picker.
 
 ---
 
@@ -382,7 +378,7 @@ Key files:
 - `hypr/modules/keybinds.lua` — keyboard shortcuts, screenshots, multimedia and session.
 - `hypr/modules/autostart.lua` — services and programs that launch with Hyprland.
 - `hypr/modules/monitors.lua` — automatic output detection, resolution, position, and scale.
-- `hypr/modules/input.lua` — keyboard layout, sensitivity, 3-finger horizontal swipe to switch workspace, and per-device config placeholder.
+- `hypr/modules/input.lua` — keyboard layout, sensitivity, and per-device config placeholder.
 - `hypr/modules/environment.lua` — Wayland, Qt, Electron, and AMD environment variables.
 - `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Border colors are hardcoded here as the static fallback, but get overwritten live via `hyprctl eval` when matugen is enabled — see [External Additions](#external-additions).
 - `hypr/modules/layout.lua` — configuration for the three layouts (dwindle, master, scrolling); the active default is `scrolling`. Can be hot-swapped with `SUPER + SHIFT + D/M/O`.
@@ -423,7 +419,7 @@ applies wallpaper + matugen_reload
 
 | Variable | Default | Contents |
 |---|---|---|
-| `WALLPAPER_DIR_VIDEO` | `~/Videos/wallpapersvideo` | Videos (`mp4`, `mkv`, `mov`, `webm`) and images |
+| `WALLPAPER_DIR_VIDEO` | `~/Videos/Wallpapers` | Videos (`mp4`, `mkv`, `mov`, `webm`) and images |
 | `WALLPAPER_DIR_IMG` | `~/Pictures/Wallpapers` | Static images only (`jpg`, `png`, `webp`, `gif`) |
 
 Both can be overridden by exporting the variable before the launcher runs.
@@ -513,7 +509,7 @@ Aliases defined in `fish/conf.d/tools.fish`:
 ```fish
 ecfish      ecwaybar    echypr      ecswaync
 eckitty     echyprlock  ecrofi      ecwlogout
-eccava      ecfastfetch ecstarship  ecscripts
+eccava      ecfastfetch ecstarship
 ```
 
 ### Functions
@@ -559,7 +555,7 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 ## Scripts and Commands Used in This Rice
 
 - **Hyprland/Wayland:** `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `awww`, `matugen`
-- **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`, `glava`
+- **Audio/media:** `wpctl`, `pavucontrol`, `playerctl`, `cava`
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
 - **System:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
 - **Network/GUI:** `nm-connection-editor`, `blueman-manager`, `nwg-look`
@@ -577,7 +573,7 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 - Waybar may break the temperature module if your hardware sensor is different from mine.
 - Fish functions run real tasks like updating packages and cleaning caches. Read them before using them.
 - Hyprlock scripts use MPRIS, `playerctl`, `curl`, `jq`, `imagemagick`, and external services like `wttr.in` or `ipinfo.io`.
-- The `hyprlock/` folder includes scripts for battery, MPRIS/Spotify, weather, location, and stopwatch that **are not connected** to the active `layout.conf` — they were left available in case you want to build your own info-heavy layout; the current lock screen is deliberately minimalist.
+- `hyprlock/scripts/` has 4 files, all MPRIS-related: `playerlayout4.sh` (source/title/artist), `music-progress.sh` (progress bar), and their matugen-generated color pair (`music-colors.sh` / `music-colors.static.sh`) — see [External Additions](#external-additions).
 - Some settings are tailored specifically to my hardware, my programs, and my workflow.
 
 ---

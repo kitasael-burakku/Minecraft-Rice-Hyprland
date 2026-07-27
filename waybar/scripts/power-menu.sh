@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o pipefail
 
 ROFI_THEME="${HOME}/.config/rofi/power-menu.rasi"
 

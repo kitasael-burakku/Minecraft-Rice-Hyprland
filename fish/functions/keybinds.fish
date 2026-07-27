@@ -26,20 +26,22 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     # back to named colors (cyan / yellow / white / red …) so the viewer still
     # looks right everywhere. Fish also approximates hex to the closest palette
     # color on its own, but the explicit fallback keeps things predictable.
+    # Paleta "Kitasan Glass" — mismos tonos que report-ui.fish/dotbackup, en
+    # vez de los rojos saturados ajenos a la identidad del resto del proyecto.
     if test "$COLORTERM" = truecolor -o "$COLORTERM" = 24bit
-        set -g __kb_border  ffffff   
-        set -g __kb_muted   b4b4b3 
-        set -g __kb_accent  ff4d4d  
-        set -g __kb_section ff8080   
+        set -g __kb_border  909090
+        set -g __kb_muted   686058
+        set -g __kb_accent  6a96b0
+        set -g __kb_section b89458
         set -g __kb_key     ffffff
-        set -g __kb_desc    e0e0e0
-        set -g __kb_error   ff0033
+        set -g __kb_desc    d8d8d8
+        set -g __kb_error   a85a48
     else
         # Fallback estándar: Colores ANSI brillantes nativos
         set -g __kb_border  brblack
         set -g __kb_muted   brblack
         set -g __kb_accent  cyan
-        set -g __kb_section magenta
+        set -g __kb_section yellow
         set -g __kb_key     white
         set -g __kb_desc    brwhite
         set -g __kb_error   red
@@ -465,6 +467,18 @@ function __keybinds_restore_window
     end
 end
 
+# Fish no tiene scope real para funciones/variables anidadas — todo lo
+# definido dentro de __keybinds_viewer/__keybinds_prepare_window queda
+# global y persiste después de cerrar el visor. Se borra todo por nombre.
+function __keybinds_cleanup
+    for fn in __kb_getch __kb_line __kb_mid __kb_bottom __kb_raw __kb_text __kb_pair __kb_hint __kb_entries __kb_draw __kb_search __kb_search_prompt __kb_read_key
+        functions -q $fn; and functions -e $fn
+    end
+    for v in __kb_border __kb_muted __kb_accent __kb_section __kb_key __kb_desc __kb_error __kb_query __kb_window_addr __kb_was_floating
+        set -e $v 2>/dev/null
+    end
+end
+
 function keybinds --description "Open keybinds viewer in current terminal as floating window"
     if test "$argv[1]" = -h -o "$argv[1]" = --help
         echo "keybinds — interactive Hyprland keybinds viewer"
@@ -480,4 +494,5 @@ function keybinds --description "Open keybinds viewer in current terminal as flo
     __keybinds_prepare_window
     __keybinds_viewer $argv
     __keybinds_restore_window
+    __keybinds_cleanup
 end

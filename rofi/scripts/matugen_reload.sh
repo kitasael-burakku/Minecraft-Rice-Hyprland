@@ -19,6 +19,7 @@
 # ============================================================================
 
 set -u
+set -o pipefail
 
 WALL="${1:-}"
 LOG="${XDG_RUNTIME_DIR:-/tmp}/matugen-reload.log"
@@ -72,7 +73,9 @@ fi
 
 # ── Extras dormant (fuera de alcance v1, no hay template de matugen para estos) ──
 if [ "$ENABLE_CAVA_RELOAD" = "1" ] && pgrep -x cava >/dev/null; then
-    cat ~/.config/cava/config_base ~/.config/cava/colors > ~/.config/cava/config 2>/dev/null || true
+    if [ -f ~/.config/cava/config_base ] && [ -f ~/.config/cava/colors ]; then
+        cat ~/.config/cava/config_base ~/.config/cava/colors > ~/.config/cava/config 2>/dev/null || true
+    fi
     killall -USR1 cava 2>/dev/null || true
 fi
 

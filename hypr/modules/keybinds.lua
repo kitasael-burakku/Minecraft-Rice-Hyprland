@@ -54,7 +54,7 @@ hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
 -----------------------------
 
 -- Close focused window
-local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
+hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- Toggle floating mode
 hl.bind("+ CTRL + ALT + V", function()
