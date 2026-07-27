@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -o pipefail
 
-THUMB="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-thumb"
 META_CACHE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-meta.cache"
 
 if [ $# -eq 0 ]; then
@@ -9,7 +8,10 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-for cmd in playerctl curl magick pkill; do
+# Solo playerctl: los 7 flags de este script lo usan. curl/magick/pkill
+# ya no hacen falta desde que se sacó fetch_thumb() (descargaba una carátula
+# que ningún widget de layout.conf mostraba nunca).
+for cmd in playerctl; do
     command -v "$cmd" >/dev/null 2>&1 || {
         echo ""
         exit 0
@@ -76,26 +78,11 @@ convert_position() {
     printf "%d:%02d" $minutes $remaining_seconds
 }
 
-# Function to fetch album art (se dispara solo cuando el caché de metadata
-# se refresca de verdad, no en cada invocación del script)
-fetch_thumb() {
-    artUrl=$(playerctl -p spotify metadata --format '{{mpris:artUrl}}' 2>/dev/null)
-    [[ -z "$artUrl" ]] && return 0
-    [[ -f "${THUMB}.inf" && "${artUrl}" = "$(cat "${THUMB}.inf")" ]] && return 0
-
-    printf "%s\n" "$artUrl" > "${THUMB}.inf"
-
-    curl -so "${THUMB}.png" "$artUrl"
-    magick "${THUMB}.png" -quality 50 "${THUMB}.png"
-    # Avisa a hyprlock para que relea el thumbnail actualizado
-    pkill -USR2 hyprlock 2>/dev/null || true
-}
-
 # --title/--artist/--source comparten un solo caché de metadata con ventana
 # de frescura de 3s: layout.conf dispara los tres cada 3000ms, así que sin
-# esto cada tick hacía 3 llamadas separadas a playerctl (más 3 fetch_thumb
-# redundantes en background). Con el caché, solo la primera llamada del
-# tick consulta playerctl de verdad; las otras dos leen el resultado.
+# esto cada tick hacía 3 llamadas separadas a playerctl. Con el caché, solo
+# la primera llamada del tick consulta playerctl de verdad; las otras dos
+# leen el resultado.
 load_metadata() {
     local mtime age
     if [ -f "$META_CACHE" ]; then
@@ -115,7 +102,6 @@ load_metadata() {
             printf 'ARTIST=%q\n' "$artist"
             printf 'TRACKID=%q\n' "$trackid"
         } > "$META_CACHE"
-        fetch_thumb &
     fi
 
     # shellcheck disable=SC1090

@@ -44,7 +44,6 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 -- Toggle theming dinámico (matugen)
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
 
--- Music
 
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
