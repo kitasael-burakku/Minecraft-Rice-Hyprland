@@ -22,10 +22,20 @@ restore_static() {
 }
 
 current_wallpaper() {
-    # Caso video (mpvpaper, el default de este rice) — el path es el último
-    # argumento del proceso. Si no hay mpvpaper corriendo (wallpaper de
-    # imagen vía awww), no hay forma simple de introspectar el path actual;
-    # se deja para la próxima vez que se elija un wallpaper con el picker.
+    # Fuente principal: el estado que persiste hypr/scripts/apply-wallpaper.sh
+    # cada vez que se aplica un wallpaper — cubre video E imagen por igual.
+    local state="$HOME/.config/hypr/.current-wallpaper"
+    if [ -f "$state" ]; then
+        local wall
+        wall="$(cat "$state" 2>/dev/null)"
+        if [ -n "$wall" ] && [ -f "$wall" ]; then
+            echo "$wall"
+            return 0
+        fi
+    fi
+
+    # Fallback: introspección del proceso de mpvpaper (solo cubre video) —
+    # cubre el caso de que el archivo de estado todavía no exista.
     local mpv_cmd
     mpv_cmd="$(pgrep -a mpvpaper 2>/dev/null | head -n1)"
     if [ -n "$mpv_cmd" ]; then

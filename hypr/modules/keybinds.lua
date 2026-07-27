@@ -44,7 +44,6 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 -- Toggle theming dinámico (matugen)
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
 
-
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
 
@@ -224,3 +223,17 @@ hl.bind(mainMod .. "+ SHIFT + M", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 
 -- Scrolling layout
 hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "scrolling" } })']]))
+
+------------------------------
+----   BINDS PRIVADOS     ----
+------------------------------
+
+-- Ver hypr/modules/private.example.lua — no versionado. pcall(): la
+-- ausencia de private.lua no debe tumbar ninguno de los binds públicos de
+-- arriba, solo deja sin registrar estos extras opcionales.
+do
+    local ok, private = pcall(require, "modules.private")
+    if ok and type(private) == "table" and type(private.binds) == "function" then
+        private.binds(mainMod)
+    end
+end

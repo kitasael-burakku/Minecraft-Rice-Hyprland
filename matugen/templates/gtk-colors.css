@@ -1,0 +1,19 @@
+/* Kitasan Glass — colores de sistema GTK3/GTK4, dinámicos por wallpaper.
+   Generado por matugen. Estático de referencia:
+   ~/.config/matugen/templates/gtk-colors.static.css
+
+   Se importa DESPUÉS del tema base (Win11-Fantasy-Dark) — en CSS, la última
+   declaración de un @define-color gana, así que esto sobreescribe solo los
+   colores de sistema, sin reemplazar el tema completo. */
+@define-color theme_bg_color                    {{colors.surface.default.hex}};
+@define-color theme_fg_color                    {{colors.on_surface.default.hex}};
+@define-color theme_base_color                  {{colors.surface_container.default.hex}};
+@define-color theme_text_color                  {{colors.on_surface.default.hex}};
+@define-color theme_selected_bg_color           {{colors.primary.default.hex}};
+@define-color theme_selected_fg_color           {{colors.on_primary.default.hex}};
+@define-color theme_unfocused_bg_color          {{colors.surface.default.hex}};
+@define-color theme_unfocused_fg_color          {{colors.on_surface_variant.default.hex}};
+@define-color theme_unfocused_base_color        {{colors.surface_container.default.hex}};
+@define-color theme_unfocused_text_color        {{colors.on_surface_variant.default.hex}};
+@define-color theme_unfocused_selected_bg_color {{colors.primary.default.hex}};
+@define-color theme_unfocused_selected_fg_color {{colors.on_primary.default.hex}};

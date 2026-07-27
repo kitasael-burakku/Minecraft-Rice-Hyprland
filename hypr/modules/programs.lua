@@ -16,3 +16,13 @@ Programs = {
     windowswitcher ='pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show winswitcher -modi winswitcher:~/.config/rofi/scripts/window-switcher.sh -theme ~/.config/rofi/window-switcher.rasi',
     lockscreen     = "hyprlock"
 }
+
+-- Comandos privados (ver hypr/modules/private.example.lua) — no versionados.
+-- pcall(): la ausencia de private.lua no debe tumbar el resto de la config,
+-- solo deja sin definir las claves opcionales que hubiera aportado.
+local ok, private = pcall(require, "modules.private")
+if ok and type(private) == "table" and type(private.programs) == "table" then
+    for key, value in pairs(private.programs) do
+        Programs[key] = value
+    end
+end

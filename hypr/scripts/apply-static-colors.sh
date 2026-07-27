@@ -27,9 +27,18 @@ cp "$HOME/.config/swaync/colors.static.css"        "$HOME/.config/swaync/colors.
 cp "$HOME/.config/starship.static.toml"            "$HOME/.config/starship.toml"             2>/dev/null || true
 cp "$HOME/.config/fish/theme-goldship.static.fish" "$HOME/.config/fish/conf.d/theme-goldship.fish" 2>/dev/null || true
 cp "$HOME/.config/hyprlock/scripts/music-colors.static.sh" "$HOME/.config/hyprlock/scripts/music-colors.sh" 2>/dev/null || true
+cp "$HOME/.config/matugen/templates/gtk-colors.static.css" "$HOME/.config/gtk-3.0/colors.css" 2>/dev/null || true
+cp "$HOME/.config/matugen/templates/gtk-colors.static.css" "$HOME/.config/gtk-4.0/colors.css" 2>/dev/null || true
 
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
 [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"
+
+# Fondo de hyprlock: bootstrap desde el estático 2.png solo si todavía no hay
+# un current.png — no pisa la elección real del usuario si ya existe (elegir
+# un wallpaper actualiza current.png independientemente del toggle de
+# matugen, así que apagar el toggle nunca debe revertirlo).
+[ -f "$HOME/.config/hyprlock/wallpapers/current.png" ] || \
+    cp "$HOME/.config/hyprlock/wallpapers/2.png" "$HOME/.config/hyprlock/wallpapers/current.png" 2>/dev/null || true
 
 pkill -SIGUSR2 waybar 2>/dev/null || true
 killall -SIGUSR1 kitty 2>/dev/null || true

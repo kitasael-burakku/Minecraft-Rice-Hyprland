@@ -65,36 +65,19 @@ display_name_unique() {
     printf '%s' "$name"
 }
 
+# La aplicación real (mpvpaper/awww), la persistencia para el próximo
+# arranque, y la herencia del wallpaper en hyprlock viven todas en
+# hypr/scripts/apply-wallpaper.sh — fuente única compartida con
+# hypr/modules/autostart.lua, no hay una segunda copia de los flags.
+APPLY_WALLPAPER_SCRIPT="$HOME/.config/hypr/scripts/apply-wallpaper.sh"
+
 apply_wallpaper() {
     local target="$1"
-    local ext_lc
-    ext_lc="$(printf '%s' "${target##*.}" | tr '[:upper:]' '[:lower:]')"
-
-    case "$ext_lc" in
-        mp4|mkv|mov|webm)
-            pkill -x mpvpaper 2>/dev/null
-            sleep 0.1
-            # Flags idénticos a los de hypr/modules/autostart.lua — si cambian
-            # acá, cambian ahí también, no hay una tercera copia.
-            if [ -n "$MONITOR" ]; then
-                nohup mpvpaper -o "--loop-file=inf --no-audio --hwdec=auto" "$MONITOR" "$target" \
-                    >"${XDG_RUNTIME_DIR:-/tmp}/mpvpaper.log" 2>&1 &
-            else
-                nohup mpvpaper -o "--loop-file=inf --no-audio --hwdec=auto" '*' "$target" \
-                    >"${XDG_RUNTIME_DIR:-/tmp}/mpvpaper.log" 2>&1 &
-            fi
-            disown
-            ;;
-        jpg|jpeg|png|webp|gif)
-            pkill -x mpvpaper 2>/dev/null
-            # Backend nativo awww restaurado y optimizado sin sleeps
-            awww img "$target" --transition-type any --transition-fps 60 >/dev/null 2>&1
-            ;;
-        *)
-            echo "$(date) ERROR: extensión no soportada: $target" >> "$LOG"
-            return 1
-            ;;
-    esac
+    if [ ! -x "$APPLY_WALLPAPER_SCRIPT" ]; then
+        echo "$(date) ERROR: no se encontró apply-wallpaper.sh" >> "$LOG"
+        return 1
+    fi
+    "$APPLY_WALLPAPER_SCRIPT" "$target" "$MONITOR"
 }
 
 if [ "${ROFI_RETV:-0}" = "1" ]; then

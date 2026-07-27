@@ -1,0 +1,7 @@
+/* Antes: symlink a ~/.themes/Win11-Fantasy-Dark/gtk-4.0/gtk.css.
+   Se reemplaza por un archivo real para poder importar el tema Y encima
+   los colores dinámicos de matugen (colors.css, gitignored, generado por
+   matugen/templates/gtk-colors.css). Ruta del tema hardcodeada a propósito
+   — ver README > rutas personales si cambiás de tema GTK. */
+@import url("file:///home/kitasa-elburakku/.themes/Win11-Fantasy-Dark/gtk-4.0/gtk.css");
+@import url("colors.css");
