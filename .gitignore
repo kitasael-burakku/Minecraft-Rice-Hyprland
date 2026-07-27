@@ -32,11 +32,6 @@ swaync/colors.css
 fish/conf.d/theme-goldship.fish
 hypr/dynamic-colors.sh
 hyprlock/scripts/music-colors.sh
-gtk-3.0/colors.css
-gtk-4.0/colors.css
-
-# ── GTK personal (no parte del rice) ─────────────────────────
-gtk-3.0/bookmarks
 
 # ── Funciones locales (no parte del rice) ────────────────────
 fish/functions/RPS.exe.fish

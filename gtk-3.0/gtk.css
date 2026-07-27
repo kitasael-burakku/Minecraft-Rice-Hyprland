@@ -1,4 +1,0 @@
-/* GTK3 carga esto automáticamente después del tema del sistema — no hace
-   falta tocar el tema para inyectar los colores dinámicos de matugen.
-   colors.css (gitignored) lo genera matugen/templates/gtk-colors.css. */
-@import url("colors.css");

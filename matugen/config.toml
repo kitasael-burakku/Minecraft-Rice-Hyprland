@@ -67,14 +67,3 @@ input_path  = '~/.config/matugen/templates/music-progress-colors.sh'
 output_path = '~/.config/hyprlock/scripts/music-colors.sh'
 # sin post_hook: music-progress.sh relee este archivo en cada invocación
 # (cada 1s), no hace falta ninguna señal
-
-[templates.gtk3]
-input_path  = '~/.config/matugen/templates/gtk-colors.css'
-output_path = '~/.config/gtk-3.0/colors.css'
-# sin post_hook: GTK no tiene señal de recarga en caliente — las ventanas
-# nuevas lo recogen solas (mismo criterio que [templates.fish])
-
-[templates.gtk4]
-input_path  = '~/.config/matugen/templates/gtk-colors.css'
-output_path = '~/.config/gtk-4.0/colors.css'
-# sin post_hook, misma razón que gtk3

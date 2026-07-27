@@ -543,7 +543,6 @@ At minimum, review before using:
 - `hypr/modules/monitors.lua` — fixes output, resolution, position and scale for this machine (`HDMI-A-1`, `1920x1080@200Hz`). This is the one you're most likely to need to change before Hyprland even starts — set it to your own monitor, or switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection.
 - `waybar/config.jsonc` — change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
 - `hyprlock/layouts/layout.conf` — points to `hyprlock/wallpapers/current.png`, which always mirrors whatever wallpaper you last picked (see `apply-wallpaper.sh` above); `2.png` is only the static fallback used to bootstrap `current.png` on a fresh clone. Nothing to change here unless you want a different fallback image.
-- `gtk-4.0/gtk.css` and `gtk-4.0/gtk-dark.css` — `@import` the GTK4 theme by absolute path (`~/.themes/Win11-Fantasy-Dark/...`); update that path in both files if you use a different theme.
 - `fastfetch/config*.jsonc` — change logos, images and presets if you don't want to use the included assets.
 
 To find all personal paths at once:

@@ -27,8 +27,6 @@ cp "$HOME/.config/swaync/colors.static.css"        "$HOME/.config/swaync/colors.
 cp "$HOME/.config/starship.static.toml"            "$HOME/.config/starship.toml"             2>/dev/null || true
 cp "$HOME/.config/fish/theme-goldship.static.fish" "$HOME/.config/fish/conf.d/theme-goldship.fish" 2>/dev/null || true
 cp "$HOME/.config/hyprlock/scripts/music-colors.static.sh" "$HOME/.config/hyprlock/scripts/music-colors.sh" 2>/dev/null || true
-cp "$HOME/.config/matugen/templates/gtk-colors.static.css" "$HOME/.config/gtk-3.0/colors.css" 2>/dev/null || true
-cp "$HOME/.config/matugen/templates/gtk-colors.static.css" "$HOME/.config/gtk-4.0/colors.css" 2>/dev/null || true
 
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
 [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"

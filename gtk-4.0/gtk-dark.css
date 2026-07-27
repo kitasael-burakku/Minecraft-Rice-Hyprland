@@ -1,7 +1,0 @@
-/* Mismo tratamiento que gtk.css — GTK4 carga este archivo en vez de gtk.css
-   cuando gtk-application-prefer-dark-theme=1 (ver settings.ini). El tema
-   original tenía gtk.css y gtk-dark.css idénticos, así que este importa lo
-   mismo. Ruta del tema hardcodeada a propósito — ver README > rutas
-   personales si cambiás de tema GTK. */
-@import url("file:///home/kitasa-elburakku/.themes/Win11-Fantasy-Dark/gtk-4.0/gtk-dark.css");
-@import url("colors.css");
