@@ -14,6 +14,8 @@ hl.on("hyprland.start", function()
 
     -- Fondo de pantalla
     hl.exec_cmd("awww-daemon &")
+    -- Flags idénticos a los de rofi/scripts/wallpaper_grid.sh — si cambian
+    -- acá, cambian ahí también, no hay una tercera copia.
     hl.exec_cmd(wait_hyprland .. " && mpvpaper -o '--loop-file=inf --no-audio --hwdec=auto' '*' " .. default_wallpaper .. " &")
 
     -- Colores dinámicos (matugen) a partir del wallpaper de arranque —

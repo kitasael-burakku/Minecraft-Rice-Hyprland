@@ -58,17 +58,6 @@ hl.window_rule({
     float = true,
 })
 
--- Cava
-hl.window_rule({
-    name  = "cava-float",
-    match = {
-        class = "^(cava-float)$",
-    },
-    
-    float   = true,
-    opacity = 0.90,
-})
-
 --------------------
 ---- MEDIA APPS ----
 --------------------

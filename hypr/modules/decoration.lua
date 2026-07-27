@@ -13,9 +13,12 @@ hl.config({
 
         border_size = 2,
 
+        -- Teal Kitasan Glass, no blanco — misma identidad de reposo que
+        -- hypr/scripts/dynamic-colors.static.sh (fuente de verdad), para que
+        -- un arranque en frío y un "apagar el toggle" luzcan igual.
         col = {
-            active_border = "rgba(ffffff33)",
-            inactive_border = "rgba(ffffff0a)",
+            active_border = "rgba(7ab8b8cc)",
+            inactive_border = "rgba(7ab8b80f)",
         },
 
         resize_on_border         = true,

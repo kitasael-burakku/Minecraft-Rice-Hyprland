@@ -334,6 +334,7 @@ chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/*.sh
 chmod +x ~/.config/rofi/scripts/*.sh
+chmod +x ~/.config/hypr/scripts/*.sh
 ```
 
 If you want to use Fish as your default shell:

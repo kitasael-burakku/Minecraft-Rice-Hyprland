@@ -1,5 +1,5 @@
 {
-    "spacing": 2,       // Subido de 4 a 8 para estirar el espacio entre widgets
+    "spacing": 2,       // Separación horizontal entre módulos
     "margin-top": 6,
     "margin-left": 10,
     "margin-right": 10,
