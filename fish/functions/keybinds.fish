@@ -426,6 +426,12 @@ function __keybinds_prepare_window
     command -q hyprctl; or return 0
     command -q jq; or return 0
 
+    # Antes esto iba a /dev/null: un error de Lua acá quedaba invisible para
+    # siempre (mismo criterio que el fix de rofi/scripts/window-switcher.sh).
+    set -l runtime_dir /tmp
+    set -q XDG_RUNTIME_DIR; and set runtime_dir "$XDG_RUNTIME_DIR"
+    set -l log "$runtime_dir/keybinds-float.log"
+
     # Floating window size — keep in sync with the centring maths below.
     set -l win_w 590
     set -l win_h 1000
@@ -437,8 +443,8 @@ function __keybinds_prepare_window
         return 0
     end
 
-    hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'set', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
-    hyprctl eval "hl.dispatch(hl.dsp.window.resize({ x = $win_w, y = $win_h, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+    hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'set', window = 'address:$__kb_window_addr' }))" >>"$log" 2>&1
+    hyprctl eval "hl.dispatch(hl.dsp.window.resize({ x = $win_w, y = $win_h, window = 'address:$__kb_window_addr' }))" >>"$log" 2>&1
 
     set -l mon (hyprctl monitors -j | jq -r '.[] | select(.focused == true) | "\(.x) \(.y) \(.width) \(.height)"' | head -n 1)
 
@@ -451,12 +457,16 @@ function __keybinds_prepare_window
         set -l x (math "$mx + (($mw - $win_w) / 2)")
         set -l y (math "$my + (($mh - $win_h) / 2)")
 
-        hyprctl eval "hl.dispatch(hl.dsp.window.move({ x = $x, y = $y, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+        hyprctl eval "hl.dispatch(hl.dsp.window.move({ x = $x, y = $y, window = 'address:$__kb_window_addr' }))" >>"$log" 2>&1
     end
 end
 
 function __keybinds_restore_window
     command -q hyprctl; or return 0
+
+    set -l runtime_dir /tmp
+    set -q XDG_RUNTIME_DIR; and set runtime_dir "$XDG_RUNTIME_DIR"
+    set -l log "$runtime_dir/keybinds-float.log"
 
     if test -z "$__kb_window_addr" -o "$__kb_window_addr" = "null"
         return 0
@@ -467,7 +477,7 @@ function __keybinds_restore_window
         # verdad (la forzamos con "set" en prepare_window), así que
         # alterna a tiled — mismo vocabulario que ya usa
         # hypr/modules/keybinds.lua para el mismo caso (set/toggle, no on/off).
-        hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'toggle', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+        hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'toggle', window = 'address:$__kb_window_addr' }))" >>"$log" 2>&1
     end
 end
 

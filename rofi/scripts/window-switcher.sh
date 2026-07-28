@@ -82,7 +82,7 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
     if [ "$ws" = "$MINIMIZED_WS" ]; then
         # Restaurar: mover al workspace activo y enfocar
         active_ws="$(hyprctl -j activeworkspace | jq -r '.id')"
-        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$active_ws\", window = \"address:$address\" }))" >/dev/null 2>&1
+        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$active_ws\", window = \"address:$address\" }))" >>"$LOG" 2>&1
         # OJO: "focus" no existe dentro de hl.dsp.window (confirmado en vivo,
         # ver hl.dsp.focus vs hl.dsp.window.focus) — vive en hl.dsp, un nivel
         # arriba.
@@ -105,7 +105,7 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
         disown
     else
         # Minimizar
-        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$MINIMIZED_WS\", follow = false, window = \"address:$address\" }))" >/dev/null 2>&1
+        hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$MINIMIZED_WS\", follow = false, window = \"address:$address\" }))" >>"$LOG" 2>&1
     fi
 
     exit 0

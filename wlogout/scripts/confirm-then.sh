@@ -2,9 +2,9 @@
 # ============================================================================
 #  confirm-then.sh — pide confirmación (rofi Sí/No) antes de correr $1
 # ----------------------------------------------------------------------------
-#  Mismo patrón visual que ya usa waybar/scripts/power-menu.sh. wlogout no
-#  tiene paso de confirmación propio; esto se lo agrega a las acciones
-#  destructivas (apagar/reiniciar/hibernar) sin tocar lock/logout/suspend.
+#  Reusa rofi/power-menu.rasi para el tema visual. wlogout no tiene paso de
+#  confirmación propio; esto se lo agrega a las acciones destructivas
+#  (apagar/reiniciar/hibernar) sin tocar lock/logout/suspend.
 #
 #  Uso: confirm-then.sh '<comando a correr si confirma>' ['<pregunta>']
 # ============================================================================
