@@ -18,20 +18,9 @@
   /* ── Texto: --text-primary/body/muted/base/active/accent
          vienen de ../colors.css (dinámicos, siguen al wallpaper) ── */
 
-  /* ── Radios ──────────────────────────────────────────── */
-  --radius-outer:   22px;
-  --radius-card:    16px;
-  --radius-widget:  13px;
-  --radius-button:  10px;
-  --radius-close:   8px;
-  --radius-image:   10px;
-  --radius-pill:    99px;
-
   /* ── Sombras ─────────────────────────────────────────── */
   --shadow-base:    0 4px 16px rgba(0, 0, 0, 0.40);
   --shadow-dim:     0 2px 10px rgba(0, 0, 0, 0.25);
-
-  --transition: 280ms ease-in-out;
 }
 
 * {
@@ -47,7 +36,22 @@
 
 /* ── Control center shell ───────────────────────────────── */
 
+/* Los --radius-*/--transition de acá NO van en :root: notifications.css
+   también los declara (con --radius-card: 18px contra los 16px de acá) e
+   importa antes en style.css, así que el de acá siempre ganaba en :root —
+   el toast de notificación terminaba redondeado a 16px en vez de 18px.
+   Escopados en .control-center, que ya envuelve el 100% de los usos de
+   estas variables en este archivo. */
 .control-center {
+  --radius-outer:   22px;
+  --radius-card:    16px;
+  --radius-widget:  13px;
+  --radius-button:  10px;
+  --radius-close:   8px;
+  --radius-image:   10px;
+  --radius-pill:    99px;
+  --transition: 280ms ease-in-out;
+
   background:    var(--bg-base);
   border-radius: var(--radius-outer);
   border:        1px solid var(--border-base);

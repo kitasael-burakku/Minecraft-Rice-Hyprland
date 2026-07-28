@@ -18,19 +18,25 @@
   /* ── Texto: --text-primary/body/muted/active/accent
          vienen de ../colors.css (dinámicos, siguen al wallpaper) ── */
 
-  /* ── Radios ──────────────────────────────────────────── */
+  /* ── Sombra ──────────────────────────────────────────── */
+  --shadow-card:
+    0 4px 20px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Los --radius-*/--transition de acá abajo NO van en :root: central_control.css
+   también los declara (con valores distintos para --radius-card: 16px vs los
+   18px de acá) e importa después en style.css, así que en :root el de
+   central_control ganaba siempre — el toast de notificación terminaba
+   redondeado a 16px en vez de 18px. Escopados en .floating-notifications, que
+   ya envuelve el 100% de los usos de estas variables en este archivo. */
+.floating-notifications.background {
   --radius-card:    18px;
   --radius-body:    15px;
   --radius-action:  10px;
   --radius-close:   8px;
   --radius-image:   10px;
   --radius-pill:    99px;
-
-  /* ── Sombra ──────────────────────────────────────────── */
-  --shadow-card:
-    0 4px 20px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-
   --transition: 280ms ease-in-out;
 }
 

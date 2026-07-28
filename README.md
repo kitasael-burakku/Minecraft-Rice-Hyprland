@@ -378,7 +378,7 @@ Key files:
 - `hypr/modules/programs.lua` — terminal, file manager and launcher (global `Programs` table used by `keybinds.lua`).
 - `hypr/modules/keybinds.lua` — keyboard shortcuts, screenshots, multimedia and session.
 - `hypr/modules/autostart.lua` — services and programs that launch with Hyprland.
-- `hypr/modules/monitors.lua` — automatic output detection, resolution, position, and scale.
+- `hypr/modules/monitors.lua` — output, resolution, position, and scale hardcoded for my machine (`HDMI-A-1`, `1920x1080@200Hz`) — see [Things You Must Change](#things-you-must-change) for how to switch it to automatic detection instead.
 - `hypr/modules/input.lua` — keyboard layout, sensitivity, and per-device config placeholder.
 - `hypr/modules/environment.lua` — Wayland, Qt, Electron, and AMD environment variables.
 - `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Border colors are hardcoded here as the static fallback, but get overwritten live via `hyprctl eval` when matugen is enabled — see [External Additions](#external-additions).
@@ -489,7 +489,6 @@ Aliases defined in `fish/conf.d/tools.fish`:
 |---|---|---|
 | `cat` | `bat` | Plain style, no paging |
 | `less` | `bat` | With paging |
-| `grep` | `ripgrep` | Faster search |
 | `ls` / `ll` / `la` | `eza` | Icons + directory-first |
 | `move` / `copy` / `copyr` | `mv` / `cp` / `cp -r` | Interactive + verbose |
 | `remove` / `remover` | `rm` / `rm -r` | Interactive + verbose |
@@ -541,7 +540,7 @@ At minimum, review before using:
 - `rofi/scripts/window-switcher.sh` — the `MINIMIZED_WS` variable defaults to `special:minimized`; change it if you use a different special workspace name.
 - `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
 - `hypr/modules/monitors.lua` — fixes output, resolution, position and scale for this machine (`HDMI-A-1`, `1920x1080@200Hz`). This is the one you're most likely to need to change before Hyprland even starts — set it to your own monitor, or switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection.
-- `waybar/config.jsonc` — change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine. The `hyprland/window` module displays the fixed text `"CachyOs"` on purpose (aesthetic decision); change it to `{title}` if you prefer to see the real focused window title.
+- `waybar/config.jsonc` — change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine.
 - `hyprlock/layouts/layout.conf` — points to `hyprlock/wallpapers/current.png`, which always mirrors whatever wallpaper you last picked (see `apply-wallpaper.sh` above); `2.png` is only the static fallback used to bootstrap `current.png` on a fresh clone. Nothing to change here unless you want a different fallback image.
 - `fastfetch/config*.jsonc` — change logos, images and presets if you don't want to use the included assets.
 
@@ -573,8 +572,7 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 - Icons depend on Nerd Fonts. If you see squares or strange symbols, install and select a Nerd Font in your terminal.
 - Waybar may break the temperature module if your hardware sensor is different from mine.
 - Fish functions run real tasks like updating packages and cleaning caches. Read them before using them.
-- Hyprlock scripts use MPRIS, `playerctl`, `curl`, `jq`, `imagemagick`, and external services like `wttr.in` or `ipinfo.io`.
-- `hyprlock/scripts/` has 4 files, all MPRIS-related: `playerlayout4.sh` (source/title/artist), `music-progress.sh` (progress bar), and their matugen-generated color pair (`music-colors.sh` / `music-colors.static.sh`) — see [External Additions](#external-additions).
+- `hyprlock/scripts/` has 4 files, all MPRIS-related via `playerctl` — no network calls: `playerlayout4.sh` (source/title/artist), `music-progress.sh` (progress bar), and their matugen-generated color pair (`music-colors.sh` / `music-colors.static.sh`) — see [External Additions](#external-additions).
 - Some settings are tailored specifically to my hardware, my programs, and my workflow.
 
 ---
