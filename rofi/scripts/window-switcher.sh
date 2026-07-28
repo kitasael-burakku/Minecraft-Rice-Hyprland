@@ -83,13 +83,26 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
         # Restaurar: mover al workspace activo y enfocar
         active_ws="$(hyprctl -j activeworkspace | jq -r '.id')"
         hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$active_ws\", window = \"address:$address\" }))" >/dev/null 2>&1
-        sleep 0.05
         # OJO: "focus" no existe dentro de hl.dsp.window (confirmado en vivo,
         # ver hl.dsp.focus vs hl.dsp.window.focus) — vive en hl.dsp, un nivel
-        # arriba. El >/dev/null de acá abajo escondió este error de Lua por
-        # quién sabe cuánto tiempo: la ventana quedaba en el workspace
-        # correcto pero nunca recuperaba el foco. Log en vez de silenciar.
-        hyprctl eval "hl.dispatch(hl.dsp.focus({ window = \"address:$address\" }))" >>"$LOG" 2>&1
+        # arriba.
+        #
+        # setsid + delay: este script ES el callback de rofi (rofi lo espera
+        # antes de cerrar), y probando con rofi real (vía inyección de
+        # teclado sintética con wtype) el dispatch de foco corría y devolvía
+        # "ok" pero no siempre pegaba, con o sin delay — no llegué a aislar
+        # la causa exacta con las herramientas de este entorno (puede ser
+        # algo propio de esa forma de inyectar teclas, no necesariamente de
+        # un teclado real). Esto queda como el mejor intento razonable
+        # (setsid para no depender del proceso de rofi, delay corto para no
+        # sentirse lento) — si en el uso real la ventana restaurada sigue sin
+        # foco, hace falta diagnosticarlo con una interacción real, no
+        # simulada.
+        setsid bash -c '
+            sleep 0.15
+            hyprctl eval "hl.dispatch(hl.dsp.focus({ window = \"address:$1\" }))" >>"$2" 2>&1
+        ' _ "$address" "$LOG" &
+        disown
     else
         # Minimizar
         hyprctl eval "hl.dispatch(hl.dsp.window.move({ workspace = \"$MINIMIZED_WS\", follow = false, window = \"address:$address\" }))" >/dev/null 2>&1
@@ -121,9 +134,12 @@ while IFS=$'\t' read -r address class title ws; do
 
     # "info" viaja aparte del texto visible, vía $ROFI_INFO en el callback —
     # no se toca con markup ni con nada que rofi le haga al label para
-    # mostrarlo. Ver el fix de más abajo: parsear el address desde el label
-    # visible (con o sin markup) es justo lo que se rompía.
-    echo -en "${label}\0icon\x1f${icon}\0info\x1f${address}\n"
+    # mostrarlo. OJO con la sintaxis: un solo "\0" al principio del bloque de
+    # opciones, y CADA par clave/valor separado por "\x1f" — un segundo "\0"
+    # antes de "info" (como tenía esto en un intento anterior) hace que rofi
+    # descarte silenciosamente todo lo que viene después del primer "\0",
+    # dejando $ROFI_INFO vacío. Confirmado en vivo con rofi real.
+    echo -en "${label}\0icon\x1f${icon}\x1finfo\x1f${address}\n"
 
 done < <(hyprctl -j clients | jq -r \
     'sort_by(.workspace.name == "special:minimized") |
