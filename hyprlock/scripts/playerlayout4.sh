@@ -4,11 +4,11 @@ set -o pipefail
 META_CACHE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-mpris-meta.cache"
 
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 --title | --artist | --position | --length | --album | --status | --source"
+    echo "Usage: $0 --title | --artist | --source"
     exit 1
 fi
 
-# Solo playerctl: los 7 flags de este script lo usan. curl/magick/pkill
+# Solo playerctl: los 3 flags de este script lo usan. curl/magick/pkill
 # ya no hacen falta desde que se sacó fetch_thumb() (descargaba una carátula
 # que ningún widget de layout.conf mostraba nunca).
 for cmd in playerctl; do
@@ -17,13 +17,6 @@ for cmd in playerctl; do
         exit 0
     }
 done
-
-# Function to get metadata using playerctl (usado solo por los flags que no
-# pasan por el caché compartido: --position, --length, --album)
-get_metadata() {
-    key=$1
-    playerctl metadata --format "{{ $key }}" 2>/dev/null
-}
 
 # Escapa markup Pango: title/artist se interpolan crudos en un <span> de
 # hyprlock/layouts/layout.conf, y un título con "&" o "<" (común en pestañas
@@ -53,29 +46,6 @@ get_source_info() {
     else
         echo ""
     fi
-}
-
-# Function to get position using playerctl
-get_position() {
-    playerctl position 2>/dev/null
-}
-
-# Function to convert microseconds to minutes and seconds
-convert_length() {
-    local length=$1
-    local seconds=$((length / 1000000))
-    local minutes=$((seconds / 60))
-    local remaining_seconds=$((seconds % 60))
-    printf "%d:%02d m" $minutes $remaining_seconds
-}
-
-# Function to convert seconds to minutes and seconds
-convert_position() {
-    local position=$1
-    local seconds=${position%.*} # Remove fractional part if exists
-    local minutes=$((seconds / 60))
-    local remaining_seconds=$((seconds % 60))
-    printf "%d:%02d" $minutes $remaining_seconds
 }
 
 # --title/--artist/--source comparten un solo caché de metadata con ventana
@@ -126,54 +96,12 @@ case "$1" in
         escape_pango "${ARTIST:0:50}" # Limit the output to 50 characters
     fi
     ;;
---position)
-    position=$(get_position)
-    length=$(get_metadata "mpris:length")
-    if [ -z "$position" ] || [ -z "$length" ]; then
-        echo ""
-    else
-        position_formatted=$(convert_position "$position")
-        length_formatted=$(convert_length "$length")
-        echo "$position_formatted/$length_formatted"
-    fi
-    ;;
---length)
-    length=$(get_metadata "mpris:length")
-    if [ -z "$length" ]; then
-        echo ""
-    else
-        convert_length "$length"
-    fi
-    ;;
---status)
-    status=$(playerctl status 2>/dev/null)
-    if [[ $status == "Playing" ]]; then
-        echo "󰎆"
-    elif [[ $status == "Paused" ]]; then
-        echo "󱑽"
-    else
-        echo ""
-    fi
-    ;;
---album)
-    album=$(playerctl metadata --format "{{ xesam:album }}" 2>/dev/null)
-    if [[ -n $album ]]; then
-        echo "$album"
-    else
-        status=$(playerctl status 2>/dev/null)
-        if [[ -n $status ]]; then
-            echo "Not album"
-        else
-            echo ""
-        fi
-    fi
-    ;;
 --source)
     load_metadata
     get_source_info "$TRACKID"
     ;;
 *)
     echo "Invalid option: $1"
-    echo "Usage: $0 --title | --artist | --position | --length | --album | --status | --source" ; exit 1
+    echo "Usage: $0 --title | --artist | --source" ; exit 1
     ;;
 esac

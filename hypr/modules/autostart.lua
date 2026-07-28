@@ -5,7 +5,7 @@
 -- \____|__  /____/ |__|  \____/____  > |__| (____  /__|   |__|  
 --         \/                       \/            \/             
 
-local home = os.getenv("HOME") or "/home/kitasa-elburakku"
+local home = os.getenv("HOME") or "/home/user"
 
 local wait_hyprland   = home .. "/.config/hypr/scripts/wait-for-hyprland.sh"
 local apply_wallpaper = home .. "/.config/hypr/scripts/apply-wallpaper.sh"
@@ -32,7 +32,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE && systemctl --user start hyprland-session.service")
 
     -- UI y Daemons
-    hl.exec_cmd("hyprctl setcursor Future-black-cursors 24")
+    hl.exec_cmd("hyprctl setcursor " .. CursorTheme .. " 24")
     hl.exec_cmd(home .. "/.config/waybar/scripts/launch.sh &")
     hl.exec_cmd(wait_hyprland .. " && hypridle &")
     hl.exec_cmd("test -x /usr/lib/polkit-kde-authentication-agent-1 && /usr/lib/polkit-kde-authentication-agent-1 &")

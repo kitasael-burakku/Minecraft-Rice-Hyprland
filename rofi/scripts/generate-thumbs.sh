@@ -24,7 +24,10 @@ process_image() {
     local src="$1"
     local thumb="$THUMB_DIR/$(basename "$src").jpg"
 
-    [ -f "$thumb" ] && { skipped=$((skipped + 1)); return 0; }
+    # "-nt" (más nuevo que) en vez de solo existencia: si el wallpaper se
+    # reemplaza con el mismo nombre pero contenido distinto, el thumbnail
+    # viejo quedaba para siempre porque nunca se comparaba mtime.
+    [ -f "$thumb" ] && [ "$thumb" -nt "$src" ] && { skipped=$((skipped + 1)); return 0; }
 
     convert "$src[0]" \
         -thumbnail "${THUMB_SIZE}x" \
@@ -38,7 +41,7 @@ process_video() {
     local src="$1"
     local thumb="$THUMB_DIR/$(basename "$src").jpg"
 
-    [ -f "$thumb" ] && { skipped=$((skipped + 1)); return 0; }
+    [ -f "$thumb" ] && [ "$thumb" -nt "$src" ] && { skipped=$((skipped + 1)); return 0; }
 
     ffmpegthumbnailer \
         -i "$src" \
@@ -71,7 +74,27 @@ if [ -d "$WALLPAPER_DIR_VIDEO" ]; then
     shopt -u nullglob nocaseglob
 fi
 
-echo "$(date) === generate-thumbs END | generados=$generated saltados=$skipped errores=$errors ===" >> "$LOG"
+# ── Poda: thumbnails sin wallpaper vivo ──────────────────────────────────────
+# El nombre de cada thumbnail es "<nombre-original-con-extensión>.jpg" (ver
+# process_image/process_video), así que basta con despojar el ".jpg" final
+# y comprobar que ese nombre exista como archivo real en alguno de los dos
+# directorios de wallpapers — si no, el thumbnail quedó huérfano (wallpaper
+# borrado o renombrado) y se borra.
+pruned=0
+if [ -d "$THUMB_DIR" ]; then
+    shopt -s nullglob
+    for thumb in "$THUMB_DIR"/*.jpg; do
+        [ -f "$thumb" ] || continue
+        src_name="$(basename "$thumb" .jpg)"
+        if [ ! -f "$WALLPAPER_DIR_IMG/$src_name" ] && [ ! -f "$WALLPAPER_DIR_VIDEO/$src_name" ]; then
+            rm -f "$thumb"
+            pruned=$((pruned + 1))
+        fi
+    done
+    shopt -u nullglob
+fi
+
+echo "$(date) === generate-thumbs END | generados=$generated saltados=$skipped errores=$errors podados=$pruned ===" >> "$LOG"
 
 # Marca de "último escaneo completo" — wallpaper_rofi.sh la usa para saltarse
 # el escaneo por completo cuando no hay wallpapers nuevos desde la última vez.

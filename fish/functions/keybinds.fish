@@ -437,7 +437,7 @@ function __keybinds_prepare_window
         return 0
     end
 
-    hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'on', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+    hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'set', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
     hyprctl eval "hl.dispatch(hl.dsp.window.resize({ x = $win_w, y = $win_h, window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
 
     set -l mon (hyprctl monitors -j | jq -r '.[] | select(.focused == true) | "\(.x) \(.y) \(.width) \(.height)"' | head -n 1)
@@ -463,7 +463,11 @@ function __keybinds_restore_window
     end
 
     if test "$__kb_was_floating" = "false"
-        hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'off', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
+        # "toggle", no "off": en este punto la ventana está floating de
+        # verdad (la forzamos con "set" en prepare_window), así que
+        # alterna a tiled — mismo vocabulario que ya usa
+        # hypr/modules/keybinds.lua para el mismo caso (set/toggle, no on/off).
+        hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'toggle', window = 'address:$__kb_window_addr' }))" >/dev/null 2>&1
     end
 end
 

@@ -29,12 +29,6 @@ MATUGEN_CONFIG="${MATUGEN_CONFIG:-$HOME/.config/matugen/config.toml}"
 MATUGEN_SENTINEL="${MATUGEN_SENTINEL:-$HOME/.config/matugen/enabled}"
 ENABLE_DYNAMIC_COLORS="${ENABLE_DYNAMIC_COLORS:-0}"
 
-# Dormant / fuera de alcance por ahora — no hay templates de matugen para
-# estos, pero se dejan los flags para sumarlos después sin tocar este script.
-ENABLE_CAVA_RELOAD="${ENABLE_CAVA_RELOAD:-0}"
-ENABLE_SWAYNC_RELOAD="${ENABLE_SWAYNC_RELOAD:-0}"
-ENABLE_SWAYOSD_RELOAD="${ENABLE_SWAYOSD_RELOAD:-0}"
-
 echo "$(date) === matugen_reload START (wall=$WALL) ===" >> "$LOG"
 
 # ── Gate: ¿está encendido el theming dinámico? ───────────────────────────────
@@ -70,21 +64,4 @@ if matugen --config "$MATUGEN_CONFIG" image "$IN" -m dark -t scheme-tonal-spot >
 else
     echo "$(date) matugen falló generando templates — los archivos anteriores quedan intactos" >> "$LOG"
 fi
-
-# ── Extras dormant (fuera de alcance v1, no hay template de matugen para estos) ──
-if [ "$ENABLE_CAVA_RELOAD" = "1" ] && pgrep -x cava >/dev/null; then
-    if [ -f ~/.config/cava/config_base ] && [ -f ~/.config/cava/colors ]; then
-        cat ~/.config/cava/config_base ~/.config/cava/colors > ~/.config/cava/config 2>/dev/null || true
-    fi
-    killall -USR1 cava 2>/dev/null || true
-fi
-
-if [ "$ENABLE_SWAYNC_RELOAD" = "1" ] && command -v swaync-client >/dev/null 2>&1; then
-    swaync-client -rs >/dev/null 2>&1 || true
-fi
-
-if [ "$ENABLE_SWAYOSD_RELOAD" = "1" ] && systemctl --user is-active --quiet swayosd.service; then
-    systemctl --user restart swayosd.service >/dev/null 2>&1 || true
-fi
-
 echo "$(date) === matugen_reload END ===" >> "$LOG"

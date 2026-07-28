@@ -138,7 +138,10 @@ hl.layer_rule({
 ---- WORKSPACE RULES ----
 --------------------------
 
--- Smart gaps / no gaps when only one tiled window
+-- Workspace de una sola ventana tileada (w[tv1]/f[1]): gap interno un poco
+-- mayor que el global (15 vs 12 de decoration.lua) y, más abajo, borde más
+-- fino + rounding suave solo para esas ventanas — no es "sin gaps", es un
+-- tratamiento distinto para el caso de una sola ventana.
 hl.workspace_rule({
     workspace = "w[tv1]",
     gaps_out  = 30,

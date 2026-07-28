@@ -127,7 +127,7 @@ window#waybar {
 
 #custom-power:hover {
     color: @fg;
-    text-shadow: 0 0 8px rgba(184, 92, 80, 0.6);
+    text-shadow: 0 0 8px alpha(@red, 0.6);
 }
 
 /* -----------------------------------
@@ -160,7 +160,7 @@ tooltip label {
 }
 
 #custom-playerctl.Playing { color: @accent; }
-#custom-playerctl.Paused, #custom-playerctl.Stopped { color: rgba(216, 37, 37, 0.468); }
+#custom-playerctl.Paused, #custom-playerctl.Stopped { color: alpha(@red, 0.468); }
 
 #custom-playerlabel {
     font-size: 12px;

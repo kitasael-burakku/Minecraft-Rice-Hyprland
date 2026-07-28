@@ -56,10 +56,20 @@ get_icon() {
 # ── Callback: el usuario eligió una entrada ───────────────────────────────────
 if [ "${ROFI_RETV:-0}" = "1" ]; then
     chosen="$1"
-    address="$(echo "$chosen" | grep -oP '(?<=addr:)[a-fx0-9]+')"
+    # Ancla a fin de línea + toma el último match: el título de la ventana
+    # (contenido no confiable, va ANTES del address en esta misma línea) podría
+    # contener algo que matchee "addr:..." — sin el "$" y el "tail -1", eso
+    # devolvería el address equivocado en vez del real, que siempre es lo
+    # último en la línea.
+    address="$(echo "$chosen" | grep -oP '(?<=addr:)[a-fx0-9]+$' | tail -1)"
 
     if [ -z "$address" ]; then
         echo "$(date) ERROR: no se pudo extraer address de: $chosen" >> "$LOG"
+        exit 1
+    fi
+
+    if ! [[ "$address" =~ ^0x[a-f0-9]+$ ]]; then
+        echo "$(date) ERROR: address con formato inválido: $address" >> "$LOG"
         exit 1
     fi
 

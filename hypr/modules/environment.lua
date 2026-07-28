@@ -7,8 +7,12 @@
 
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
--- Cursor settings
-hl.env("XCURSOR_THEME", "Future-black-cursors")
+-- Cursor settings — CursorTheme queda global (environment.lua es el primer
+-- módulo que carga hyprland.lua) para que autostart.lua reuse el mismo
+-- valor en su "hyprctl setcursor" en vez de repetirlo a mano en dos
+-- archivos.
+CursorTheme = "Future-black-cursors"
+hl.env("XCURSOR_THEME", CursorTheme)
 hl.env("XCURSOR_SIZE", "24")
 
 -- Toolkit Backends

@@ -7,7 +7,6 @@
   --border-base:   rgba(230, 236, 236, 0.30);
   --border-mid:    rgba(190, 190, 190, 0.20);
   --border-dim:    rgba(180, 182, 182, 0.14);
-  --border-low:    rgba(130, 132, 132, 0.10);
   --border-hover:  rgba(232, 239, 239, 0.50);
   --border-bottom: rgba(105, 110, 110, 0.22);
   --border-btm-hv: rgba(150, 155, 155, 0.45);
@@ -29,8 +28,6 @@
   --text-body:    #c8c8c8;
   --text-muted:   #7a7a7a;
   --text-base:    #d8d8d8;
-  --text-active:  #0a0a0a;
-  --text-accent:  #e8e8e8;
 
   --glow-red:      rgba(184, 92, 80, 0.08);
   --bg-action-btn: rgba(20, 20, 20, 0.55);

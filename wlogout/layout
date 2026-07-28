@@ -28,7 +28,7 @@
 
   {
       "label": "hibernate",
-      "action": "systemctl hibernate",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl hibernate' '¿Hibernar?'",
       "text": "",
       "keybind": "h"
   },

@@ -23,7 +23,10 @@ case "$choice" in
         ;;
 
     "󰒲  Suspender")
-        systemctl suspend
+        # wlogout/scripts/suspend.sh bloquea la pantalla antes de suspender
+        # (poll acotado a que hyprlock esté listo) — antes este menú suspendía
+        # directo, sin bloquear, a diferencia del menú de wlogout.
+        ~/.config/wlogout/scripts/suspend.sh
         ;;
 
     "󰌾  Bloquear")

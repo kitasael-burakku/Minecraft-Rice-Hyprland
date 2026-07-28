@@ -169,21 +169,26 @@ This configuration was developed and tested on this hardware. Some parts depend 
 
 ```text
 .
+├── assets/             # demo.mp4 and other assets for the GitHub Pages site
 ├── cava/               # Config, GLSL shaders and themes for the audio visualizer
 ├── docs/screenshots/   # Rice screenshots
 ├── fastfetch/          # jsonc configs, logos and visual presets
 ├── fish/               # config.fish, functions, aliases and Fish shell themes
 ├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
 ├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
+├── index.html          # Source for the GitHub Pages site
+├── KEYBINDS.txt         # Keybind reference used by the `keybinds` fish function
 ├── kitty/              # Kitty configuration and colors
+├── LICENSE
+├── matugen/            # Dynamic (Material You) theming templates and config
 ├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), power menu, and window switcher (window-switcher.sh + window-switcher.rasi)
-├── starship.toml       # Starship config (prompt), goes in ~/.config/starship.toml
+├── starship.static.toml # Starship config (prompt); copy to ~/.config/starship.toml (starship.toml itself is generated/gitignored)
 ├── swaync/             # Notification center config, styles, icons and theme
 ├── waybar/             # Waybar config, CSS and scripts
 └── wlogout/            # Layout, CSS, icons and shutdown/session scripts
 ```
 
-Each folder goes inside `~/.config/` on your system, except `docs/` and `starship.toml` (which goes directly at `~/.config/starship.toml`).
+Each folder goes inside `~/.config/` on your system, except `docs/`, `assets/`, `index.html`, `KEYBINDS.txt` (goes to `~/Documents/KEYBINDS.txt`), and `starship.static.toml` (which goes to `~/.config/starship.toml`, not under its own name — see [Manual Installation](#manual-installation)).
 
 ---
 
@@ -203,8 +208,8 @@ sudo pacman -S \
   bluez bluez-utils blueman \
   wl-clipboard cliphist grim slurp swappy \
   nautilus btop udiskie polkit-kde-agent \
-  jq curl imagemagick libnotify ffmpeg \
-  pacman-contrib reflector fzf bat eza zoxide ripgrep \
+  jq curl imagemagick libnotify ffmpeg ffmpegthumbnailer \
+  pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd\
   thefuck bottom
 ```
@@ -358,18 +363,20 @@ hypr/hyprland.lua
 That file loads modules:
 
 ```lua
-require("modules.animations")
-require("modules.autostart")
-require("modules.decoration")
 require("modules.environment")
+require("modules.monitors")
 require("modules.input")
+require("modules.animations")
+require("modules.decoration")
+require("modules.layout")
+require("modules.windowrules")
 require("modules.programs")
 require("modules.keybinds")
-require("modules.layout")
 require("modules.misc")
-require("modules.monitors")
-require("modules.windowrules")
+require("modules.autostart")
 ```
+
+The order is intentional, not alphabetical: `environment` loads first (env vars other modules may depend on), `programs` loads before `keybinds` (which reads the global `Programs` table), and `autostart` loads last.
 
 > This is **not the classic `hyprland.conf` format**. You need Lua support for Hyprland to be working in your installation. If your Hyprland only reads `hyprland.conf`, this configuration will not load as-is.
 
@@ -384,8 +391,9 @@ Key files:
 - `hypr/modules/decoration.lua` — gaps, borders, rounding, opacity, shadow and blur. Border colors are hardcoded here as the static fallback, but get overwritten live via `hyprctl eval` when matugen is enabled — see [External Additions](#external-additions).
 - `hypr/modules/layout.lua` — configuration for the three layouts (dwindle, master, scrolling); the active default is `scrolling`. Can be hot-swapped with `SUPER + SHIFT + D/M/O`.
 - `hypr/modules/animations.lua` — custom curves and springs system (" 流 水   ·   R Y Ū S U I   M O T I O N ") for windows, fades, layers, workspaces, and zoom.
-- `hypr/modules/windowrules.lua` — window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout, Waybar).
+- `hypr/modules/windowrules.lua` — window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout).
 - `hypr/modules/misc.lua` — miscellaneous settings, includes disabling Hyprland's random wallpaper/logo.
+- `hypr/modules/private.lua` (optional, not tracked — see `hypr/modules/private.example.lua` for the template) — personal programs/autostart commands/keybinds you don't want in the public repo. `programs.lua`, `autostart.lua`, and `keybinds.lua` all `pcall(require, "modules.private")`, so everything works fine if this file doesn't exist; copy the example and fill it in if you want the extra hooks.
 
 ---
 
@@ -401,7 +409,7 @@ wallpaper_launcher.sh               ← entry point (called from keybind)
 rofi (wallpaper-type-select.rasi)   ← level 0: choose type
   │   󰎁  Video
   │   󰉏  Imagen
-      ↓ (selection written to /tmp/rofi-wallpaper-next)
+      ↓ (selection written to ${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next)
 rofi (wallpaper-picker.rasi)        ← level 1: thumbnail grid
   │   [thumb] [thumb] [thumb] ...
       ↓
@@ -410,11 +418,11 @@ applies wallpaper + matugen_reload
 
 **Scripts involved:**
 
-- `rofi/scripts/wallpaper_launcher.sh` — entry point called by the keybind. Runs the type selector, waits for it to close, reads the chosen directory from `/tmp/rofi-wallpaper-next`, then opens the grid picker with the correct theme. This sequential approach (blocking Rofi instances) is what makes the two-level flow reliable.
-- `rofi/scripts/wallpaper_rofi.sh` — runs as the script mode modi for the type selector. On selection, writes the target directory and prompt label to `/tmp/rofi-wallpaper-next` and exits cleanly.
+- `rofi/scripts/wallpaper_launcher.sh` — entry point called by the keybind. Runs the type selector, waits for it to close, reads the chosen directory from `${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next`, then opens the grid picker with the correct theme. This sequential approach (blocking Rofi instances) is what makes the two-level flow reliable.
+- `rofi/scripts/wallpaper_rofi.sh` — runs as the script mode modi for the type selector. On selection, writes the target directory and prompt label to `${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next` and exits cleanly.
 - `rofi/scripts/wallpaper_grid.sh` — runs as the script mode modi for the thumbnail grid. Lists wallpapers from the chosen directory with their thumbnails as icons. On selection, applies the wallpaper and calls `matugen_reload.sh`.
 - `rofi/scripts/generate-thumbs.sh` — generates `.jpg` thumbnails for both `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` into `~/.cache/rofi-wallpapers/thumbs`. Runs in the background when the picker opens — never blocks the menu.
-- `rofi/scripts/matugen_reload.sh` — called after applying a wallpaper. Gated by the `~/.config/matugen/enabled` sentinel (off by default on a fresh clone); a handful of `ENABLE_*` env vars exist purely for manual testing outside that gate — see [External Additions](#external-additions).
+- `rofi/scripts/matugen_reload.sh` — called after applying a wallpaper. Gated by the `~/.config/matugen/enabled` sentinel (off by default on a fresh clone); `ENABLE_DYNAMIC_COLORS=1` bypasses that gate purely for manual testing — see [External Additions](#external-additions).
 
 **Directories:**
 
@@ -425,12 +433,12 @@ applies wallpaper + matugen_reload
 
 Both can be overridden by exporting the variable before the launcher runs.
 
-**Applying wallpapers:**
-- Video formats → relaunches `mpvpaper` with `--loop-file --hwdec=auto`
+**Applying wallpapers:** handled by `hypr/scripts/apply-wallpaper.sh`, the single place these flags live (shared by the picker and by `autostart.lua`'s restore-on-start):
+- Video formats → relaunches `mpvpaper` with `--loop-file=inf --no-audio --hwdec=auto`
 - Image formats → `awww img` with transition
 
 **Themes:**
-- Type selector uses `rofi/wallpaper-type-select.rasi` (compact list, inherits Ship Gray style from `style-4.rasi`)
+- Type selector uses `rofi/wallpaper-type-select.rasi` (compact list, imports `colors.rasi` like every other Rofi theme)
 - Grid picker uses `rofi/wallpaper-picker.rasi` (4-column thumbnail grid)
 
 The keybind in `hypr/modules/programs.lua` calls `wallpaper_launcher.sh` directly, not `wallpaper_rofi.sh`. If you point the keybind at the wrong script, only the type selector opens and nothing happens after you choose.
@@ -522,7 +530,7 @@ Beyond aliases and external tool integrations, Fish includes custom functions in
 - `checkerrors` — diagnoses failed services, journalctl errors (including Hyprland/portals), and recent coredumps. Read-only, changes nothing.
 - `healthcheck` — quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention.
 - `keybinds` — opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window.
-- `fastfetch` (the function, not the binary) — randomly picks one of the presets in `fastfetch/config*.jsonc`, avoiding repeating the same one twice in a row.
+- `fastfetch` (the function, not the binary) — picks a preset from `fastfetch/config*.jsonc` using a weighted shuffle bag (rarer presets show up less often); the bag reshuffles once exhausted, so a repeat across that boundary is possible.
 
 > ⚠️ `keybinds` depends on `KEYBINDS.txt` maintaining an exact format: section header in UPPERCASE, a line of only dashes below it, and entries as `KEY    Description` with at least two spaces between columns. If you edit that file manually, respect the format or the viewer will stop recognizing sections.
 
@@ -536,9 +544,10 @@ At minimum, review before using:
 - `hypr/scripts/apply-wallpaper.sh` — change `DEFAULT_WALLPAPER` to a wallpaper you actually have. This is the only place the default lives; `hypr/modules/autostart.lua` just calls this script to restore the last wallpaper you picked (or this default, on a fresh clone).
 - `hypr/modules/environment.lua` and `hypr/modules/autostart.lua` — both define the same cursor theme; if you change it, update it in both files to avoid them going out of sync.
 - `hypr/modules/input.lua` — mouse and keyboard are configured with real device names (`Logitech G203 LIGHTSYNC Gaming Mouse`, `Shinetek Technology USB Gaming Keyboard`); change them to yours, or remove the `hl.device` blocks if you don't need per-device sensitivity.
-- `hypr/modules/programs.lua` — change `kitty`, `nautilus`, the launcher, or `windowswitcher` command if you use other apps or a different Rofi theme path.
+- `hypr/modules/programs.lua` — change `kitty`, `nautilus`, `zen-browser`, the launcher, or `windowswitcher` command if you use other apps or a different Rofi theme path.
 - `rofi/scripts/window-switcher.sh` — the `MINIMIZED_WS` variable defaults to `special:minimized`; change it if you use a different special workspace name.
-- `hypr/modules/keybinds.lua` — change `obs`, `vscodium`, `zen-browser`, screenshot paths, and commands you don't use.
+- `hypr/modules/keybinds.lua` — change `obs`, screenshot paths, and commands you don't use.
+- `fish/conf.d/tools.fish` — the `ec*` aliases (`ecswaync`, `echypr`, etc.) open the corresponding folder in `codium` (VSCodium); change the editor if you use another one.
 - `hypr/modules/monitors.lua` — fixes output, resolution, position and scale for this machine (`HDMI-A-1`, `1920x1080@200Hz`). This is the one you're most likely to need to change before Hyprland even starts — set it to your own monitor, or switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection.
 - `waybar/config.jsonc` — change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine.
 - `hyprlock/layouts/layout.conf` — points to `hyprlock/wallpapers/current.png`, which always mirrors whatever wallpaper you last picked (see `apply-wallpaper.sh` above); `2.png` is only the static fallback used to bootstrap `current.png` on a fresh clone. Nothing to change here unless you want a different fallback image.
@@ -559,8 +568,8 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 - **Screenshots/clipboard:** `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker`
 - **System:** `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`
 - **Network/GUI:** `nm-connection-editor`, `blueman-manager`, `nwg-look`
-- **Terminal/shell:** `kitty`, `fish`, `starship`, `fastfetch`, `fzf`, `bat`, `eza`, `zoxide`, `ripgrep`
-- **Utilities:** `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `libnotify`/`notify-send`, `udiskie`, `reflector`
+- **Terminal/shell:** `kitty`, `fish`, `starship`, `fastfetch`, `fzf`, `fd`, `bat`, `eza`, `zoxide`, `ripgrep`
+- **Utilities:** `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `ffmpegthumbnailer`, `libnotify`/`notify-send`, `udiskie`, `reflector`
 
 ---
 
@@ -695,7 +704,7 @@ Manual installation requires more work, but teaches you much more about how the 
 ## External Credits
 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout, and SwayNC belong to their respective projects.
-- The Rofi wallpaper selector (`rofi/scripts/wallpaper_launcher.sh` + `wallpaper_rofi.sh` + `wallpaper_grid.sh`) is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via `/tmp/rofi-wallpaper-next`. Replaces the previous Quickshell-based version.
+- The Rofi wallpaper selector (`rofi/scripts/wallpaper_launcher.sh` + `wallpaper_rofi.sh` + `wallpaper_grid.sh`) is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via `${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-next`. Replaces the previous Quickshell-based version.
 - [matugen](https://github.com/InioX/matugen) is the dynamic theming engine behind the optional wallpaper-driven color pipeline — see [External Additions](#external-additions).
 - Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.

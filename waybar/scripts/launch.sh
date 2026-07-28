@@ -15,7 +15,17 @@ command -v playerctl >/dev/null 2>&1 && {
     disown
 }
 
-"${script_dir}/launch_waybar.sh"
+# Subshell a propósito: si waybar no está instalado, el "exit" de acá adentro
+# no debe matar el resto de este script (el reload de swaync más abajo).
+(
+    command -v waybar >/dev/null 2>&1 || {
+        command -v notify-send >/dev/null 2>&1 && notify-send "Waybar" "waybar is not installed or not in PATH"
+        exit 127
+    }
+
+    pkill -x waybar 2>/dev/null || true
+    waybar &
+)
 
 if [ -x "$HOME/.config/swaync/scripts/launch.sh" ]; then
     "$HOME/.config/swaync/scripts/launch.sh"
