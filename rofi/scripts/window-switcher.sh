@@ -56,15 +56,16 @@ get_icon() {
 # ── Callback: el usuario eligió una entrada ───────────────────────────────────
 if [ "${ROFI_RETV:-0}" = "1" ]; then
     chosen="$1"
-    # Ancla a fin de línea + toma el último match: el título de la ventana
-    # (contenido no confiable, va ANTES del address en esta misma línea) podría
-    # contener algo que matchee "addr:..." — sin el "$" y el "tail -1", eso
-    # devolvería el address equivocado en vez del real, que siempre es lo
-    # último en la línea.
-    address="$(echo "$chosen" | grep -oP '(?<=addr:)[a-fx0-9]+$' | tail -1)"
+    # $ROFI_INFO viene del campo "info" de la fila elegida (ver el "\0info\x1f"
+    # más abajo, en el listado) — no del texto visible. Antes esto parseaba
+    # "addr:..." del label con regex, y se rompía apenas rofi le hacía
+    # cualquier cosa al texto (agregar/sacar el markup de los <span>, etc.):
+    # el label real termina en "</span>" después del address, no en el hex
+    # pelado, así que un regex anclado a fin de línea nunca matcheaba nada.
+    address="${ROFI_INFO:-}"
 
     if [ -z "$address" ]; then
-        echo "$(date) ERROR: no se pudo extraer address de: $chosen" >> "$LOG"
+        echo "$(date) ERROR: ROFI_INFO vacío para: $chosen" >> "$LOG"
         exit 1
     fi
 
@@ -118,7 +119,11 @@ while IFS=$'\t' read -r address class title ws; do
         label="  $title  <span size='small' alpha='40%'>addr:$address</span>"
     fi
 
-    echo -en "${label}\0icon\x1f${icon}\n"
+    # "info" viaja aparte del texto visible, vía $ROFI_INFO en el callback —
+    # no se toca con markup ni con nada que rofi le haga al label para
+    # mostrarlo. Ver el fix de más abajo: parsear el address desde el label
+    # visible (con o sin markup) es justo lo que se rompía.
+    echo -en "${label}\0icon\x1f${icon}\0info\x1f${address}\n"
 
 done < <(hyprctl -j clients | jq -r \
     'sort_by(.workspace.name == "special:minimized") |
