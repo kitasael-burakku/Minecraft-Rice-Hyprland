@@ -24,7 +24,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-/* Los --radius-*/--transition de acá abajo NO van en :root: central_control.css
+/* Los --radius-* y --transition de acá abajo NO van en :root: central_control.css
    también los declara (con valores distintos para --radius-card: 16px vs los
    18px de acá) e importa después en style.css, así que en :root el de
    central_control ganaba siempre — el toast de notificación terminaba
