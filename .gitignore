@@ -41,6 +41,8 @@ fish/functions/RPS.exe.fish
 *.mkv
 *.webm
 *.mp4
+*.mp4
+!docs/assets/demo.mp4
 
 # ── Secretos ─────────────────────────────────────────────────
 *.key
