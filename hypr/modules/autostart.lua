@@ -20,7 +20,7 @@ hl.on("hyprland.start", function()
     -- la fuente única de los flags de mpvpaper/awww — compartida con
     -- rofi/scripts/wallpaper_grid.sh, no hay una segunda copia que mantener
     -- sincronizada a mano.
-    --
+
     -- Encadenado en un solo job de fondo para garantizar el orden:
     -- matugen_reload.sh (no-op si el theming dinámico está apagado) necesita
     -- leer el estado que apply-wallpaper.sh acaba de escribir.
