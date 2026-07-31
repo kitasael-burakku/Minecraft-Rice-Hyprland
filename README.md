@@ -582,7 +582,7 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 - Icons depend on Nerd Fonts. If you see squares or strange symbols, install and select a Nerd Font in your terminal.
 - Waybar may break the temperature module if your hardware sensor is different from mine.
 - Fish functions run real tasks like updating packages and cleaning caches. Read them before using them.
-- `hyprlock/scripts/` has 4 files, all MPRIS-related via `playerctl` — no network calls: `playerlayout4.sh` (source/title/artist), `music-progress.sh` (progress bar), and their matugen-generated color pair (`music-colors.sh` / `music-colors.static.sh`) — see [External Additions](#external-additions).
+- `hyprlock/scripts/` has 3 files, all MPRIS-related via `playerctl` — no network calls: `player.sh` (source/title/artist/progress bar, one shared decision of which player is "active" for all three) and its matugen-generated color pair (`music-colors.sh` / `music-colors.static.sh`) — see [External Additions](#external-additions).
 - Some settings are tailored specifically to my hardware, my programs, and my workflow.
 
 ---
