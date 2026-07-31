@@ -112,10 +112,10 @@ load_state() {
 # fuera Firefox/Spotify/Chromium/YoutubeMusic).
 source_label() {
     case "$P_NAME" in
-        *firefox*|*zen*)         echo "Firefox 󰈹" ;;
-        *[Ss]potify*)            echo "Spotify " ;;
-        *chromium*|*chrome*)     echo "Chrome " ;;
-        *[Yy]outube*[Mm]usic*)   echo "YouTube Music " ;;
+        *firefox*|*zen*)         echo "󰈹 Firefox" ;;
+        *[Ss]potify*)            echo "󰓇 Spotify" ;;
+        *chromium*|*chrome*)     echo "Chrome" ;;
+        *[Yy]outube*[Mm]usic*)   echo "YouTube Music" ;;
         *)                       echo "$(escape_pango "${P_NAME^}") " ;;
     esac
 }
