@@ -143,8 +143,8 @@ style = "fg:{{colors.on_surface.default.hex}} italic"
 format = "[ 󰔚 $duration ]($style)"
 
 [character]
-success_symbol = "[ 󰁔](fg:{{colors.primary.default.hex}} bold)"
-error_symbol   = "[ 󰁔](fg:{{colors.error.default.hex}} bold)"
+success_symbol = "[ -->](fg:{{colors.primary.default.hex}} bold)"
+error_symbol   = "[ -->](fg:{{colors.error.default.hex}} bold)"
 
 [status]
 disabled = false
