@@ -536,6 +536,21 @@ chsh -s /usr/bin/fish
 
 Before logging into Hyprland, check paths, monitors, sensors, wallpaper, and programs. If something doesn't exist on your system, Hyprland may start incomplete or some shortcuts won't do anything.
 
+After your installation activate the infinite desktop script
+
+## Infinite Desktop
+
+> For implementation details and upstream documentation, see the original
+> [Infinite Desktop project](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2).
+
+1. Add your user to the `input` group: 
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Log out and log back in (or reboot your system) for the new group membership to take effect.
+
 ---
 
 ### Wallpapers
@@ -891,11 +906,32 @@ sudo pacman -Syu            # update the entire system
 
 Package manager for Arch Linux and CachyOS.
 
-### yay
+### yay 
+
+> ⚠️ The AUR contains community-maintained packages. Always inspect the `PKGBUILD` before installing software you don't trust.
 
 ```bash
 yay -S package
 ```
+
+### `sudo usermod -aG input $USER`
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Adds your current user to the `input` group.
+
+The Infinite Desktop scripts need direct access to Linux input devices (mouse and keyboard). Adding your user to the `input` group grants the required permissions.
+Breaking it down:
+
+- `sudo` — runs the command with administrator privileges.
+- `usermod` — modifies an existing user account.
+- `-a` — appends the change without removing the user from other groups.
+- `-G input` — adds the user to the `input` group.
+- `$USER` — expands to the name of the currently logged-in user.
+
+> ⚠️ You must log out and log back in (or reboot) before the new group membership takes effect.s
 
 Installs packages from the AUR (Arch User Repository). Works similar to pacman but accesses community-maintained software.
 
