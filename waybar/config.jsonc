@@ -166,10 +166,6 @@
     "custom/power": {
         "format": "󰐥",
         "tooltip": false,
-        // Antes llamaba a un power-menu.sh propio de Waybar, con su propia
-        // política de confirmación (distinta de wlogout — ej. no ofrecía
-        // hibernar, y suspendía sin bloquear la pantalla antes). Un solo
-        // menú de sesión, no dos con reglas distintas.
         "on-click": "~/.config/wlogout/scripts/launch_wlogout.sh"
     },
 

@@ -22,6 +22,12 @@
       "text": "hostnamectl --pretty 2>/dev/null || hostname",
       "format": "{result}"
     },
+    {
+      "type": "command",
+      "key":  "{#141}󰒲 Mood",
+      "text": "shuf -n1 -e 'Too lazy to train today' 'Naptime beats training' 'Winning on vibes alone' 'Ice cream first, training later' 'Training menu? Never heard of her'",
+      "format": "{result}"
+    },
     "break",
     {
       "type": "os",

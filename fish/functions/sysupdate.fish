@@ -54,7 +54,7 @@ function sysupdate
     _rui_section_plain bd7fd4 "" " AUR — $aur_helper"
     echo ""
     sleep 0.1
-    $aur_helper -Sua
+    $aur_helper -Sua --diffmenu --editmenu
     or begin
         set_color a85a48
         echo ""

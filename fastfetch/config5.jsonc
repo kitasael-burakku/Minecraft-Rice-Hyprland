@@ -11,6 +11,11 @@
   },
   "modules": [
     {
+      "type": "custom",
+      "format": "― Built, not installed ―"
+    },
+    "break",
+    {
       "type": "command",
       "key":  "User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",

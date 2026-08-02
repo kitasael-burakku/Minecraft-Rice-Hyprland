@@ -130,22 +130,28 @@ hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | swappy -f 
 hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/Screenshots"))
 
 -----------------------------
-----        FOCUS         ----
+----   INFINITE DESKTOP   ----
+----      NAVIGATION      ----
 -----------------------------
+-- Reemplaza el focus nativo: navega/centra ventanas flotantes
+-- en el canvas infinito (hyprland-infinite-desktop-v2)
 
-hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left"  }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up"    }))
-hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down"  }))
+hl.bind(mainMod .. " + left",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py left"))
+hl.bind(mainMod .. " + right", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py right"))
+hl.bind(mainMod .. " + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py up"))
+hl.bind(mainMod .. " + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py down"))
 
 -----------------------------
-----    MOVE WINDOWS      ----
+----   INFINITE DESKTOP   ----
+----         PAN          ----
 -----------------------------
+-- Reemplaza el move nativo: desplaza ventanas flotantes dentro
+-- del canvas infinito (hyprland-infinite-desktop-v2)
 
-hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.window.move({ direction = "left"  }))
-hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }))
-hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.window.move({ direction = "up"    }))
-hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.move({ direction = "down"  }))
+hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py left"),  { repeating = true })
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py right"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py up"),    { repeating = true })
+hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py down"),  { repeating = true })
 
 -----------------------------
 ----      WORKSPACES      ----
@@ -219,6 +225,34 @@ hl.bind(mainMod .. "+ SHIFT + M", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 
 -- Scrolling layout
 hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "scrolling" } })']]))
+
+------------------------------
+----   INFINITE DESKTOP    ----
+------------------------------
+-- hyprland-infinite-desktop-v2 — requiere los scripts en ~/.config/hypr/infinite_desktop/
+-- (chmod +x) y el daemon infinite_desktop_core.py corriendo
+-- (autostart configurado aparte)
+
+-- Ciclar workspace (además de tus binds numéricos y el scroll del mouse)
+hl.bind(mainMod .. " + Z", hl.dsp.focus({ workspace = "-1" }))
+hl.bind(mainMod .. " + X", hl.dsp.focus({ workspace = "+1" }))
+hl.bind(mainMod .. " + SHIFT + Z", hl.dsp.window.move({ workspace = "-1" }))
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "+1" }))
+
+-- Toggle floating/tiling de todas las ventanas
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/floating_tile_toggle.py"))
+
+-- Mover ventanas en modo tiled
+hl.bind(mainMod .. " + ALT + left",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window_tiled.py left"))
+hl.bind(mainMod .. " + ALT + right", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window_tiled.py right"))
+hl.bind(mainMod .. " + ALT + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window_tiled.py up"))
+hl.bind(mainMod .. " + ALT + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window_tiled.py down"))
+
+-- Redimensionar ventana flotante
+hl.bind(mainMod .. " + CTRL + left",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/resize_window.py left"),  { repeating = true })
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/resize_window.py right"), { repeating = true })
+hl.bind(mainMod .. " + CTRL + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/resize_window.py up"),    { repeating = true })
+hl.bind(mainMod .. " + CTRL + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/resize_window.py down"),  { repeating = true })
 
 ------------------------------
 ----   BINDS PRIVADOS     ----

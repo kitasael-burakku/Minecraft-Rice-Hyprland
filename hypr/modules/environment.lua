@@ -12,6 +12,7 @@
 -- valor en su "hyprctl setcursor" en vez de repetirlo a mano en dos
 -- archivos.
 CursorTheme = "Future-black-cursors"
+
 hl.env("XCURSOR_THEME", CursorTheme)
 hl.env("XCURSOR_SIZE", "24")
 

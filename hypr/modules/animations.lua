@@ -28,9 +28,9 @@ hl.animation({ leaf="global",  enabled=true, speed=3.0, bezier="ryuOut"  })
 hl.animation({ leaf="border",  enabled=true, speed=5.0, bezier="meniscus"})
 
 -- ─── Windows ──────────────────────────────────────────────────────────────────────────────────────
-hl.animation({ leaf="windows",     enabled=true, speed=3.0, bezier="settleFeel"                    })
-hl.animation({ leaf="windowsIn",   enabled=true, speed=2.6, bezier="birthFeel",  style="popin 87%" })
-hl.animation({ leaf="windowsOut",  enabled=true, speed=1.0, bezier="undertow",   style="popin 70%" })
+-- hl.animation({ leaf="windows",     enabled=true, speed=3.0, bezier="settleFeel"                    })
+hl.animation({ leaf="windowsIn",   enabled=true, speed=3.6, bezier="birthFeel",  style="popin 87%" })
+hl.animation({ leaf="windowsOut",  enabled=true, speed=3.3, bezier="undertow",   style="popin 70%" })
 hl.animation({ leaf="windowsMove", enabled=true, speed=3.8, bezier="glideFeel"                     })
 
 -- ─── Fades ──────────────────────────────────────────────────────────────────
@@ -44,7 +44,7 @@ hl.animation({ leaf="layersIn",      enabled=true, speed=2.2, bezier="ripple",  
 hl.animation({ leaf="layersOut",     enabled=true, speed=1.8, bezier="undertow", style="slide bot" })
 
 -- ─── Workspaces ───────────────────────────────────────────────────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=2.8, bezier="tideFeel", style="slidefadevert" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=3.0, bezier="tideFeel", style="slidefadevert" })
 
 -- ─── Zoom ───────────────────────────────────────────────────────────────────
 hl.animation({ leaf="zoomFactor", enabled=true, speed=4.0, bezier="meniscus" })

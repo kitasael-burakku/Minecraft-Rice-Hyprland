@@ -9,6 +9,9 @@ This project is **NOT an automatic installer**, **NOT a universal configuration*
 > 🎨 **Dynamic theming via matugen, off by default.**
 > The base palette ("Kitasan Glass") is hardcoded and intentional — that's what you get on a fresh clone. Toggle `SUPER + SHIFT + W` and it derives a Material You palette from your current wallpaper across every app instead. See [External Additions](#external-additions).
 
+> **Infinite Desktop via python script
+> This project is made by sarodcommiits all the credits belong he 
+
 ---
 
 ## Screenshots
@@ -137,6 +140,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | mpvpaper | Video wallpaper (loops mp4/mkv/webm/mov) |
 | awww | Static image wallpaper (replaces swww) |
 | cava | Audio visualizer — includes config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
+| Infinite Desktop | Floating desktop tiled style see [External Additions](#external-additions) |
 | Qylock | Minecraft-style SDDM theme |
 | MINEGRUB | Minecraft-style GRUB theme |
 
@@ -162,6 +166,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Hot-swappable Hyprland layout (dwindle / master / scrolling), with `scrolling` as the default.
 - Shortcuts for screenshots, color picker, multimedia control, floating with auto-resize, Waybar reload, and system tools.
 - The fuck: typo corrector integrated into Fish.
+- Infinite Desktop tiled mode is a powerful script to transform your Hyprland workspace into an "infinite" canvas. This tool allows you to pan all floating windows simultaneously using your mouse and navigate between them with keyboard shortcuts, creating a dynamic and boundless desktop experience. 
 
 ---
 
@@ -211,7 +216,7 @@ sudo pacman -S \
   jq curl imagemagick libnotify ffmpeg ffmpegthumbnailer \
   pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd\
-  thefuck bottom
+  thefuck bottom python python-evdev bash jq
 ```
 
 > If you use CachyOS you can download Zen-Browser from pacman packages:
@@ -340,6 +345,7 @@ chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/*.sh
 chmod +x ~/.config/rofi/scripts/*.sh
 chmod +x ~/.config/hypr/scripts/*.sh
+chmod +x ~/.config/hypr/infinite_desktop/infinite-desktop.sh ~/.config/hypr/infinite_desktop/floating_tile_toggle.py ~/.config/hypr/infinite_desktop/move_window_tiled.py ~/.config/hypr/infinite_desktop/navigate_windows.py ~/.config/hypr/infinite_desktop/resize_window.py
 ```
 
 If you want to use Fish as your default shell:
@@ -711,6 +717,7 @@ Manual installation requires more work, but teaches you much more about how the 
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted.
 - Nerd Fonts and JetBrains Mono Nerd Font belong to their respective authors.
+- Credits to sarodscommits who made the infinite desktop [Infinite-Desktop](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2)
 
 If you reuse this rice, keep the credits for the projects and assets you use.
 

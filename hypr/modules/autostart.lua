@@ -44,6 +44,11 @@ hl.on("hyprland.start", function()
     -- Udiskie
     hl.exec_cmd("udiskie --tray &")
 
+    --Infinite Desktop
+    hl.on("hyprland.start", function()
+        hl.exec_cmd("python3 ~/.config/hypr/infinite_desktop/infinite_desktop_core.py 1.6 > /tmp/infinite-desktop.log 2>&1")
+    end)
+
     -- Comandos privados (ver hypr/modules/private.example.lua) — no
     -- versionados. pcall(): la ausencia de private.lua no debe tumbar el
     -- resto del arranque.

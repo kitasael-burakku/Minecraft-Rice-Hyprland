@@ -120,7 +120,7 @@ hl.layer_rule({
 
     blur = true,
     ignore_alpha = 0.9,
-    animation = "slide 20%"
+    animation = "popin"
 })
 
 -- Wlogout 
@@ -184,17 +184,4 @@ hl.workspace_rule({
     gaps_out  = 10,
     gaps_in   = 20,
     border_size = 0,
-})
-
-------------
---- APPS ---
-------------
-hl.window_rule({
-    name  = "spotify-float",
-    match = {
-        class = "^(Spotify|spotify)$",
-    },
-    float  = true,
-    center = true,
-    size   = "1100 700",
 })

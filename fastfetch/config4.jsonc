@@ -6,6 +6,11 @@
 
   "modules": [
     {
+      "type": "custom",
+      "format": "{#65}― # still compiling... ―"
+    },
+    "break",
+    {
       "type": "command",
       "key":  "{#71}User",
       "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
@@ -32,6 +37,12 @@
       "type": "packages",
       "key":    "{#65}├󰏖 Portage",
       "format": "{emerge}"
+    },
+    {
+      "type": "command",
+      "key":    "{#65}├ World",
+      "text": "wc -l < /var/lib/portage/world 2>/dev/null || echo 'n/a'",
+      "format": "{result} pkgs"
     },
     {
       "type": "shell",

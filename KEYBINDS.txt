@@ -38,6 +38,7 @@ CTRL + SHIFT + Escape      Open btop
 SHIFT + Escape             Open Bottom 
 ALT + SHIFT                Change the keyboard layout
 
+
 CLIPBOARD / COLOR
 -----------------
 
@@ -76,6 +77,24 @@ WORKSPACES
 
 SUPER + 1-0                Switch to workspace 1-10
 SUPER + SHIFT + 1-0        Move window to workspace 1-10
+
+
+INFINITE DESKTOP
+----------------
+
+SUPER + X		           Switch Workspace -1
+SUPER + Z                  Switch Workspace +1
+SUPER + SHIFT + Z          Move window to workspace -1
+SUPER + SHIFT + X          Move window to workspace +1
+SUPER + D                  Toggle floating tile 
+SUPER + ALT + Left         Move windows tiled mode to left
+SUPER + ALT + Right        Move windows tiled mode to Right
+SUPER + ALT + Up           Move windows tiled mode to Up      
+SUPER + ALT + Down         Move windows tiled mode to Down       
+SUPER + CTRL + Left        Resize Floating Window to Left
+SUPER + CTRL + Right       Resize Floating Window to Right
+SUPER + CTRL + Up          Resize Floating Window to Up       
+SUPER + CTRL + Down        Resize Floating Window to Down
 
 
 SCRATCHPAD
