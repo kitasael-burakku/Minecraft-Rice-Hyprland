@@ -1,4 +1,4 @@
-// CachyOS · Fastfetch
+// CachyOS · Fastfetch · Caja cerrada
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
@@ -15,151 +15,39 @@
   },
 
   "modules": [
-    {
-      "type": "custom",
-      "format": "{#90}╭─ System ─────────────────────────────╮"
-    },
+    { "type": "custom", "format": "{#90}╭─ System {$1}" },
 
-    {
-      "type": "command",
-      "key": "{#91} User",
-      "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
-      "format": "{result}"
-    },
-    {
-      "type": "command",
-      "key": "{#91}󰌢 Host",
-      "text": "test -n \"$(hostnamectl --pretty)\" && hostnamectl --pretty || hostname",
-      "format": "{result}"
-    },
-    {
-      "type": "datetime",
-      "key": "{#91}󰃭 Date",
-      "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}]"
-    },
+    { "type": "title", "key": "{#91}│ ", "format": "{user-name}@{host-name}" },
+    { "type": "datetime", "key": "{#91}│ 󰃭 Date", "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}" },
 
-    {
-      "type": "custom",
-      "format": "{#90}├─ OS ─────────────────────────────────╯"
-    },
+    { "type": "custom", "format": "{#90}├─ OS {$1}" },
 
-    {
-      "type": "os",
-      "key": "{#93} OS",
-      "format": "{pretty-name} [{arch}]"
-    },
-    {
-      "type": "kernel",
-      "key": "{#93}├ Kernel"
-    },
-    {
-      "type": "packages",
-      "key": "{#93}├󰏖 Packages"
-    },
-    {
-      "type": "shell",
-      "key": "{#93}└ Shell"
-    },
+    { "type": "os", "key": "{#93}│  OS", "format": "{pretty-name} [{arch}]" },
+    { "type": "kernel", "key": "{#93}│ ├ Kernel" },
+    { "type": "packages", "key": "{#93}│ ├󰏖 Packages" },
+    { "type": "shell", "key": "{#93}│ └ Shell" },
 
-    "break",
+    { "type": "custom", "format": "{#90}├─ Desktop {$1}" },
 
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Desktop ────────────────────────────╮"
-    },
+    { "type": "wm", "key": "{#94}│ 󱂬 WM" },
+    { "type": "lm", "key": "{#94}│ ├󰧨 Login" },
+    { "type": "terminal", "key": "{#94}│ ├ Terminal" },
+    { "type": "icons", "key": "{#94}│ └󰀻 Icons" },
 
-    {
-      "type": "de",
-      "key": "{#94} DE"
-    },
-    {
-      "type": "wm",
-      "key": "{#94}├󱂬 WM"
-    },
-    {
-      "type": "lm",
-      "key": "{#94}├󰧨 Login"
-    },
-    {
-      "type": "terminal",
-      "key": "{#94}├ Terminal"
-    },
-    {
-      "type": "terminalfont",
-      "key": "{#94}├ Font"
-    },
-    {
-      "type": "icons",
-      "key": "{#94}├󰀻 Icons"
-    },
-    {
-      "type": "wallpaper",
-      "key": "{#94}└󰸉 Wallpaper"
-    },
+    { "type": "custom", "format": "{#90}├─ Hardware {$1}" },
 
-    "break",
+    { "type": "host", "key": "{#92}│ 󰌢 PC" },
+    { "type": "cpu", "key": "{#92}│ ├󰻠 CPU", "showPeCoreCount": true, "temp": true, "format": "{name} [{core-types}] [{freq-max}]" },
+    { "type": "gpu", "key": "{#92}│ ├󰍛 GPU", "detectionMethod": "auto", "driverSpecific": false, "format": "{name}" },
+    { "type": "memory", "key": "{#92}│ ├󰑭 Memory", "format": "{used} / {total} ({percentage})" },
+    { "type": "swap", "key": "{#92}│ ├󰓡 Swap", "format": "{used} / {total} ({percentage})" },
+    { "type": "disk", "key": "{#92}│ ├ Disk", "folders": "/", "format": "{size-used} / {size-total} ({size-percentage})" },
+    { "type": "display", "key": "{#92}│ ├󰍹 Display", "format": "{name} {width}x{height}[{refresh-rate}Hz]" },
+    { "type": "uptime", "key": "{#92}│ └󰅐 Uptime" },
 
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Hardware ───────────────────────────╮"
-    },
+    { "type": "custom", "format": "{#90}├─ Colors {$1}" },
+    { "type": "colors", "key": "{#92}│", "symbol": "circle" },
 
-    {
-      "type": "host",
-      "key": "{#92}󰌢 PC"
-    },
-    {
-      "type": "cpu",
-      "key": "{#92}├󰻠 CPU",
-      "showPeCoreCount": true,
-      "temp": true,
-      "format": "{name} [{core-types}] [{freq-max}]"
-    },
-    {
-      "type": "gpu",
-      "key": "{#92}├󰍛 GPU",
-      "detectionMethod": "auto",
-      "driverSpecific": false,
-      "format": "{name}"
-    },
-    {
-      "type": "memory",
-      "key": "{#92}├󰑭 Memory",
-      "format": "{used} / {total} ({percentage})"
-    },
-    {
-      "type": "swap",
-      "key": "{#92}├󰓡 Swap",
-      "format": "{used} / {total} ({percentage})"
-    },
-    {
-      "type": "disk",
-      "key": "{#92}├ Disk",
-      "format": "{size-used} / {size-total} ({size-percentage})"
-    },
-    {
-      "type": "display",
-      "key": "{#92}├󰍹 Display",
-      "format": "{name} {width}x{height}[{refresh-rate}Hz]"
-    },
-    {
-      "type": "uptime",
-      "key": "{#92}└󰅐 Uptime"
-    },
-
-    "break",
-
-    {
-      "type": "custom",
-      "format": "{#90}╭─ Colors ─────────────────────────────╮"
-    },
-    {
-      "type": "colors",
-      "symbol": "circle"
-    },
-    {
-      "type": "custom",
-      "format": "{#90}╰──────────────────────────────────────╯"
-    }
+    { "type": "custom", "format": "{#90}╰──────────────────────────────────────╯" }
   ]
 }

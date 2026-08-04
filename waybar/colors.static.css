@@ -11,3 +11,7 @@
 @define-color mem         #c8b898;
 @define-color disk-col    #d8c098;
 @define-color temp        #d8d8d8;
+
+/* Módulos nuevos (tray/gpu/ppd/bluetooth/privacy) */
+@define-color gpu-col     #8098a8;
+@define-color bt          #8ab0b8;

@@ -117,13 +117,13 @@
       "key":    "{#244}├󰑭 Wisdom",
       "format": "{used} / {total}  {#60}({percentage})"
     },
-    
+
     {
       "type": "disk",
-      "key":    "{#244}├ Stamina",
-      "format": "{size-used} / {size-total}  {#60}({size-percentage})"
+      "key":    "{#71}├ Chest",
+      "format": "{size-used} / {size-total}  {#65}({size-percentage})"
     },
-    
+
     {
       "type": "uptime",
       "key":    "{#244}└󰅐 Guts",
@@ -138,3 +138,4 @@
     }
   ]
 }
+

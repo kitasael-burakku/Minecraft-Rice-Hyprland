@@ -1,112 +1,58 @@
-// Gentoo · Fastfetch
+// Inspired by microfetch
 {
-  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-  "logo": { "source": "gentoo", "type": "builtin"},
-  "display": { "separator": " » " },
-
-  "modules": [
-    {
-      "type": "custom",
-      "format": "{#65}― # still compiling... ―"
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "source": "arch_small",
+        "type":"builtin"
     },
-    "break",
-    {
-      "type": "command",
-      "key":  "{#71}User",
-      "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
-      "format": "{result}"
+    "general": {
+        "detectVersion": false
     },
-    {
-      "type": "command",
-      "key":  "{#71}󰌢 Host",
-      "text": "hostnamectl --pretty 2>/dev/null || hostname",
-      "format": "{result}"
+    "display": {
+        "separator": "  ",
+        "brightColor": false,
+        "key": {
+            "type": "both-2"
+        }
     },
-    "break",
-    {
-      "type": "os",
-      "key":    "{#71} OS",
-      "format": "{pretty-name}  {#23}[{arch}]"
-    },
-    {
-      "type": "kernel",
-      "key":    "{#65}├ Kernel",
-      "format": "{sysname}  {#23}[v{release}]"
-    },
-    {
-      "type": "packages",
-      "key":    "{#65}├󰏖 Portage",
-      "format": "{emerge}"
-    },
-    {
-      "type": "command",
-      "key":    "{#65}├ World",
-      "text": "wc -l < /var/lib/portage/world 2>/dev/null || echo 'n/a'",
-      "format": "{result} pkgs"
-    },
-    {
-      "type": "shell",
-      "key":    "{#65}└ Shell",
-      "format": "{pretty-name}  {#23}[v{version}]"
-    },
-    "break",
-    {
-      "type": "wm",
-      "key":    "{#71}󱂬 WM",
-      "format": "{pretty-name}"
-    },
-    {
-      "type": "terminal",
-      "key":    "{#65}├ Terminal",
-      "format": "{pretty-name}  {#23}[{version}]"
-    },
-    {
-      "type": "terminalfont",
-      "key":    "{#65}├ Font",
-      "format": "{name}  {#23}[{size}]"
-    },
-    {
-      "type": "wallpaper",
-      "key":    "{#65}└󰸉 Wallpaper"
-    },
-    "break",
-    {
-      "type": "host",
-      "key":    "{#71}󰌢 PC"
-    },
-    {
-      "type": "cpu",
-      "key":    "{#65}├󰻠 CPU",
-      "showPeCoreCount": true,
-      "temp": true,
-      "format": "{name}  {#23}[{core-types}] [{freq-max}]"
-    },
-    {
-      "type": "gpu",
-      "key":    "{#244}├󰍛 GPU",
-      "detectionMethod": "auto",
-      "driverSpecific": false,
-      "format": "{vendor} {name}"
-    },
-    {
-      "type": "memory",
-      "key":    "{#65}├󰑭 Memory",
-      "format": "{used} / {total}  {#23}({percentage})"
-    },
-    {
-      "type": "disk",
-      "key":    "{#65}├ Disk",
-      "format": "{size-used} / {size-total}  {#23}({size-percentage})"
-    },
-    {
-      "type": "uptime",
-      "key":    "{#65}└󰅐 Uptime",
-      "format": "{?days}{days}d {?}{hours}h {minutes}m"
-    },
-    "break",
-    {
-      "type": "colors",
-      "symbol": "circle"
-    }
-  ]
+    "modules": [
+        {
+            "type": "title",
+            "format": "{user-name-colored}{#light_red}@{host-name-colored} {#}{cwd}"
+        },
+        {
+            "type": "os",
+            "key": "System       "
+        },
+        {
+            "type": "kernel",
+            "key": "Kernel       "
+        },
+        {
+            "type": "shell",
+            "key": "Shell        "
+        },
+        {
+            "type": "uptime",
+            "key": "Uptime       "
+        },
+        {
+            "type": "wm",
+            "key": "Desktop      "
+        },
+        {
+            "type": "memory",
+            "key": "Memory       "
+        },
+        {
+            "type": "disk",
+            "key": "Storage (/)  ",
+            "folders": "/"
+        },
+        {
+            "type": "colors",
+            "key": "Colors       ",
+            "symbol": "circle"
+        }
+    ]
 }

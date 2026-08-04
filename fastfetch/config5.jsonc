@@ -1,112 +1,38 @@
-// Linux From Scratch · Fastfetch
+// Linux From Scratch · Fastfetch · Ficha técnica monocroma
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": { "source": "lfs", "type": "builtin", "padding": { "top": 1, "left": 1 } },
   "display": {
     "separator": " : ",
-    "color": {
-      "keys":   "white",
-      "output": "white"
-    }
+    "key": { "width": 11 },
+    "color": { "keys": "white", "output": "white" }
   },
+
   "modules": [
-    {
-      "type": "custom",
-      "format": "― Built, not installed ―"
-    },
-    "break",
-    {
-      "type": "command",
-      "key":  "User",
-      "text": "test -n \"$USER_PRETTY\" && printf '%s' \"$USER_PRETTY\" || printf '%s' \"$USER\"",
-      "format": "{result}"
-    },
-    {
-      "type": "command",
-      "key":  "󰌢 Host",
-      "text": "hostnamectl --pretty 2>/dev/null || hostname",
-      "format": "{result}"
-    },
-    "break",
-    {
-      "type": "os",
-      "key":    "OS",
-      "format": "{pretty-name}  [{arch}]"
-    },
-    {
-      "type": "kernel",
-      "key":    "├ Kernel",
-      "format": "{sysname}  [v{release}]"
-    },
-    {
-      "type": "command",
-      "key":  "├ Compiler",
-      "text": "gcc -dumpversion 2>/dev/null",
-      "format": "GCC {result}"
-    },
-    {
-      "type": "shell",
-      "key":    "└ Shell",
-      "format": "{pretty-name}  [v{version}]"
-    },
-    "break",
-    {
-      "type": "wm",
-      "key":    "󱂬 WM",
-      "format": "{pretty-name}"
-    },
-    {
-      "type": "terminal",
-      "key":    "├ Terminal",
-      "format": "{pretty-name}  [{version}]"
-    },
-    {
-      "type": "terminalfont",
-      "key":    "├ Font",
-      "format": "{name}  [{size}]"
-    },
-    {
-      "type": "wallpaper",
-      "key":    "└󰸉 Wallpaper"
-    },
-    "break",
-    {
-      "type": "host",
-      "key":    "󰌢 PC"
-    },
-    {
-      "type": "cpu",
-      "key":    "├󰻠 CPU",
-      "showPeCoreCount": true,
-      "temp": true,
-      "format": "{name}  [{core-types}] [{freq-max}]"
-    },
-    {
-      "type": "gpu",
-      "key":    "{#244}├󰍛 GPU",
-      "detectionMethod": "auto",
-      "driverSpecific": false,
-      "format": "{vendor} {name}"
-    },
-    {
-      "type": "memory",
-      "key":    "├󰑭 Memory",
-      "format": "{used} / {total}  ({percentage})"
-    },
-    {
-      "type": "disk",
-      "key":    "├ Disk",
-      "format": "{size-used} / {size-total}  ({size-percentage})"
-    },
-    {
-      "type": "uptime",
-      "key":    "└󰅐 Uptime",
-      "format": "{?days}{days}d {?}{hours}h {minutes}m"
-    },
-    "break",
-    {
-      "type": "colors",
-      "symbol": "circle"
-    }
+    { "type": "custom", "format": "― Built, not installed ―" },
+    { "type": "separator", "string": "─" },
+
+    { "type": "title", "key": "host" },
+    { "type": "board", "key": "board" },
+    { "type": "bootmgr", "key": "boot" },
+
+    { "type": "separator", "string": "─" },
+
+    { "type": "os", "key": "os", "format": "{pretty-name}  [{arch}]" },
+    { "type": "kernel", "key": "kernel", "format": "{sysname}  [v{release}]" },
+    { "type": "command", "key": "compiler", "text": "gcc -dumpversion 2>/dev/null", "format": "GCC {result}" },
+    { "type": "shell", "key": "shell" },
+
+    { "type": "separator", "string": "─" },
+
+    { "type": "cpu", "key": "cpu", "temp": true, "format": "{name}  [{freq-max}]" },
+    { "type": "cpucache", "key": "cache" },
+    { "type": "gpu", "key": "gpu", "detectionMethod": "auto", "driverSpecific": false, "format": "{vendor} {name}" },
+    { "type": "memory", "key": "memory" },
+    { "type": "disk", "key": "disk", "folders": "/" },
+
+    { "type": "separator", "string": "─" },
+
+    { "type": "uptime", "key": "uptime" }
   ]
 }

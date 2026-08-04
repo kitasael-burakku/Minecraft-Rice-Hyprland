@@ -1,29 +1,35 @@
 {
+    "layer": "top",
+    "position": "top",
     "spacing": 2,       // Separación horizontal entre módulos
     "margin-top": 6,
     "margin-left": 10,
     "margin-right": 10,
-    
+
     "modules-left": [
         "pulseaudio",
         "pulseaudio/slider",
         "custom/playerctl",
-        "custom/playerlabel",
-        "clock"
+        "custom/playerlabel"
     ],
     "modules-center": [
         "hyprland/window",
         "hyprland/workspaces",
-        "wlr/taskbar",
-        "idle_inhibitor"
+        "clock"
     ],
     "modules-right": [
         "custom/updates",
-        "network",
+        "privacy",
         "temperature",
         "cpu",
         "memory",
         "disk",
+        "custom/gpu",
+        "power-profiles-daemon",
+        "bluetooth",
+        "network",
+        "idle_inhibitor",
+        "tray",
         "custom/power"
     ],
 
@@ -70,21 +76,6 @@
         },
         "persistent-workspaces": {
             "*": 5
-        }
-    },
-
-    "wlr/taskbar": {
-        "format": "{icon}",
-        "icon-size": 18,
-        "tooltip-format": "{title}",
-        "on-click": "activate",
-        "on-click-middle": "close",
-        "on-click-right": "minimize",
-        "sort-by-app-id": true,
-        "ignore-list": ["kitty"],
-        "app_ids-mapping": {
-            "zen-alpha": "firefox",
-            "zen-beta":  "firefox"
         }
     },
 
@@ -144,8 +135,12 @@
 
     "temperature": {
         "interval": 4,
-        "thermal-zone": 0, // Intenta leer primero la zona térmica general
-        "hwmon-path-abs": "/sys/class/hwmon", 
+        // Path fijo al hwmon del CPU (función PCI 00:18.3, propia del die AMD).
+        // hwmon-path-abs: "/sys/class/hwmon" tomaba la primera entrada por orden
+        // de directorio (no determinista: podía caer en nct6687, nvme, etc. en
+        // vez de k10temp) y thermal-zone no aplica en este equipo (no hay
+        // /sys/class/thermal/thermal_zone*, solo cooling_device*).
+        "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
         "input-filename": "temp1_input",
         "format": "{icon} {temperatureC}°C",
         "tooltip-format": " CPU Temperature\n\nSensor: k10temp\nCurrent: {temperatureC}°C",
@@ -167,6 +162,50 @@
         "format": "󰐥",
         "tooltip": false,
         "on-click": "~/.config/wlogout/scripts/launch_wlogout.sh"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "custom/gpu": {
+        "exec": "~/.config/waybar/scripts/gpu.sh",
+        "interval": 5,
+        "return-type": "json",
+        "format": "{}",
+        "tooltip": true
+    },
+
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Perfil de energía: {profile}\nClick para cambiar",
+        "format-icons": {
+            "default": "󰊚",
+            "performance": "󰓅",
+            "balanced": "󰗑",
+            "power-saver": "󰌪"
+        }
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱 {num_connections}",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "kitty fish -lc bluetoothctl"
+    },
+
+    "privacy": {
+        "icon-spacing": 4,
+        "icon-size": 14,
+        "transition-duration": 250,
+        "modules": [
+            { "type": "screenshare", "tooltip": true, "tooltip-icon-size": 24 },
+            { "type": "audio-in", "tooltip": true, "tooltip-icon-size": 24 }
+        ]
     },
 
     "custom/playerctl": {

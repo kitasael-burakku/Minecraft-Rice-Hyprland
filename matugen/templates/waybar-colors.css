@@ -12,3 +12,7 @@
 @define-color mem         {{colors.on_tertiary_container.default.hex}};
 @define-color disk-col    {{colors.secondary.default.hex}};
 @define-color temp        {{colors.on_surface_variant.default.hex}};
+
+/* Módulos nuevos (tray/gpu/ppd/bluetooth/privacy) */
+@define-color gpu-col     {{colors.secondary_container.default.hex}};
+@define-color bt          {{colors.tertiary_container.default.hex}};

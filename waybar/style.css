@@ -34,20 +34,21 @@ window#waybar {
 ----------------------------------- */
 
 /* Forzamos margen a todos los módulos internos para que no se peguen */
-#clock, #cpu, #memory, #disk, #network, #pulseaudio, 
-#workspaces, #window, #custom-updates, #temperature, 
-#idle_inhibitor, #custom-power, #taskbar, #pulseaudio-slider,
-#custom-playerctl, #custom-playerlabel {
-    margin: 0 7px; 
+#clock, #cpu, #memory, #disk, #network, #pulseaudio,
+#workspaces, #window, #custom-updates, #temperature,
+#idle_inhibitor, #custom-power, #pulseaudio-slider,
+#custom-playerctl, #custom-playerlabel, #custom-gpu,
+#power-profiles-daemon, #bluetooth, #privacy, #tray {
+    margin: 0 7px;
     padding: 0;
 }
 
 /* -----------------------------------
-   WORKSPACES & TASKBAR (Centro)
+   WORKSPACES (Centro)
 ----------------------------------- */
 
 #workspaces button {
-    color: rgba(255, 255, 255, 0.25);
+    color: alpha(@fg, 0.25);
     margin: 0 4px;
     padding: 0 4px;
     transition: all 250ms ease-in-out;
@@ -62,22 +63,6 @@ window#waybar {
     text-shadow: 0 0 6px alpha(@accent, 0.5);
 }
 
-#taskbar button {
-    margin: 0 4px;
-    padding: 2px 6px;
-    border-radius: 8px;
-    transition: all 200ms ease;
-}
-
-#taskbar button:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-#taskbar button.active {
-    background: alpha(@accent, 0.12);
-    border-bottom: 2px solid alpha(@accent, 0.348);
-}
-
 /* -----------------------------------
    HARDWARE & ESTADOS (Colores limpios)
 ----------------------------------- */
@@ -87,12 +72,21 @@ window#waybar {
     color: @fg;
 }
 
+#pulseaudio { color: @fg; }
+#window { color: @fg; }
+#idle_inhibitor { color: @fg; }
+
 #custom-updates { color: @accent-gold; }
 #network { color: @net; }
 #cpu { color: @cpu-col; }
 #memory { color: @mem; }
 #disk { color: @disk-col; }
 #temperature { color: @temp; }
+#custom-gpu { color: @cpu-col; }
+#bluetooth { color: @fg; }
+#power-profiles-daemon { color: @accent-gold; }
+#privacy { color: @red; }
+#tray { color: @fg; }
 
 #pulseaudio.muted,
 #network.disconnected,
@@ -131,6 +125,33 @@ window#waybar {
 }
 
 /* -----------------------------------
+   MÓDULOS NUEVOS (tray / gpu / ppd / bluetooth / privacy)
+----------------------------------- */
+
+#bluetooth.disabled { color: alpha(@fg, 0.35); }
+
+#power-profiles-daemon.performance { color: @red; }
+#power-profiles-daemon.power-saver { color: @net; }
+
+#custom-gpu.critical {
+    color: @red;
+}
+
+#privacy-item {
+    color: @red;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background: alpha(@red, 0.3);
+    border-radius: 8px;
+}
+
+/* -----------------------------------
    TOOLTIPS (Cajitas Flotantes Corregidas)
 ----------------------------------- */
 
@@ -164,7 +185,7 @@ tooltip label {
 
 #custom-playerlabel {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.666);
+    color: alpha(@fg, 0.666);
     padding-left: 2px;
     margin-left: 0;
 }
@@ -173,15 +194,18 @@ tooltip label {
    ESTADOS DE ACTUALIZACIÓN Y ALERTAS
 ----------------------------------- */
 
-/* Cuando no hay actualizaciones: un turquesa suave o verde brillante que resalte */
-#custom-updates.updated  { 
-    color: #00ff26; 
+/* Cuando no hay actualizaciones: verde "ok" fijo a propósito (como @red para
+   error/crítico) pero suavizado a un mint que convive con el teal de @accent,
+   en vez del neón #00ff26 original que desentonaba con la paleta */
+#custom-updates.updated  {
+    color: #7fd9a0;
     font-weight: bold;
 }
 
-/* Cuando hay pocas actualizaciones pendientes */
-#custom-updates.pending  { 
-    color: #e09d70; 
+/* Cuando hay pocas actualizaciones pendientes: reusa @accent-gold en vez de un
+   naranja fijo, así queda atado al wallpaper como el resto de la paleta */
+#custom-updates.pending  {
+    color: @accent-gold;
     font-weight: bold;
 }
 
