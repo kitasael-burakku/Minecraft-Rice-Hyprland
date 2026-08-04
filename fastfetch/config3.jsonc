@@ -89,18 +89,6 @@
             "keyColor": "magenta",
             "type": "memory"
         },
-        {
-            "key": "Local IP     ",
-            "keyColor": "red",
-            "type": "localip",
-            "compact": true
-        },
-        {
-            "key": "Public IP    ",
-            "keyColor": "cyan",
-            "type": "publicip",
-            "timeout": 1000
-        },
         "break",
         {
             "type": "custom",
