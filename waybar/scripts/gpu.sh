@@ -26,7 +26,7 @@ for d in /sys/class/drm/card*/device; do
 done
 
 if [[ -z "$gpu_dev" ]]; then
-    printf '%s\n' '{"text":"","tooltip":"GPU no detectada","class":"hidden"}'
+    printf '%s\n' '{"text":"","tooltip":"GPU not detected","class":"hidden"}'
     exit 0
 fi
 
@@ -59,7 +59,7 @@ if [[ "$temp_c" =~ ^[0-9]+$ ]] && (( temp_c >= 85 )); then
     css_class="critical"
 fi
 
-tooltip=$(printf '   GPU (amdgpu)\n\nUso:      %s%%\nTemp:     %s°C\nConsumo:  %s W\nVRAM:     %s / %s MB' \
+tooltip=$(printf '   GPU (amdgpu)\n\nUsage:      %s%%\nTemp:     %s°C\nWatts:    %s W\nVRAM:   %s / %s MB' \
     "$usage" "$temp_c" "$watts" "$vram_used_mb" "$vram_total_mb")
 
 result="{\"text\":\"$(json_escape "$text")\",\"tooltip\":\"$(json_escape "$tooltip")\",\"class\":\"$css_class\"}"

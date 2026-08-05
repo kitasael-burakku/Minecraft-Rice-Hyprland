@@ -63,6 +63,7 @@
       "type": "uptime",
       "key":    "{#91}└󰅐 Uptime",
       "format": "{?days}{days}d {?}{hours}h {minutes}m"
-    }
+    },
+    "break"
   ]
 }

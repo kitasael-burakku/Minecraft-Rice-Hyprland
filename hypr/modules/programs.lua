@@ -15,6 +15,7 @@ Programs = {
     clipboard      = 'pgrep -x rofi >/dev/null && pkill -x rofi || cliphist list | rofi -dmenu -display-columns 2 -p "Clipboard" -theme $HOME/.config/rofi/clipboard.rasi | cliphist decode | wl-copy',
     windowswitcher ='pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show winswitcher -modi winswitcher:~/.config/rofi/scripts/window-switcher.sh -theme ~/.config/rofi/window-switcher.rasi',
     lockscreen     = "hyprlock"
+    --music        = "spotify" --Placeholder
 }
 
 -- Comandos privados (ver hypr/modules/private.example.lua) — no versionados.

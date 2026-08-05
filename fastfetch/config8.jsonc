@@ -23,6 +23,7 @@
     { "type": "gpu", "key": "{#136}├󰍛 Speed", "detectionMethod": "auto", "driverSpecific": false, "format": "{name}" },
     { "type": "memory", "key": "{#136}├󰑭 Wisdom" },
     { "type": "disk", "key": "{#136}├ Stamina", "folders": "/" },
-    { "type": "uptime", "key": "{#136}└󰅐 Guts" }
+    { "type": "uptime", "key": "{#136}└󰅐 Guts" },
+    "break"
   ]
 }

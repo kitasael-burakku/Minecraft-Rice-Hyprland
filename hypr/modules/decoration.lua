@@ -8,8 +8,8 @@
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
-        gaps_in  = 12,
-        gaps_out = 30,
+        gaps_in  = 10,
+        gaps_out = 20,
 
         border_size = 2,
 
@@ -29,12 +29,12 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 14,
-        rounding_power = 2.5,
+        rounding       = 10,
+        rounding_power = 15,
 
         active_opacity   = 0.9,
         inactive_opacity = 0.8,
-        fullscreen_opacity = 0.95,
+        fullscreen_opacity = 1,
 
         shadow = {
             enabled = true,
@@ -48,7 +48,7 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 7,
+            size     = 10,
             passes   = 2,
 
             ignore_opacity    = true,

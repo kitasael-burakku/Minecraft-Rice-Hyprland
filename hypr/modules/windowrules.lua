@@ -21,167 +21,47 @@
 -- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
 --------------------
----- WINDOW RULES ----
+--- WINDOW RULES ---
 --------------------
 
 -- Ignore maximize requests from all apps
-hl.window_rule({
-    name  = "suppress-maximize-events",
-    match = { class = ".*" },
-
-    suppress_event = "maximize",
-})
+hl.window_rule({ name  = "suppress-maximize-events", match = { class = ".*" }, suppress_event = "maximize" })
 
 -- Fix some dragging issues with XWayland
-hl.window_rule({
-    name  = "fix-xwayland-drags",
-    match = {
-        class      = "^$",
-        title      = "^$",
-        xwayland   = true,
-        float      = true,
-        fullscreen = false,
-        pin        = false,
-    },
-
-    no_focus = true,
-})
+hl.window_rule({ name  = "fix-xwayland-drags", match = { class = "^$", title = "^$", xwayland = true, float = true, fullscreen = false, pin = false, }, no_focus = true, })
 
 -- Hyprland-run windowrule
-hl.window_rule({
-    name  = "move-hyprland-run",
-    match = {
-        class = "hyprland-run",
-    },
+hl.window_rule({ name  = "move-hyprland-run", match = { class = "hyprland-run", }, move  = "20 monitor_h-120", float = true, })
 
-    move  = "20 monitor_h-120",
-    float = true,
-})
-
---------------------
----- MEDIA APPS ----
---------------------
-
--- MPV: float centrado con tamaño razonable
-hl.window_rule({
-    name  = "mpv-float",
-    match = {
-        class = "^(mpv)$",
-    },
-
-    float  = true,
-    center = true,
-    size   = "960 540",
-})
-
--- MPV: animación popin para que se sienta menos abrupto
-hl.window_rule({
-    name  = "mpv-anim",
-    match = {
-        class = "^(mpv)$",
-    },
-
-    animation = "popin 80%",
-})
-
---------------------
----- LAYER RULES ----
---------------------
+-------------------
+--- LAYER RULES ---
+-------------------
 
 -- Notification Center
-hl.layer_rule({
-    name  = "swaync-control-blur",
-    match = {
-        namespace = "swaync-control-center",
-    },
-
-    blur = true,
-    ignore_alpha = 0.4,
-    animation = "slide right",
-})
+hl.layer_rule({ name  = "swaync-control-blur", match = { namespace = "swaync-control-center", },blur = true , ignore_alpha = 0.4, animation = "slide right" })
 
 -- Notification Window
-hl.layer_rule({
-    name  = "swaync-window-blur",
-    match = {
-        namespace = "swaync-notification-window",
-    },
-
-    blur = true,
-    ignore_alpha = 0.4,
-})
+hl.layer_rule({ name  = "swaync-window-blur", match = { namespace = "swaync-notification-window", }, blur = true, ignore_alpha = 0.4 })
 
 -- Rofi
-hl.layer_rule({
-    name  = "rofi",
-    match = {
-        namespace = "rofi",
-    },
-
-    blur = true,
-    ignore_alpha = 0.9,
-    animation = "popin"
-})
+hl.layer_rule({ name  = "rofi", match = { namespace = "rofi", },blur = true, ignore_alpha = 0.9, animation = "popin" })
 
 -- Wlogout 
-hl.layer_rule({
-    name  = "wlogout",
-    match = {
-        namespace = "logout_dialog",
-    },
-
-    blur = true,
-    ignore_alpha=0.5,
-})
+hl.layer_rule({ name  = "wlogout", match = { namespace = "logout_dialog", }, blur = true, ignore_alpha=0.5 })
 
 --------------------------
----- WORKSPACE RULES ----
+---- WORKSPACE RULES -----
 --------------------------
 
 -- Workspace de una sola ventana tileada (w[tv1]/f[1]): gap interno un poco
 -- mayor que el global (15 vs 12 de decoration.lua) y, más abajo, borde más
 -- fino + rounding suave solo para esas ventanas — no es "sin gaps", es un
 -- tratamiento distinto para el caso de una sola ventana.
-hl.workspace_rule({
-    workspace = "w[tv1]",
-    gaps_out  = 30,
-    gaps_in   = 15,
-})
 
-hl.workspace_rule({
-    workspace = "f[1]",
-    gaps_out  = 30,
-    gaps_in   = 15,
-})
-
-hl.window_rule({
-    name  = "no-gaps-wtv1",
-    match = {
-        float     = false,
-        workspace = "w[tv1]",
-    },
-
-    border_size    = 1,
-    rounding       = 18,
-    rounding_power = 4,
-})
-
-hl.window_rule({
-    name  = "no-gaps-f1",
-    match = {
-        float     = false,
-        workspace = "f[1]",
-    },
-
-    border_size    = 1,
-    rounding       = 18,
-    rounding_power = 4,
-})
+hl.workspace_rule({ workspace = "w[tv1]", gaps_out  = 20, gaps_in   = 10, })
+hl.workspace_rule({ workspace = "f[1]", gaps_out  = 10, gaps_in   = 20, })
+hl.window_rule({ name  = "no-gaps-wtv1", match = { float     = false, workspace = "w[tv1]",}, border_size    = 1, rounding       = 18, rounding_power = 4, })
+hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 1, rounding       = 18, rounding_power = 4, })
 
 -- Special workspace (scratchpad)
-hl.workspace_rule({
-    workspace = "special:magic",
-    gaps_out  = 10,
-    gaps_in   = 20,
-    border_size = 0,
-})
+hl.workspace_rule({ workspace = "special:magic", gaps_out  = 10, gaps_in   = 20, border_size = 0, })

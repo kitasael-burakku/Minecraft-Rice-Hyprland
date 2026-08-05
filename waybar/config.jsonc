@@ -189,13 +189,13 @@
     },
 
     "bluetooth": {
-        "format": "󰂯",
-        "format-disabled": "󰂲",
+        "format": "󰂯 Enable",
+        "format-disabled": "󰂲 Disabled",
         "format-connected": "󰂱 {num_connections}",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "kitty fish -lc bluetoothctl"
+        "on-click": "blueman-manager"
     },
 
     "privacy": {

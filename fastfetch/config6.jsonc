@@ -48,6 +48,7 @@
     { "type": "custom", "format": "{#90}├─ Colors {$1}" },
     { "type": "colors", "key": "{#92}│", "symbol": "circle" },
 
-    { "type": "custom", "format": "{#90}╰──────────────────────────────────────╯" }
+    { "type": "custom", "format": "{#90}╰──────────────────────────────────────╯" },
+    "break"
   ]
 }

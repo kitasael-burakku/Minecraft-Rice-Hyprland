@@ -53,6 +53,7 @@
             "type": "colors",
             "key": "Colors       ",
             "symbol": "circle"
-        }
+        },
+        "break"
     ]
 }

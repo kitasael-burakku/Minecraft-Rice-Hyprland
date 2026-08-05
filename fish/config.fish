@@ -88,6 +88,8 @@ if status is-interactive
         end
     end
 
+    fastfetch
+
 end
 
 # Created by pipx / local user binaries

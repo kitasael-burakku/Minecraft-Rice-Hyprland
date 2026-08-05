@@ -1,7 +1,7 @@
 -- Plantilla de hypr/modules/private.lua — ese archivo NO se versiona
 -- (gitignored). Copiá este a private.lua y completá con tus propios
 -- comandos privados.
---
+
 -- programs.lua, autostart.lua y keybinds.lua lo requieren con pcall(), así
 -- que si private.lua no existe, el resto de la config sigue funcionando
 -- exactamente igual — solo faltan estos extras opcionales. Reemplaza el

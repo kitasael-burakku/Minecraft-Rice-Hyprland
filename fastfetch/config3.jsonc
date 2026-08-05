@@ -99,6 +99,7 @@
             "type": "colors",
             "paddingLeft": 34,
             "symbol": "circle"
-        }
+        },
+        "break"
     ]
 }

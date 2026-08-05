@@ -33,6 +33,7 @@
 
     { "type": "separator", "string": "─" },
 
-    { "type": "uptime", "key": "uptime" }
+    { "type": "uptime", "key": "uptime" },
+    "break"
   ]
 }
