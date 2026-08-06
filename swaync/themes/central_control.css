@@ -63,11 +63,20 @@
 
 /* ── Label widget (header) ──────────────────────────────── */
 
+/* Ojo con la tipografía de los widgets: el `* { all: unset; color; font-size }`
+   de arriba matchea TAMBIÉN el label interno, así que lo que se declare en el
+   contenedor nunca le llega — la herencia pierde contra una declaración que
+   matchea al propio elemento. Por eso el color y el tamaño van siempre en
+   `> label`, igual que hace el stylesheet oficial de swaync. El contenedor se
+   queda solo con la caja (margin/padding). */
 .widget-label {
+  margin: 4px 8px 8px 8px;
+}
+
+.widget-label > label {
   color:          var(--text-muted);
   font-size:      0.78rem;
   letter-spacing: 0.04em;
-  margin:         4px 8px 8px 8px;
 }
 
 /* ── Notifications ──────────────────────────────────────── */
@@ -88,14 +97,75 @@
   border-bottom-color: var(--border-btm-hv);
 }
 
+/* .notification.critical es el hijo del card, no el card: si le ponemos borde
+   acá se dibuja ENCIMA del que ya tiene .notification-background y se ve un
+   trazo doble. El fondo y el radio también eran redundantes con el card. La
+   urgencia se marca con el glow interno y el .summary en rojo. */
 .control-center
 .notification-row
 .notification-background
 .notification.critical {
-  background:    var(--bg-dark);
-  border-radius: var(--radius-card);
-  border:        1px solid var(--border-red);
-  border-bottom: 2px solid var(--border-red-b);
+  box-shadow: inset 0 0 16px var(--bg-red-active);
+}
+
+.control-center
+.notification-row
+.notification-background
+.notification.critical
+.summary {
+  color: var(--red);
+}
+
+/* ── Foco por teclado (keyboard-shortcuts: true) ─────────── */
+
+/* Sin esto navegar el panel con las flechas/Tab es completamente invisible. */
+.control-center .notification-row:focus,
+.control-center .notification-row:focus-within {
+  outline: none;
+}
+
+.control-center .notification-row:focus .notification-background,
+.control-center .notification-row:focus-within .notification-background {
+  border-color:        var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.notification-group:focus-within .notification-group-headers label {
+  color: var(--text-primary);
+}
+
+/* ── Lista y scrollbar ──────────────────────────────────── */
+
+.control-center-list {
+  background: transparent;
+}
+
+/* El placeholder de "text-empty" — con el centro vacío es lo que más se ve. */
+.control-center-list-placeholder {
+  color:      var(--text-muted);
+  font-size:  0.82rem;
+  padding:    28px 12px;
+  opacity:    0.85;
+}
+
+/* Escopado a .control-center porque los --radius y --transition viven ahí. */
+.control-center scrollbar,
+.control-center scrollbar trough {
+  background: transparent;
+  border:     none;
+  min-width:  6px;
+}
+
+.control-center scrollbar slider {
+  background:    var(--border-base);
+  border-radius: var(--radius-pill);
+  min-width:     6px;
+  min-height:    28px;
+  transition:    background var(--transition);
+}
+
+.control-center scrollbar slider:hover {
+  background: var(--border-hover);
 }
 
 .control-center .notification-content {
@@ -164,10 +234,22 @@ progress {
 /* ── Notification groups ────────────────────────────────── */
 
 .notification-group {
-  margin: 2px 6px;
+  margin:     2px 6px;
+  transition: opacity var(--transition);
 }
 
-.notification-group-headers {
+/* Efecto pila: cuando hay otro grupo expandido, los colapsados se apagan un
+   poco para que la atención quede en el que está abierto. */
+.notification-group.collapsed {
+  opacity: 0.75;
+}
+
+.notification-group.collapsed.not-expanded {
+  opacity: 1;
+}
+
+/* Ver la nota de .widget-label: la tipografía tiene que ir en el label. */
+.notification-group-headers label {
   font-weight:    700;
   font-size:      1.1rem;
   color:          var(--text-body);
@@ -176,6 +258,10 @@ progress {
 
 .notification-group-icon {
   color: var(--text-body);
+}
+
+.notification-group-buttons {
+  margin: 0 4px;
 }
 
 .notification-group-collapse-button,
@@ -197,8 +283,12 @@ progress {
 /* ── Title widget ───────────────────────────────────────── */
 
 .widget-title {
-  font-size:   1.1em;
-  margin:      6px;
+  margin: 6px;
+}
+
+/* Ver la nota de .widget-label: la tipografía tiene que ir en el label. */
+.widget-title > label {
+  font-size:   1.1rem;
   color:       var(--text-body);
   font-weight: 700;
 }
@@ -227,7 +317,11 @@ progress {
 /* ── DND widget ─────────────────────────────────────────── */
 
 .widget-dnd {
-  margin:    6px;
+  margin: 6px;
+}
+
+/* Ver la nota de .widget-label: la tipografía tiene que ir en el label. */
+.widget-dnd label {
   font-size: 1.1rem;
   color:     var(--text-body);
 }
@@ -303,6 +397,14 @@ progress {
 .widget-mpris button:hover {
   background: rgba(255, 255, 255, 0.08);
   color:      var(--accent);
+}
+
+/* Sin esto, prev/next se ven igual de "vivos" aunque el player no los soporte. */
+.widget-mpris > box > button:disabled,
+.widget-mpris button:disabled {
+  color:      var(--text-muted);
+  opacity:    0.4;
+  background: transparent;
 }
 
 .widget-mpris-title {

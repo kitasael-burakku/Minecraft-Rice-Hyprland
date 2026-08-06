@@ -93,4 +93,9 @@ if status is-interactive
 end
 
 # Created by pipx / local user binaries
-fish_add_path "$HOME/.local/bin"
+#
+# -g y no universal: antes esto convivía con una fish_user_paths universal
+# guardada en fish_variables con el mismo valor, o sea la ruta estaba definida
+# en dos lugares y solo uno de los dos es visible en los dotfiles. Queda este,
+# que se lee acá y se puede versionar; la universal se borró.
+fish_add_path -g "$HOME/.local/bin"

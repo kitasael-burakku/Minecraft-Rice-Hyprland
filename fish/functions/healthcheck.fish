@@ -1,26 +1,33 @@
 function healthcheck
     clear
 
+    # Ver la nota en checkerrors: rg se usa en varias secciones y sin él el
+    # reporte se llena de "command not found" en vez de fallar una sola vez.
+    if not command -q rg
+        _rui_bad "Falta ripgrep (rg) — pacman -S ripgrep"
+        return 127
+    end
+
     set -l W 52
 
     # ── Banner ────────────────────────────────────────────────────────────────
     echo ""
     _rui_top $W
-    _rui_row $W ffffff "󰒋  System Health Check"
+    _rui_row $W brwhite "󰒋  System Health Check"
     _rui_mid $W
-    _rui_row $W 686058 "System · Memory · Disk · Network · Temps"
+    _rui_row $W brblack "System · Memory · Disk · Network · Temps"
     _rui_bot $W
     echo ""
 
     # ── System ────────────────────────────────────────────────────────────────
-    _rui_section 6a96b0 "󰌢" "System"
+    _rui_section cyan "󰌢" "System"
     _rui_val "Host:"   (uname -n)
     _rui_val "Kernel:" (uname -r)
     _rui_val "Uptime:" (uptime -p)
     _rui_val "Shell:"  (basename $SHELL)
 
     # ── Memory ────────────────────────────────────────────────────────────────
-    _rui_section 6a96b0 "󰍛" "Memory"
+    _rui_section cyan "󰍛" "Memory"
     free -h | awk '/Mem:/  { printf "  %-16s%s / %s\n", "RAM:", $3, $2 }
                   /Swap:/ { printf "  %-16s%s / %s\n", "Swap:", $3, $2 }'
     if swapon --show=NAME,SIZE,USED,TYPE 2>/dev/null | rg -q "zram"
@@ -30,7 +37,11 @@ function healthcheck
     end
 
     # ── Updates ───────────────────────────────────────────────────────────────
-    _rui_section b89458 "󰚰" "Updates"
+    _rui_section yellow "󰚰" "Updates"
+    # Declaradas acá afuera a propósito: un "set -l" adentro del if quedaría
+    # escopado al bloque y no se vería más abajo.
+    set -l pacman_updates
+    set -l aur_updates
     if command -q checkupdates
         set pacman_updates (checkupdates 2>/dev/null | wc -l | string trim)
     else
@@ -52,8 +63,8 @@ function healthcheck
     end
 
     # ── Orphans ───────────────────────────────────────────────────────────────
-    _rui_section b89458 "󰮯" "Orphan packages"
-    set orphans (pacman -Qtdq 2>/dev/null)
+    _rui_section yellow "󰮯" "Orphan packages"
+    set -l orphans (pacman -Qtdq 2>/dev/null)
     if test (count $orphans) -gt 0
         printf "  %s\n" $orphans
     else
@@ -61,8 +72,8 @@ function healthcheck
     end
 
     # ── Pacnew / Pacsave ──────────────────────────────────────────────────────
-    _rui_section b89458 "󰘓" "Pacnew / Pacsave"
-    set pacfiles (find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)
+    _rui_section yellow "󰘓" "Pacnew / Pacsave"
+    set -l pacfiles (find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)
     if test (count $pacfiles) -gt 0
         printf "  %s\n" $pacfiles
     else
@@ -70,8 +81,8 @@ function healthcheck
     end
 
     # ── Failed services ───────────────────────────────────────────────────────
-    _rui_section a85a48 "󰋊" "Failed services"
-    set failed_system (systemctl --failed --no-legend 2>/dev/null)
+    _rui_section red "󰋊" "Failed services"
+    set -l failed_system (systemctl --failed --no-legend 2>/dev/null)
     if test (count $failed_system) -gt 0
         printf "  %s\n" $failed_system
         if printf "%s\n" $failed_system | rg -q "tpm2|pcrproduct"
@@ -81,7 +92,7 @@ function healthcheck
         _rui_ok "No failed system services."
     end
 
-    set failed_user (systemctl --user --failed --no-legend 2>/dev/null)
+    set -l failed_user (systemctl --user --failed --no-legend 2>/dev/null)
     if test (count $failed_user) -gt 0
         printf "  %s\n" $failed_user
     else
@@ -89,9 +100,13 @@ function healthcheck
     end
 
     # ── Boot errors ───────────────────────────────────────────────────────────
-    _rui_section a85a48 "󰍛" "Boot errors"
-    set boot_errors (journalctl -b -p 3 --no-pager 2>/dev/null)
-    set error_count (printf "%s\n" $boot_errors | wc -l | string trim)
+    _rui_section red "󰍛" "Boot errors"
+    set -l boot_errors (journalctl -b -p 3 --no-pager 2>/dev/null)
+    # Con la lista vacía, "printf '%s\n' $boot_errors | wc -l" devolvía 1 y no 0
+    # (printf igual emite un salto de línea sin argumentos), así que la rama de
+    # "No critical boot errors" era inalcanzable. Mismo patrón que ya está
+    # documentado para el bag de fastfetch en config.fish.
+    set -l error_count (count $boot_errors)
 
     _rui_val "Errors:" "$error_count this boot"
 
@@ -99,7 +114,7 @@ function healthcheck
         _rui_ok "No critical boot errors."
     else if printf "%s\n" $boot_errors | rg -q "tpm2|pcrproduct|TPM key integrity"
         _rui_warn "Critical errors are mostly TPM — known issue."
-        set non_tpm (printf "%s\n" $boot_errors | rg -i "random-seed|bluetooth|filesystem|nvme|amdgpu|i/o error|failed to mount|corrupt" | head -12)
+        set -l non_tpm (printf "%s\n" $boot_errors | rg -i "random-seed|bluetooth|filesystem|nvme|amdgpu|i/o error|failed to mount|corrupt" | head -12)
         if test (count $non_tpm) -gt 0
             printf "  %s\n" $non_tpm
         else
@@ -110,11 +125,23 @@ function healthcheck
     end
 
     # ── Disk ──────────────────────────────────────────────────────────────────
-    _rui_section 6a96b0 "󰪺" "Disk"
-    df -h / /boot 2>/dev/null | awk 'NR>1 {printf "  %-16s%s used of %s\n", $6":", $3, $2}'
+    #
+    # Antes era "df -h / /boot", que estaba mal por dos motivos: /boot no es un
+    # montaje separado acá (solo lo es /boot/efi), así que df resolvía las dos
+    # rutas al mismo filesystem y la sección imprimía "/" DOS veces — y el
+    # segundo disco (/mnt/storage, 938G) no aparecía nunca.
+    #
+    # Ahora se autodetectan todos los filesystems reales excluyendo los
+    # pseudo-FS, así un disco o un USB nuevo aparece solo sin tocar la función.
+    # --output en vez de columnas posicionales ($6): con un device de nombre
+    # largo df parte la línea y el awk posicional se descoloca.
+    _rui_section cyan "󰪺" "Disk"
+    df -h --output=target,used,size,pcent \
+        -x tmpfs -x devtmpfs -x efivarfs -x overlay -x squashfs 2>/dev/null \
+        | awk 'NR>1 {printf "  %-16s%s used of %s (%s)\n", $1":", $2, $3, $4}'
 
     # ── Cache overview ────────────────────────────────────────────────────────
-    _rui_section 686058 "󰪺" "Cache overview"
+    _rui_section brblack "󰪺" "Cache overview"
     for d in ~/.cache ~/.config ~/.local/share/Trash
         if test -d $d
             _rui_val (string replace $HOME "~" $d)":" (du -sh $d 2>/dev/null | cut -f1)
@@ -122,7 +149,7 @@ function healthcheck
     end
 
     # ── Network ───────────────────────────────────────────────────────────────
-    _rui_section 6a96b0 "󰛟" "Network"
+    _rui_section cyan "󰛟" "Network"
     if command -q nmcli
         nmcli -t -f DEVICE,TYPE,STATE connection show --active 2>/dev/null \
             | awk -F: '{printf "  %-16s%-12s%s\n", $1, $2, $3}'
@@ -131,7 +158,7 @@ function healthcheck
     end
 
     # ── Temperatures ──────────────────────────────────────────────────────────
-    _rui_section 6a96b0 "󰔏" "Temperatures"
+    _rui_section cyan "󰔏" "Temperatures"
     if command -q sensors
         sensors | rg -i "tctl|edge|composite|junction|temp" || sensors
     else
@@ -140,8 +167,8 @@ function healthcheck
 
     # ── Done ──────────────────────────────────────────────────────────────────
     echo ""
-    set_color 909090; printf "  ────────────────────────────────────────────────────\n"; set_color normal
-    set_color 6aab7a; echo "  ✓ Health check complete."; set_color normal
+    set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
+    set_color green; echo "  ✓ Health check complete."; set_color normal
     echo ""
-    read -p 'set_color 686058; echo -n "  Press Enter to exit..."; set_color normal' __discard
+    read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
 end

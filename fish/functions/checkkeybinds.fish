@@ -19,9 +19,9 @@ function checkkeybinds
 
     echo ""
     _rui_top $W
-    _rui_row $W ffffff "󰌌  Keybinds Drift Check"
+    _rui_row $W brwhite "󰌌  Keybinds Drift Check"
     _rui_mid $W
-    _rui_row $W 686058 "keybinds.lua vs KEYBINDS.txt"
+    _rui_row $W brblack "keybinds.lua vs KEYBINDS.txt"
     _rui_bot $W
     echo ""
 
@@ -34,7 +34,7 @@ function checkkeybinds
         return 1
     end
 
-    _rui_section 6a96b0 "󰌌" "Binds sin documentar (posibles)"
+    _rui_section cyan "󰌌" "Binds sin documentar (posibles)"
 
     # Alias de nombres crudos de Hyprland -> texto amigable que ya usa
     # KEYBINDS.txt. Sin esto, RETURN/XF86Audio*/mouse:* siempre saldrían
@@ -76,12 +76,12 @@ function checkkeybinds
     end
 
     echo ""
-    _rui_section 686058 "󰋼" "Nota"
+    _rui_section brblack "󰋼" "Nota"
     echo "  Chequeo conservador: algunos binds legítimos con nombres poco"
     echo "  comunes pueden no matchear por casualidad. Un aviso de arriba no"
     echo "  es necesariamente un error, es una señal a revisar a mano."
 
     echo ""
-    set_color 6aab7a; echo "  ✓ Chequeo completo."; set_color normal
+    set_color green; echo "  ✓ Chequeo completo."; set_color normal
     echo ""
 end

@@ -72,4 +72,12 @@ CLAUDE.md
 fish/conf.d/local.fish
 
 # ── Completions locales (no parte del rice) ──────────────────
-fish/completions/
+# El ignore global existe por maly.fish (proyecto privado). Excepción para
+# ec.fish: fish/functions/ec.fish SÍ se publica, así que sin su completion el
+# repo publicaba la función a medias — `ec <TAB>` no funcionaba tras clonar.
+# Solo declara los nombres de directorios de config, nada privado.
+# Se ignora el CONTENIDO (fish/completions/*) y no el directorio: git no
+# desciende a un directorio excluido, así que con "fish/completions/" la
+# excepción de abajo nunca se llegaba a evaluar.
+fish/completions/*
+!fish/completions/ec.fish

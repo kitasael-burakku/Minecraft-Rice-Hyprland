@@ -41,7 +41,10 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
 
 -- OBS Studio
-hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obs"))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(Programs.record))
+
+-- Open Music player
+-- hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 
 -----------------------------
 ----      WINDOWS         ----

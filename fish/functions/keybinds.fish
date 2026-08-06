@@ -22,31 +22,24 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     end
 
     # ── Color palette ──────────────────────────────────────────────────────
-    # True-color hex values. On terminals that report no 24-bit support we fall
-    # back to named colors (cyan / yellow / white / red …) so the viewer still
-    # looks right everywhere. Fish also approximates hex to the closest palette
-    # color on its own, but the explicit fallback keeps things predictable.
-    # Paleta "Kitasan Glass" — mismos tonos que report-ui.fish/dotbackup, en
-    # vez de los rojos saturados ajenos a la identidad del resto del proyecto.
-    if test "$COLORTERM" = truecolor -o "$COLORTERM" = 24bit
-        set -g __kb_border  909090
-        set -g __kb_muted   686058
-        set -g __kb_accent  6a96b0
-        set -g __kb_section b89458
-        set -g __kb_key     ffffff
-        set -g __kb_desc    d8d8d8
-        set -g __kb_error   a85a48
-    else
-        # Fallback estándar: Colores ANSI brillantes nativos
-        set -g __kb_border  brblack
-        set -g __kb_muted   brblack
-        set -g __kb_accent  cyan
-        set -g __kb_section yellow
-        set -g __kb_key     white
-        set -g __kb_desc    brwhite
-        set -g __kb_error   red
-    end
-    
+    # Nombres ANSI, igual que report-ui.fish: los resuelve la terminal, así que
+    # el visor sigue la paleta de kitty (que matugen regenera con el wallpaper)
+    # en vez de traer la suya congelada.
+    #
+    # Antes esto era un if sobre $COLORTERM con una rama hex y otra ANSI. Se
+    # fue: la detección es frágil ($COLORTERM suele venir vacío por SSH/tmux
+    # aunque la terminal sí soporte 24 bits) y en esta máquina la rama de
+    # fallback no se ejecutaba nunca, o sea que estaba sin probar. Un solo
+    # camino, el que anda en todas partes.
+    set -g __kb_border  brblack
+    set -g __kb_muted   brblack
+    set -g __kb_accent  cyan
+    set -g __kb_section yellow
+    set -g __kb_key     brwhite
+    set -g __kb_desc    white
+    set -g __kb_error   red
+
+
     # ── Settings ─────────────────────────────────────────────────────────────
     set -l width 74
     set -l page 1
@@ -70,6 +63,19 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     end
 
     # ── Input without bullets ────────────────────────────────────────────────
+
+    # Estado del tty tal como estaba antes de entrar al visor. __kb_getch pone
+    # la terminal en raw mode y la restaura al salir, pero si cortás con Ctrl+C
+    # justo en el medio ese restore nunca corre y te quedás sin echo ni line
+    # editing. El handler de abajo usa esta copia para dejarla como estaba.
+    set -g __kb_saved_tty (stty -g 2>/dev/null)
+
+    function __kb_on_int --on-signal INT
+        test -n "$__kb_saved_tty"; and stty $__kb_saved_tty 2>/dev/null
+        __keybinds_restore_window
+        __keybinds_cleanup
+        echo ""
+    end
 
     function __kb_getch
         set -l old_tty (stty -g)
@@ -485,10 +491,12 @@ end
 # definido dentro de __keybinds_viewer/__keybinds_prepare_window queda
 # global y persiste después de cerrar el visor. Se borra todo por nombre.
 function __keybinds_cleanup
-    for fn in __kb_getch __kb_line __kb_mid __kb_bottom __kb_raw __kb_text __kb_pair __kb_hint __kb_entries __kb_draw __kb_search __kb_search_prompt __kb_read_key
+    # __kb_on_int va en la lista: si quedara colgado, el próximo Ctrl+C en una
+    # shell normal dispararía el restore de una ventana que ya no existe.
+    for fn in __kb_getch __kb_line __kb_mid __kb_bottom __kb_raw __kb_text __kb_pair __kb_hint __kb_entries __kb_draw __kb_search __kb_search_prompt __kb_read_key __kb_on_int
         functions -q $fn; and functions -e $fn
     end
-    for v in __kb_border __kb_muted __kb_accent __kb_section __kb_key __kb_desc __kb_error __kb_query __kb_window_addr __kb_was_floating
+    for v in __kb_border __kb_muted __kb_accent __kb_section __kb_key __kb_desc __kb_error __kb_query __kb_window_addr __kb_was_floating __kb_saved_tty
         set -e $v 2>/dev/null
     end
 end

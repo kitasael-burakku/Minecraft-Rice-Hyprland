@@ -32,17 +32,13 @@ if status is-interactive
     alias temps="watch -n 2 sensors"
 
     # ── Software Config ──────────────────────────────────────
-    alias ecswaync="codium ~/.config/swaync && pkill kitty"
-    alias echypr="codium ~/.config/hypr && pkill kitty"
-    alias ecwaybar="codium ~/.config/waybar && pkill kitty"
-    alias ecfish="codium ~/.config/fish && pkill kitty"
-
-    alias eckitty="codium ~/.config/kitty && pkill kitty"
-    alias echyprlock="codium ~/.config/hyprlock && pkill kitty"
-    alias ecrofi="codium ~/.config/rofi && pkill kitty"
-    alias ecwlogout="codium ~/.config/wlogout && pkill kitty"
-
-    alias eccava="codium ~/.config/cava && pkill kitty"
-    alias ecfastfetch="codium ~/.config/fastfetch && pkill kitty"
-    alias ecstarship="codium ~/.config/matugen/templates/starship.toml ~/.config/starship.static.toml && pkill kitty"
+    # Todo esto vive ahora en functions/ec.fish (con tab-completion:
+    # "ec <TAB>"). Los nombres viejos se conservan como envoltorios para no
+    # romper la memoria muscular — agregar un config nuevo es una línea en
+    # __ec_targets, no una alias más acá.
+    for __ec_name in swaync hypr waybar fish kitty hyprlock rofi wlogout \
+        cava fastfetch starship
+        alias ec$__ec_name="ec $__ec_name"
+    end
+    set -e __ec_name
 end

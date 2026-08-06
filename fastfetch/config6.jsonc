@@ -7,48 +7,103 @@
     "type": "builtin"
   },
 
-  "display": {
-    "separator": " → ",
-    "constants": [
-      "────────────────────────────────────────"
+    "display": {
+        "separator": "->   ",
+        "color": {
+            "separator": "1" // Bold
+        },
+        "constants": [
+            "─────────────────────"
+        ],
+        "key": {
+            "type": "both",
+            "paddingLeft": 4
+        }
+    },
+    "modules": [
+        {
+            "type": "custom",
+            "format": "────────────────────CachyOS@キタサンブラック────────────────────",
+            "outputColor": "31"
+        },
+        "break",
+        {
+            "type": "custom",
+            "format": "┌{$1} {#1}System Information{#} {$1}┐"
+        },
+        "break",
+        {
+            "key": "OS           ",
+            "keyColor": "red",
+            "type": "os"
+        },
+        {
+            "key": "Machine      ",
+            "keyColor": "green",
+            "type": "host"
+        },
+        {
+            "key": "Kernel       ",
+            "keyColor": "magenta",
+            "type": "kernel"
+        },
+        {
+            "key": "Uptime       ",
+            "keyColor": "red",
+            "type": "uptime"
+        },
+        {
+            "key": "Resolution   ",
+            "keyColor": "yellow",
+            "type": "display",
+            "compactType": "original-with-refresh-rate"
+        },
+        {
+            "key": "WM           ",
+            "keyColor": "blue",
+            "type": "wm"
+        },
+        {
+            "key": "DE           ",
+            "keyColor": "green",
+            "type": "de"
+        },
+        {
+            "key": "Shell        ",
+            "keyColor": "cyan",
+            "type": "shell"
+        },
+        {
+            "key": "Terminal     ",
+            "keyColor": "red",
+            "type": "terminal"
+        },
+        {
+            "key": "CPU          ",
+            "keyColor": "yellow",
+            "type": "cpu"
+        },
+        {
+            "key": "GPU          ",
+            "keyColor": "blue",
+            "type": "gpu"
+        },
+        {
+            "key": "Memory       ",
+            "keyColor": "magenta",
+            "type": "memory"
+        },
+        "break",
+        {
+            "type": "custom",
+            "format": "└{$1}────────────────────{$1}┘"
+        },
+        "break",
+        {
+            "type": "colors",
+            "paddingLeft": 34,
+            "symbol": "circle"
+        },
+        "break"
     ]
-  },
-
-  "modules": [
-    { "type": "custom", "format": "{#90}╭─ System {$1}" },
-
-    { "type": "title", "key": "{#91}│ ", "format": "{user-name}@{host-name}" },
-    { "type": "datetime", "key": "{#91}│ 󰃭 Date", "format": "{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty}" },
-
-    { "type": "custom", "format": "{#90}├─ OS {$1}" },
-
-    { "type": "os", "key": "{#93}│  OS", "format": "{pretty-name} [{arch}]" },
-    { "type": "kernel", "key": "{#93}│ ├ Kernel" },
-    { "type": "packages", "key": "{#93}│ ├󰏖 Packages" },
-    { "type": "shell", "key": "{#93}│ └ Shell" },
-
-    { "type": "custom", "format": "{#90}├─ Desktop {$1}" },
-
-    { "type": "wm", "key": "{#94}│ 󱂬 WM" },
-    { "type": "lm", "key": "{#94}│ ├󰧨 Login" },
-    { "type": "terminal", "key": "{#94}│ ├ Terminal" },
-    { "type": "icons", "key": "{#94}│ └󰀻 Icons" },
-
-    { "type": "custom", "format": "{#90}├─ Hardware {$1}" },
-
-    { "type": "host", "key": "{#92}│ 󰌢 PC" },
-    { "type": "cpu", "key": "{#92}│ ├󰻠 CPU", "showPeCoreCount": true, "temp": true, "format": "{name} [{core-types}] [{freq-max}]" },
-    { "type": "gpu", "key": "{#92}│ ├󰍛 GPU", "detectionMethod": "auto", "driverSpecific": false, "format": "{name}" },
-    { "type": "memory", "key": "{#92}│ ├󰑭 Memory", "format": "{used} / {total} ({percentage})" },
-    { "type": "swap", "key": "{#92}│ ├󰓡 Swap", "format": "{used} / {total} ({percentage})" },
-    { "type": "disk", "key": "{#92}│ ├ Disk", "folders": "/", "format": "{size-used} / {size-total} ({size-percentage})" },
-    { "type": "display", "key": "{#92}│ ├󰍹 Display", "format": "{name} {width}x{height}[{refresh-rate}Hz]" },
-    { "type": "uptime", "key": "{#92}│ └󰅐 Uptime" },
-
-    { "type": "custom", "format": "{#90}├─ Colors {$1}" },
-    { "type": "colors", "key": "{#92}│", "symbol": "circle" },
-
-    { "type": "custom", "format": "{#90}╰──────────────────────────────────────╯" },
-    "break"
-  ]
 }

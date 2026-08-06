@@ -105,13 +105,15 @@
 
 /* ── Critical ───────────────────────────────────────────── */
 
+/* .notification.critical es el hijo del card, no el card: si le ponemos borde
+   acá se dibuja ENCIMA del que ya tiene .notification-background y se ve un
+   trazo doble. La urgencia queda marcada con el glow interno y el .summary
+   en rojo. */
 .floating-notifications.background
 .notification-row
 .notification-background
 .notification.critical {
-  border:        1px solid var(--border-red);
-  border-bottom: 2px solid var(--border-red-b);
-  box-shadow:    inset 0 0 12px var(--glow-red);
+  box-shadow: inset 0 0 16px var(--bg-red-active);
 }
 
 .floating-notifications.background
@@ -146,6 +148,53 @@
   color:      var(--text-primary);
 }
 
+/* ── Inline replies ─────────────────────────────────────── */
+
+/* config.json tiene notification-inline-replies: true. Como acá hay
+   `* { all: unset }` + ignore-gtk-theme, y swaync no carga el style.css de
+   /etc/xdg cuando existe el del usuario, sin estas reglas el campo de texto
+   se dibuja literalmente invisible: sin fondo, sin borde y sin cursor. */
+.inline-reply {
+  margin-top: 6px;
+}
+
+.inline-reply-entry {
+  background:    var(--bg-dark);
+  color:         var(--text-primary);
+  caret-color:   var(--accent);
+  border:        1px solid var(--border-dim);
+  border-radius: var(--radius-action);
+  padding:       6px 10px;
+  margin-right:  6px;
+  transition:    border-color var(--transition);
+}
+
+.inline-reply-entry:focus {
+  border-color: var(--accent);
+}
+
+.inline-reply-button {
+  background:    var(--bg-action-btn);
+  color:         var(--text-body);
+  border:        1px solid var(--border-dim);
+  border-radius: var(--radius-action);
+  padding:       6px 12px;
+  transition:    background var(--transition), color var(--transition),
+                 border-color var(--transition);
+}
+
+.inline-reply-button:hover {
+  background:   var(--bg-action);
+  color:        var(--text-primary);
+  border-color: var(--accent);
+}
+
+.inline-reply-button:disabled {
+  background:   transparent;
+  color:        var(--text-muted);
+  border-color: transparent;
+}
+
 /* ── Images ─────────────────────────────────────────────── */
 
 .image {
@@ -153,6 +202,19 @@
   min-height:    56px;
   border-radius: var(--radius-image);
   margin:        8px 14px 8px 4px;
+}
+
+/* La imagen grande opcional del cuerpo (config.json la fija en 160x200). */
+.body-image {
+  border-radius: var(--radius-image);
+  margin-top:    6px;
+}
+
+/* Badge del ícono de la app, superpuesto sobre la imagen principal: la sombra
+   es lo que lo despega del arte cuando la carátula es clara. */
+.app-icon {
+  -gtk-icon-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  margin:           6px;
 }
 
 /* ── Typography ─────────────────────────────────────────── */
