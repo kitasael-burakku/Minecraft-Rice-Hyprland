@@ -9,6 +9,10 @@
 # Tabla nombre→ruta(s). Una entrada por línea, rutas separadas por espacios.
 # Está en una función y no en una variable global para no ocupar entorno en
 # cada shell: solo se evalúa cuando se llama a ec o a su completion.
+#
+# OJO: si agregás un target acá, agregá el nombre TAMBIÉN al bucle de aliases
+# en conf.d/tools.fish, o `ec <nombre>` va a andar pero `ec<nombre>` no.
+# (Fue exactamente lo que pasó con matugen.)
 function __ec_targets
     echo "swaync     $HOME/.config/swaync"
     echo "hypr       $HOME/.config/hypr"

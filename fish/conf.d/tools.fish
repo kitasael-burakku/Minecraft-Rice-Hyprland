@@ -36,8 +36,13 @@ if status is-interactive
     # "ec <TAB>"). Los nombres viejos se conservan como envoltorios para no
     # romper la memoria muscular — agregar un config nuevo es una línea en
     # __ec_targets, no una alias más acá.
+    # OJO: esta lista tiene que coincidir con __ec_targets en
+    # functions/ec.fish. No se deriva de ahí a propósito — hacerlo obligaría a
+    # cargar ec.fish en CADA arranque de shell solo para leer los nombres, y
+    # ec.fish está en functions/ justamente para que se cargue recién cuando lo
+    # usás. El precio es tener que agregar el nombre en los dos lados.
     for __ec_name in swaync hypr waybar fish kitty hyprlock rofi wlogout \
-        cava fastfetch starship
+        cava fastfetch matugen starship
         alias ec$__ec_name="ec $__ec_name"
     end
     set -e __ec_name
