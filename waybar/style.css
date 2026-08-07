@@ -83,7 +83,7 @@ window#waybar {
 #disk { color: @disk-col; }
 #temperature { color: @temp; }
 #custom-gpu { color: @cpu-col; }
-#custom-bluetooth { color: @bt; }
+#custom-bluetooth { color: @fg; }
 #power-profiles-daemon { color: @accent-gold; }
 #privacy { color: @red; }
 #tray { color: @fg; }
@@ -134,7 +134,7 @@ window#waybar {
    cuando está apagado, acento cuando hay un dispositivo conectado — tres
    estados con tres colores reales, no una variación de opacidad. */
 #custom-bluetooth.disabled { color: @red; }
-#custom-bluetooth.connected { color: @accent; }
+#custom-bluetooth.connected { color: @fg; }
 
 #power-profiles-daemon.performance { color: @red; }
 #power-profiles-daemon.power-saver { color: @net; }
