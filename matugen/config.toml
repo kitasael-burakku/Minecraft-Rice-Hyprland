@@ -67,3 +67,27 @@ input_path  = '~/.config/matugen/templates/music-progress-colors.sh'
 output_path = '~/.config/hyprlock/scripts/music-colors.sh'
 # sin post_hook: music-progress.sh relee este archivo en cada invocación
 # (cada 1s), no hace falta ninguna señal
+
+[templates.gtk3]
+input_path  = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/gtk-3.0/gtk-colors.css'
+# sin post_hook posible: GTK sólo lee gtk.css al arrancar la app (mismo
+# límite que ya documenta el template de fish) — Nautilus/pavucontrol/
+# blueman-manager ya abiertos no recogen esto hasta reabrirse.
+
+[templates.gtk4]
+input_path  = '~/.config/matugen/templates/gtk-colors.css'
+output_path = '~/.config/gtk-4.0/gtk-colors.css'
+# mismo archivo de entrada que gtk3 (los overrides son idénticos en ambas
+# versiones) — sólo cambia el output_path. Sin post_hook, mismo motivo.
+
+[templates.qt5]
+input_path  = '~/.config/matugen/templates/qt-colors.conf'
+output_path = '~/.config/qt5ct/colors/kitasan-glass.conf'
+# sin post_hook posible: qt5ct sólo relee el color_scheme_path al arrancar
+# cada app Qt (mismo límite que gtk/fish).
+
+[templates.qt6]
+input_path  = '~/.config/matugen/templates/qt-colors.conf'
+output_path = '~/.config/qt6ct/colors/kitasan-glass.conf'
+# mismo archivo de entrada que qt5 — sólo cambia el output_path.

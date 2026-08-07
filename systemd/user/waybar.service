@@ -1,0 +1,23 @@
+[Unit]
+Description=Waybar status bar
+# PartOf: al pararse graphical-session.target (hl.on("hyprland.shutdown") en
+# hypr/modules/autostart.lua), este servicio se para con él — antes era un
+# job suelto de hl.exec_cmd que sobrevivía a cualquier cosa salvo un pkill
+# manual.
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/waybar
+# Mismo mecanismo que ya usaban apply-static-colors.sh y los post_hook de
+# matugen (pkill -SIGUSR2 waybar) — ahora también disponible como
+# `systemctl --user reload waybar.service`.
+ExecReload=/usr/bin/pkill -SIGUSR2 waybar
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

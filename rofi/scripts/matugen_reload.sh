@@ -16,6 +16,12 @@
 #  eval) ya NO se manejan acá — cada uno es un post_hook de su template en
 #  ~/.config/matugen/config.toml. Este script solo resuelve el frame de
 #  entrada y llama a matugen; todo lo demás lo dispara matugen solo.
+#
+#  Esquema de color: antes hardcodeado a "scheme-tonal-spot". Ahora se lee de
+#  ~/.config/matugen/scheme (una línea, sin saltos) si existe — así
+#  rofi/scripts/theme.sh puede cambiarlo sin tocar este script. Sin ese
+#  archivo, cae al mismo default de siempre (tonal-spot), cero cambio de
+#  comportamiento para quien no use el selector de perfiles.
 # ============================================================================
 
 set -u
@@ -27,7 +33,23 @@ FRAME="${XDG_RUNTIME_DIR:-/tmp}/matugen-frame.png"
 
 MATUGEN_CONFIG="${MATUGEN_CONFIG:-$HOME/.config/matugen/config.toml}"
 MATUGEN_SENTINEL="${MATUGEN_SENTINEL:-$HOME/.config/matugen/enabled}"
+MATUGEN_SCHEME_FILE="${MATUGEN_SCHEME_FILE:-$HOME/.config/matugen/scheme}"
 ENABLE_DYNAMIC_COLORS="${ENABLE_DYNAMIC_COLORS:-0}"
+
+# Whitelist — misma lista que reporta `matugen --help`. Si el archivo trae
+# basura (edición a mano, corrupción), cae al default en vez de pasarle un
+# -t inválido a matugen.
+VALID_SCHEMES="scheme-content scheme-expressive scheme-fidelity scheme-fruit-salad scheme-monochrome scheme-neutral scheme-rainbow scheme-tonal-spot scheme-vibrant"
+MATUGEN_SCHEME="scheme-tonal-spot"
+if [ -f "$MATUGEN_SCHEME_FILE" ]; then
+    candidate="$(tr -d '[:space:]' < "$MATUGEN_SCHEME_FILE" 2>/dev/null)"
+    for s in $VALID_SCHEMES; do
+        if [ "$s" = "$candidate" ]; then
+            MATUGEN_SCHEME="$candidate"
+            break
+        fi
+    done
+fi
 
 echo "$(date) === matugen_reload START (wall=$WALL) ===" >> "$LOG"
 
@@ -59,8 +81,8 @@ case "$ext" in
 esac
 
 # ── Generar colores (los post_hook de cada template disparan sus reloads) ───
-if matugen --config "$MATUGEN_CONFIG" image "$IN" -m dark -t scheme-tonal-spot >>"$LOG" 2>&1; then
-    echo "$(date) matugen OK (imagen: $IN)" >> "$LOG"
+if matugen --config "$MATUGEN_CONFIG" image "$IN" -m dark -t "$MATUGEN_SCHEME" >>"$LOG" 2>&1; then
+    echo "$(date) matugen OK (imagen: $IN, scheme: $MATUGEN_SCHEME)" >> "$LOG"
 else
     echo "$(date) matugen falló generando templates — los archivos anteriores quedan intactos" >> "$LOG"
 fi

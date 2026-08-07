@@ -1,0 +1,15 @@
+[Unit]
+Description=Playerctl watcher — cache MPRIS metadata para Waybar (custom/playerctl, custom/playerlabel)
+PartOf=graphical-session.target
+After=graphical-session.target waybar.service
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=%h/.config/waybar/scripts/playerctl-watch.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

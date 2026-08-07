@@ -1,0 +1,5 @@
+/* Kitasan Glass — GTK3 SÍ soporta GTK_THEME (ver hypr/modules/environment.lua,
+   GTKTheme = "Colorful-Dark-GTK"), así que el tema base ya se carga solo —
+   este archivo sólo suma overrides de color encima, no hace falta
+   re-importar el tema como en gtk-4.0/gtk.css. */
+@import 'gtk-colors.css';

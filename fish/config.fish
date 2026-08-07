@@ -8,15 +8,16 @@ function fastfetch
 
     # Configuración y pesos
     set -l weighted \
-        "$base/config.jsonc:12" \
-        "$base/config2.jsonc:10" \
-        "$base/config3.jsonc:7" \
-        "$base/config4.jsonc:5" \
-        "$base/config5.jsonc:3" \
-        "$base/config6.jsonc:2" \
-        "$base/config7.jsonc:1" \
-        "$base/config8.jsonc:0.5" \
-        "$base/config9.jsonc:0.25"
+        "$base/kitasan.jsonc:12" \
+        "$base/goldship.jsonc:10" \
+        "$base/yani.jsonc:8" \
+        "$base/arch.jsonc:6" \
+        "$base/microfetch.jsonc:4" \
+        "$base/lfs.jsonc:3" \
+        "$base/cachyos.jsonc:2" \
+        "$base/hyprmc.jsonc:1" \
+        "$base/kitasan_ascii.jsonc:0.5" \
+        "$base/duki.jsonc:0.25"
 
     set -l bag_file "$base/.fastfetch_bag"
 

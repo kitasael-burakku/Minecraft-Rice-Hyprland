@@ -3,7 +3,7 @@
 #  apply-static-colors.sh — aplica la paleta estática "Kitasan Glass"
 # ----------------------------------------------------------------------------
 #  Dos usos:
-#   1) Bootstrap en un clon nuevo: los 9 archivos de color por app son
+#   1) Bootstrap en un clon nuevo: los archivos de color por app son
 #      generados por matugen y NO viven en el repo — solo sus contrapartes
 #      *.static.* sí. Correr esto una vez tras clonar deja el sistema con la
 #      identidad estática, idéntico a como se ve con el theming dinámico
@@ -27,9 +27,23 @@ cp "$HOME/.config/swaync/colors.static.css"        "$HOME/.config/swaync/colors.
 cp "$HOME/.config/starship.static.toml"            "$HOME/.config/starship.toml"             2>/dev/null || true
 cp "$HOME/.config/fish/theme-goldship.static.fish" "$HOME/.config/fish/conf.d/theme-goldship.fish" 2>/dev/null || true
 cp "$HOME/.config/hyprlock/scripts/music-colors.static.sh" "$HOME/.config/hyprlock/scripts/music-colors.sh" 2>/dev/null || true
+cp "$HOME/.config/gtk-3.0/gtk-colors.static.css"    "$HOME/.config/gtk-3.0/gtk-colors.css"    2>/dev/null || true
+cp "$HOME/.config/gtk-4.0/gtk-colors.static.css"    "$HOME/.config/gtk-4.0/gtk-colors.css"    2>/dev/null || true
+cp "$HOME/.config/qt5ct/colors/kitasan-glass.static.conf" "$HOME/.config/qt5ct/colors/kitasan-glass.conf" 2>/dev/null || true
+cp "$HOME/.config/qt6ct/colors/kitasan-glass.static.conf" "$HOME/.config/qt6ct/colors/kitasan-glass.conf" 2>/dev/null || true
 
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
 [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"
+
+# gtk-4.0/theme-base.css: symlink al tema real (Colorful-Dark-GTK), NO
+# versionado a propósito — es un archivo de ~140 KB de un tema de terceros
+# instalado en ~/.local/share/themes/, no algo que este repo deba publicar,
+# y un symlink absoluto con el username hardcodeado tampoco sobrevive a un
+# clon en otra máquina. Se recrea acá (idempotente) para que el bootstrap
+# de un clon nuevo deje gtk-4.0/gtk.css funcionando sin depender de que
+# theme-base.css haya sobrevivido el clonado.
+THEME_GTK4="$HOME/.local/share/themes/Colorful-Dark-GTK/gtk-4.0/gtk.css"
+[ -f "$THEME_GTK4" ] && ln -sf "$THEME_GTK4" "$HOME/.config/gtk-4.0/theme-base.css" 2>/dev/null || true
 
 # Fondo de hyprlock: bootstrap desde el estático 2.png solo si todavía no hay
 # un current.png — no pisa la elección real del usuario si ya existe (elegir

@@ -1,0 +1,18 @@
+[Unit]
+Description=Restaura el último wallpaper persistido y regenera colores dinámicos si matugen está encendido
+# Antes esto era un solo hl.exec_cmd con wait-for-hyprland.sh + apply-wallpaper.sh
+# + matugen_reload.sh encadenados a mano con "&&" dentro de un string Lua
+# (hypr/modules/autostart.lua). El orden real ahora lo expresa systemd:
+# awww.service tiene que estar arriba antes de aplicar el wallpaper.
+PartOf=graphical-session.target
+After=graphical-session.target awww.service
+Requires=awww.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=%h/.config/hypr/scripts/wait-for-hyprland.sh
+ExecStart=/usr/bin/bash -c '%h/.config/hypr/scripts/apply-wallpaper.sh && wall="$(cat %h/.config/hypr/.current-wallpaper 2>/dev/null)" && %h/.config/rofi/scripts/matugen_reload.sh "$wall"'
+
+[Install]
+WantedBy=graphical-session.target

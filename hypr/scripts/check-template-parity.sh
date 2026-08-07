@@ -24,6 +24,8 @@ pairs=(
     "starship|$BASE/matugen/templates/starship.toml|$BASE/starship.static.toml|toml"
     "fish/theme-goldship|$BASE/matugen/templates/theme-goldship.fish|$BASE/fish/theme-goldship.static.fish|fishset"
     "hyprlock/music-colors|$BASE/matugen/templates/music-progress-colors.sh|$BASE/hyprlock/scripts/music-colors.static.sh|shvar"
+    "gtk|$BASE/matugen/templates/gtk-colors.css|$BASE/gtk-3.0/gtk-colors.static.css|definecolor"
+    "qt|$BASE/matugen/templates/qt-colors.conf|$BASE/qt5ct/colors/kitasan-glass.static.conf|iniassign"
 )
 
 # Extrae el set de identificadores declarados de un archivo, según su formato.
@@ -60,6 +62,13 @@ extract() {
             ;;
         shvar)
             grep -oP '^\K\w+(?==)' "$file"
+            ;;
+        iniassign)
+            # active_colors=/disabled_colors=/inactive_colors= — anclado a
+            # inicio de línea a propósito: sin el "^" esto también matchea
+            # substrings de comentarios explicativos que mencionan
+            # "active_colors" en prosa (pasó en vivo al escribir esto).
+            grep -oP '^\K[a-zA-Z_]+(?=\s*=)' "$file"
             ;;
     esac
 }

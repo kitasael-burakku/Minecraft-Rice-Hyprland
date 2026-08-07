@@ -1,0 +1,49 @@
+/* Kitasan Glass — overrides de color para GTK3/GTK4, generados por matugen.
+   Estático de referencia: ~/.config/gtk-3.0/gtk-colors.static.css (mismo
+   contenido para gtk-4.0/gtk-colors.static.css).
+
+   Subconjunto DELIBERADAMENTE chico: Colorful-Dark-GTK (el tema activo,
+   derivado de Breeze) define ~90 variables con sufijo "_breeze" para
+   estados muy específicos (insensitive/backdrop/hover/unfocused/titlebar).
+   Re-tintar las 90 a ciegas es más superficie de la que hace falta — acá
+   sólo se pisan las que controlan la identidad de color percibida
+   (fondo/texto/selección/bordes/semánticos), tanto en su nombre base como
+   en su variante "_breeze" (el tema usa mayormente las "_breeze" en sus
+   selectores reales). No se toca nada del resto: sigue viniendo del tema
+   base vía el @import que carga esto antes que este archivo
+   (~/.config/gtk-3.0/gtk.css y gtk-4.0/gtk.css). */
+
+@define-color theme_bg_color            {{colors.surface.default.hex}};
+@define-color theme_bg_color_breeze     {{colors.surface.default.hex}};
+
+@define-color theme_fg_color            {{colors.on_surface.default.hex}};
+@define-color theme_fg_color_breeze     {{colors.on_surface.default.hex}};
+
+@define-color theme_base_color          {{colors.surface_container_low.default.hex}};
+@define-color theme_base_color_breeze   {{colors.surface_container_low.default.hex}};
+
+@define-color theme_text_color          {{colors.on_surface.default.hex}};
+@define-color theme_text_color_breeze   {{colors.on_surface.default.hex}};
+
+@define-color theme_selected_bg_color          {{colors.primary.default.hex}};
+@define-color theme_selected_bg_color_breeze   {{colors.primary.default.hex}};
+@define-color theme_selected_fg_color          {{colors.on_primary.default.hex}};
+@define-color theme_selected_fg_color_breeze   {{colors.on_primary.default.hex}};
+@define-color theme_hovering_selected_bg_color_breeze {{colors.primary.default.hex}};
+@define-color theme_view_active_decoration_color_breeze {{colors.primary.default.hex}};
+@define-color theme_view_hover_decoration_color_breeze  {{colors.primary.default.hex}};
+
+@define-color borders             {{colors.outline.default.hex}};
+@define-color borders_breeze      {{colors.outline.default.hex}};
+@define-color unfocused_borders   {{colors.outline_variant.default.hex}};
+@define-color unfocused_borders_breeze {{colors.outline_variant.default.hex}};
+
+@define-color error_color         {{colors.error.default.hex}};
+@define-color error_color_breeze  {{colors.error.default.hex}};
+/* matugen no tiene roles "warning"/"success" propios — reusa tertiary/secondary,
+   mismo criterio que ya aplican waybar-colors.css y starship.toml para
+   variedad de color sin inventar roles nuevos. */
+@define-color warning_color         {{colors.tertiary.default.hex}};
+@define-color warning_color_breeze  {{colors.tertiary.default.hex}};
+@define-color success_color         {{colors.secondary.default.hex}};
+@define-color success_color_breeze  {{colors.secondary.default.hex}};

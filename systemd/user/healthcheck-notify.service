@@ -1,0 +1,6 @@
+[Unit]
+Description=Chequeo de salud del sistema — notifica sólo si encuentra algo
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/healthcheck-notify.sh

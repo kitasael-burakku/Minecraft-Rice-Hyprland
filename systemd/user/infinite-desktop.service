@@ -1,0 +1,24 @@
+[Unit]
+Description=Infinite Desktop — canvas infinito por mouse/teclado (hyprland-infinite-desktop-v2)
+# Lee /dev/input crudo (grupo "input") y habla con Hyprland vía hypr_ipc.py.
+# Antes NUNCA arrancaba (bug: hl.on("hyprland.start") anidado dentro de otro
+# hl.on del mismo evento, en hypr/modules/autostart.lua — corregido). Ahora
+# además queda supervisado: si este proceso muere, se comen los eventos de
+# teclado que consume hasta que algo lo reinicie, así que Restart=on-failure
+# importa acá más que en la mayoría de los daemons de este archivo.
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStartPre=%h/.config/hypr/scripts/wait-for-hyprland.sh
+ExecStart=/usr/bin/python3 %h/.config/hypr/infinite_desktop/infinite_desktop_core.py 1.6
+Restart=on-failure
+RestartSec=2
+# journalctl --user -u infinite-desktop -f reemplaza al /tmp/infinite-desktop.log
+# suelto que usaba el hl.exec_cmd original.
+
+[Install]
+WantedBy=graphical-session.target

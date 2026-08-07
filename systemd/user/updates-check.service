@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresca el cache de actualizaciones pendientes (pacman+AUR) para Waybar
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/waybar/scripts/updates.sh --force
+# best-effort: si waybar no está corriendo (p.ej. sesión sin Hyprland), esto
+# no debe marcar el servicio como fallido — el pkill sólo importa cuando hay
+# una barra viva escuchando la señal 8 (custom/updates en config.jsonc).
+ExecStartPost=/usr/bin/bash -c 'pkill -RTMIN+8 waybar || true'
+# En background y con setsid (no bloquea este ExecStartPost, ni depende del
+# cgroup del servicio oneshot que ya terminó): notify-send --action implica
+# --wait, y puede quedar esperando un click del usuario durante rato largo.
+ExecStartPost=/usr/bin/bash -c 'setsid %h/.config/hypr/scripts/updates-notify-actionable.sh >/dev/null 2>&1 &'

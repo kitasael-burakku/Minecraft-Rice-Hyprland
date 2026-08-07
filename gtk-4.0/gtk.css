@@ -1,0 +1,13 @@
+/* Kitasan Glass — antes esto era un symlink directo al gtk.css del tema
+   (Colorful-Dark-GTK), puesto ahí por nwg-look: GTK4 no soporta la env var
+   GTK_THEME, así que ~/.config/gtk-4.0/gtk.css TIENE que ser el contenido
+   del tema, no sólo un override.
+   theme-base.css es un symlink al mismo archivo de siempre — se preserva
+   exactamente el mismo comportamiento. gtk-colors.css suma overrides de
+   color encima (dinámicos si matugen está encendido, estáticos si no) sin
+   tocar nada más del tema. Si nwg-look vuelve a pisar este archivo con un
+   symlink nuevo (p.ej. al cambiar de tema desde su UI), estos overrides se
+   pierden — hay que reaplicar (ec gtk / correr apply-static-colors.sh o el
+   toggle de matugen). */
+@import 'theme-base.css';
+@import 'gtk-colors.css';

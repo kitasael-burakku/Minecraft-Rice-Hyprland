@@ -1,0 +1,39 @@
+/* =====================================================
+   CONFIG COMPARTIDA — Kitasan Glass
+   ===================================================== */
+/* Antes cada uno de los 6 temas repetía su propio bloque `configuration {}`
+   con los mismos valores base. Este archivo centraliza lo que era idéntico
+   (o debería serlo) entre todos; cada tema importa esto primero y sólo
+   declara, en su propio `configuration {}`, lo que de verdad cambia respecto
+   a la base (show-icons en clipboard/power-menu, icon-theme en
+   window-switcher, etc. — rofi mergea bloques `configuration {}` sucesivos,
+   así que las claves no repetidas acá abajo simplemente no se tocan). */
+
+configuration {
+    /* Modos disponibles y sus iconos/formatos — usado por el mode-switcher
+       del launcher (style-4.rasi). El resto de los temas invocan un modo
+       explícito por CLI (-dmenu, -modi custom, -show <x>), que siempre gana
+       sobre este valor — no hay conflicto real en compartirlo. */
+    modi:                 "drun,run,filebrowser,window";
+    display-drun:         "󰀻";
+    display-run:          "󰆍";
+    display-filebrowser:  "󰉋";
+    display-window:       "󰖲";
+    drun-display-format:  "{name}";
+    window-format:        "{w} · {c} · {t}";
+
+    /* Terminal explícito: antes rofi adivinaba cuál usar para "run" en modo
+       drun/run — ahora coincide siempre con Programs.terminal
+       (hypr/modules/programs.lua). */
+    terminal:             "kitty";
+
+    /* Búsqueda fuzzy + orden por relevancia (mismo criterio que ya usás en
+       fzf vía fish/conf.d/fzf.fish) — antes quedaba en el default de rofi
+       (substring, sin reordenar). */
+    matching:             "fuzzy";
+    sorting-method:       "fzf";
+
+    show-icons:           true;
+
+    kb-cancel:            "Escape";
+}

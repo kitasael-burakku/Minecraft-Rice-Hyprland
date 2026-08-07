@@ -1,0 +1,15 @@
+[Unit]
+Description=Timer diario para thumbs-refresh.service
+
+[Timer]
+# generate-thumbs.sh ya es incremental (compara mtime contra el thumbnail
+# existente) y wallpaper_rofi.sh igual lo relanza al abrir el picker si hay
+# wallpapers más nuevos que el último escaneo — este timer sólo adelanta ese
+# trabajo para que el picker nunca tenga que generar nada la primera vez que
+# se abre después de agregar wallpapers nuevos.
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,18 @@
+[Unit]
+Description=SwayNC notification daemon
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/swaync
+# swaync-client -R / -rs (usado por apply-static-colors.sh y el post_hook de
+# matugen para swaync) sigue funcionando igual — hablan con el proceso vivo,
+# no con el supervisor.
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

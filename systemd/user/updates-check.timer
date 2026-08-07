@@ -1,0 +1,17 @@
+[Unit]
+Description=Timer periódico para updates-check.service
+
+[Timer]
+# Antes esto se disparaba implícitamente cada vez que waybar sondeaba
+# custom/updates (interval: 30s en config.jsonc) y el cache TTL de
+# updates.sh (300s) ya vencía — es decir, la primera consulta de waybar
+# después de esos 5 min bloqueaba ese ciclo de render con la llamada real a
+# checkupdates/yay -Qua. Ahora el refresh real corre acá, desacoplado del
+# polling de la barra: waybar sigue leyendo el mismo cache, pero nunca es
+# quien dispara la consulta lenta.
+OnBootSec=2min
+OnUnitActiveSec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+[Unit]
+Description=Genera/poda thumbnails del wallpaper picker en background
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/rofi/scripts/generate-thumbs.sh

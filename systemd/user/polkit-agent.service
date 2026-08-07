@@ -1,0 +1,16 @@
+[Unit]
+Description=Polkit authentication agent (KDE)
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionPathExists=/usr/lib/polkit-kde-authentication-agent-1
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/polkit-kde-authentication-agent-1
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

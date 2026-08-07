@@ -40,6 +40,10 @@ hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(Programs.wallpaper))
 -- Toggle theming dinámico (matugen)
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/matugen_toggle.sh"))
 
+-- Selector de perfil visual — esquema de matugen. Mismo mnemónico que W
+-- (wallpaper) / SHIFT+W (toggle dinámico): ALT+W elige CUÁL esquema.
+hl.bind(mainMod .. " + ALT + W", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/theme.sh"))
+
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(Programs.record))
 
@@ -54,7 +58,7 @@ hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(Programs.record))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- Toggle floating mode
-hl.bind("+ CTRL + ALT + V", function()
+hl.bind("CTRL + ALT + V", function()
     local win = hl.get_active_window()
     local monitor = hl.get_active_monitor()
 
@@ -93,21 +97,39 @@ hl.bind(mainMod .. "+ F1", hl.dsp.exec_cmd("kitty --title keybinds -e fish -c ke
 -- Update System
 hl.bind(mainMod .. "+ F2", hl.dsp.exec_cmd("kitty --title sysupdate -e fish -c sysupdate"))
 
+-- Gestor de servicios systemd — start/stop/restart/journal
+hl.bind(mainMod .. "+ F3", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/systemd.sh"))
+
+-- kitasan menu — puerta de entrada rofi al CLI unificado (health/clean/
+-- update/theme/wallpaper/doctor)
+hl.bind(mainMod .. "+ F4", hl.dsp.exec_cmd("fish -c 'kitasan menu'"))
+
+-- Dashboard del sistema — updates/servicios/temps/disco/reproductor/backup.
+-- Mismo patrón de invocación que window-switcher en hypr/modules/programs.lua
+hl.bind(mainMod .. "+ F5", hl.dsp.exec_cmd("pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show dashboard -modi dashboard:" .. home .. "/.config/rofi/scripts/dashboard.sh -theme " .. home .. "/.config/rofi/clipboard.rasi"))
+
 -- Exit Hyprland
 hl.bind(mainMod .. " + delete", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 
--- Session menu (Wlogout)
+-- Session menu (Wlogout) — menú completo
 hl.bind(mainMod .. "+ ESCAPE", hl.dsp.exec_cmd(home .. "/.config/wlogout/scripts/launch_wlogout.sh"))
+
+-- Power menu rápido (rofi) — alternativa liviana a wlogout para lo común
+-- (lock/suspend/logout/reboot/shutdown); hibernate sigue sólo en wlogout.
+hl.bind(mainMod .. " + SHIFT + ESCAPE", hl.dsp.exec_cmd(home .. "/.config/rofi/scripts/power.sh"))
 
 -- Lock screen
 hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd(Programs.lockscreen))
 
 -- System monitor (btop)
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title btop -e btop"))
+-- System monitor (bottom)
 hl.bind("SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title bottom -e btm"))
 
--- Reload Waybar & SwayNc
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd(home .. "/.config/waybar/scripts/launch.sh"))
+-- Reload Waybar & SwayNc — ahora son servicios systemd supervisados
+-- (waybar.service, playerctl-watch.service, swaync.service): restart en vez
+-- de pkill+relanzar a mano vía waybar/scripts/launch.sh.
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("systemctl --user restart waybar.service playerctl-watch.service swaync.service"))
 
 -----------------------------
 ----   CLIPBOARD / COLOR  ----
@@ -236,13 +258,13 @@ hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 -- (chmod +x) y el daemon infinite_desktop_core.py corriendo
 -- (autostart configurado aparte)
 
--- Ciclar workspace (además de tus binds numéricos y el scroll del mouse)
+-- Ciclar workspace — además de los binds numéricos y el scroll del mouse
 hl.bind(mainMod .. " + Z", hl.dsp.focus({ workspace = "-1" }))
 hl.bind(mainMod .. " + X", hl.dsp.focus({ workspace = "+1" }))
 hl.bind(mainMod .. " + SHIFT + Z", hl.dsp.window.move({ workspace = "-1" }))
 hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "+1" }))
 
--- Toggle floating/tiling de todas las ventanas
+-- Toggle floating/tiling — todas las ventanas
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/floating_tile_toggle.py"))
 
 -- Mover ventanas en modo tiled

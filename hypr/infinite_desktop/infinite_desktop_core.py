@@ -1,4 +1,4 @@
-import sys, struct, threading, time, subprocess, json, os
+import sys, struct, threading, time, subprocess, json, os, shutil
 import fcntl
 import select
 import math
@@ -51,11 +51,21 @@ def read_inverted():
     except:
         return False
 
+# quickshell ('qs') es opcional — este daemon no depende de él para nada más
+# que mostrar/ocultar un marco visual. Resuelto una sola vez al importar en
+# vez de en cada toggle: sin esto, cada SUPER+ALT lanzaba un hilo +
+# subprocess.run condenado a FileNotFoundError si 'qs' no está instalado
+# (silencioso por el try/except, pero seguía siendo overhead por evento).
+QUICKSHELL_AVAILABLE = shutil.which("qs") is not None
+
 def notify_quickshell_hold(state):
     """Avisa a quickshell (IpcHandler target='frame') que esconda/muestre
     el marco. No bloqueante: se lanza en su propio hilo para no meter
-    latencia en el loop de lectura de teclado. Silenciosa si quickshell
-    no está corriendo (p.ej. durante un reload)."""
+    latencia en el loop de lectura de teclado. No-op si quickshell no está
+    instalado (QUICKSHELL_AVAILABLE=False) o no está corriendo (p.ej.
+    durante un reload)."""
+    if not QUICKSHELL_AVAILABLE:
+        return
     try:
         subprocess.run(
             ['qs', 'ipc', 'call', 'frame', 'setHeldHidden', 'true' if state else 'false'],
@@ -375,7 +385,7 @@ def kbd_reader_device(path):
         # propio hilo: qs ipc call puede tardar unos ms y no queremos
         # bloquear la lectura de eventos ni a otros hilos de teclado
         # esperando el mismo lock.
-        if notify_state is not None:
+        if notify_state is not None and QUICKSHELL_AVAILABLE:
             threading.Thread(target=notify_quickshell_hold, args=(notify_state,), daemon=True).start()
 
     try:

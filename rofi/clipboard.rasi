@@ -2,11 +2,12 @@
    CLIPBOARD — Kitasan Glass
    ===================================================== */
 
+@import "~/.config/rofi/config.rasi"
+@import "~/.config/rofi/colors.rasi"
+
 configuration {
     show-icons: false;
 }
-
-@import "~/.config/rofi/colors.rasi"
 
 * {
     font:           "JetBrainsMono Nerd Font Propo 11";

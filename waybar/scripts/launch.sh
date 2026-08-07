@@ -3,6 +3,12 @@
 ##############
 ## Reinicio ##
 ##############
+# Superseded por systemd (waybar.service, playerctl-watch.service,
+# swaync.service — ver ~/.config/systemd/user/) desde la migración de
+# autostart.lua. Ya no lo llama nada del rice: ni el arranque de sesión ni
+# el bind SUPER+SHIFT+R (ahora "systemctl --user restart waybar.service
+# playerctl-watch.service swaync.service"). Se deja andando como fallback
+# manual (bash launch.sh) para debug fuera de systemd si hiciera falta.
 
 set -u
 

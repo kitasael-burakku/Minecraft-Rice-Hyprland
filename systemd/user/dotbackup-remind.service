@@ -1,0 +1,6 @@
+[Unit]
+Description=Avisa si ~/.config divergió de ~/Projects/dotfiles (solo lectura, no sincroniza nada)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/dotbackup-remind.sh

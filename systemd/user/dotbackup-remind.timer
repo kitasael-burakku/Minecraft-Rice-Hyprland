@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer semanal para dotbackup-remind.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target

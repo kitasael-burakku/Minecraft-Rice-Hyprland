@@ -3,41 +3,50 @@ KEYBINDS
 
 Main modifier: SUPER (Tecla Windows / Options)
 
+Generado automáticamente por hypr/scripts/generate-keybinds-doc.sh
+desde hypr/modules/keybinds.lua — no editar a mano, se pisa en el
+próximo regenerado. Para documentar un bind nuevo, agregá un
+comentario "-- descripción" arriba de su hl.bind(...) y volvé a
+correr este script.
+
 
 APPS
 ----
 
-SUPER + Enter              Open Terminal
-SUPER + E                  Open File manager
-SUPER + B                  Open Browser
-SUPER + Space              Open Launcher
-SUPER + A                  Open/close SwayNC
-SUPER + W                  Open Wallpaper selector (Rofi)
-SUPER + SHIFT + W          Toggle dynamic wallpaper theming (matugen)
-SUPER + O                  Open OBS
+SUPER + Enter              Terminal
+SUPER + E                  File Manager
+SUPER + B                  Browser
+SUPER + Space              App Launcher
+SUPER + A                  Notification Center
+SUPER + W                  Wallpaper picker
+SUPER + SHIFT + W          Toggle theming dinámico (matugen)
+SUPER + ALT + W            Selector de perfil visual
+SUPER + O                  OBS Studio
 
 WINDOWS
 -------
 
-SUPER + Q                  Close window
-CTRL + ALT + V             Toggle floating
+SUPER + Q                  Close focused window
+CTRL + ALT + V             Toggle floating mode
+ALT + TAB                  Window shitcher
 SUPER + F                  Fullscreen mode 1
 SUPER + SHIFT + F          Fullscreen mode 0
-ALT + TAB		           Window Switcher
 
 SYSTEM
 ------
 
-SUPER + F1		           Keybind Viewer
-SUPER + F2		           Update System
-SUPER + SHIFT + R		   Reload Waybar and SwayNC
-SUPER + Delete             hyprshutdown (fallback: Exit Hyprland)
-SUPER + Escape             Open Wlogout
+SUPER + F1                 Keybind Viewer
+SUPER + F2                 Update System
+SUPER + F3                 Gestor de servicios systemd
+SUPER + F4                 kitasan menu
+SUPER + F5                 Dashboard del sistema
+SUPER + Delete             Exit Hyprland
+SUPER + Escape             Session menu (Wlogout)
+SUPER + SHIFT + Escape     Power menu rápido (rofi)
 SUPER + ALT + H            Lock screen
-CTRL + SHIFT + Escape      Open btop
-SHIFT + Escape             Open Bottom 
-ALT + SHIFT                Change the keyboard layout
-
+CTRL + SHIFT + Escape      System monitor (btop)
+SHIFT + Escape             System monitor (bottom)
+SUPER + SHIFT + R          Reload Waybar & SwayNc
 
 CLIPBOARD / COLOR
 -----------------
@@ -45,84 +54,59 @@ CLIPBOARD / COLOR
 SUPER + SHIFT + V          Clipboard history
 SUPER + P                  Color picker
 
-
 SCREENSHOTS
 -----------
 
-SUPER + F12                Full monitor screenshot
+SUPER + F12                Full monitor
 SUPER + F11                Region screenshot with Swappy
 SUPER + F10                Active window screenshot
 
+INFINITE DESKTOP — NAVIGATION
+-----------------------------
 
-FOCUS
------
+SUPER + Left               Reemplaza el focus nativo
+SUPER + Right              Reemplaza el focus nativo
+SUPER + Up                 Reemplaza el focus nativo
+SUPER + Down               Reemplaza el focus nativo
 
-SUPER + Left               Focus left
-SUPER + Right              Focus right
-SUPER + Up                 Focus up
-SUPER + Down               Focus down
+INFINITE DESKTOP — PAN
+----------------------
 
-
-MOVE WINDOWS
-------------
-
-SUPER + SHIFT + Left       Move window left
-SUPER + SHIFT + Right      Move window right
-SUPER + SHIFT + Up         Move window up
-SUPER + SHIFT + Down       Move window down
-
+SUPER + SHIFT + Left       Reemplaza el move nativo
+SUPER + SHIFT + Right      Reemplaza el move nativo
+SUPER + SHIFT + Up         Reemplaza el move nativo
+SUPER + SHIFT + Down       Reemplaza el move nativo
 
 WORKSPACES
 ----------
 
-SUPER + 1-0                Switch to workspace 1-10
-SUPER + SHIFT + 1-0        Move window to workspace 1-10
-
-
-INFINITE DESKTOP
-----------------
-
-SUPER + X		           Switch Workspace -1
-SUPER + Z                  Switch Workspace +1
-SUPER + SHIFT + Z          Move window to workspace -1
-SUPER + SHIFT + X          Move window to workspace +1
-SUPER + D                  Toggle floating tile 
-SUPER + ALT + Left         Move windows tiled mode to left
-SUPER + ALT + Right        Move windows tiled mode to Right
-SUPER + ALT + Up           Move windows tiled mode to Up      
-SUPER + ALT + Down         Move windows tiled mode to Down       
-SUPER + CTRL + Left        Resize Floating Window to Left
-SUPER + CTRL + Right       Resize Floating Window to Right
-SUPER + CTRL + Up          Resize Floating Window to Up       
-SUPER + CTRL + Down        Resize Floating Window to Down
-
+SUPER + 1-0                Cambiar a workspace 1-10
+SUPER + SHIFT + 1-0        Mover ventana a workspace 1-10
 
 SCRATCHPAD
 ----------
 
 SUPER + S                  Toggle scratchpad
-SUPER + SHIFT + S          Move window to/from scratchpad (toggle)
-
+SUPER + SHIFT + S          Move window to scratchpad
 
 MEDIA
 -----
 
-Volume +                   Increase volume
-Volume -                   Decrease volume
-Mute                       Mute audio
-Next                       Next track
-Play/Pause                 Play/Pause
-Previous                   Previous track
-
+Volume +                   Volume
+Volume -                   Volume
+Mute                       Volume
+Next                       Media playback
+Play/Pause                 Media playback
+Play/Pause                 Media playback
+Previous                   Media playback
 
 MOUSE
 -----
 
-SUPER + Left click         Move window
-SUPER + Right click        Resize window
-SUPER + Scroll down        Next workspace
-SUPER + Scroll up          Previous workspace
-
+SUPER + mouse:272          Move / resize windows
+SUPER + mouse:273          Move / resize windows
+SUPER + mouse_down         Workspace scrolling
+SUPER + mouse_up           Workspace scrolling
 
 LAYOUT SWITCHER
 ---------------
@@ -130,3 +114,25 @@ LAYOUT SWITCHER
 SUPER + SHIFT + D          Dwindle layout
 SUPER + SHIFT + M          Master layout
 SUPER + SHIFT + O          Scrolling layout
+
+INFINITE DESKTOP
+----------------
+
+SUPER + Z                  Ciclar workspace
+SUPER + X                  Ciclar workspace
+SUPER + SHIFT + Z          Ciclar workspace
+SUPER + SHIFT + X          Ciclar workspace
+SUPER + D                  Toggle floating/tiling
+SUPER + ALT + Left         Mover ventanas en modo tiled
+SUPER + ALT + Right        Mover ventanas en modo tiled
+SUPER + ALT + Up           Mover ventanas en modo tiled
+SUPER + ALT + Down         Mover ventanas en modo tiled
+SUPER + CTRL + Left        Redimensionar ventana flotante
+SUPER + CTRL + Right       Redimensionar ventana flotante
+SUPER + CTRL + Up          Redimensionar ventana flotante
+SUPER + CTRL + Down        Redimensionar ventana flotante
+
+BINDS PRIVADOS
+--------------
+
+SUPER + M                  Abrir/cerrar reproductor
