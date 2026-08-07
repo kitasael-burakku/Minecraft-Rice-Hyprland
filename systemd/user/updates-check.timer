@@ -9,8 +9,16 @@ Description=Timer periódico para updates-check.service
 # checkupdates/yay -Qua. Ahora el refresh real corre acá, desacoplado del
 # polling de la barra: waybar sigue leyendo el mismo cache, pero nunca es
 # quien dispara la consulta lenta.
-OnBootSec=2min
-OnUnitActiveSec=30min
+#
+# OnBootSec=/OnUnitActiveSec= (reloj monotónico) se probó primero acá, pero
+# se rompía en cada reinicio real: "próxima vez" se calculaba contra
+# LastTriggerUSec de la sesión anterior, con un reloj monotónico que
+# arranca de cero en cada boot — confirmado en vivo, el timer quedaba con
+# next_elapse=infinity después de reiniciar (nunca volvía a correr solo).
+# Los otros 3 timers de este rice (thumbs-refresh/healthcheck-notify/
+# dotbackup-remind) usan OnCalendar= — reloj de pared, sin esta clase de
+# bug — y nunca tuvieron el problema. Mismo mecanismo acá ahora.
+OnCalendar=*:0/30
 Persistent=true
 
 [Install]

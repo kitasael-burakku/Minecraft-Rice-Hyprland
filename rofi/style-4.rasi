@@ -2,7 +2,7 @@
 @import "~/.config/rofi/config.rasi"
 @import "~/.config/rofi/colors.rasi"
 
-/* modi/show-icons/display-*/window-format/terminal/matching/sorting ya
+/* modi/show-icons/display-/window-format/terminal/matching/sorting ya
    vienen de config.rasi — este tema no necesita overrides. */
 
 * {
