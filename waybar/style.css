@@ -38,7 +38,7 @@ window#waybar {
 #workspaces, #window, #custom-updates, #temperature,
 #idle_inhibitor, #custom-power, #pulseaudio-slider,
 #custom-playerctl, #custom-playerlabel, #custom-gpu,
-#power-profiles-daemon, #bluetooth, #privacy, #tray {
+#power-profiles-daemon, #custom-bluetooth, #privacy, #tray {
     margin: 0 7px;
     padding: 0;
 }
@@ -83,7 +83,7 @@ window#waybar {
 #disk { color: @disk-col; }
 #temperature { color: @temp; }
 #custom-gpu { color: @cpu-col; }
-#bluetooth { color: @fg; }
+#custom-bluetooth { color: @bt; }
 #power-profiles-daemon { color: @accent-gold; }
 #privacy { color: @red; }
 #tray { color: @fg; }
@@ -128,7 +128,13 @@ window#waybar {
    MÓDULOS NUEVOS (tray / gpu / ppd / bluetooth / privacy)
 ----------------------------------- */
 
-#bluetooth.disabled { color: alpha(@fg, 0.35); }
+/* Antes .disabled sólo bajaba la opacidad de @fg (35%) — muy sutil para
+   notar el cambio a simple vista, a diferencia de #network.disconnected /
+   #pulseaudio.muted (rojo directo, arriba). Mismo criterio acá: rojo
+   cuando está apagado, acento cuando hay un dispositivo conectado — tres
+   estados con tres colores reales, no una variación de opacidad. */
+#custom-bluetooth.disabled { color: @red; }
+#custom-bluetooth.connected { color: @accent; }
 
 #power-profiles-daemon.performance { color: @red; }
 #power-profiles-daemon.power-saver { color: @net; }

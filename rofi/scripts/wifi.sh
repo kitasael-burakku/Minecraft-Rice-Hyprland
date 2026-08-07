@@ -14,13 +14,31 @@ set -o pipefail
 THEME="$HOME/.config/rofi/clipboard.rasi"
 command -v nmcli >/dev/null 2>&1 || exit 0
 
+# Si ya hay un rofi abierto (ej. un click repetido antes de que cierre el
+# anterior), lo cerramos en vez de apilar una segunda ventana encima de una
+# con datos viejos — mismo patrón que wallpaper_launcher.sh.
+if pgrep -x rofi >/dev/null; then
+    pkill -x rofi
+    exit 0
+fi
+
 if nmcli radio wifi 2>/dev/null | grep -qi disabled; then
     nmcli radio wifi on
     sleep 1
 fi
 
-nmcli device wifi rescan >/dev/null 2>&1
-sleep 1
+# OJO con esto: "nmcli device wifi rescan" NO es confiablemente rápido —
+# a veces vuelve casi al instante (si NetworkManager deduplica contra un
+# escaneo reciente) y a veces bloquea de verdad varios segundos esperando
+# un escaneo real sobre la radio (confirmado en vivo: 14s+ cuando había
+# pasado un rato desde el último). Pedirlo ACÁ, antes de mostrar el menú,
+# es lo que hacía sentir lento el click. En vez de eso: listar del cache de
+# NetworkManager (instantáneo siempre, ~7ms, poblado solo por su escaneo
+# periódico de fondo) y disparar el rescan real DESPUÉS, en background — no
+# refresca esta apertura, pero deja la próxima más fresca sin que nadie
+# tenga que esperarlo.
+nohup nmcli device wifi rescan >/dev/null 2>&1 &
+disown
 
 declare -A SIGNAL_OF SEC_OF INUSE_OF
 

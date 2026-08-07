@@ -13,16 +13,29 @@ set -o pipefail
 THEME="$HOME/.config/rofi/clipboard.rasi"
 command -v bluetoothctl >/dev/null 2>&1 || exit 0
 
+# Si ya hay un rofi abierto (ej. un click repetido antes de que cierre el
+# anterior), lo cerramos en vez de apilar una segunda ventana encima de una
+# con datos viejos — mismo patrón que wallpaper_launcher.sh.
+if pgrep -x rofi >/dev/null; then
+    pkill -x rofi
+    exit 0
+fi
+
 powered="$(bluetoothctl show 2>/dev/null | grep -oP 'Powered:\s*\K\w+')"
 
 declare -A ACTION_OF
 menu=""
 
+# El ícono acá representa el ESTADO actual (no la acción del click) — antes
+# era al revés (ícono de "apagado" en la fila que dice "Apagar", visible
+# cuando está prendido), lo que hacía parecer que nada cambiaba entre
+# abrir/cerrar bluetooth aunque el toggle sí funcionara. Ahora el ícono
+# coincide con lo que ves, y el texto deja explícita la acción aparte.
 if [ "$powered" = "yes" ]; then
-    label="󰂲  Apagar Bluetooth"
+    label="󰂯  Bluetooth encendido — click para apagar"
     ACTION_OF["$label"]="power_off"
 else
-    label="󰂯  Encender Bluetooth"
+    label="󰂲  Bluetooth apagado — click para encender"
     ACTION_OF["$label"]="power_on"
 fi
 menu+="$label"$'\n'
@@ -61,3 +74,7 @@ case "$action" in
         fi
         ;;
 esac
+
+# custom/bluetooth (waybar) sondea cada 5s, pero no hay que esperar ese
+# margen para ver el cambio reflejado — mismo patrón que custom/updates.
+pkill -RTMIN+9 waybar 2>/dev/null

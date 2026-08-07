@@ -26,7 +26,7 @@
         "disk",
         "custom/gpu",
         "power-profiles-daemon",
-        "bluetooth",
+        "custom/bluetooth",
         "network",
         "idle_inhibitor",
         "tray",
@@ -195,17 +195,18 @@
         }
     },
 
-    "bluetooth": {
-        "format": "󰂯 Enable",
-        "format-disabled": "󰂲 Disabled",
-        "format-connected": "󰂱 {num_connections}",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        // Antes abría blueman-manager. rofi/scripts/bluetooth.sh cubre el
-        // 95% del uso real (conectar/desconectar algo ya emparejado) sin
-        // abrir una ventana — blueman-manager sigue disponible para
-        // emparejar dispositivos nuevos.
+    // El módulo nativo "bluetooth" no reflejaba el estado real en la barra
+    // (power/conexión cambiaban bien por bluetoothctl, pero el widget no se
+    // redibujaba) y, al ser nativo, no expone forma de forzarlo a refrescar.
+    // custom/bluetooth (waybar/scripts/bluetooth.sh) sí — rofi/scripts/
+    // bluetooth.sh manda la señal después de cada cambio de estado.
+    "custom/bluetooth": {
+        "exec": "~/.config/waybar/scripts/bluetooth.sh",
+        "interval": 5,
+        "signal": 9,
+        "return-type": "json",
+        "format": "{}",
+        "tooltip": true,
         "on-click": "~/.config/rofi/scripts/bluetooth.sh"
     },
 
