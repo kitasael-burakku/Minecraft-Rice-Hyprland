@@ -32,11 +32,14 @@
 
 ## ✨ Repository highlights
 
-- 🎨 Opt-in Material You theming that propagates across **9 app surfaces** through matugen
+- 🎛️ **Session managed by `systemd --user`**, not loose background processes — every daemon (Waybar, SwayNC, Hypridle, clipboard, wallpaper daemon, etc.) is a real unit with `Restart=`, its own journal, and a clean start/stop lifecycle tied to `graphical-session.target`
+- ⌨️ **`kitasan` — one CLI for the whole rice**: health checks, cache cleanup, updates, visual theme switching, desktop modes, and a system dashboard, all under one command with Fish completions
+- 🎨 Opt-in Material You theming that propagates across **13 app surfaces** through matugen — including GTK3/GTK4 and Qt5/Qt6, not just the terminal-adjacent apps
+- 🚀 A handful of purpose-built Rofi tools beyond the launcher — Wi-Fi, Bluetooth, audio device, MPRIS player picker, quick power menu, service manager, visual theme picker, and a system dashboard, all native Rofi script mode
 - 🖱️ Custom two-level Rofi wallpaper picker (video / image, each with its own theme) — built from scratch as native Rofi script mode, no external project
 - 🌀 Hand-tuned custom animation system, "流水 · Ryūsui Motion" (curves & springs)
-- 🪟 **Infinite Desktop** — pan and navigate a boundless floating-window canvas
-- 🐟 Custom Fish functions for health checks, maintenance, and an interactive keybind viewer
+- 🪟 **Infinite Desktop** — pan and navigate a boundless floating-window canvas, now itself a supervised systemd service
+- 🐟 Custom Fish functions for health checks, maintenance, and an interactive keybind viewer — `KEYBINDS.txt` is generated from `keybinds.lua`, not maintained by hand
 - 🎮 Minecraft-themed boot experience: Qylock (SDDM) + MINEGRUB (GRUB)
 
 <br>
@@ -46,11 +49,15 @@
 | Feature | Included |
 |---|---|
 | Lua-based Hyprland configuration | ✅ |
+| Session & daemons managed by `systemd --user` | ✅ |
+| `kitasan` unified CLI (health / clean / update / theme / mode / dashboard) | ✅ |
+| Desktop modes — normal / focus / gaming / cinema | ✅ |
 | Waybar (taskbar, audio slider, media controls) | ✅ |
-| Dynamic theming via matugen (opt-in) | ✅ |
+| Dynamic theming via matugen — Rofi, Waybar, Kitty, GTK3/4, Qt5/6, and more (opt-in) | ✅ |
+| Rofi quick actions — Wi-Fi, Bluetooth, audio, MPRIS, power, services, dashboard | ✅ |
 | Two-level wallpaper picker (video / image) | ✅ |
 | Infinite Desktop (floating canvas mode) | ✅ |
-| Custom Fish functions & aliases | ✅ |
+| Custom Fish functions, aliases & completions | ✅ |
 | Window switcher with minimize/restore | ✅ |
 | cava audio visualizer with GLSL shaders | ✅ |
 | Hyprlock with MPRIS now-playing block | ✅ |
@@ -80,7 +87,10 @@
   - [Wallpapers](#wallpapers)
 - [Configuration Deep Dive](#configuration-deep-dive)
   - [Hyprland in Lua](#hyprland-in-lua)
+  - [systemd — Session & Services](#systemd-session-services)
+  - [kitasan — Unified CLI](#kitasan-unified-cli)
   - [Rofi — Wallpaper Selector](#rofi-wallpaper-selector)
+  - [Rofi — Quick Actions](#rofi-quick-actions)
   - [Cava — Audio Visualizer](#cava-audio-visualizer)
   - [External Additions — Dynamic Theming](#external-additions-dynamic-theming)
   - [Fish Functions](#fish-functions)
@@ -140,21 +150,24 @@ A quick map before you go any further — what lives where, and what it's for.
 
 | Folder / File | What it is |
 |---|---|
-| `hypr/` | Core Hyprland configuration — Lua modules, `hypridle.conf`, base `hyprlock.conf` |
+| `hypr/` | Core Hyprland configuration — Lua modules, `hypridle.conf`, base `hyprlock.conf`, and the maintenance/orchestration scripts (`hypr/scripts/`) |
+| `systemd/user/` | `systemd --user` unit files that supervise the session — `hyprland-session.service` plus every daemon (Waybar, SwayNC, Hypridle, clipboard, wallpaper, etc.) and 4 background timers. See [systemd — Session & Services](#systemd-session-services) |
 | `waybar/` | Status bar config, CSS, and scripts |
-| `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, power menu, window switcher |
+| `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, power menu, window switcher, and the quick-action scripts (Wi-Fi, Bluetooth, audio, MPRIS, theme, service manager, dashboard) |
 | `kitty/` | Terminal configuration and colors |
-| `fish/` | Shell config, functions, aliases, and themes |
+| `fish/` | Shell config, functions (including `kitasan`), aliases, themes, and completions |
 | `hyprlock/` | Lock screen layout, colors, wallpaper, and MPRIS scripts |
 | `swaync/` | Notification center config, styles, and icons |
 | `wlogout/` | Session menu layout, CSS, icons, and shutdown scripts |
-| `matugen/` | Dynamic (Material You) theming templates and config |
+| `matugen/` | Dynamic (Material You) theming templates and config — 14 templates covering 13 app surfaces |
+| `gtk-3.0/` / `gtk-4.0/` | GTK theme override chain (`gtk.css` importing the active theme + matugen-driven color overrides) — see [External Additions](#external-additions-dynamic-theming) |
+| `qt5ct/` / `qt6ct/` | Qt palette config (`qt5ct.conf`/`qt6ct.conf`) and the matugen-driven `kitasan-glass` color scheme |
 | `cava/` | Audio visualizer config, GLSL shaders, and themes |
 | `fastfetch/` | jsonc configs, logos, and visual presets |
 | `docs/screenshots/` | Rice screenshots |
 | `assets/` | Assets for the GitHub Pages site (e.g. `demo.mp4`) |
 | `index.html` | Source for the GitHub Pages site |
-| `KEYBINDS.txt` | Keybind reference, read by the `keybinds` Fish function |
+| `KEYBINDS.txt` | Keybind reference, generated from `hypr/modules/keybinds.lua` by `hypr/scripts/generate-keybinds-doc.sh` — read by the `keybinds` Fish function |
 | `starship.static.toml` | Starship prompt config — copied to `~/.config/starship.toml` |
 | `LICENSE` | License file |
 
@@ -164,7 +177,42 @@ A quick map before you go any further — what lives where, and what it's for.
 
 ## Architecture
 
-How the pieces talk to each other — from Hyprland launching everything, to a wallpaper change flowing all the way through the theming pipeline.
+Two diagrams: how the **session and its daemons boot/shut down** (systemd), and how the pieces **talk to each other at runtime** — from Hyprland launching everything, to a wallpaper change flowing through the theming pipeline.
+
+### Session lifecycle — `systemd --user`
+
+Every daemon in this rice is a real systemd unit, not a loose background process. Hyprland's Lua layer only has to trigger **one** thing; systemd owns the rest.
+
+```text
+Hyprland compositor
+      │
+      │  hl.on("hyprland.start")   ← hypr/modules/autostart.lua (the ONLY
+      ▼                              Lua→systemd touchpoint left)
+systemctl --user start hyprland-session.service
+      │
+      │  Wants= / BindsTo= graphical-session.target
+      ▼
+graphical-session.target  (native systemd target, RefuseManualStart=yes —
+│                           can only be pulled up by something that Wants it)
+│
+│  WantedBy=graphical-session.target, declared by each unit's own [Install]
+├──▶ waybar.service              ├──▶ cliphist-text.service
+├──▶ swaync.service              ├──▶ cliphist-image.service
+├──▶ hypridle.service            ├──▶ infinite-desktop.service
+├──▶ udiskie.service             ├──▶ playerctl-watch.service
+├──▶ awww.service                └──▶ polkit-agent.service
+└──▶ wallpaper.service (oneshot — restores the last wallpaper, kicks matugen)
+
++ timers.target → updates-check.timer, thumbs-refresh.timer,
+                  healthcheck-notify.timer, dotbackup-remind.timer
+
+hl.on("hyprland.shutdown") → systemctl --user stop graphical-session.target
+      → every unit above (PartOf=graphical-session.target) stops in cascade
+```
+
+Each unit ships with `Restart=`, its own `journalctl --user -u <unit>` log, and `[Install] WantedBy=graphical-session.target` — but **that `[Install]` line alone doesn't start anything**; you still need to `systemctl --user enable` the units after installing (see [systemd — Session & Services](#systemd-session-services) and [Manual Installation](#manual-installation)).
+
+### Runtime — apps talking to each other
 
 ```text
                          ┌───────────────────────────┐
@@ -175,33 +223,36 @@ How the pieces talk to each other — from Hyprland launching everything, to a w
         ┌─────────────┬─────────────────┼─────────────────┬─────────────┐
         ▼             ▼                 ▼                 ▼             ▼
      Waybar         Rofi            Hyprlock           Wlogout        SwayNC
-  (status bar)  (launcher /       (lock screen)      (session menu) (notifications)
-                 wallpaper /
-                 window switcher)
+  (status bar,   (launcher /       (lock screen)      (session menu) (notifications)
+   quick-action    wallpaper /
+   scripts)        window switcher /
+                    quick actions)
                      │
-                     │  SUPER + W
-                     ▼
-          wallpaper_launcher.sh
-                     │
-        ┌────────────┴────────────┐
-        ▼                         ▼
+                     │  SUPER + W                    SUPER + F4 / F5
+                     ▼                                     ▼
+          wallpaper_launcher.sh                    kitasan menu / dashboard
+                     │                              (Rofi frontend for health,
+        ┌────────────┴────────────┐                  clean, update, theme,
+        ▼                         ▼                   mode, and service mgmt)
  apply-wallpaper.sh        matugen_reload.sh   (only runs if the
  (mpvpaper / awww)                │              matugen sentinel is ON)
                                    ▼
                                 matugen
                           (Material You engine)
                                    │
-      ┌─────────┬─────────┬───────┼───────┬─────────┬─────────────────┐
-      ▼         ▼         ▼       ▼       ▼         ▼                 ▼
-    Rofi     Waybar     Kitty  Hyprlock  SwayNC   Wlogout      Starship / Fish /
-   colors    colors     colors  colors   colors    colors    Hyprland borders (hyprctl eval)
+   ┌────────┬────────┬────────┬───┼────┬────────┬─────────┬────────────────┐
+   ▼        ▼        ▼        ▼   ▼    ▼        ▼         ▼                ▼
+ Rofi    Waybar   Kitty   Hyprlock SwayNC Wlogout GTK3/4   Qt5/6    Starship / Fish /
+colors   colors   colors  colors  colors colors  colors   colors  Hyprland borders
+                                                                    (hyprctl eval)
 
    cava (audio visualizer)  ──  independent, reads Pipewire directly
    Fastfetch                ──  triggered by Fish on every new Kitty terminal
-   Infinite Desktop scripts ──  Python, hooked into Hyprland through keybinds.lua
+   Infinite Desktop scripts ──  Python, systemd-supervised, hooked into
+                                 Hyprland through keybinds.lua
 ```
 
-Every generated color file has a `*.static.*` counterpart that's the source of truth when dynamic theming is off — see [External Additions](#external-additions-dynamic-theming) for the full surface-by-surface breakdown.
+Every generated color file has a `*.static.*` counterpart that's the source of truth when dynamic theming is off — see [External Additions](#external-additions-dynamic-theming) for the full surface-by-surface breakdown (13 surfaces now, GTK/Qt included).
 
 ---
 
@@ -270,9 +321,12 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | Tool | Function |
 |---|---|
 | Hyprland (Lua) | Modular window manager |
+| `systemd --user` | Supervises every daemon — Waybar, SwayNC, Hypridle, clipboard, wallpaper, Infinite Desktop, and 4 background timers, all as real units tied to `graphical-session.target`. See [systemd — Session & Services](#systemd-session-services) |
+| `kitasan` (Fish function) | Unified CLI for the whole rice — health checks, cache cleanup, updates, theme/mode switching, dashboard. See [kitasan — Unified CLI](#kitasan-unified-cli) |
 | Waybar | Status bar with taskbar (`wlr/taskbar`), inline audio slider (`pulseaudio/slider`), and media player controls |
-| Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), decorative power menu, and window switcher with minimize/restore (`ALT + TAB`) |
-| matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, see [External Additions](#external-additions-dynamic-theming) |
+| Rofi | Launcher, clipboard selector, two-level wallpaper selector (Videos / Images, each with its own theme), decorative power menu, window switcher with minimize/restore (`ALT + TAB`), and quick-action tools (Wi-Fi, Bluetooth, audio, MPRIS, service manager, theme picker, dashboard). See [Rofi — Quick Actions](#rofi-quick-actions) |
+| matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, propagates to 13 app surfaces including GTK3/4 and Qt5/6. See [External Additions](#external-additions-dynamic-theming) |
+| power-profiles-daemon | CPU power profile switching (`balanced`/`performance`/`power-saver`) — driven by the Waybar module and by `kitasan mode` |
 | Kitty | Terminal |
 | Fish + Starship | Shell with custom prompt — includes `starship.toml` with "Floating Stone Bubbles" theme (Minecraft shader palette) |
 | Fastfetch | System info on terminal open |
@@ -298,7 +352,18 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Hot-swappable Hyprland layout (dwindle / master / scrolling), with `scrolling` as the default.
 - Window and layer rules for blur/alpha/animation (SwayNC, Rofi, Wlogout).
 - Shortcuts for screenshots, color picker, multimedia control, floating with auto-resize, Waybar reload, and system tools.
-- Autostart for animated wallpaper with `mpvpaper`, Waybar, SwayNC, Hypridle, Polkit, clipboard, and udiskie.
+- Session daemons (animated wallpaper, Waybar, SwayNC, Hypridle, Polkit, clipboard, udiskie, Infinite Desktop) are `systemd --user` units, not raw autostart processes — Hyprland's Lua layer just starts `hyprland-session.service`, which pulls in every enabled unit via `graphical-session.target`. See [systemd — Session & Services](#systemd-session-services).
+
+</details>
+
+<details open>
+<summary><b>🎛️ System Management</b></summary>
+<br>
+
+- **`kitasan`** — a single Fish CLI covering health checks, cache cleanup, full system updates, visual theme switching, desktop modes, and a system dashboard, with Fish completions for every subcommand. `kitasan menu` (`SUPER + F4`) puts all of it behind a Rofi picker. See [kitasan — Unified CLI](#kitasan-unified-cli).
+- **Desktop modes** (`kitasan mode` / normal, focus, gaming, cinema) toggle DND, blur/animations, idle timeouts, and the power profile together, applied live via `hyprctl eval` — no relogin needed, and they don't persist across one either (by design).
+- **Dashboard** (`SUPER + F5`) — pending updates, failed services, CPU/GPU temps, disk usage, current MPRIS track, and last dotfiles backup, all in one Rofi panel with quick actions attached to each row.
+- Every daemon that used to be a loose background process is now a supervised `systemd --user` unit with `Restart=` and a real journal — see [systemd — Session & Services](#systemd-session-services).
 
 </details>
 
@@ -309,6 +374,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Waybar with modules for disk, audio, clock, workspaces, tray, updates (with direct access to `sysupdate`), network, temperature, CPU, memory, and a power button connected to a mini Rofi menu.
 - Includes a `wlr/taskbar` with app icons in the center bubble, and an inline `pulseaudio/slider` for quick volume control.
 - SwayNC with notification center, quick controls, and `goldship` theme.
+- Actionable notifications: a background timer refreshes the pending-updates count every 30 minutes, and past a threshold you get a notification with an **"Update now"** action button — no need to open a terminal first.
 
 </details>
 
@@ -318,6 +384,19 @@ This configuration was developed and tested on this hardware. Some parts depend 
 
 - Rofi as application launcher, clipboard history selector, decorative power menu (the different font in that menu is intentional; the actual session is handled by Wlogout), and window switcher (`ALT + TAB`) — lists all open windows with minimize/restore: click an active window to minimize it to `special:minimized`, click a minimized one to restore it to the current workspace.
 - Two-level wallpaper selector as native Rofi script mode, shortcut `SUPER + W`. Opens a type selector (Videos / Images, each sourced from a different directory) before showing the thumbnail grid — each level uses its own `.rasi` theme. Thumbnail generation runs in the background and never blocks the menu. Applying a wallpaper feeds matugen for dynamic theming when it's enabled — see [Rofi — Wallpaper Selector](#rofi-wallpaper-selector) and [External Additions](#external-additions-dynamic-theming).
+- A quick power menu (`SUPER + SHIFT + ESCAPE`) — lock/suspend/logout/reboot/shutdown from a 5-line Rofi list, faster than opening full-screen Wlogout for the common case. Hibernate stays Wlogout-only.
+
+</details>
+
+<details open>
+<summary><b>🌐 Rofi Quick Actions</b></summary>
+<br>
+
+- Wi-Fi, Bluetooth, and audio device pickers — list, connect/disconnect, and set default, all via `nmcli`/`bluetoothctl`/`wpctl`, no GTK settings windows.
+- MPRIS player picker — pick which player to control when more than one is running, then Play/Pause/Next/Previous.
+- Visual theme picker (`SUPER + ALT + W`) — choose between 6 matugen color schemes or the static "Kitasan Glass" baseline, independent of the on/off toggle.
+- Service manager (`SUPER + F3`) — list `systemd --user` units (failed ones first), start/stop/restart, or jump straight into `journalctl -f` for one.
+- See [Rofi — Quick Actions](#rofi-quick-actions) for the full list and the scripts behind each one.
 
 </details>
 
@@ -325,7 +404,8 @@ This configuration was developed and tested on this hardware. Some parts depend 
 <summary><b>🎨 Theming</b></summary>
 <br>
 
-- Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, Starship prompt, and SwayNC — desaturated accents (cyan `#7ab8b8`, blue-gray `#8098a8`, muted red `#b85c50`, sand `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
+- Unified color palette **Kitasan Glass · Universal Dark** applied across Waybar CSS, Kitty, Fish shell, Rofi `.rasi` themes, Starship prompt, SwayNC, GTK3/4, and Qt5/6 — desaturated accents (cyan `#7ab8b8`, blue-gray `#8098a8`, muted red `#b85c50`, sand `#c8b898`) over near-black backgrounds, designed to work with any wallpaper without clashing.
+- GTK/Qt theming is deliberately conservative: only the color roles that define the palette's identity (background, foreground, selection, borders, semantic colors) are overridden — not a full re-theme of every widget state. See [External Additions](#external-additions-dynamic-theming).
 
 </details>
 
@@ -374,17 +454,22 @@ This configuration was developed and tested on this hardware. Some parts depend 
 ├── cava/               # Config, GLSL shaders and themes for the audio visualizer
 ├── docs/screenshots/   # Rice screenshots
 ├── fastfetch/          # jsonc configs, logos and visual presets
-├── fish/               # config.fish, functions, aliases and Fish shell themes
-├── hypr/               # Hyprland Lua, modules, hypridle.conf and base hyprlock.conf
+├── fish/               # config.fish, functions (incl. kitasan), aliases, completions and Fish shell themes
+├── gtk-3.0/            # gtk.css override chain + matugen-driven color file
+├── gtk-4.0/            # gtk.css override chain + matugen-driven color file (GTK4 has no GTK_THEME env var — this IS the theme)
+├── hypr/               # Hyprland Lua, modules, hypridle.conf, base hyprlock.conf, and hypr/scripts/ (autostart helpers, systemd-adjacent tooling)
 ├── hyprlock/           # Lock screen layout, colors, wallpaper and scripts
 ├── index.html          # Source for the GitHub Pages site
-├── KEYBINDS.txt        # Keybind reference used by the `keybinds` fish function
+├── KEYBINDS.txt        # Keybind reference, generated from keybinds.lua — used by the `keybinds` fish function
 ├── kitty/              # Kitty configuration and colors
 ├── LICENSE
-├── matugen/            # Dynamic (Material You) theming templates and config
-├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), power menu, and window switcher (window-switcher.sh + window-switcher.rasi)
+├── matugen/            # Dynamic (Material You) theming templates and config — 14 templates, 13 app surfaces
+├── qt5ct/              # Qt5 palette config + matugen-driven color scheme
+├── qt6ct/              # Qt6 palette config + matugen-driven color scheme
+├── rofi/               # Launcher, clipboard, two-level wallpaper selector (wallpaper_launcher.sh → wallpaper_rofi.sh → wallpaper_grid.sh), power menu, window switcher, and quick-action scripts (Wi-Fi, Bluetooth, audio, MPRIS, theme, service manager, dashboard) — see rofi/scripts/
 ├── starship.static.toml # Starship config (prompt); copy to ~/.config/starship.toml (starship.toml itself is generated/gitignored)
 ├── swaync/             # Notification center config, styles, icons and theme
+├── systemd/user/       # systemd --user units: hyprland-session.service, every daemon, and 4 background timers
 ├── waybar/             # Waybar config, CSS and scripts
 └── wlogout/            # Layout, CSS, icons and shutdown/session scripts
 ```
@@ -414,8 +499,11 @@ sudo pacman -S \
   jq curl imagemagick libnotify ffmpeg ffmpegthumbnailer \
   pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd\
-  thefuck bottom python python-evdev bash jq
+  thefuck bottom python python-evdev bash jq \
+  power-profiles-daemon qt5ct qt6ct
 ```
+
+> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely.
 
 > If you use CachyOS you can download Zen-Browser from pacman packages:
 > ```bash
@@ -500,14 +588,15 @@ Copy the folders you want to use:
 
 ```bash
 mkdir -p ~/.config
-cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava matugen ~/.config/
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava matugen \
+      gtk-3.0 gtk-4.0 qt5ct qt6ct systemd ~/.config/
 cp starship.static.toml ~/.config/starship.toml
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
 
-The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/colors.conf`, etc.) aren't in the repo — they're generated. Populate them with the static "Kitasan Glass" baseline:
+The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/colors.conf`, `gtk-3.0/gtk-colors.css`, `qt5ct/colors/kitasan-glass.conf`, etc.) aren't in the repo — they're generated. Populate them with the static "Kitasan Glass" baseline:
 
 ```bash
 bash ~/.config/hypr/scripts/apply-static-colors.sh
@@ -527,6 +616,21 @@ chmod +x ~/.config/rofi/scripts/*.sh
 chmod +x ~/.config/hypr/scripts/*.sh
 chmod +x ~/.config/hypr/infinite_desktop/infinite-desktop.sh ~/.config/hypr/infinite_desktop/floating_tile_toggle.py ~/.config/hypr/infinite_desktop/move_window_tiled.py ~/.config/hypr/infinite_desktop/navigate_windows.py ~/.config/hypr/infinite_desktop/resize_window.py
 ```
+
+Enable the systemd units — copying the files into `~/.config/systemd/user/` is not enough by itself, `[Install]` blocks only take effect once you `enable` them:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now \
+  waybar.service swaync.service hypridle.service udiskie.service \
+  awww.service wallpaper.service cliphist-text.service cliphist-image.service \
+  infinite-desktop.service playerctl-watch.service polkit-agent.service
+
+systemctl --user enable --now \
+  updates-check.timer thumbs-refresh.timer healthcheck-notify.timer dotbackup-remind.timer
+```
+
+> `hyprland-session.service` is *not* in that list — it has no `[Install]` block on purpose, it's only ever started by `hypr/modules/autostart.lua` when Hyprland itself launches. See [systemd — Session & Services](#systemd-session-services) for why the architecture is split this way.
 
 If you want to use Fish as your default shell:
 
@@ -609,7 +713,7 @@ The order is intentional, not alphabetical: `environment` loads first (env vars 
 |---|---|
 | `hypr/modules/programs.lua` | Terminal, file manager and launcher (global `Programs` table used by `keybinds.lua`) |
 | `hypr/modules/keybinds.lua` | Keyboard shortcuts, screenshots, multimedia and session |
-| `hypr/modules/autostart.lua` | Services and programs that launch with Hyprland |
+| `hypr/modules/autostart.lua` | Deliberately thin now — starts `hyprland-session.service` (which pulls in every systemd-managed daemon, see [systemd — Session & Services](#systemd-session-services)), sets the cursor theme, and runs any private autostart commands. Everything that used to be a raw `hl.exec_cmd` background job lives in `systemd/user/` instead |
 | `hypr/modules/monitors.lua` | Output, resolution, position, and scale hardcoded for my machine (`HDMI-A-1`, `1920x1080@200Hz`) — see [Things You Must Change](#things-you-must-change) to switch to automatic detection |
 | `hypr/modules/input.lua` | Keyboard layout, sensitivity, and per-device config placeholder |
 | `hypr/modules/environment.lua` | Wayland, Qt, Electron, and AMD environment variables |
@@ -619,6 +723,93 @@ The order is intentional, not alphabetical: `environment` loads first (env vars 
 | `hypr/modules/windowrules.lua` | Window and layer rules (blur/alpha/animation for SwayNC, Rofi, Wlogout) |
 | `hypr/modules/misc.lua` | Miscellaneous settings, including disabling Hyprland's random wallpaper/logo |
 | `hypr/modules/private.lua` *(optional, not tracked)* | Personal programs/autostart/keybinds you don't want public — see `hypr/modules/private.example.lua` for the template. `programs.lua`, `autostart.lua`, and `keybinds.lua` all `pcall(require, "modules.private")`, so everything works fine if this file doesn't exist |
+
+---
+
+### systemd — Session & Services
+
+Every daemon this rice needs — Waybar, SwayNC, Hypridle, the clipboard watchers, the wallpaper daemon, udiskie, Polkit, playerctl's watcher, and Infinite Desktop — is a real `systemd --user` unit under `systemd/user/`, not a background process launched by Hyprland's Lua and left to fend for itself.
+
+**Why a `.service` for a compositor daemon at all?** Restart-on-crash, a real `journalctl --user -u <unit>` log instead of output vanishing into nowhere, and a single, predictable teardown path — instead of "reload Waybar" meaning `pkill` + relaunch by hand.
+
+**The bootstrap chain:**
+
+```text
+hypr/modules/autostart.lua (hl.on("hyprland.start"))
+      │
+      ▼
+systemctl --user start hyprland-session.service
+      │  Wants= / BindsTo= graphical-session.target
+      ▼
+graphical-session.target        ← native systemd target (ships with systemd itself)
+      │  Wants= (from each unit's own [Install] WantedBy=, once enabled)
+      ▼
+waybar / swaync / hypridle / udiskie / awww / wallpaper /
+cliphist-text / cliphist-image / infinite-desktop /
+playerctl-watch / polkit-agent  (+ maly, if you add a private daemon the same way)
+```
+
+`hyprland-session.service` itself is intentionally minimal:
+
+```ini
+[Unit]
+Description=Hyprland graphical session
+BindsTo=graphical-session.target
+Wants=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/true
+RemainAfterExit=yes
+```
+
+It has no `[Install]` section on purpose — it's not meant to be `enable`d, only started directly by Hyprland at `hyprland.start`. `graphical-session.target` refuses to be started manually (`RefuseManualStart=yes`, a systemd default); it can only be pulled up by something that `Wants=` it, which is exactly what this service does.
+
+Every daemon unit declares `PartOf=graphical-session.target` — that's a **lifecycle** relation (stop the target, and everything with `PartOf=` on it stops too), not a start trigger. The actual start trigger is each unit's `[Install] WantedBy=graphical-session.target`, which only takes effect once you run `systemctl --user enable` on it (see [Manual Installation](#manual-installation)). Copying the unit files into `~/.config/systemd/user/` is not enough by itself — `is-enabled` will say `disabled` until you do.
+
+Teardown is symmetric: `hl.on("hyprland.shutdown")` runs `systemctl --user stop graphical-session.target`, which stops every `PartOf=` unit in cascade.
+
+**Timers** (`timers.target`, also need `enable --now`):
+
+| Timer | Runs | Why |
+|---|---|---|
+| `updates-check.timer` | Every 30 min | Refreshes the pacman+AUR update count in the background, instead of Waybar's own polling triggering the (slow) check itself |
+| `thumbs-refresh.timer` | Daily | Pre-generates wallpaper thumbnails so the picker never has to generate them on open |
+| `healthcheck-notify.timer` | Daily | Silent unless it finds something — orphan packages, failed services, low disk space |
+| `dotbackup-remind.timer` | Weekly | Only meaningful if you maintain your own fork the way this repo's author does (see `hypr/scripts/dotbackup-remind.sh`) — notifies if `~/.config` diverged from your local clone. Safe to disable if that's not your workflow |
+
+**No `hyprland-session.target`.** A dedicated target was considered and deliberately not built — `hyprland-session.service` bootstrapping the native `graphical-session.target` is the standard pattern non-DE-integrated Wayland compositors use, it already comes with `Requires=basic.target` (sockets, D-Bus, etc.) for free, and every `xdg-desktop-portal-*`/`gvfs-*` unit the desktop portals need is already `PartOf=` the same target. A second target would add a layer without solving anything the native one doesn't already handle.
+
+---
+
+### kitasan — Unified CLI
+
+Before this existed, `healthcheck`, `quickcache`, `cleantrash`, and `sysupdate` were four separate Fish functions you had to remember by name. `kitasan` (`fish/functions/kitasan.fish`) is a thin wrapper over all of them plus the newer systemd/theming/mode tooling, with Fish completions (`fish/completions/kitasan.fish`) for every subcommand and argument.
+
+```text
+kitasan health           → healthcheck
+kitasan clean            → quickcache (fast, no sudo)
+kitasan clean --deep     → cleantrash (orphans + pacman cache, needs sudo)
+kitasan update           → sysupdate
+kitasan theme [scheme]   → visual profile picker — Rofi if no argument, direct if you pass one (e.g. `kitasan theme vibrant`)
+kitasan wall             → wallpaper picker over fzf, for when you don't want Rofi
+kitasan mode [profile]   → normal / focus / gaming / cinema — see below
+kitasan doctor           → template parity + keybinds drift + failed services + orphans, all read-only
+kitasan dashboard        → same panel as `SUPER + F5`, launched from a terminal
+kitasan menu             → all of the above, picked from Rofi (same as `SUPER + F4`)
+```
+
+**Desktop modes** (`kitasan mode`, or from `kitasan menu`) bundle DND, blur/animations, idle timeout, and the power profile into one live-applied state, each via the mechanism that actually supports it — `hyprctl eval` for blur/animations (the same one used for dynamic border colors, and it survives a plain `hyprctl reload`), `swaync-client -dn/-df` for DND, and either `systemctl --user stop/start hypridle.service` or a raw `hypridle -c` process with a longer-timeout config for the idle behavior:
+
+| Mode | Effect |
+|---|---|
+| `normal` | Everything as installed |
+| `focus` | DND on, idle timeout stretched to 30 min (lock) / 60 min (DPMS off) |
+| `gaming` | Blur and animations off, DND on, power profile set to `performance` |
+| `cinema` | Waybar hidden, DND on, Hypridle stopped entirely (no auto-lock, no DPMS-off) |
+
+Modes don't persist across a relogin on purpose — `hyprland.start` re-runs the Lua modules fresh (blur/animations back on) and restarts `hypridle.service`/`waybar.service` from scratch, so you never boot back into `gaming` by accident.
 
 ---
 
@@ -668,6 +859,28 @@ Both can be overridden by exporting the variable before the launcher runs.
 
 > ⚠️ The keybind in `hypr/modules/programs.lua` calls `wallpaper_launcher.sh` directly, not `wallpaper_rofi.sh`. If you point the keybind at the wrong script, only the type selector opens and nothing happens after you choose.
 
+> Every Rofi theme in this rice imports `rofi/config.rasi` first — shared `matching: "fuzzy"`, `sorting-method: "fzf"`, `terminal`, and the launcher's mode-switcher config live there once, instead of duplicated across all six `.rasi` files.
+
+---
+
+### Rofi — Quick Actions
+
+Beyond the launcher and the wallpaper picker, `rofi/scripts/` has a handful of small, single-purpose tools — each one a plain dmenu script over a CLI tool that was already a dependency, no new GUI toolkits pulled in.
+
+| Script | Keybind / trigger | What it does |
+|---|---|---|
+| `power.sh` | `SUPER + SHIFT + ESCAPE` | Lock / suspend / logout / reboot / shutdown from a 5-line list — reuses `wlogout/scripts/confirm-then.sh` for the destructive ones, so the confirmation dialog and the command whitelist are shared, not duplicated |
+| `mpris.sh` | Waybar `custom/playerctl` right-click | Pick which MPRIS player to control when more than one is running, then Play/Pause/Next/Previous/Stop on that one specifically |
+| `audio.sh` | Waybar `pulseaudio` left-click | Lists sinks/sources parsed from `wpctl status`, sets the chosen one as default |
+| `wifi.sh` | Waybar `network` left-click | Lists nearby networks via `nmcli`, connects, and prompts for a password with `rofi -password` only if the network actually needs one |
+| `bluetooth.sh` | Waybar `bluetooth` left-click | Toggle adapter power, connect/disconnect already-paired devices via `bluetoothctl` |
+| `theme.sh` | `SUPER + ALT + W` | Pick one of matugen's 6 color schemes, or the static "Kitasan Glass" baseline — independent of the dynamic on/off toggle (`SUPER + SHIFT + W`) |
+| `systemd.sh` | `SUPER + F3` | Lists `systemd --user` units (failed ones first), then start/stop/restart or open `journalctl -f` for the one you pick |
+| `mode.sh` | via `kitasan mode` / `kitasan menu` | Rofi frontend for the desktop modes described in [kitasan — Unified CLI](#kitasan-unified-cli) |
+| `dashboard.sh` | `SUPER + F5` | Pending updates, failed services, CPU/GPU temperature, disk usage, current MPRIS track, and time since the last dotfiles backup — each with a quick action attached (e.g. selecting "failed services" opens `systemd.sh`) |
+
+All nine reuse `rofi/clipboard.rasi` as their theme (a plain single-column list, no icon assumptions baked in) rather than each shipping its own `.rasi`.
+
 ---
 
 ### Cava — Audio Visualizer
@@ -690,6 +903,8 @@ I'm fairly purist about this: I change wallpapers often (based on mood or time o
 - **Turning on** generates colors right away from whatever wallpaper is currently active (or asks you to pick one, if it can't detect it) and notifies you via `notify-send`.
 - **Turning off** restores the exact static values — bit for bit, no visual drift from the pre-toggle look.
 
+**Which scheme:** the toggle above is binary (on/off); `SUPER + ALT + W` (`rofi/scripts/theme.sh`) is the other dimension — pick *which* of matugen's 6 Material You schemes to use (`tonal-spot`, `vibrant`, `expressive`, `fidelity`, `content`, `neutral`) while dynamic theming is on. The chosen scheme is stored in `~/.config/matugen/scheme` and read by `matugen_reload.sh` on every subsequent regeneration, so it survives wallpaper changes until you pick a different one.
+
 **Pipeline:** applying a wallpaper (`SUPER + W`, or the autostart hook seeding colors from the default video wallpaper at login) calls `rofi/scripts/matugen_reload.sh`, which — only if the sentinel is present — runs `matugen` against the current wallpaper (extracting a frame with `ffmpeg` first if it's a video) using the templates and hooks declared in `matugen/config.toml`:
 
 | Surface | Output | Reload mechanism |
@@ -703,8 +918,13 @@ I'm fairly purist about this: I change wallpapers often (based on mood or time o
 | SwayNC | `swaync/colors.css` | `swaync-client -rs` |
 | Starship | `starship.toml` | none needed — re-read on every prompt render |
 | Fish | `fish/conf.d/theme-goldship.fish` | none possible — `conf.d/` is only sourced when a shell starts; new terminals pick it up automatically |
+| GTK3 | `gtk-3.0/gtk-colors.css` | none possible — GTK only reads `gtk.css` at app launch; already-open apps keep their old colors |
+| GTK4 | `gtk-4.0/gtk-colors.css` | same as GTK3. `gtk-4.0/gtk.css` imports `theme-base.css` (a symlink to the actual installed theme — GTK4 has no `GTK_THEME` env var, so this file *is* the theme) and then this generated file on top, so only the color roles below are overridden, nothing else about the theme changes |
+| Qt5 / Qt6 | `qt5ct/colors/kitasan-glass.conf` / `qt6ct/colors/kitasan-glass.conf` | none possible — same per-launch limitation as GTK |
 
 Every generated file has a `*.static.*` counterpart (e.g. `rofi/colors.static.rasi`) that's the source of truth when dynamic theming is off, and what `matugen_toggle.sh` restores when you turn it back off. Semantic colors (errors, critical states) follow the wallpaper too, kept consistent across every surface on purpose.
+
+**GTK/Qt are deliberately partial.** Colorful-Dark-GTK (the shipped GTK theme) defines close to 90 color variables for very specific states (insensitive/backdrop/hover/unfocused/titlebar, mostly with a `_breeze` suffix). Re-tinting all of them blind wasn't worth the risk of a broken-looking widget somewhere; only the roles that define the palette's *identity* — background, foreground, selection, borders, and the semantic colors — are overridden, both under their base name and their `_breeze` variant. The Qt palette follows the same philosophy: it's a minimal diff over the stock `darker.conf` scheme (still shipped by `qt5ct`/`qt6ct`), touching only `WindowText`/`Text`/`Base`/`Window`/`Highlight`/`HighlightedText`/`AlternateBase` and leaving the other ~14 QPalette roles exactly as they were.
 
 If you want to adapt this to your own palette instead of matugen's Material You output, edit the templates in `matugen/templates/` and their matching `*.static.*` baseline — everything downstream (hooks, toggle, sentinel) stays the same.
 
@@ -759,16 +979,17 @@ eccava      ecfastfetch ecstarship
 
 | Function | What it does |
 |---|---|
-| `sysupdate` | Updates pacman and AUR (yay) in one pass, with animated output. Same thing that runs when you click the `custom/updates` module in Waybar |
-| `quickcache` | Quick cleanup of known app caches (browser, Spotify, Electron, etc.) — browser detection is automatic, only cleans what's actually installed, with confirmation before deleting |
-| `checktrash` / `cleantrash` | The first only reports what can be cleaned (orphan packages, caches, trash); the second actually cleans it, with confirmation |
+| `kitasan` | Unified CLI wrapping most of the functions below plus theme/mode/dashboard — see [kitasan — Unified CLI](#kitasan-unified-cli). Has full Fish completions (`fish/completions/kitasan.fish`) |
+| `sysupdate` | Updates pacman and AUR (yay) in one pass, with animated output. Same thing that runs when you click the `custom/updates` module in Waybar, or `kitasan update` |
+| `quickcache` | Quick cleanup of known app caches (browser, Spotify, Electron, etc.) — browser detection is automatic, only cleans what's actually installed, with confirmation before deleting. Also `kitasan clean` |
+| `checktrash` / `cleantrash` | The first only reports what can be cleaned (orphan packages, caches, trash); the second actually cleans it, with confirmation. `cleantrash` is also `kitasan clean --deep` |
 | `checkerrors` | Diagnoses failed services, journalctl errors (including Hyprland/portals), and recent coredumps. Read-only, changes nothing |
-| `healthcheck` | Quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention |
+| `healthcheck` | Quick overview of the entire system in one screen: kernel, memory/zram, pending updates, orphan packages, `.pacnew`/`.pacsave` files, failed services, boot errors, disk, network, and temperatures. Unlike `checkerrors`, it does not show full logs — it only counts and flags what needs attention. Also `kitasan health` |
 | `keybinds` | Opens an interactive viewer for `KEYBINDS.txt` directly in the terminal, with vim-style navigation (`h/j/k/l`), search (`:` + space), and section pagination. While open, it automatically floats and centers the terminal window |
-| `checkkeybinds` | Conservatively checks for `hl.bind()` entries in `keybinds.lua` that don't appear anywhere in `KEYBINDS.txt` (a bind added but never documented). Read-only; some legitimate binds with uncommon names may not match — that's an expected false negative, not a bug |
+| `checkkeybinds` | No longer a drift-checker — `KEYBINDS.txt` can't drift from `keybinds.lua` anymore because it's *generated* from it (`hypr/scripts/generate-keybinds-doc.sh`, reading the `-- comment` above each `hl.bind()` as its description). `checkkeybinds` is now a thin wrapper: bare, it runs `--check` and tells you if a regen is needed; `checkkeybinds --write` regenerates `KEYBINDS.txt` for real |
 | `fastfetch` *(the function, not the binary)* | Picks a preset from `fastfetch/config*.jsonc` using a weighted shuffle bag (rarer presets show up less often); the bag reshuffles once exhausted, so a repeat across that boundary is possible |
 
-> ⚠️ `keybinds` depends on `KEYBINDS.txt` maintaining an exact format: section header in UPPERCASE, a line of only dashes below it, and entries as `KEY    Description` with at least two spaces between columns. If you edit that file manually, respect the format or the viewer will stop recognizing sections.
+> `KEYBINDS.txt` is generated, not hand-maintained — edit the comment above the relevant `hl.bind()` in `keybinds.lua` and run `checkkeybinds --write` (or `kitasan doctor` to just check first). Manual edits to `KEYBINDS.txt` itself get silently overwritten on the next regen.
 
 ---
 
@@ -788,6 +1009,9 @@ At minimum, review before using:
 | `fish/conf.d/tools.fish` | The `ec*` aliases (`ecswaync`, `echypr`, etc.) open the corresponding folder in `codium` (VSCodium); change the editor if you use another one |
 | `hypr/modules/monitors.lua` | Fixes output, resolution, position and scale for this machine (`HDMI-A-1`, `1920x1080@200Hz`). This is the one you're most likely to need to change before Hyprland even starts — set it to your own monitor, or switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection |
 | `waybar/config.jsonc` | Change `hwmon-path-abs`/`input-filename` to the correct sensor for your machine |
+| `rofi/scripts/dashboard.sh` | Same `hwmon-path-abs` sensor path as Waybar, hardcoded separately — the CPU temperature row won't work until you fix both |
+| `qt5ct/qt5ct.conf` & `qt6ct/qt6ct.conf` | `color_scheme_path` is a hardcoded absolute path (`/home/kitasa-elburakku/.config/...`) — change it to your own `$HOME`, or Qt apps will silently fail to find the color scheme |
+| `hypr/scripts/dotbackup-remind.sh` & `systemd/user/dotbackup-remind.timer` | Assumes you maintain your own fork checked out at `~/Projects/dotfiles` and want a weekly nudge if it diverges from `~/.config`. If that's not your workflow, just don't `enable` the timer — nothing else depends on it |
 | `hyprlock/layouts/layout.conf` | Points to `hyprlock/wallpapers/current.png`, which always mirrors whatever wallpaper you last picked (see `apply-wallpaper.sh` above); `2.png` is only the static fallback used to bootstrap `current.png` on a fresh clone. Nothing to change here unless you want a different fallback image |
 | `fastfetch/config*.jsonc` | Change logos, images and presets if you don't want to use the included assets |
 
@@ -806,8 +1030,8 @@ rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" 
 | Hyprland/Wayland | `hyprctl`, `hyprlock`, `hypridle`, `waybar`, `swaync`, `swaync-client`, `wlogout`, `awww`, `matugen` |
 | Audio/media | `wpctl`, `pavucontrol`, `playerctl`, `cava` |
 | Screenshots/clipboard | `hyprshot`, `grim`, `slurp`, `swappy`, `wl-copy`, `wl-paste`, `cliphist`, `hyprpicker` |
-| System | `systemctl`, `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors` |
-| Network/GUI | `nm-connection-editor`, `blueman-manager`, `nwg-look` |
+| System | `systemctl` (--user, extensively — see [systemd — Session & Services](#systemd-session-services)), `loginctl`, `pacman`, `yay`, `checkupdates`, `paccache`, `journalctl`, `lm_sensors`, `powerprofilesctl` |
+| Network/Bluetooth/GUI | `nmcli`, `bluetoothctl`, `nm-connection-editor`, `blueman-manager`, `nwg-look` |
 | Terminal/shell | `kitty`, `fish`, `starship`, `fastfetch`, `fzf`, `fd`, `bat`, `eza`, `zoxide`, `ripgrep` |
 | Utilities | `curl`, `jq`, `imagemagick`/`magick`, `ffmpeg`, `ffmpegthumbnailer`, `libnotify`/`notify-send`, `udiskie`, `reflector` |
 
