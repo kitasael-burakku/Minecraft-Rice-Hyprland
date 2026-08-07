@@ -11,7 +11,8 @@ function fastfetch
         "$base/kitasan.jsonc:12" \
         "$base/goldship.jsonc:10" \
         "$base/yani.jsonc:8" \
-        "$base/arch.jsonc:6" \
+        "$base/Yani-Neko.jsonc:7" \
+        "$base/arch.jsonc:5" \
         "$base/microfetch.jsonc:4" \
         "$base/lfs.jsonc:3" \
         "$base/cachyos.jsonc:2" \

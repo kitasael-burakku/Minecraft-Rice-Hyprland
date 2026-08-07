@@ -177,6 +177,37 @@ tooltip label {
 }
 
 /* -----------------------------------
+   MENÚ CONTEXTUAL (click derecho en el tray)
+----------------------------------- */
+
+/* Mismo problema que el tooltip de arriba: el "* { all: unset; }" del
+   principio también pisa los nodos "menu"/"menuitem" del popup GTK que abre
+   el tray al click derecho, dejándolo sin fondo (solo texto flotando). */
+menu {
+    background: alpha(@bg, 0.92);
+    border: 1px solid alpha(@accent, 0.2);
+    border-radius: 10px;
+    padding: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+menuitem {
+    color: @fg;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+menuitem:hover {
+    background: alpha(@accent, 0.25);
+}
+
+menu separator {
+    background: alpha(@fg, 0.15);
+    min-height: 1px;
+    margin: 4px 2px;
+}
+
+/* -----------------------------------
    REPRODUCTOR DE MÚSICA (PLAYERCTL)
 ----------------------------------- */
 
@@ -219,4 +250,11 @@ tooltip label {
 #custom-updates.critical {
     color: @red;
     font-weight: bold;
+}
+
+/* checkupdates/AUR helper falló (sin red, DB bloqueada, etc.) — se combina
+   con .updated/.pending/.critical (waybar permite varias clases a la vez),
+   así que solo tocamos el ícono de warning, no pisamos el color base */
+#custom-updates.error {
+    text-shadow: 0 0 6px alpha(@red, 0.6);
 }

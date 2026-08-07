@@ -44,7 +44,7 @@ hl.animation({ leaf="layersIn",      enabled=true, speed=2.2, bezier="ripple",  
 hl.animation({ leaf="layersOut",     enabled=true, speed=1.8, bezier="undertow", style="slide bot" })
 
 -- ─── Workspaces ───────────────────────────────────────────────────────────────────────────────────────────
-hl.animation({ leaf="workspaces",    enabled=true, speed=3.0, bezier="tideFeel", style="slidefade 20%" })
+hl.animation({ leaf="workspaces",    enabled=true, speed=3.5, bezier="tideFeel", style="slidefadevert 20%" })
 
 -- ─── Zoom ───────────────────────────────────────────────────────────────────
 hl.animation({ leaf="zoomFactor", enabled=true, speed=4.0, bezier="meniscus" })
