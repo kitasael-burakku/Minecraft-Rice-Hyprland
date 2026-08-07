@@ -79,5 +79,8 @@ fish/conf.d/local.fish
 # Se ignora el CONTENIDO (fish/completions/*) y no el directorio: git no
 # desciende a un directorio excluido, así que con "fish/completions/" la
 # excepción de abajo nunca se llegaba a evaluar.
+# Misma razón para kitasan.fish: fish/functions/kitasan.fish es público, sin
+# su completion `kitasan <TAB>` tampoco andaría tras clonar.
 fish/completions/*
 !fish/completions/ec.fish
+!fish/completions/kitasan.fish
