@@ -19,7 +19,7 @@
 
   "timeout": 4,
   "timeout-low": 5,
-  "timeout-critical": 6,
+  "timeout-critical": 0,
 
 
   "keyboard-shortcuts": true,

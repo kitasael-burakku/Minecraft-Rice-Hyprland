@@ -18,6 +18,18 @@
   --bg-red-hover:  {{colors.error.default.hex_alpha | set_alpha: 0.12}};
   --bg-red-active: {{colors.error.default.hex_alpha | set_alpha: 0.22}};
 
+  /* Crítico — fijo A PROPÓSITO: la urgencia no puede depender del wallpaper.
+     colors.error de Material en esquemas oscuros es siempre un pastel,
+     así que no es alcanzable un rojo de alarma por esa vía. --red y compañía
+     arriba siguen dinámicos: los usa el hover destructivo del close button,
+     que es otra semántica (acción peligrosa, no urgencia). */
+  --critical:        #ff6b5b;
+  --critical-ring:   rgba(255, 107, 91, 0.85);
+  --critical-dim:    rgba(255, 107, 91, 0.55);
+  --critical-bg:     rgba(255, 107, 91, 0.10);
+  --critical-bg-str: rgba(255, 107, 91, 0.16);
+  --critical-glow:   rgba(255, 107, 91, 0.28);
+
   --bg-base:      {{colors.surface_container.default.hex_alpha | set_alpha: 0.74}};
   --bg-dark:      {{colors.surface_container_lowest.default.hex_alpha | set_alpha: 0.82}};
   --bg-hover:     {{colors.surface_container_high.default.hex_alpha | set_alpha: 0.88}};

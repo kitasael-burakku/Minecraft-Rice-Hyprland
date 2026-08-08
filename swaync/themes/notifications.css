@@ -22,6 +22,19 @@
   --shadow-card:
     0 4px 20px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  /* El schema llama "deprecated" a notification-icon-size en config.json y
+     sugiere esta variable en su lugar — PERO medido en vivo (A/B real,
+     notify-send -i con un ícono de archivo): la opción JSON efectivamente
+     sigue siendo la que fija el tamaño real del ícono (48px), mientras que
+     esta variable CSS solo le pega a -gtk-icon-size, que GTK únicamente usa
+     para íconos resueltos por nombre vía el icon theme, no para pixbufs
+     cargados directo desde archivo (que es el caso común: app_icon de
+     notify-send, Discord, etc.). Sin la clave JSON el ícono se veía en
+     16px real, no 48. Por eso config.json mantiene "notification-icon-size":
+     48 — esta variable queda declarada igual por si algún emisor manda un
+     ícono por nombre simbólico en vez de archivo. */
+  --notification-icon-size: 48px;
 }
 
 /* Los --radius-* y --transition de acá abajo NO van en :root: central_control.css
@@ -32,7 +45,7 @@
    ya envuelve el 100% de los usos de estas variables en este archivo. */
 .floating-notifications.background {
   --radius-card:    18px;
-  --radius-body:    15px;
+  --radius-body:    18px;
   --radius-action:  10px;
   --radius-close:   8px;
   --radius-image:   10px;
@@ -40,12 +53,9 @@
   --transition: 280ms ease-in-out;
 }
 
-* {
-  all:         unset;
-  color:       var(--text-body);
-  font-size:   13px;
-  font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
-}
+/* El reset base (`* { all: unset; ... }`) vive en ../style.css: notifications.css
+   y central_control.css lo declaraban idéntico dos veces. Tiene especificidad 0,
+   así que hoistearlo no cambia qué gana ninguna regla de clase de acá abajo. */
 
 .notification-row {
   outline: none;
@@ -103,17 +113,45 @@
   min-height: 3.2em;
 }
 
-/* ── Critical ───────────────────────────────────────────── */
+/* ── Urgency tiers ──────────────────────────────────────── */
+/* low / normal / critical son las tres caras del mismo card — mismo radio,
+   misma familia de sombra, distinto peso visual. Normal es el card base
+   (arriba, sin clase extra que agregarle). */
 
-/* .notification.critical es el hijo del card, no el card: si le ponemos borde
-   acá se dibuja ENCIMA del que ya tiene .notification-background y se ve un
-   trazo doble. La urgencia queda marcada con el glow interno y el .summary
-   en rojo. */
+/* Low: mismo card, menos peso. No compite con normal ni con critical. */
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification.low {
+  opacity: 0.82;
+}
+
+.floating-notifications.background
+.notification-row
+.notification-background
+.notification.low
+.summary {
+  color:       var(--text-body);
+  font-weight: 600;
+}
+
+/* Critical: .notification es hijo flush del card (.notification-background
+   tiene padding: 0), así que un `border` acá cae pegado por dentro del borde
+   del card y se ve doble trazo — por eso la versión anterior solo ponía un
+   glow interno. El truco es un box-shadow OUTSET de spread 1px y blur 0: se
+   dibuja FUERA de la caja, justo encima del borde del card, y lo REEMPLAZA en
+   vez de apilarse encima. GTK 4.22 no soporta :has(), así que esta es la
+   única forma de darle al card un borde de urgencia real desde el hijo. */
 .floating-notifications.background
 .notification-row
 .notification-background
 .notification.critical {
-  box-shadow: inset 0 0 16px var(--bg-red-active);
+  background:    var(--critical-bg);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 0 0 1px var(--critical-ring),        /* anillo, reemplaza el borde del card */
+    0 0 18px 2px var(--critical-glow),     /* glow externo, suave */
+    inset 0 0 24px var(--critical-bg);     /* profundidad interna */
 }
 
 .floating-notifications.background
@@ -121,7 +159,8 @@
 .notification-background
 .notification.critical
 .summary {
-  color: var(--red);
+  color:       var(--critical);
+  font-weight: 800;
 }
 
 /* ── Actions ────────────────────────────────────────────── */
@@ -271,12 +310,7 @@
 }
 
 /* ── Progress ───────────────────────────────────────────── */
-
-progressbar,
-progress,
-trough {
-  border-radius: var(--radius-pill);
-}
+/* El radio compartido de progressbar/progress/trough vive en ../style.css. */
 
 trough {
   background: var(--bg-progress);
@@ -288,5 +322,5 @@ trough {
 }
 
 .notification.critical progress {
-  background: var(--red);
+  background: var(--critical);
 }

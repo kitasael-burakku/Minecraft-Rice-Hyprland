@@ -1,2 +1,23 @@
 @import 'themes/notifications.css';
 @import 'themes/central_control.css';
+
+/* Reset base compartido — notifications.css y central_control.css lo
+   declaraban idéntico dos veces (--text-base y --text-body resuelven al
+   mismo valor en colors.css/colors.static.css, así que unificarlo acá no
+   cambia el color visible en ninguno de los dos). Especificidad 0: toda
+   regla de clase en los temas sigue ganando sin importar el orden. */
+* {
+  all:         unset;
+  color:       var(--text-body);
+  font-size:   13px;
+  font-family: "JetBrainsMono Nerd Font Propo", sans-serif;
+}
+
+/* progressbar/progress/trough también se repetían idénticos en ambos temas
+   para el radio; el color de fondo/relleno sigue definido por separado en
+   cada uno porque difiere (accent vs accent/critical según urgencia). */
+progressbar,
+progress,
+trough {
+  border-radius: var(--radius-pill);
+}
