@@ -5,7 +5,7 @@
 # DIRECTAMENTE desde keybinds.lua (leyendo el comentario "-- " de arriba de
 # cada bind como descripción) — no puede haber drift porque no hay dos
 # fuentes de verdad, sólo una que se regenera.
-#
+
 # Esta función ahora es un wrapper fino: --check (no escribe nada, sólo
 # avisa si haría falta regenerar) por defecto, y regenera de verdad con
 # `checkkeybinds --write` o `checkkeybinds --apply`.
@@ -24,7 +24,7 @@ function checkkeybinds --description "Regenerar/verificar KEYBINDS.txt desde key
     _rui_top $W
     _rui_row $W brwhite "󰌌  Keybinds Doc"
     _rui_mid $W
-    _rui_row $W brblack "generate-keybinds-doc.sh — fuente única: keybinds.lua"
+    _rui_row $W brblack "generate-keybinds-doc.sh — Source: keybinds.lua"
     _rui_bot $W
     echo ""
 

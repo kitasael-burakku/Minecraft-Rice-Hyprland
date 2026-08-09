@@ -37,6 +37,11 @@ fi
 # periódico de fondo) y disparar el rescan real DESPUÉS, en background — no
 # refresca esta apertura, pero deja la próxima más fresca sin que nadie
 # tenga que esperarlo.
+#
+# TRAMPA: "nmcli dev wifi list" sin más también escanea si el caché tiene
+# más de ~30s (--rescan auto es el default) — el mismo bloqueo de arriba
+# colándose por la puerta de atrás. Por eso el --rescan no explícito abajo:
+# confirmado en vivo, sin él tardaba 14.8s en frío y 7ms en caliente.
 nohup nmcli device wifi rescan >/dev/null 2>&1 &
 disown
 
@@ -52,7 +57,7 @@ while IFS=: read -r ssid signal sec inuse; do
     SIGNAL_OF["$ssid"]="$signal"
     SEC_OF["$ssid"]="$sec"
     [ "$inuse" = "*" ] && INUSE_OF["$ssid"]=1
-done < <(nmcli -t -f SSID,SIGNAL,SECURITY,IN-USE dev wifi list 2>/dev/null)
+done < <(nmcli -t -f SSID,SIGNAL,SECURITY,IN-USE dev wifi list --rescan no 2>/dev/null)
 
 if [ "${#SIGNAL_OF[@]}" -eq 0 ]; then
     command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "No se encontraron redes"

@@ -16,12 +16,20 @@ Programs = {
     windowswitcher ='pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show winswitcher -modi winswitcher:~/.config/rofi/scripts/window-switcher.sh -theme ~/.config/rofi/window-switcher.rasi',
     lockscreen     = "hyprlock",
     --music        = "spotify" --Placeholder,
-    record         = "obs"
+    record         = "obs",
+
+    -- Lanzadores rofi y menús de sistema 
+    themePicker    = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/theme.sh',
+    services       = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/systemd.sh',
+    powermenu      = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/power.sh',
+    dashboard      = 'pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show dashboard -modi dashboard:$HOME/.config/rofi/scripts/dashboard.sh -theme $HOME/.config/rofi/clipboard.rasi',
+
+    themeToggle    = "bash $HOME/.config/rofi/scripts/matugen_toggle.sh",
+    sessionMenu    = "bash $HOME/.config/wlogout/scripts/launch_wlogout.sh",
+    kitasanMenu    = "fish -c 'kitasan menu'"
 }
 
--- Comandos privados (ver hypr/modules/private.example.lua) — no versionados.
--- pcall(): la ausencia de private.lua no debe tumbar el resto de la config,
--- solo deja sin definir las claves opcionales que hubiera aportado.
+-- Comandos privados
 local ok, private = pcall(require, "modules.private")
 if ok and type(private) == "table" and type(private.programs) == "table" then
     for key, value in pairs(private.programs) do
