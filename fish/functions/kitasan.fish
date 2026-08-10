@@ -13,8 +13,11 @@
 #   kitasan theme           → selector de perfil visual (rofi)
 #   kitasan theme <scheme>  → fija el esquema directo, sin rofi (ej: vibrant)
 #   kitasan wall             → selector de wallpaper por terminal (fzf, sin rofi)
+#   kitasan mode             → normal/focus/gaming/cinema, selector rofi
+#   kitasan mode <perfil>    → fija el perfil directo, sin rofi
 #   kitasan doctor           → paridad de templates + drift de keybinds +
 #                               servicios systemd caídos + huérfanos (solo lectura)
+#   kitasan dashboard        → panorama del sistema (updates/temps/disco/reproductor), rofi
 #   kitasan menu              → todo lo de arriba, elegido desde un rofi
 
 function __kitasan_doctor

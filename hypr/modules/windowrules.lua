@@ -56,10 +56,10 @@ hl.layer_rule({ name  = "waybar", match  = { namespace = "waybar", }, blur = tru
 --------------------------
 
 -- Workspace de una sola ventana tileada:
-hl.workspace_rule({ workspace = "w[tv1]", gaps_out  = 20, gaps_in   = 10, })
-hl.workspace_rule({ workspace = "f[1]", gaps_out  = 20, gaps_in   = 10, })
-hl.window_rule({ name  = "no-gaps-wtv1", match = { float     = false, workspace = "w[tv1]",}, border_size    = 2, rounding       = 18, rounding_power = 4, })
-hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 2, rounding       = 18, rounding_power = 4, })
+--hl.workspace_rule({ workspace = "w[tv1]", gaps_out  = 20, gaps_in   = 10, })
+--hl.workspace_rule({ workspace = "f[1]", gaps_out  = 20, gaps_in   = 10, })
+--hl.window_rule({ name  = "no-gaps-wtv1", match = { float     = false, workspace = "w[tv1]",}, border_size    = 2, rounding       = 20, rounding_power = 2.4, })
+--hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 2, rounding       = 20, rounding_power = 2.4, })
 
 -- Special workspace (scratchpad)
 hl.workspace_rule({ workspace = "special:magic", gaps_out  = 10, gaps_in   = 20, border_size = 0, })

@@ -89,6 +89,13 @@ status=$?
 if [ "$status" -ne 0 ] && printf '%s' "$err" | grep -qiE 'secrets were required|802-1x|key-mgmt'; then
     pass=$(rofi -dmenu -p "Contraseña de $ssid" -password -theme "$THEME")
     [ -n "$pass" ] || exit 0
+    # nmcli no tiene forma no-interactiva de pasar la password sin argv (no
+    # soporta stdin para esto); "nmcli --ask" evita el argv pidiéndola de
+    # forma interactiva, pero no se usa acá porque no está verificado que
+    # funcione bien con un prompt pipeado (no-tty) sin arriesgar dejar al
+    # usuario sin poder conectarse. Riesgo aceptado: queda brevemente
+    # visible en `ps`/`/proc/<pid>/cmdline` solo para otros procesos DEL
+    # MISMO usuario local, nunca en la red ni para otros usuarios.
     if nmcli device wifi connect "$ssid" password "$pass" >/dev/null 2>&1; then
         command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "Conectado a $ssid"
     else

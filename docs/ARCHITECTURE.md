@@ -245,7 +245,7 @@ Beyond the launcher and wallpaper picker, `rofi/scripts/` has a handful of small
 
 ## Cava — audio visualizer
 
-`cava/` has three parts: `config` (pipewire method, noncurses output, 60fps mono), `themes/` (three swappable palettes — `agua`, `solarized_dark`, `tricolor`, applied by copying one into the `[color]` block of `config`), and `shaders/` (six GLSL shaders for cava's visual mode, requiring cava built with OpenGL support — `ngl` method).
+`cava/` has three parts: `config` (pipewire method, noncurses output, 60fps mono), `themes/` (three swappable palettes — `agua`, `solarized_dark`, `tricolor`, applied by copying one into the `[color]` block of `config`), and `shaders/` (six GLSL shaders for cava's visual mode, requiring cava built with OpenGL support — `ngl` method). Cava has no autostart or systemd unit and isn't wired into Waybar, Kitty, or Hyprland — it's launched manually (`cava`) whenever wanted.
 
 ---
 

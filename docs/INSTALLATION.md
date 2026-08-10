@@ -203,8 +203,7 @@ chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/player.sh
 chmod +x ~/.config/rofi/scripts/*.sh
 chmod +x ~/.config/hypr/scripts/*.sh
-chmod +x ~/.config/hypr/infinite_desktop/infinite-desktop.sh \
-          ~/.config/hypr/infinite_desktop/floating_tile_toggle.py \
+chmod +x ~/.config/hypr/infinite_desktop/floating_tile_toggle.py \
           ~/.config/hypr/infinite_desktop/move_window.py \
           ~/.config/hypr/infinite_desktop/move_window_tiled.py \
           ~/.config/hypr/infinite_desktop/navigate_windows.py \

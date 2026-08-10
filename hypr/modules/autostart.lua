@@ -29,7 +29,7 @@ hl.on("hyprland.start", function()
     -- él) necesita que el D-Bus activation environment ya tenga
     -- WAYLAND_DISPLAY/XDG_CURRENT_DESKTOP/XDG_SESSION_TYPE actualizados, o
     -- los servicios que dependen de Wayland arrancan con el entorno viejo.
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE && systemctl --user start hyprland-session.service")
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XCURSOR_THEME XCURSOR_SIZE GTK_THEME GDK_BACKEND QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME GSK_RENDERER && systemctl --user start hyprland-session.service")
 
     -- Único one-shot que no tiene sentido como servicio propio (no es un
     -- daemon, no hay nada que supervisar).

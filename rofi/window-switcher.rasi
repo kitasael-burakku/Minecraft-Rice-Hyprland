@@ -7,9 +7,10 @@
 
 configuration {
     /* show-icons: true ya es el default de config.rasi. icon-theme sí es
-       propio de este tema — window-switcher.sh resuelve iconos por clase de
-       app y necesita Papirus-Dark específicamente. */
-    icon-theme: "Papirus-Dark";
+       propio de este tema — window-switcher.sh resuelve iconos por nombre
+       genérico (el Icon= del .desktop), así que el tema activo define la
+       cobertura. Se usa el mismo que GTK/Qt para no divergir. */
+    icon-theme: "Slot-Gray-Dark-Icons";
 }
 
 * {

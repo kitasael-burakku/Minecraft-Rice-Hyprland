@@ -29,24 +29,34 @@ LABELS=(
     "󰜉  Reboot"
     "󰐥  Shutdown"
 )
-CMDS=(
-    "hyprlock"
-    "$WLOGOUT_SCRIPTS/suspend.sh"
-    "hyprctl dispatch 'hl.dsp.exit()'"
-    "$WLOGOUT_SCRIPTS/confirm-then.sh 'systemctl reboot' '¿Reiniciar?'"
-    "$WLOGOUT_SCRIPTS/confirm-then.sh 'systemctl poweroff' '¿Apagar?'"
-)
-
 menu=""
 for l in "${LABELS[@]}"; do menu+="$l"$'\n'; done
 
 chosen=$(printf '%s' "$menu" | rofi -dmenu -p "Power" -theme "$THEME")
 [ -n "$chosen" ] || exit 0
 
-for i in "${!LABELS[@]}"; do
-    if [ "${LABELS[$i]}" = "$chosen" ]; then
-        eval "${CMDS[$i]}" &
-        disown
+# case en vez de un segundo array (CMDS) + eval: mismo despacho, pero cada
+# comando se escribe una sola vez como argumentos reales de bash — sin una
+# segunda pasada de parseo sobre un string armado a mano.
+case "$chosen" in
+    "󰌾  Lock")
+        hyprlock &
+        ;;
+    "󰤄  Suspend")
+        "$WLOGOUT_SCRIPTS/suspend.sh" &
+        ;;
+    "󰗽  Logout")
+        hyprctl dispatch 'hl.dsp.exit()' &
+        ;;
+    "󰜉  Reboot")
+        "$WLOGOUT_SCRIPTS/confirm-then.sh" 'systemctl reboot' '¿Reiniciar?' &
+        ;;
+    "󰐥  Shutdown")
+        "$WLOGOUT_SCRIPTS/confirm-then.sh" 'systemctl poweroff' '¿Apagar?' &
+        ;;
+    *)
         exit 0
-    fi
-done
+        ;;
+esac
+disown
+exit 0

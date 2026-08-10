@@ -70,7 +70,7 @@ GTK3 and GTK4 are handled differently because **GTK4 dropped support for the `GT
 3. Re-run `hypr/scripts/apply-static-colors.sh` — it re-derives the GTK4 `theme-base.css` symlink from the new `GTKTheme` value automatically.
 4. If you used `nwg-look` to apply the GTK theme, re-run step 3 again afterward (see the warning above).
 
-Icon themes don't need a code change at all — nothing in this repo hardcodes an icon theme name in logic. The only place an icon theme name shows up is a comment in `hypr/scripts/link-steam-icons.sh`, explaining the *previous* icon theme this was written against; the script itself writes into the universal `hicolor` fallback (see below), which works under any active icon theme.
+Icon themes mostly don't need a code change — `hypr/scripts/link-steam-icons.sh` writes into the universal `hicolor` fallback (see below), which works under any active icon theme. The one exception is `rofi/window-switcher.rasi`, whose `configuration { icon-theme: ... }` hardcodes the icon theme name so its by-class icon lookup has something concrete to resolve against; it's kept in sync with whatever GTK/Qt use elsewhere in this doc, not switched independently.
 
 ---
 

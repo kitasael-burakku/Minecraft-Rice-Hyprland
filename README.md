@@ -59,7 +59,7 @@
 | Infinite Desktop (floating canvas mode) | ✅ |
 | Custom Fish functions, aliases & completions | ✅ |
 | Window switcher with minimize/restore | ✅ |
-| cava audio visualizer with GLSL shaders | ✅ |
+| cava audio visualizer with GLSL shaders (needs a cava build with OpenGL/`ngl` support) | ✅ |
 | Hyprlock with MPRIS now-playing block | ✅ |
 | Minecraft-themed SDDM / GRUB | ✅ |
 | Automatic one-click installer | ❌ *(by design — see [The Philosophy](#the-philosophy))* |
