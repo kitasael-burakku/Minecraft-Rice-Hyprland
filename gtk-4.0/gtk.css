@@ -1,5 +1,6 @@
 /* Kitasan Glass — antes esto era un symlink directo al gtk.css del tema
-   (Colorful-Dark-GTK), puesto ahí por nwg-look: GTK4 no soporta la env var
+   (el que declare GTKTheme en environment.lua — a la fecha Win11-Fantasy-Dark),
+   puesto ahí por nwg-look: GTK4 no soporta la env var
    GTK_THEME, así que ~/.config/gtk-4.0/gtk.css TIENE que ser el contenido
    del tema, no sólo un override.
    theme-base.css es un symlink al mismo archivo de siempre — se preserva

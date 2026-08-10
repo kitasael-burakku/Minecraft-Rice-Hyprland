@@ -1,0 +1,434 @@
+# Installation
+
+This is the complete, ordered path from a bare Arch/CachyOS install to a working session. Each step exists because a later one depends on it — follow them in order the first time.
+
+> This repo is **not plug-and-play**. See [Who Is This For](../README.md#who-is-this-for) before you start. Steps [0](#0-back-up-your-current-configuration) through [10](#10-shell-and-first-login) below are the whole thing; everything else on this page is context for why each step exists.
+
+> 🚫 **Desktop-first.** This rice is developed and tested on desktop hardware (see [Hardware & Compatibility](../README.md#hardware--compatibility)). Laptop-specific concerns — battery, brightness, power profiles, function keys, touchpad gestures, suspend/resume — are out of scope.
+
+---
+
+## 0. Back up your current configuration
+
+```bash
+mkdir -p ~/backup-configs
+
+cp -r \
+  ~/.config/hypr \
+  ~/.config/waybar \
+  ~/.config/kitty \
+  ~/.config/fish \
+  ~/.config/rofi \
+  ~/.config/fastfetch \
+  ~/.config/hyprlock \
+  ~/.config/swaync \
+  ~/.config/wlogout \
+  ~/backup-configs 2>/dev/null
+```
+
+If something goes wrong you'll be able to restore your previous configuration easily.
+
+> ⚠️ Read the files before copying them.
+> ⚠️ Don't run scripts you don't understand.
+> ⚠️ Check personal paths, wallpapers, sensors, and programs before logging into Hyprland — see [step 9](#9-fix-personal-paths) below.
+
+---
+
+## 1. Dependencies
+
+> Package names may vary depending on your enabled repositories. Check each package before installing it.
+
+> `rofi-wayland` (the old community fork with native Wayland support) is gone from the repos — Wayland support was merged into upstream `rofi` itself, so plain `rofi` is what you want now. The list below already reflects this.
+
+**Recommended base for Arch / CachyOS**
+
+```bash
+sudo pacman -Syu
+sudo pacman -S \
+  hyprland waybar kitty fish starship fastfetch rofi \
+  hyprlock hypridle swaync wlogout \
+  pipewire wireplumber pavucontrol playerctl \
+  networkmanager network-manager-applet \
+  bluez bluez-utils blueman \
+  wl-clipboard cliphist grim slurp swappy \
+  nautilus btop udiskie polkit-kde-agent \
+  jq curl imagemagick libnotify ffmpeg ffmpegthumbnailer \
+  pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
+  lm_sensors ttf-jetbrains-mono-nerd \
+  thefuck bottom python python-evdev bash \
+  power-profiles-daemon qt5ct qt6ct
+```
+
+> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely.
+
+> If you use CachyOS you can download Zen-Browser from pacman packages:
+> ```bash
+> sudo pacman -S zen-browser-bin
+> ```
+
+**AUR or to verify**
+
+```bash
+yay -S \
+  mpvpaper \
+  hyprshot \
+  hyprpicker \
+  nwg-look \
+  vscodium-bin \
+  cava \
+  awww \
+  matugen
+```
+
+> If you don't use CachyOS you can download Zen-Browser from AUR packages:
+> ```bash
+> yay -S zen-browser-bin
+> ```
+
+> ⚠️ **If you install things from the AUR, carefully review what will be installed.**
+>
+> `awww` is the image wallpaper backend used by this rice. `swww` is **not used** — `awww` replaced it entirely. Install `awww` from the AUR.
+
+<details>
+<summary><b>Marked as "to verify" — click to expand</b></summary>
+<br>
+
+- `hyprland-lua`: this rice uses `hypr/hyprland.lua` with `hl.*` calls, not classic `hyprland.conf`. Verify the correct package or method for your version of Hyprland — see the [Hyprland in Lua](ARCHITECTURE.md#hyprland-in-lua) section for why this matters.
+- `hyprshutdown`: appears as an optional fallback in a keybind.
+- `obs`, `brave`, `vscodium`: personal applications tied to keybinds, not requirements of the base environment.
+- `awww`: required by the Rofi wallpaper selector to apply static images. `matugen` is required if you want dynamic theming — see [THEMING.md](THEMING.md); the rest of the rice works fine without it.
+
+</details>
+
+---
+
+## 2. Themes, icons, cursors and fonts
+
+This is the part the base dependency list above doesn't cover: the actual visual assets the configs reference by name. Skipping this step is the single most common way to end up with a desktop that "looks wrong" after copying every config file correctly — the configs assume these are already installed.
+
+| Kind | Name used in this rice | Where it's referenced | Get it |
+|---|---|---|---|
+| GTK theme | **Win11-Fantasy-Dark** | `hypr/modules/environment.lua` (`GTKTheme`), `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | [gnome-look.org/p/2307588](https://www.gnome-look.org/p/2307588) |
+| GTK theme (previous, referenced in older comments) | Colorful-Dark-GTK | historical — see [THEMING.md](THEMING.md#gtk-theming) | [gnome-look.org/p/2091032](https://www.gnome-look.org/p/2091032) |
+| Icon theme | **Slot Gray Dark Icons** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `hypr/scripts/link-steam-icons.sh` | [gnome-look.org/p/2345718](https://www.gnome-look.org/p/2345718) |
+| Cursor theme | **Future-black Cursors** | `hypr/modules/environment.lua` (`CursorTheme`) | [gnome-look.org/p/1519633](https://www.gnome-look.org/p/1519633) |
+| Cursor theme (alternative) | Colloid cursors | optional swap | [gnome-look.org/p/1831077](https://www.gnome-look.org/p/1831077) |
+| Monospace / UI font | JetBrainsMono Nerd Font | terminal, Waybar, SwayNC, Rofi | `ttf-jetbrains-mono-nerd` (already in the pacman list above) |
+| GTK UI font | Adwaita Sans | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | `adwaita-fonts` (Arch repos) |
+
+If you'd rather pick your own instead of these exact ones, browse the categories directly:
+
+- Icon themes — [gnome-look.org/browse?cat=132](https://www.gnome-look.org/browse?cat=132)
+- GTK3/4 themes — [gnome-look.org/browse?cat=135](https://www.gnome-look.org/browse?cat=135)
+- Cursors — [gnome-look.org/browse?cat=107](https://www.gnome-look.org/browse?cat=107)
+
+**Where to install them:**
+
+```bash
+mkdir -p ~/.themes ~/.icons ~/.local/share/icons
+# GTK themes go in ~/.themes/<Theme-Name>/ (or ~/.local/share/themes/)
+# Icon themes go in ~/.icons/<Theme-Name>/ (or ~/.local/share/icons/)
+# Cursor themes go in ~/.icons/<Theme-Name>/ as well
+```
+
+After installing, apply them with `nwg-look` (already in the AUR list above) rather than editing GTK settings files by hand — it keeps `gtk-3.0/settings.ini` and `gtk-4.0/settings.ini` consistent. Then update the two names this repo hardcodes so they match what you installed:
+
+- `hypr/modules/environment.lua` — `CursorTheme` and `GTKTheme`
+- `hypr/scripts/link-steam-icons.sh` mentions `Slot-Gray-Dark-Icons` only in a comment (it doesn't hardcode the theme name in logic — it writes to the universal `hicolor` fallback instead, see [THEMING.md](THEMING.md#steam-game-icons)), so no code change is needed there if you pick a different icon theme.
+
+> `rofi/window-switcher.rasi` also requests `Papirus-Dark` for its own icon lookups, independent of your main icon theme. It falls back silently if not installed; grab it with `sudo pacman -S papirus-icon-theme` if you want window-switcher icons to resolve fully.
+
+> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting this repo's version (which imports `theme-base.css` + `gtk-colors.css` instead, so matugen/static color overrides keep working). If you use `nwg-look` to apply a GTK4 theme, re-run `hypr/scripts/apply-static-colors.sh` afterward — see [THEMING.md](THEMING.md#gtk-theming) for why.
+
+---
+
+## 3. Clone and copy configs
+
+```bash
+git clone https://github.com/kitasael-burakku/Minecraft-Rice-Hyprland.git ~/dotfiles
+cd ~/dotfiles
+```
+
+Copy the folders you want to use:
+
+```bash
+mkdir -p ~/.config
+cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava matugen \
+      gtk-3.0 gtk-4.0 qt5ct qt6ct systemd ~/.config/
+cp starship.static.toml ~/.config/starship.toml
+
+mkdir -p ~/Documents
+cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
+```
+
+Every top-level folder in the repo maps to the same name under `~/.config/`, **except** `docs/`, `README.md`, `LICENSE`, `KEYBINDS.txt` (→ `~/Documents/`), and `starship.static.toml` (→ `~/.config/starship.toml`, renamed).
+
+---
+
+## 4. Bootstrap generated color files
+
+The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/colors.conf`, `gtk-3.0/gtk-colors.css`, `qt5ct/colors/kitasan-glass.conf`, etc.) aren't in the repo — they're generated, and gitignored. Populate them with the static "Kitasan Glass" baseline:
+
+```bash
+bash ~/.config/hypr/scripts/apply-static-colors.sh
+```
+
+This has to run **before** step 6 (enabling services) — some of those services read the files this step creates. Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [THEMING.md](THEMING.md).
+
+---
+
+## 5. Make scripts executable
+
+```bash
+chmod +x ~/.config/waybar/scripts/*.sh
+chmod +x ~/.config/rofi/launcher.sh
+chmod +x ~/.config/swaync/scripts/*.sh
+chmod +x ~/.config/wlogout/scripts/*.sh
+chmod +x ~/.config/hyprlock/scripts/*.sh
+chmod +x ~/.config/rofi/scripts/*.sh
+chmod +x ~/.config/hypr/scripts/*.sh
+chmod +x ~/.config/hypr/infinite_desktop/infinite-desktop.sh \
+          ~/.config/hypr/infinite_desktop/floating_tile_toggle.py \
+          ~/.config/hypr/infinite_desktop/move_window_tiled.py \
+          ~/.config/hypr/infinite_desktop/navigate_windows.py \
+          ~/.config/hypr/infinite_desktop/resize_window.py
+```
+
+---
+
+## 6. Enable the systemd units
+
+Copying the files into `~/.config/systemd/user/` is **not** enough by itself — each unit's `[Install]` block only takes effect once you `enable` it:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now \
+  waybar.service swaync.service hypridle.service udiskie.service \
+  awww.service wallpaper.service cliphist-text.service cliphist-image.service \
+  infinite-desktop.service playerctl-watch.service polkit-agent.service
+
+systemctl --user enable --now \
+  updates-check.timer thumbs-refresh.timer healthcheck-notify.timer dotbackup-remind.timer
+```
+
+> `hyprland-session.service` is **not** in that list — it has no `[Install]` block on purpose, it's only ever started by `hypr/modules/autostart.lua` when Hyprland itself launches. See [ARCHITECTURE.md](ARCHITECTURE.md#session-lifecycle) for why the architecture is split this way.
+
+> `dotbackup-remind.timer` only makes sense if you keep your own fork checked out and want a reminder when `~/.config` drifts from it (see `hypr/scripts/dotbackup-remind.sh`). If that's not your workflow, skip enabling that one timer — nothing else depends on it.
+
+---
+
+## 7. Infinite Desktop — input group
+
+The Infinite Desktop scripts read raw `/dev/input` events, which requires your user to be in the `input` group:
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Log out and log back in (or reboot) for the new group membership to take effect. For implementation details, see the original [Infinite Desktop project](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2) by **sarodscommits**.
+
+---
+
+## 8. Wallpapers
+
+Video wallpapers are **not included** in this repo due to file size limits. Place your own here:
+
+```bash
+mkdir -p ~/Videos/Wallpapers
+# Place your .mp4 .mkv .mov .webm files here
+```
+
+For static image wallpapers, the ones used in this rice come from [NischalDawadi/Wallpapers](https://github.com/NischalDawadi/Wallpapers). Full credit to the original author.
+
+```bash
+mkdir -p ~/Pictures
+git clone https://github.com/NischalDawadi/Wallpapers.git ~/Pictures/Wallpapers
+```
+
+> The wallpaper picker expects videos in `~/Videos/Wallpapers/` and images in `~/Pictures/Wallpapers/`. Both paths can be overridden by exporting `WALLPAPER_DIR_VIDEO` and `WALLPAPER_DIR_IMG` before launching the picker.
+
+---
+
+## 9. Fix personal paths
+
+This repo runs on one specific machine and was never meant to be copied byte-for-byte. Before logging into Hyprland, review and edit:
+
+| File | What to change |
+|---|---|
+| `hypr/modules/monitors.lua` | Output name, resolution, position, scale (`HDMI-A-1`, `1920x1080@200Hz` here) — the one you're most likely to need before Hyprland even starts. Switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
+| `hypr/modules/input.lua` | Keyboard/mouse device names (`hl.device` blocks reference specific hardware) |
+| `hypr/hyprlock.conf` | `$hyprlockDir` — your real path (`/home/your-username/.config/hyprlock`) |
+| `hypr/scripts/apply-wallpaper.sh` | `DEFAULT_WALLPAPER` — a wallpaper you actually have. This is the only place the default lives; `autostart.lua` just calls this script |
+| `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones |
+| `hypr/modules/programs.lua` | Terminal, file manager, browser, launcher — change if you use different apps |
+| `waybar/config.jsonc` | `hwmon-path-abs` — the correct sensor path for your machine |
+| `rofi/scripts/dashboard.sh` | Same `hwmon-path-abs` sensor path as Waybar, hardcoded separately — both need fixing or the CPU temperature row won't work |
+| `qt5ct/qt5ct.conf` & `qt6ct/qt6ct.conf` | `color_scheme_path` — a hardcoded absolute path; point it at your own `$HOME` or Qt apps silently fail to find the color scheme |
+| `hypr/modules/keybinds.lua` | `obs`, screenshot paths, and any command you don't use |
+| `fish/conf.d/tools.fish` | The `ec*` aliases open folders in `codium` — change the editor if you use another one |
+| `rofi/scripts/window-switcher.sh` | `MINIMIZED_WS` defaults to `special:minimized` — change if you use a different special workspace name |
+| `hypr/scripts/dotbackup-remind.sh` & `systemd/user/dotbackup-remind.timer` | Assumes a fork checked out at `~/Projects/dotfiles` — see [step 6](#6-enable-the-systemd-units) |
+
+Find all of them at once:
+
+```bash
+rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
+```
+
+---
+
+## 10. Shell and first login
+
+If you want Fish as your default shell:
+
+```bash
+chsh -s /usr/bin/fish
+```
+
+Log into Hyprland. If something doesn't exist on your system, Hyprland may start incomplete, or some shortcuts won't do anything — that's expected until step 9 is fully done.
+
+---
+
+## Verification
+
+A correct install looks like this:
+
+```bash
+systemctl --user --failed          # should be empty
+systemctl --user is-active waybar.service hypridle.service swaync.service
+```
+
+- Waybar is visible with all modules rendering (not blank/missing icons).
+- `SUPER + W` opens the wallpaper picker; picking one changes the desktop background.
+- GTK apps (e.g. `nautilus`) render with the installed theme, not the GTK default (Adwaita fallback look) — if they don't, see [Troubleshooting](#troubleshooting).
+- `SUPER + F4` opens the `kitasan` menu.
+
+---
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| Rofi/Waybar/Kitty show no colors, or an error about a missing file | Step 4 (bootstrap colors) wasn't run, or was run before the folders existed |
+| `systemctl --user is-enabled <unit>` says `disabled` after copying the units | `[Install]` blocks don't self-activate — re-run step 6's `enable --now` |
+| Hyprland doesn't start, or ignores the whole config | Your Hyprland build doesn't support the native Lua config API (`hl.*`) — see [ARCHITECTURE.md](ARCHITECTURE.md#hyprland-in-lua) |
+| Wallpaper picker errors on `awww` | You installed `swww` instead — this rice uses `awww`, not `swww` |
+| GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink — re-run `hypr/scripts/apply-static-colors.sh`, see [THEMING.md](THEMING.md#gtk-theming) |
+| Steam games have no icon in Rofi's launcher | Expected on a fresh clone until Steam has actually cached art for those games — see [THEMING.md](THEMING.md#steam-game-icons) |
+| CPU temperature row is empty in Waybar/dashboard | `hwmon-path-abs` in `waybar/config.jsonc` and `rofi/scripts/dashboard.sh` still point at the original machine's sensor — fix both, see step 9 |
+
+---
+
+## Appendix — command reference for beginners
+
+<details>
+<summary><b>📖 Click to expand</b> — for people coming from Windows or just starting out with Linux (skip if you already know these)</summary>
+
+### git clone
+
+```bash
+git clone https://github.com/user/repository.git
+```
+
+Downloads a repository from GitHub to your computer, preserving the change history. It's equivalent to downloading a ZIP but better.
+
+### cd
+
+```bash
+cd ~/dotfiles
+```
+
+Changes the current directory (folder) in the terminal. `cd ~/.config` enters the configuration folder.
+
+### mkdir
+
+```bash
+mkdir -p ~/.config
+```
+
+Creates directories. The `-p` flag avoids errors if the folder already exists.
+
+### cp and cp -r
+
+```bash
+cp file.txt destination/        # copies a file
+cp -r hypr waybar ~/.config/    # copies entire folders (recursive)
+```
+
+Without `-r`, Linux won't copy directories.
+
+### chmod +x
+
+```bash
+chmod +x script.sh
+```
+
+Adds execution permissions. Required to run `.sh` scripts as programs.
+
+### chsh
+
+```bash
+chsh -s /usr/bin/fish
+```
+
+Changes the user's default shell. After logging out and back in, Fish will open automatically instead of Bash.
+
+### rg (ripgrep)
+
+```bash
+rg "wallpaper" .
+```
+
+Searches for text inside files. Very useful for finding personal paths, usernames, sensors, and variables in configs.
+
+### sudo
+
+```bash
+sudo pacman -S package
+```
+
+Runs a command with administrator permissions. Only use it when you understand what the command does.
+
+### pacman
+
+```bash
+sudo pacman -S package      # install
+sudo pacman -Rns package    # remove with unneeded dependencies
+sudo pacman -Syu            # update the entire system
+```
+
+Package manager for Arch Linux and CachyOS.
+
+### yay
+
+```bash
+yay -S package
+```
+
+Installs packages from the AUR (Arch User Repository). Works similar to pacman but accesses community-maintained software.
+
+> ⚠️ The AUR contains community-maintained packages. Always inspect the `PKGBUILD` before installing software you don't trust.
+
+### sudo usermod -aG input $USER
+
+```bash
+sudo usermod -aG input $USER
+```
+
+Adds your current user to the `input` group. The Infinite Desktop scripts need direct access to Linux input devices (mouse and keyboard) — this grants the required permissions. Breaking it down:
+
+- `sudo` — runs the command with administrator privileges.
+- `usermod` — modifies an existing user account.
+- `-a` — appends the change without removing the user from other groups.
+- `-G input` — adds the user to the `input` group.
+- `$USER` — expands to the name of the currently logged-in user.
+
+> ⚠️ You must log out and log back in (or reboot) before the new group membership takes effect.
+
+### Why is there no automatic installer?
+
+Copying files manually lets you understand where each configuration lives, which program uses each file, detect errors more easily, and modify specific parts without depending on automatic scripts.
+
+Manual installation requires more work, but teaches you much more about how the system actually works.
+
+</details>

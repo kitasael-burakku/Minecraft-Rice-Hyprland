@@ -35,15 +35,33 @@ cp "$HOME/.config/qt6ct/colors/kitasan-glass.static.conf" "$HOME/.config/qt6ct/c
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
 [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"
 
-# gtk-4.0/theme-base.css: symlink al tema real (Colorful-Dark-GTK), NO
-# versionado a propósito — es un archivo de ~140 KB de un tema de terceros
-# instalado en ~/.local/share/themes/, no algo que este repo deba publicar,
+# gtk-4.0/theme-base.css: symlink al tema real (el que declare GTKTheme en
+# hypr/modules/environment.lua — a la fecha Win11-Fantasy-Dark), NO
+# versionado a propósito — es un archivo de terceros instalado en
+# ~/.themes/ o ~/.local/share/themes/, no algo que este repo deba publicar,
 # y un symlink absoluto con el username hardcodeado tampoco sobrevive a un
 # clon en otra máquina. Se recrea acá (idempotente) para que el bootstrap
 # de un clon nuevo deje gtk-4.0/gtk.css funcionando sin depender de que
 # theme-base.css haya sobrevivido el clonado.
-THEME_GTK4="$HOME/.local/share/themes/Colorful-Dark-GTK/gtk-4.0/gtk.css"
-[ -f "$THEME_GTK4" ] && ln -sf "$THEME_GTK4" "$HOME/.config/gtk-4.0/theme-base.css" 2>/dev/null || true
+#
+# El nombre del tema se lee de environment.lua en vez de estar hardcodeado
+# acá también — GTKTheme cambió de Colorful-Dark-GTK a Win11-Fantasy-Dark
+# una vez y este script se quedó apuntando al tema viejo (symlinks rotos)
+# hasta que alguien lo notó a mano. Con esto, cambiar de tema en un solo
+# lugar alcanza. Se busca en ambas ubicaciones estándar porque nwg-look
+# instala en ~/.themes/ pero otros instaladores usan
+# ~/.local/share/themes/.
+ENV_LUA="$HOME/.config/hypr/modules/environment.lua"
+GTK_THEME_NAME=$(grep -oP '(?<=^GTKTheme = ")[^"]+' "$ENV_LUA" 2>/dev/null)
+if [ -n "$GTK_THEME_NAME" ]; then
+    for base in "$HOME/.themes" "$HOME/.local/share/themes"; do
+        THEME_GTK4="$base/$GTK_THEME_NAME/gtk-4.0/gtk.css"
+        if [ -f "$THEME_GTK4" ]; then
+            ln -sf "$THEME_GTK4" "$HOME/.config/gtk-4.0/theme-base.css" 2>/dev/null || true
+            break
+        fi
+    done
+fi
 
 # Fondo de hyprlock: bootstrap desde el estático 2.png solo si todavía no hay
 # un current.png — no pisa la elección real del usuario si ya existe (elegir
