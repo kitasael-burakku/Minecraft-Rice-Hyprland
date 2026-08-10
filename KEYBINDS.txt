@@ -127,8 +127,3 @@ SUPER + CTRL + Left        Redimensionar ventana flotante
 SUPER + CTRL + Right       Redimensionar ventana flotante
 SUPER + CTRL + Up          Redimensionar ventana flotante
 SUPER + CTRL + Down        Redimensionar ventana flotante
-
-BINDS PRIVADOS
---------------
-
-SUPER + M                  Abrir/cerrar reproductor

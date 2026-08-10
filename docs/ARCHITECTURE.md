@@ -231,7 +231,7 @@ Beyond the launcher and wallpaper picker, `rofi/scripts/` has a handful of small
 
 | Script | Keybind / trigger | What it does |
 |---|---|---|
-| `power.sh` | `SUPER + SHIFT + ESCAPE` | Lock / suspend / logout / reboot / shutdown — reuses `wlogout/scripts/confirm-then.sh` for the destructive ones |
+| `power.sh` | `ALT + ESCAPE` | Lock / suspend / logout / reboot / shutdown — reuses `wlogout/scripts/confirm-then.sh` for the destructive ones |
 | `mpris.sh` | Waybar `custom/playerctl` right-click | Pick which MPRIS player to control, then Play/Pause/Next/Previous/Stop |
 | `audio.sh` | Waybar `pulseaudio` left-click | Lists sinks/sources via `wpctl status`, sets the chosen one as default |
 | `wifi.sh` | Waybar `network` left-click | Lists networks via `nmcli`, connects, prompts for password only if needed |

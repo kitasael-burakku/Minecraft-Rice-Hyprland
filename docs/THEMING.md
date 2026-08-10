@@ -25,6 +25,7 @@ I change wallpapers often — based on mood or time of day — but I don't alway
 | Kitty | `kitty/colors/colors.conf` | `killall -SIGUSR1 kitty` |
 | Wlogout | `wlogout/colors.css` | none needed — relaunched per invocation |
 | Hyprlock | `hyprlock/colors.conf` | none needed — each lock is a fresh process |
+| Hyprlock MPRIS progress bar | `hyprlock/scripts/music-colors.sh` | none needed — `sourced` by `player.sh` on each lock, same as `colors.conf` above |
 | Hyprland borders | `hypr/dynamic-colors.sh` | run through `hyprctl eval` right after being generated (`hyprctl keyword` doesn't work against this Lua config — see [ARCHITECTURE.md](ARCHITECTURE.md#hyprland-in-lua)) |
 | SwayNC | `swaync/colors.css` | `swaync-client -rs` |
 | Starship | `starship.toml` | none needed — re-read on every prompt render |

@@ -8,6 +8,8 @@
 **/*.bak
 **/*.old
 **/*.swp
+**/__pycache__/
+**/*.pyc
 
 # ── Generados / estado local ─────────────────────────────────
 fastfetch/.fastfetch_bag
@@ -32,6 +34,15 @@ swaync/colors.css
 fish/conf.d/theme-goldship.fish
 hypr/dynamic-colors.sh
 hyprlock/scripts/music-colors.sh
+
+# Estos 4 no llegan al repo hoy por otra vía (gtk-3.0/, qt5ct/, qt6ct/ no son
+# config_dirs de dotbackup — solo copia archivos puntuales, ver
+# ~/.local/bin/dotbackup), pero si eso cambiara algún día, nada los frenaría
+# sin esta regla. Defensa en profundidad, no una fuga activa.
+gtk-3.0/gtk-colors.css
+gtk-4.0/gtk-colors.css
+qt5ct/colors/kitasan-glass.conf
+qt6ct/colors/kitasan-glass.conf
 
 # ── Funciones locales (no parte del rice) ────────────────────
 fish/functions/RPS.exe.fish

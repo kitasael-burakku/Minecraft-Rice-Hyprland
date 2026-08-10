@@ -47,24 +47,35 @@ sudo pacman -Syu
 sudo pacman -S \
   hyprland waybar kitty fish starship fastfetch rofi \
   hyprlock hypridle swaync wlogout \
-  pipewire wireplumber pavucontrol playerctl \
-  networkmanager network-manager-applet \
+  pipewire wireplumber pavucontrol playerctl libpulse \
+  networkmanager \
   bluez bluez-utils blueman \
   wl-clipboard cliphist grim slurp swappy \
   nautilus btop udiskie polkit-kde-agent \
-  jq curl imagemagick libnotify ffmpeg ffmpegthumbnailer \
+  jq imagemagick libnotify ffmpeg ffmpegthumbnailer \
   pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
   lm_sensors ttf-jetbrains-mono-nerd \
   thefuck bottom python python-evdev bash \
   power-profiles-daemon qt5ct qt6ct
 ```
 
-> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely.
+> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely. `libpulse` is what provides `pactl`, used unguarded by Waybar's audio module (right-click to mute) — listed explicitly here rather than relying on it arriving transitively through `pavucontrol`.
 
 > If you use CachyOS you can download Zen-Browser from pacman packages:
 > ```bash
 > sudo pacman -S zen-browser-bin
 > ```
+
+**An AUR helper, before the next block**
+
+The next block uses `yay -S`, so you need `yay` (or `paru`) installed first. On CachyOS both are plain pacman packages, not an AUR bootstrap:
+
+```bash
+sudo pacman -S yay
+# or: sudo pacman -S paru
+```
+
+On vanilla Arch, `yay`/`paru` aren't in the official repos — you'd build one from the AUR manually first (`git clone` + `makepkg -si` against `base-devel`) before the block below works. `waybar/scripts/updates.sh` and `sysupdate` fall back from `yay` to `paru` if only the latter is installed, so either is fine.
 
 **AUR or to verify**
 
@@ -87,7 +98,9 @@ yay -S \
 
 > ⚠️ **If you install things from the AUR, carefully review what will be installed.**
 >
-> `awww` is the image wallpaper backend used by this rice. `swww` is **not used** — `awww` replaced it entirely. Install `awww` from the AUR.
+> `awww` is the image wallpaper backend used by this rice. `swww` is **not used** — `awww` replaced it entirely.
+>
+> "AUR" here is a loose label for "not in the base block above" — on CachyOS, `mpvpaper`, `hyprpicker`, `nwg-look`, `cava`, `awww`, and `matugen` are all actually in the `cachyos`/`cachyos-extra-znver4` repos, not the AUR proper; only `vscodium-bin` is genuine AUR on every distro. On vanilla Arch, more of this list (including `awww`) really does come from the AUR. Either way `yay -S` works for both cases — just know you're not necessarily pulling from AUR just because the command is `yay`.
 
 <details>
 <summary><b>Marked as "to verify" — click to expand</b></summary>
@@ -115,6 +128,8 @@ This is the part the base dependency list above doesn't cover: the actual visual
 | Cursor theme (alternative) | Colloid cursors | optional swap | [gnome-look.org/p/1831077](https://www.gnome-look.org/p/1831077) |
 | Monospace / UI font | JetBrainsMono Nerd Font | terminal, Waybar, SwayNC, Rofi | `ttf-jetbrains-mono-nerd` (already in the pacman list above) |
 | GTK UI font | Adwaita Sans | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | `adwaita-fonts` (Arch repos) |
+
+> The `gtk-3.0/settings.ini` / `gtk-4.0/settings.ini` referenced above are **not shipped by this repo** — only `gtk.css` and `gtk-colors.static.css` are (that's all `dotbackup` tracks from those two folders; see [ARCHITECTURE.md](ARCHITECTURE.md#dotbackup--repo-sync)). `settings.ini` is what a tool like `nwg-look` writes for you locally, on your own machine, per the instructions right below — you'll generate it, not clone it.
 
 If you'd rather pick your own instead of these exact ones, browse the categories directly:
 
@@ -156,12 +171,13 @@ mkdir -p ~/.config
 cp -r hypr waybar rofi kitty fish fastfetch hyprlock swaync wlogout cava matugen \
       gtk-3.0 gtk-4.0 qt5ct qt6ct systemd ~/.config/
 cp starship.static.toml ~/.config/starship.toml
+cp starship.static.toml ~/.config/starship.static.toml
 
 mkdir -p ~/Documents
 cp ~/dotfiles/KEYBINDS.txt ~/Documents/KEYBINDS.txt
 ```
 
-Every top-level folder in the repo maps to the same name under `~/.config/`, **except** `docs/`, `README.md`, `LICENSE`, `KEYBINDS.txt` (→ `~/Documents/`), and `starship.static.toml` (→ `~/.config/starship.toml`, renamed).
+Every top-level folder in the repo maps to the same name under `~/.config/`, **except** `docs/`, `README.md`, `LICENSE`, `KEYBINDS.txt` (→ `~/Documents/`), and `starship.static.toml` (which goes to `~/.config/` **twice**: renamed to `starship.toml`, *and* under its own name — `hypr/scripts/apply-static-colors.sh` reads the latter back every time you restore the static baseline, e.g. after toggling matugen off with `SUPER + SHIFT + W`. Skipping the second copy means that restore silently no-ops for Starship only, and the dynamic prompt colors get stuck).
 
 ---
 
@@ -184,15 +200,18 @@ chmod +x ~/.config/waybar/scripts/*.sh
 chmod +x ~/.config/rofi/launcher.sh
 chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
-chmod +x ~/.config/hyprlock/scripts/*.sh
+chmod +x ~/.config/hyprlock/scripts/player.sh
 chmod +x ~/.config/rofi/scripts/*.sh
 chmod +x ~/.config/hypr/scripts/*.sh
 chmod +x ~/.config/hypr/infinite_desktop/infinite-desktop.sh \
           ~/.config/hypr/infinite_desktop/floating_tile_toggle.py \
+          ~/.config/hypr/infinite_desktop/move_window.py \
           ~/.config/hypr/infinite_desktop/move_window_tiled.py \
           ~/.config/hypr/infinite_desktop/navigate_windows.py \
           ~/.config/hypr/infinite_desktop/resize_window.py
 ```
+
+> `hyprlock/scripts/` only needs `player.sh` executable — `music-colors.sh` and `music-colors.static.sh` are `source`d, never run directly, and are committed at `644` on purpose. `hypr_ipc.py` and `infinite_desktop_core.py` aren't in the list above either, for the same reason: both are invoked as `python3 <path>`, so the executable bit is never consulted.
 
 ---
 
@@ -257,7 +276,6 @@ This repo runs on one specific machine and was never meant to be copied byte-for
 |---|---|
 | `hypr/modules/monitors.lua` | Output name, resolution, position, scale (`HDMI-A-1`, `1920x1080@200Hz` here) — the one you're most likely to need before Hyprland even starts. Switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
 | `hypr/modules/input.lua` | Keyboard/mouse device names (`hl.device` blocks reference specific hardware) |
-| `hypr/hyprlock.conf` | `$hyprlockDir` — your real path (`/home/your-username/.config/hyprlock`) |
 | `hypr/scripts/apply-wallpaper.sh` | `DEFAULT_WALLPAPER` — a wallpaper you actually have. This is the only place the default lives; `autostart.lua` just calls this script |
 | `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones |
 | `hypr/modules/programs.lua` | Terminal, file manager, browser, launcher — change if you use different apps |
