@@ -102,11 +102,14 @@ function healthcheck
     # ── Boot errors ───────────────────────────────────────────────────────────
     _rui_section red "󰍛" "Boot errors"
     set -l boot_errors (journalctl -b -p 3 --no-pager 2>/dev/null)
-    # Con la lista vacía, "printf '%s\n' $boot_errors | wc -l" devolvía 1 y no 0
-    # (printf igual emite un salto de línea sin argumentos), así que la rama de
-    # "No critical boot errors" era inalcanzable. Mismo patrón que ya está
-    # documentado para el bag de fastfetch en config.fish.
-    set -l error_count (count $boot_errors)
+    # "count $boot_errors" contaba líneas, no eventos: un solo coredump
+    # (systemd-coredump) imprime un backtrace de cientos de líneas como UN
+    # evento, así que un par de crashes de waybar/swaync inflaban esto a
+    # tres dígitos aunque hubiera 10 entradas reales en el journal.
+    # --output=json emite un objeto JSON por evento en una sola línea (el
+    # MESSAGE multilínea va con \n escapado adentro), así que contarlo con
+    # "count" da el número real de eventos.
+    set -l error_count (journalctl -b -p 3 --no-pager --output=json 2>/dev/null | count)
 
     _rui_val "Errors:" "$error_count this boot"
 

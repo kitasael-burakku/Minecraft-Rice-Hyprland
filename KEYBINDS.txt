@@ -20,7 +20,7 @@ SUPER + Space              App Launcher
 SUPER + A                  Notification Center
 SUPER + W                  Wallpaper picker
 SUPER + SHIFT + W          Toggle theming dinámico (matugen)
-SUPER + ALT + W            Selector de perfil visual
+SUPER + ALT + W            Selector de perfil visual.
 SUPER + O                  OBS Studio
 
 WINDOWS
@@ -42,7 +42,7 @@ SUPER + F4                 kitasan menu
 SUPER + F5                 Dashboard del sistema
 SUPER + Delete             Exit Hyprland
 SUPER + Escape             Session menu (Wlogout)
-SUPER + SHIFT + Escape     Power menu rápido (rofi)
+ALT + Escape               Power menu rápido (rofi)
 SUPER + ALT + H            Lock screen
 CTRL + SHIFT + Escape      System monitor (btop)
 SHIFT + Escape             System monitor (bottom)
@@ -88,10 +88,6 @@ SCRATCHPAD
 
 SUPER + S                  Toggle scratchpad
 SUPER + SHIFT + S          Move window to scratchpad
-
-MEDIA
------
-
 Volume +                   Volume
 Volume -                   Volume
 Mute                       Volume

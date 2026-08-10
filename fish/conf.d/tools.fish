@@ -7,10 +7,10 @@ end
 # forzara "command ls" a propósito) hereda "ls" apuntando a eza, etc.
 if status is-interactive
     # ── Modern CLI Replacements ──────────────────────────────
-    alias cat="bat --style=plain --paging=never"
+    alias cat="bat --paging=never"
     alias less="bat"
     alias ls="eza --icons --group-directories-first"
-    alias ll="eza -lah --icons --group-directories-first"
+    alias lah="eza -lah --icons --group-directories-first"
     alias la="eza -a --icons --group-directories-first"
     alias move="mv -iv"
     alias copy="cp -iv"

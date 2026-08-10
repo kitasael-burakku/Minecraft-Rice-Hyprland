@@ -23,13 +23,13 @@
     "modules": [
         {
             "type": "custom",
-            "format": "─────────────────── CachyOS@キタサンブラック ───────────────────",
+            "format": "┌───────────────── [CachyOS@キタサンブラック] ─────────────────┐",
             "outputColor": "31"
         },
         "break",
         {
             "type": "custom",
-            "format": "┌{$1} {#1}System Information{#} {$1}┐"
+            "format": "{$1} {#1}System Information{#} {$1}─"
         },
         "break",
         {

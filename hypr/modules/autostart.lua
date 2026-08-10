@@ -35,6 +35,11 @@ hl.on("hyprland.start", function()
     -- daemon, no hay nada que supervisar).
     hl.exec_cmd("hyprctl setcursor " .. CursorTheme .. " 24")
 
+    -- Symlinkea steam_icon_<appid> -> librarycache/.../logo.png en
+    -- ~/.local/share/icons/hicolor (ver hypr/scripts/link-steam-icons.sh).
+    -- Otro one-shot sin estado que supervisar: corre, termina, listo.
+    hl.exec_cmd(home .. "/.config/hypr/scripts/link-steam-icons.sh")
+
     -- Comandos privados (ver hypr/modules/private.example.lua) — no
     -- versionados. pcall(): la ausencia de private.lua no debe tumbar el
     -- resto del arranque. Para daemons privados de verdad, preferí un

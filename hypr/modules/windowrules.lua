@@ -38,10 +38,10 @@ hl.window_rule({ name  = "move-hyprland-run", match = { class = "hyprland-run", 
 -------------------
 
 -- Notification Center
-hl.layer_rule({ name  = "swaync-control-blur", match = { namespace = "swaync-control-center", },blur = true , ignore_alpha = 0.4, animation = "slide right" })
+hl.layer_rule({ name  = "swaync-control-blur", match = { namespace = "swaync-control-center", },blur = true , ignore_alpha = 0.5, animation = "slide right" })
 
 -- Notification Window
-hl.layer_rule({ name  = "swaync-window-blur", match = { namespace = "swaync-notification-window", }, blur = true, ignore_alpha = 0.4 })
+hl.layer_rule({ name  = "swaync-window-blur", match = { namespace = "swaync-notification-window", }, blur = true, ignore_alpha = 0.5 })
 
 -- Rofi
 hl.layer_rule({ name  = "rofi", match = { namespace = "rofi", },blur = true, ignore_alpha = 0.5, animation = "slide" })
@@ -49,19 +49,17 @@ hl.layer_rule({ name  = "rofi", match = { namespace = "rofi", },blur = true, ign
 -- Wlogout 
 hl.layer_rule({ name  = "wlogout", match = { namespace = "logout_dialog", }, blur = true, ignore_alpha=0.5 })
 
+-- Waybar 
+hl.layer_rule({ name  = "waybar", match  = { namespace = "waybar", }, blur = true, ignore_alpha = 0.5 })
 --------------------------
 ---- WORKSPACE RULES -----
 --------------------------
 
--- Workspace de una sola ventana tileada (w[tv1]/f[1]): gap interno un poco
--- mayor que el global (15 vs 12 de decoration.lua) y, más abajo, borde más
--- fino + rounding suave solo para esas ventanas — no es "sin gaps", es un
--- tratamiento distinto para el caso de una sola ventana.
-
+-- Workspace de una sola ventana tileada:
 hl.workspace_rule({ workspace = "w[tv1]", gaps_out  = 20, gaps_in   = 10, })
-hl.workspace_rule({ workspace = "f[1]", gaps_out  = 10, gaps_in   = 20, })
-hl.window_rule({ name  = "no-gaps-wtv1", match = { float     = false, workspace = "w[tv1]",}, border_size    = 1, rounding       = 18, rounding_power = 4, })
-hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 1, rounding       = 18, rounding_power = 4, })
+hl.workspace_rule({ workspace = "f[1]", gaps_out  = 20, gaps_in   = 10, })
+hl.window_rule({ name  = "no-gaps-wtv1", match = { float     = false, workspace = "w[tv1]",}, border_size    = 2, rounding       = 18, rounding_power = 4, })
+hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 2, rounding       = 18, rounding_power = 4, })
 
 -- Special workspace (scratchpad)
 hl.workspace_rule({ workspace = "special:magic", gaps_out  = 10, gaps_in   = 20, border_size = 0, })

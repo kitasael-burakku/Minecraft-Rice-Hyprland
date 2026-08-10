@@ -12,7 +12,7 @@
 -- valor en su "hyprctl setcursor" en vez de repetirlo a mano en dos
 -- archivos.
 CursorTheme = "Future-black-cursors"
-GTKTheme = "Colorful-Dark-GTK"
+GTKTheme = "Win11-Fantasy-Dark"
 
 hl.env("XCURSOR_THEME", CursorTheme)
 hl.env("XCURSOR_SIZE", "24")

@@ -66,8 +66,8 @@ hl.bind("CTRL + ALT + V", function()
     end
 
     if not win.floating then
-        local width = monitor.width * 0.48
-        local height = monitor.height * 0.6
+        local width = monitor.width * 0.50
+        local height = monitor.height * 0.60
 
         hl.dispatch(hl.dsp.window.float({ action = "set" }))
         hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
@@ -112,7 +112,7 @@ hl.bind(mainMod .. " + delete", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/n
 hl.bind(mainMod .. "+ ESCAPE", hl.dsp.exec_cmd(Programs.sessionMenu))
 
 -- Power menu rápido (rofi)
-hl.bind(mainMod .. " + SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.powermenu))
+hl.bind("ALT + ESCAPE", hl.dsp.exec_cmd(Programs.powermenu))
 
 -- Lock screen
 hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd(Programs.lockscreen))
@@ -206,9 +206,9 @@ hl.bind(mainMod .. " + SHIFT + S", function()
     end
 end)
 
------------------------------
-----        MEDIA         ----
------------------------------
+----------------------------
+---        MEDIA         ---
+----------------------------
 
 -- Volume
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 2%+"), { locked = true, repeating = true })

@@ -39,7 +39,7 @@
         "separate-outputs": true,
         "rewrite": {
             "^.*Mozilla Firefox.*$": "󰈹 Firefox",
-            "^.*Zen Browser.*$":     "󰈹 Zen",
+            "^.*Zen Browser.*$":     "󰈹 Zen Browser",
             "^.*Spotify.*$":         "󰓇 Spotify",
             "^.*fish.*$":            " Terminal",
             "^.*Thunar.*$":          "󰉋 Files",

@@ -53,11 +53,13 @@ fi
 
 # ── Errores críticos de arranque, filtrando el ruido conocido de TPM (mismo
 #    criterio que healthcheck.fish) ───────────────────────────────────────
-boot_errors="$(journalctl -b -p 3 --no-pager 2>/dev/null)"
-if [ -n "$boot_errors" ]; then
-    non_tpm=$(printf '%s\n' "$boot_errors" | grep -viE 'tpm2|pcrproduct|TPM key integrity' | grep -c .)
-    [ "$non_tpm" -gt 0 ] && ISSUES+=("󰍛 $non_tpm error(es) crítico(s) de arranque (no-TPM)")
-fi
+# --output=json: un coredump multilínea es UN evento en journalctl, pero
+# "grep -c ." sobre el texto plano contaba cada línea del backtrace como un
+# error distinto (mismo bug ya corregido en healthcheck.fish). json emite un
+# objeto por evento en una sola línea sin importar cuántas líneas tenga el
+# MESSAGE, así que grep -c sobre eso cuenta eventos reales.
+non_tpm=$(journalctl -b -p 3 --no-pager --output=json 2>/dev/null | grep -viE 'tpm2|pcrproduct|TPM key integrity' | grep -c .)
+[ "$non_tpm" -gt 0 ] && ISSUES+=("󰍛 $non_tpm error(es) crítico(s) de arranque (no-TPM)")
 
 # ── Reportar ──────────────────────────────────────────────────────────────
 if [ "${#ISSUES[@]}" -eq 0 ]; then

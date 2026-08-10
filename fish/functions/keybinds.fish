@@ -45,7 +45,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     set -l page 1
 
     set -l sections (awk '
-        /^[A-Z0-9 \/]+[[:space:]]*$/ { title=$0; next }
+        /^[A-Z0-9 \/—]+[[:space:]]*$/ { title=$0; next }
         /^-+[[:space:]]*$/ && title != "" {
             gsub(/[[:space:]]+$/, "", title)
             print title
@@ -208,7 +208,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
 
     function __kb_entries -a doc section
         awk -v target="$section" '
-            /^[A-Z0-9 \/]+[[:space:]]*$/ { candidate=$0; next }
+            /^[A-Z0-9 \/—]+[[:space:]]*$/ { candidate=$0; next }
 
             /^-+[[:space:]]*$/ && candidate != "" {
                 if (insec) exit
@@ -291,7 +291,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         set -l count 0
 
         while read -l line
-            if string match -qr '^[A-Z0-9 /]+[[:space:]]*$' -- "$line"
+            if string match -qr '^[A-Z0-9 /—]+[[:space:]]*$' -- "$line"
                 set current_section (string trim -- "$line")
                 continue
             end
