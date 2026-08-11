@@ -7,13 +7,13 @@ from evdev import InputDevice, list_devices, ecodes
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from hypr_ipc import move_window_exact_lua, batch_async
 
-#ruta deseada /home/usuario/scripts/
+#desired path /home/user/scripts/
 
-# Ya no se pasan rutas de dispositivo a mano: se autodetectan por capacidades.
-# Uso: infinite_desktop_core.py [speed]
+# Device paths are no longer passed by hand: they're auto-detected by capability.
+# Usage: infinite_desktop_core.py [speed]
 speed = float(sys.argv[1]) if len(sys.argv) > 1 else 1.0
 
-DEVICE_RESCAN_INTERVAL = 3.0  # segundos entre escaneos de nuevos/removidos dispositivos
+DEVICE_RESCAN_INTERVAL = 3.0  # seconds between scans for new/removed devices
 
 EVENT_SIZE = struct.calcsize('llHHi')
 EV_KEY=1; EV_REL=2; REL_X=0; REL_Y=1
@@ -32,16 +32,16 @@ PROTECTED_APPS = ['brave-browser', 'chromium', 'chromium-browser', 'google-chrom
 lock = threading.Lock()
 super_pressed=False; alt_pressed=False; ctrl_pressed=False; btn_left=False
 acc_x=0.0; acc_y=0.0
-frame_held_hidden=False  # último estado notificado a quickshell (evita spam de llamadas ipc)
+frame_held_hidden=False  # last state notified to quickshell (avoids spamming ipc calls)
 
-# Variables para arrastre de ventanas
+# Variables for window dragging
 window_drag_active = False
 last_window_pos = None
 last_window_bounds = None
 mouse_rel_x = 0
 mouse_rel_y = 0
 
-# Paso de movimiento con teclado
+# Keyboard movement step
 KEY_MOVE_STEP = 20
 
 def read_inverted():
@@ -51,19 +51,18 @@ def read_inverted():
     except:
         return False
 
-# quickshell ('qs') es opcional — este daemon no depende de él para nada más
-# que mostrar/ocultar un marco visual. Resuelto una sola vez al importar en
-# vez de en cada toggle: sin esto, cada SUPER+ALT lanzaba un hilo +
-# subprocess.run condenado a FileNotFoundError si 'qs' no está instalado
-# (silencioso por el try/except, pero seguía siendo overhead por evento).
+# quickshell ('qs') is optional — this daemon doesn't depend on it for
+# anything besides showing/hiding a visual frame. Resolved once on import
+# instead of on every toggle: without this, every SUPER+ALT spawned a
+# thread + subprocess.run doomed to FileNotFoundError if 'qs' isn't
+# installed (silent thanks to the try/except, but still overhead per event).
 QUICKSHELL_AVAILABLE = shutil.which("qs") is not None
 
 def notify_quickshell_hold(state):
-    """Avisa a quickshell (IpcHandler target='frame') que esconda/muestre
-    el marco. No bloqueante: se lanza en su propio hilo para no meter
-    latencia en el loop de lectura de teclado. No-op si quickshell no está
-    instalado (QUICKSHELL_AVAILABLE=False) o no está corriendo (p.ej.
-    durante un reload)."""
+    """Tells quickshell (IpcHandler target='frame') to hide/show the frame.
+    Non-blocking: launched in its own thread so it doesn't add latency to
+    the keyboard-reading loop. No-op if quickshell isn't installed
+    (QUICKSHELL_AVAILABLE=False) or isn't running (e.g. during a reload)."""
     if not QUICKSHELL_AVAILABLE:
         return
     try:
@@ -152,7 +151,7 @@ def windows_overlap_vertically(bounds1, bounds2):
 
 
 def pan_other_windows(excluded_addr, dx, dy, workspace_id):
-    """Mueve todas las ventanas EXCEPTO la especificada en un solo batch"""
+    """Moves every window EXCEPT the specified one in a single batch"""
     if dx == 0 and dy == 0:
         return
     try:
@@ -168,7 +167,7 @@ def pan_other_windows(excluded_addr, dx, dy, workspace_id):
         pass
 
 def get_monitor_center():
-    """Devuelve el centro del monitor enfocado."""
+    """Returns the center of the focused monitor."""
     try:
         r = subprocess.run(['hyprctl', 'monitors', '-j'], capture_output=True, text=True, timeout=0.1)
         monitors = json.loads(r.stdout)
@@ -181,7 +180,7 @@ def get_monitor_center():
 
 
 def monitor_window_drag():
-    """Monitorea si se esta arrastrando una ventana y aplica empuje en bordes"""
+    """Monitors whether a window is being dragged and applies edge push"""
     global window_drag_active, last_window_bounds, mouse_rel_x, mouse_rel_y
     
     dragged_window_addr = None
@@ -251,8 +250,8 @@ def monitor_window_drag():
 
 
 def move_active_window(direction):
-    """Mueve la ventana activa KEY_MOVE_STEP px en la direccion indicada.
-    Si toca el borde del monitor, empuja las demas ventanas en sentido contrario."""
+    """Moves the active window KEY_MOVE_STEP px in the given direction.
+    If it hits the monitor edge, pushes the other windows in the opposite direction."""
     try:
         r = subprocess.run(['hyprctl', 'activeworkspace', '-j'], capture_output=True, text=True, timeout=0.1)
         ws = json.loads(r.stdout)
@@ -279,7 +278,7 @@ def move_active_window(direction):
         new_x = window['at'][0] + dx
         new_y = window['at'][1] + dy
 
-        # Detectar si toca borde DESPUÉS del movimiento
+        # Detect edge hit AFTER the move
         new_bounds_left   = new_x
         new_bounds_right  = new_x + window['size'][0]
         new_bounds_top    = new_y
@@ -292,22 +291,22 @@ def move_active_window(direction):
 
         hitting_edge = (dx < 0 and hits_left) or (dx > 0 and hits_right) or                        (dy < 0 and hits_top)  or (dy > 0 and hits_bottom)
 
-        # Mover la ventana activa
+        # Move the active window
         subprocess.run(['hyprctl', 'dispatch', move_window_exact_lua(new_x, new_y, addr)],
                        capture_output=True, timeout=0.2)
 
-        # Si toca borde, empujar las demas en sentido contrario
+        # If it hits an edge, push the others in the opposite direction
         if hitting_edge:
             pan_other_windows(addr, -dx, -dy, workspace_id)
 
     except Exception as e:
-        print(f"Error en move_active_window: {e}", flush=True)
+        print(f"Error in move_active_window: {e}", flush=True)
 
 
 def classify_device(path):
-    """Devuelve 'mouse', 'keyboard' o None segun las capacidades reales del dispositivo,
-    sin importar el nombre/marca. Esto es lo que permite que funcione con cualquier
-    mouse o teclado (alambrico, inalambrico, el que sea)."""
+    """Returns 'mouse', 'keyboard' or None based on the device's actual
+    capabilities, regardless of name/brand. This is what lets it work with
+    any mouse or keyboard (wired, wireless, whatever)."""
     try:
         dev = InputDevice(path)
         caps = dev.capabilities()
@@ -322,9 +321,9 @@ def classify_device(path):
     if is_mouse:
         return 'mouse'
 
-    # Un teclado "real" tiene el rango completo de teclas alfanumericas y las teclas Meta,
-    # esto excluye las interfaces auxiliares (Consumer Control, System Control) que
-    # muchos recievers 2.4G tambien exponen.
+    # A "real" keyboard has the full range of alphanumeric keys plus the Meta
+    # keys — this excludes the auxiliary interfaces (Consumer Control, System
+    # Control) that many 2.4G receivers also expose.
     is_keyboard = (
         ecodes.KEY_A in keys and ecodes.KEY_Z in keys and ecodes.KEY_LEFTSHIFT in keys
         and (ecodes.KEY_LEFTMETA in keys or ecodes.KEY_RIGHTMETA in keys)
@@ -347,7 +346,7 @@ def scan_devices():
 
 
 def kbd_reader_device(path):
-    """Lee eventos de UN teclado especifico. Se lanza un hilo por cada teclado detectado."""
+    """Reads events from ONE specific keyboard. A thread is spawned per detected keyboard."""
     global super_pressed, alt_pressed, ctrl_pressed, frame_held_hidden
     try:
         fd = open(path, 'rb')
@@ -381,10 +380,10 @@ def kbd_reader_device(path):
                 frame_held_hidden = combo
                 notify_state = combo
 
-        # La llamada IPC (subprocess) se hace FUERA del lock y en su
-        # propio hilo: qs ipc call puede tardar unos ms y no queremos
-        # bloquear la lectura de eventos ni a otros hilos de teclado
-        # esperando el mismo lock.
+        # The IPC call (subprocess) is made OUTSIDE the lock and in its
+        # own thread: qs ipc call can take a few ms and we don't want to
+        # block event reading or other keyboard threads waiting on the
+        # same lock.
         if notify_state is not None and QUICKSHELL_AVAILABLE:
             threading.Thread(target=notify_quickshell_hold, args=(notify_state,), daemon=True).start()
 
@@ -395,7 +394,7 @@ def kbd_reader_device(path):
 
 
 def mouse_reader_device(path):
-    """Lee eventos de UN mouse especifico. Se lanza un hilo por cada mouse detectado."""
+    """Reads events from ONE specific mouse. A thread is spawned per detected mouse."""
     global acc_x, acc_y, btn_left, mouse_rel_x, mouse_rel_y
     try:
         fd = open(path, 'rb')
@@ -440,14 +439,15 @@ _active_kbd_threads = {}
 _active_mouse_threads = {}
 
 def device_manager():
-    """Escanea periodicamente /dev/input buscando teclados y mouses nuevos
-    (o reconectados) y lanza un hilo lector para cada uno. Si un dispositivo
-    se desconecta, su hilo simplemente termina solo al fallar el read().
+    """Periodically scans /dev/input for new (or reconnected) keyboards and
+    mice and spawns a reader thread for each one. If a device disconnects,
+    its thread simply ends on its own when the read() fails.
 
-    Los primeros segundos (WARMUP_DURATION) escanea mucho mas seguido
-    (WARMUP_INTERVAL) porque justo al iniciar sesion, dongles inalambricos
-    a veces tardan unos segundos en terminar de enumerar sus interfaces USB.
-    Despues de ese periodo baja al intervalo normal para no gastar CPU."""
+    For the first few seconds (WARMUP_DURATION) it scans much more often
+    (WARMUP_INTERVAL) because right after logging in, wireless dongles
+    sometimes take a few seconds to finish enumerating their USB
+    interfaces. After that period it drops to the normal interval to avoid
+    wasting CPU."""
     WARMUP_DURATION = 20.0
     WARMUP_INTERVAL = 0.5
     start_time = time.time()
@@ -462,7 +462,7 @@ def device_manager():
                     nt = threading.Thread(target=kbd_reader_device, args=(path,), daemon=True)
                     nt.start()
                     _active_kbd_threads[path] = nt
-                    print(f"[+] Teclado detectado: {path}", flush=True)
+                    print(f"[+] Keyboard detected: {path}", flush=True)
 
             for path in mice:
                 t = _active_mouse_threads.get(path)
@@ -470,16 +470,16 @@ def device_manager():
                     nt = threading.Thread(target=mouse_reader_device, args=(path,), daemon=True)
                     nt.start()
                     _active_mouse_threads[path] = nt
-                    print(f"[+] Mouse detectado: {path}", flush=True)
+                    print(f"[+] Mouse detected: {path}", flush=True)
         except Exception as e:
-            print(f"Error en device_manager: {e}", flush=True)
+            print(f"Error in device_manager: {e}", flush=True)
 
         elapsed = time.time() - start_time
         interval = WARMUP_INTERVAL if elapsed < WARMUP_DURATION else DEVICE_RESCAN_INTERVAL
         time.sleep(interval)
 
-# PRECARGAR
-print("Precargando...", flush=True)
+# PRELOAD
+print("Preloading...", flush=True)
 try:
     subprocess.run(['hyprctl', 'activeworkspace', '-j'], capture_output=True, text=True, timeout=0.5)
     subprocess.run(['hyprctl', 'clients', '-j'], capture_output=True, text=True, timeout=0.5)
@@ -488,13 +488,13 @@ except:
 
 threading.Thread(target=device_manager, daemon=True).start()
 threading.Thread(target=monitor_window_drag, daemon=True).start()
-print("Infinite Desktop activo (deteccion automatica de dispositivos)", flush=True)
-print("Super+click: Arrastrar ventana (al tocar borde, el raton mueve el resto)", flush=True)
-print("Super+Alt+mouse: Arrastrar todo el escritorio", flush=True)
-print("Super+flechas: Navegacion via hyprland bind", flush=True)
-print("Super+Shift+flechas: Mover ventana activa via hyprland bind", flush=True)
+print("Infinite Desktop active (automatic device detection)", flush=True)
+print("Super+click: Drag window (touching an edge moves the rest)", flush=True)
+print("Super+Alt+mouse: Drag the entire desktop", flush=True)
+print("Super+arrows: Navigation via hyprland bind", flush=True)
+print("Super+Shift+arrows: Move active window via hyprland bind", flush=True)
 
-# Caché del workspace activo (se refresca cada 2s para no llamar hyprctl cada frame)
+# Active workspace cache (refreshed every 2s so hyprctl isn't called every frame)
 _cached_workspace_id = None
 _last_workspace_check = 0
 WORKSPACE_CACHE_TTL = 2.0
@@ -513,7 +513,7 @@ def get_cached_workspace_id():
             pass
     return _cached_workspace_id
 
-# Loop principal para arrastre de escritorio
+# Main loop for desktop dragging
 while True:
     time.sleep(0.016)
 

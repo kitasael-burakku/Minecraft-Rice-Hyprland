@@ -68,25 +68,25 @@ if [ -d "$DOTFILES_REPO/.git" ]; then
 fi
 
 message="󰚰 Updates: ${updates_text}
-󰋊 Servicios caídos: ${failed_total}
+󰋊 Downed services: ${failed_total}
 󱃂 CPU: ${cpu_temp}°C    GPU: ${gpu_text}
 󰋊 Disco (/): ${disk_line}
-󰐊 Reproductor: ${player_text}
-󰊤 Último backup: ${backup_line}"
+󰐊 Player: ${player_text}
+󰊤 Last backup: ${backup_line}"
 
 # ── Callback ────────────────────────────────────────────────────────────
 if [ "${ROFI_RETV:-0}" = "1" ]; then
     chosen="${1:-}"
     case "$chosen" in
-        *"Actualizar sistema"*)
+        *"Upgrade System"*)
             kitty --title kitasan-update -e fish -c 'kitasan update' &
             disown
             ;;
-        *"servicios caídos"*)
+        *"Downed services"*)
             bash "$HOME/.config/rofi/scripts/systemd.sh" &
             disown
             ;;
-        *"Correr dotbackup"*)
+        *"Run dotbackup"*)
             # Doble chequeo: la fila no debería aparecer sin dotbackup
             # instalado (ver el gate más abajo), pero no cuesta nada
             # defenderse acá también en vez de asumir.
@@ -106,13 +106,13 @@ echo -en "\0prompt\x1f󰕮  Dashboard\n"
 echo -en "\0no-custom\x1ftrue\n"
 echo -en "\0message\x1f${message}\n"
 
-[ "$updates_count" -gt 0 ] && echo "󰚰  Actualizar sistema ahora"
-[ "$failed_total" -gt 0 ] && echo "󰋊  Ver servicios caídos"
+[ "$updates_count" -gt 0 ] && echo "󰚰  Upgrade system now"
+[ "$failed_total" -gt 0 ] && echo "󰋊  See downed services"
 # command -v, no sólo "el repo existe": dotbackup es una herramienta
 # personal (~/.local/bin/, no versionada — ver docs/ARCHITECTURE.md). Quien
 # clone este repo va a tener el .git pero no el script; sin este chequeo,
 # la fila aparecería igual y fallaría al tocarla.
-[ -d "$DOTFILES_REPO/.git" ] && command -v dotbackup >/dev/null 2>&1 && echo "󰊤  Correr dotbackup"
+[ -d "$DOTFILES_REPO/.git" ] && command -v dotbackup >/dev/null 2>&1 && echo "󰊤  Run dotbackup"
 if [ -f "$PLAYER_CACHE" ] && command -v jq >/dev/null 2>&1; then
     has_player="$(jq -r '.text // ""' "$PLAYER_CACHE" 2>/dev/null)"
     [ -n "$has_player" ] && echo "󰐊  Play/Pause"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  playerctl-read.sh — consumidor liviano del cache de playerctl-watch.sh
-#  Usado por custom/playerctl y custom/playerlabel en vez de que cada módulo
-#  lance su propio playerctl -F.
+#  playerctl-read.sh — lightweight consumer of playerctl-watch.sh's cache
+#  Used by custom/playerctl and custom/playerlabel instead of each module
+#  launching its own playerctl -F.
 # ============================================================================
 
 set -u

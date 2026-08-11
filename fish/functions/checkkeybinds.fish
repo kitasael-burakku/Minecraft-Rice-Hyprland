@@ -1,19 +1,18 @@
-# checkkeybinds — antes era un verificador de drift best-effort (matcheo de
-# substrings entre hl.bind(...) y KEYBINDS.txt, con falsos negativos
-# aceptados a propósito). Reemplazado por
-# hypr/scripts/generate-keybinds-doc.sh, que genera KEYBINDS.txt
-# DIRECTAMENTE desde keybinds.lua (leyendo el comentario "-- " de arriba de
-# cada bind como descripción) — no puede haber drift porque no hay dos
-# fuentes de verdad, sólo una que se regenera.
+# checkkeybinds — used to be a best-effort drift checker (substring matching
+# between hl.bind(...) and KEYBINDS.txt, with false negatives accepted on
+# purpose). Replaced by hypr/scripts/generate-keybinds-doc.sh, which
+# generates KEYBINDS.txt DIRECTLY from keybinds.lua (reading the "-- "
+# comment above each bind as its description) — there can be no drift
+# because there aren't two sources of truth, only one that regenerates.
 
-# Esta función ahora es un wrapper fino: --check (no escribe nada, sólo
-# avisa si haría falta regenerar) por defecto, y regenera de verdad con
-# `checkkeybinds --write` o `checkkeybinds --apply`.
-function checkkeybinds --description "Regenerar/verificar KEYBINDS.txt desde keybinds.lua"
+# This function is now a thin wrapper: --check (writes nothing, just warns
+# if regeneration is needed) by default, and actually regenerates with
+# `checkkeybinds --write` or `checkkeybinds --apply`.
+function checkkeybinds --description "Regenerate/verify KEYBINDS.txt from keybinds.lua"
     set -l gen "$HOME/.config/hypr/scripts/generate-keybinds-doc.sh"
 
     if not test -x "$gen"
-        _rui_bad "No se encontró $gen"
+        _rui_bad "$gen not found"
         return 1
     end
 
@@ -31,12 +30,12 @@ function checkkeybinds --description "Regenerar/verificar KEYBINDS.txt desde key
     if contains -- --write $argv; or contains -- --apply $argv
         bash "$gen"
         echo ""
-        _rui_ok "KEYBINDS.txt regenerado."
+        _rui_ok "KEYBINDS.txt regenerated."
     else
         if bash "$gen" --check
-            _rui_ok "KEYBINDS.txt está al día con keybinds.lua."
+            _rui_ok "KEYBINDS.txt is up to date with keybinds.lua."
         else
-            _rui_warn "KEYBINDS.txt desactualizado — corré 'checkkeybinds --write' para regenerarlo."
+            _rui_warn "KEYBINDS.txt is outdated — run 'checkkeybinds --write' to regenerate it."
         end
     end
 

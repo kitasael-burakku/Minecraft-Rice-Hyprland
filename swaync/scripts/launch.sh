@@ -8,9 +8,9 @@ command -v swaync >/dev/null 2>&1 || {
 }
 
 if pgrep -x swaync >/dev/null 2>&1; then
-    # Ya está corriendo: recargar config/estilo en caliente en vez de matarlo,
-    # así un reload de Waybar (SUPER+SHIFT+R) no descarta notificaciones en
-    # el instante del kill+relanzamiento.
+    # Already running: hot-reload config/style instead of killing it, so a
+    # Waybar reload (SUPER+SHIFT+R) doesn't drop notifications at the moment
+    # of the kill+relaunch.
     if command -v swaync-client >/dev/null 2>&1; then
         swaync-client -R  >/dev/null 2>&1 || true
         swaync-client -rs >/dev/null 2>&1 || true

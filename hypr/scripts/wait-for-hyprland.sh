@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  wait-for-hyprland.sh — espera acotada a que Hyprland esté realmente listo
+#  wait-for-hyprland.sh — bounded wait for Hyprland to actually be ready
 # ----------------------------------------------------------------------------
-#  Reemplaza los `sleep 0.5` / `sleep 2` fijos que había en autostart.lua
-#  (apuestas de timing sobre cuánto tarda el compositor/daemons en arrancar)
-#  por un poll real sobre `hyprctl monitors`, con un timeout máximo para
-#  no bloquear el arranque si algo falla — si se agota el tiempo, sigue
-#  igual que antes (no cuelga la sesión).
+#  Replaces the fixed `sleep 0.5` / `sleep 2` calls that used to be in
+#  autostart.lua (timing bets on how long the compositor/daemons take to
+#  start) with a real poll on `hyprctl monitors`, with a max timeout so it
+#  doesn't block startup if something fails — if the time runs out, it
+#  continues just like before (doesn't hang the session).
 #
-#  Uso: wait-for-hyprland.sh [timeout_en_segundos=5]
+#  Usage: wait-for-hyprland.sh [timeout_in_seconds=5]
 # ============================================================================
 
 set -u

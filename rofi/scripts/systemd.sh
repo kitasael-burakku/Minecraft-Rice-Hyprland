@@ -46,11 +46,11 @@ done < <(systemctl --user list-units --type=service --all --no-legend --plain 2>
 menu="${menu_failed}${menu_rest}"
 
 if [ -z "$menu" ]; then
-    command -v notify-send >/dev/null 2>&1 && notify-send "systemd" "No se encontraron servicios de usuario"
+    command -v notify-send >/dev/null 2>&1 && notify-send "systemd" "No user services found"
     exit 0
 fi
 
-chosen=$(printf '%s' "$menu" | rofi -dmenu -p "Servicios" -theme "$THEME")
+chosen=$(printf '%s' "$menu" | rofi -dmenu -p "Services" -theme "$THEME")
 [ -n "$chosen" ] || exit 0
 
 unit="${UNIT_OF[$chosen]:-}"

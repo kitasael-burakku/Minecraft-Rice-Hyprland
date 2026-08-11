@@ -22,7 +22,7 @@ MODES=(normal focus gaming cinema)
 menu=""
 for i in "${!LABELS[@]}"; do
     label="${LABELS[$i]}"
-    [ "${MODES[$i]}" = "$current" ] && label="$label  (actual)"
+    [ "${MODES[$i]}" = "$current" ] && label="$label  (Current)"
     menu+="$label"$'\n'
 done
 

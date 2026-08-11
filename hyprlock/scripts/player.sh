@@ -1,64 +1,64 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  player.sh — metadata + barra de progreso del reproductor activo, para
+#  player.sh — metadata + progress bar for the active player, for
 #  hyprlock/layouts/layout.conf
 # ----------------------------------------------------------------------------
-#  Reemplaza a music-progress.sh + playerlayout4.sh (fusionados): los dos
-#  elegían el reproductor con políticas distintas (uno prefería "spotify" a
-#  mano y si no el primero alfabético de `playerctl -l`; el otro tomaba el
-#  default de playerctl), así que con más de un reproductor abierto el
-#  título podía mostrar uno mientras la barra seguía a otro. Acá hay una
-#  sola decisión de reproductor, cacheada, que alimenta las tres filas.
+#  Replaces music-progress.sh + playerlayout4.sh (merged): the two picked
+#  the player with different policies (one preferred a hardcoded "spotify"
+#  and otherwise the first alphabetically from `playerctl -l`; the other
+#  took playerctl's default), so with more than one player open the title
+#  could show one while the bar followed another. There's a single, cached
+#  player decision here that feeds all three rows.
 #
-#  BUG que esto reemplaza (confirmado en vivo contra un video real en curso,
-#  8:23 de 12:48): `playerctl position` devuelve SEGUNDOS pero
-#  `mpris:length` devuelve MICROSEGUNDOS — music-progress.sh mezclaba los
-#  dos, así que la barra estaba siempre en 0% y el tiempo en 0:00 sin
-#  importar el reproductor. Acá se piden ambos campos dentro de un solo
-#  --format, donde `{{ position }}` sí devuelve microsegundos — misma unidad
-#  que mpris:length, sin conversión manual ni caché de "avance sintético".
+#  BUG this replaces (confirmed live against an actual video in progress,
+#  8:23 of 12:48): `playerctl position` returns SECONDS but
+#  `mpris:length` returns MICROSECONDS — music-progress.sh mixed the two,
+#  so the bar was always at 0% and the time at 0:00 regardless of the
+#  player. Here both fields are requested inside a single --format, where
+#  `{{ position }}` does return microseconds — same unit as mpris:length,
+#  no manual conversion or "synthetic progress" cache.
 #
-#  Uso: player.sh --source | --title | --bar
+#  Usage: player.sh --source | --title | --bar
 # ============================================================================
 set -o pipefail
 
 CACHE="${XDG_RUNTIME_DIR:-/tmp}/hyprlock-player.cache"
 BAR_LENGTH=16
-SEP=$'\x1f' # separador de campos: un "|" real puede aparecer en un título
+SEP=$'\x1f' # field separator: a literal "|" can show up in a title
 
 command -v playerctl >/dev/null 2>&1 || { echo ""; exit 0; }
 
-# Colores Pango/HTML de la barra — valores por defecto (paleta estática
-# "Kitasan Glass"), sobreescritos por music-colors.sh si matugen ya generó
-# uno (dinámico, sigue al wallpaper). Ver
-# matugen/templates/music-progress-colors.sh. El resto del texto de la
-# tarjeta (fuente, título, tiempos) toma su color del `color =` del propio
-# `label` en layout.conf, no de acá.
+# Pango/HTML bar colors — default values (static "Kitasan Glass" palette),
+# overwritten by music-colors.sh if matugen has already generated one
+# (dynamic, follows the wallpaper). See
+# matugen/templates/music-progress-colors.sh. The rest of the card's text
+# (source, title, times) gets its color from the `color =` of the `label`
+# itself in layout.conf, not from here.
 COLOR_PLAYED="#7ab8b8"
 COLOR_REMAINING="#e8e8e840"
 MUSIC_COLORS="$HOME/.config/hyprlock/scripts/music-colors.sh"
 # shellcheck disable=SC1090
 [ -f "$MUSIC_COLORS" ] && source "$MUSIC_COLORS"
 
-# Escapa markup Pango: fuente/título/artista se interpolan crudos en un
-# <span> de layout.conf, y un título con "&" o "<" (común en pestañas de
-# navegador, ej. "Tom & Jerry") rompe el render sin esto.
+# Escapes Pango markup: source/title/artist get interpolated raw into a
+# <span> in layout.conf, and a title with "&" or "<" (common in browser
+# tabs, e.g. "Tom & Jerry") breaks rendering without this.
 escape_pango() {
     local s="$1"
-    # "\&" a propósito: en "${var//pat/repl}" bash trata un "&" suelto en
-    # repl como "lo que matcheó" (igual que sed) — sin escaparlo, "&lt;" se
-    # reescribe mal como "<lt;" cuando el patrón es "<".
+    # "\&" on purpose: in "${var//pat/repl}" bash treats a bare "&" in
+    # repl as "whatever matched" (same as sed) — without escaping it,
+    # "&lt;" gets rewritten wrong as "<lt;" when the pattern is "<".
     s="${s//&/\&amp;}"
     s="${s//</\&lt;}"
     s="${s//>/\&gt;}"
     printf '%s' "$s"
 }
 
-# Las 3 filas de la tarjeta comparten un caché de ~1s: layout.conf dispara
-# --source/--title/--bar cada 1000ms cada una, así que sin esto cada tick
-# haría 3 llamadas separadas a playerctl. Con el caché, solo la primera
-# llamada del tick consulta de verdad; las otras dos leen el resultado ya
-# escrito (mismo patrón que META_CACHE en la vieja playerlayout4.sh).
+# The 3 card rows share a ~1s cache: layout.conf fires --source/--title/--bar
+# every 1000ms each, so without this every tick would make 3 separate calls
+# to playerctl. With the cache, only the first call of the tick actually
+# queries; the other two read the already-written result (same pattern as
+# META_CACHE in the old playerlayout4.sh).
 load_state() {
     local mtime age
     if [ -f "$CACHE" ]; then
@@ -69,18 +69,18 @@ load_state() {
     fi
 
     if [ "$age" -ge 1 ]; then
-        # Una sola llamada trae TODOS los reproductores de una — evita que
-        # cada fila de la tarjeta elija el suyo por separado (el bug de raíz
-        # de la versión anterior).
+        # A single call brings back ALL players at once — avoids each card
+        # row picking its own separately (the root bug of the previous
+        # version).
         local raw chosen
         raw="$(playerctl -a metadata --format \
             "{{playerName}}${SEP}{{status}}${SEP}{{position}}${SEP}{{mpris:length}}${SEP}{{xesam:title}}${SEP}{{xesam:artist}}" \
             2>/dev/null)"
 
-        # Prioridad: el primero que esté Playing; si ninguno, el primero
-        # Paused; si no hay ninguno, vacío. (Antes: "spotify" fijo o el
-        # primero alfabético — ninguno de los dos refleja cuál está
-        # realmente sonando.)
+        # Priority: the first one that's Playing; if none, the first
+        # Paused; if none, empty. (Before: hardcoded "spotify" or the
+        # first alphabetically — neither reflects what's actually
+        # playing.)
         chosen="$(printf '%s\n' "$raw" | awk -F"$SEP" '$2=="Playing"{print; exit}')"
         if [ -z "$chosen" ]; then
             chosen="$(printf '%s\n' "$raw" | awk -F"$SEP" '$2=="Paused"{print; exit}')"
@@ -106,10 +106,10 @@ load_state() {
     source "$CACHE" 2>/dev/null
 }
 
-# Ícono + nombre legible por fuente. Los 4 casos con marca propia se
-# mantienen; cualquier otro reproductor usa el nombre que reporta playerctl
-# en vez de desaparecer la fila (antes: cadena vacía para todo lo que no
-# fuera Firefox/Spotify/Chromium/YoutubeMusic).
+# Icon + readable name per source. The 4 branded cases are kept; any other
+# player uses the name playerctl reports instead of blanking the row
+# (before: empty string for anything that wasn't Firefox/Spotify/Chromium/
+# YoutubeMusic).
 source_label() {
     case "$P_NAME" in
         *firefox*|*zen*)         echo "Firefox" ;;
@@ -124,17 +124,17 @@ format_time() {
     printf '%d:%02d' $(( total / 60 )) $(( total % 60 ))
 }
 
-# Construye la barra en octavos de carácter (BAR_LENGTH * 8 pasos en vez de
-# BAR_LENGTH) para que avance suave en vez de saltar de bloque en bloque.
-# Devuelve "parte_llena<SEP>parte_vacía" — cada una se colorea aparte.
+# Builds the bar in eighths of a character (BAR_LENGTH * 8 steps instead of
+# BAR_LENGTH) so it advances smoothly instead of jumping block by block.
+# Returns "filled_part<SEP>empty_part" — each one gets colored separately.
 render_bar() {
     local pos=$1 len=$2 status=$3
     local steps_total=$(( BAR_LENGTH * 8 ))
     local steps=$(( pos * steps_total / len ))
     (( steps < 0 )) && steps=0
     (( steps > steps_total )) && steps=$steps_total
-    # Igual que antes: si recién arrancó y está sonando, mostrar al menos
-    # una fracción en vez de una barra que parece congelada/vacía.
+    # Same as before: if it just started and is playing, show at least a
+    # fraction instead of a bar that looks frozen/empty.
     if [ "$status" = "Playing" ] && [ "$steps" -eq 0 ]; then
         steps=1
     fi
@@ -179,9 +179,9 @@ case "${1:-}" in
         load_state
         [ -z "$P_NAME" ] && { echo ""; exit 0; }
         if ! [[ "${P_LEN:-}" =~ ^[0-9]+$ ]] || [ "$P_LEN" -le 0 ] || ! [[ "${P_POS:-}" =~ ^[0-9]+$ ]]; then
-            # Sin duración/posición válida (stream en vivo, metadata
-            # incompleta) — el título ya cubrió esta fila, acá evitamos
-            # imprimir "0:00 / 0:00" sin sentido.
+            # No valid duration/position (live stream, incomplete metadata)
+            # — the title already covered this row, here we avoid printing
+            # a meaningless "0:00 / 0:00".
             echo ""
             exit 0
         fi

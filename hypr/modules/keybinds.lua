@@ -46,6 +46,9 @@ hl.bind(mainMod .. " + ALT + W", hl.dsp.exec_cmd(Programs.themePicker))
 -- OBS Studio
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(Programs.record))
 
+-- Yazi 
+hl.bind(mainMod .. "+ F", hl.dsp.exec_cmd(Programs.terminal .. " --title btop -e yazi"))
+
 -- Open Music player
 -- hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 

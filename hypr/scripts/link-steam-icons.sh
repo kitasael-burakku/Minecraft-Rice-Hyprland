@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  link-steam-icons.sh — resuelve los iconos "steam_icon_<appid>" que Steam
-#  referencia en los .desktop generados pero nunca materializa en disco.
+#  link-steam-icons.sh — resolves the "steam_icon_<appid>" icons Steam
+#  references in the generated .desktop files but never materializes on disk.
 # ----------------------------------------------------------------------------
-#  Steam escribe Icon=steam_icon_<appid> en ~/.local/share/applications/*.desktop
-#  pero jamás crea ese archivo en ninguna ruta de tema de iconos — sólo cachea
-#  el arte real bajo ~/.local/share/Steam/appcache/librarycache/<appid>/**/logo.png
-#  (la subcarpeta con hash cambia cuando Steam refresca esa caché). Sin un
-#  archivo steam_icon_<appid> real, Rofi/GTK nunca resuelven el icono sin
-#  importar el tema activo (Slot-Gray-Dark-Icons, Adwaita, etc. — ninguno trae
-#  iconos por-juego de Steam; eso es curación manual que hacen temas como
-#  Papirus/Ant-*, y sólo para juegos populares).
+#  Steam writes Icon=steam_icon_<appid> in
+#  ~/.local/share/applications/*.desktop but never creates that file in any
+#  icon theme path — it only caches the actual art under
+#  ~/.local/share/Steam/appcache/librarycache/<appid>/**/logo.png (the
+#  hashed subfolder changes when Steam refreshes that cache). Without an
+#  actual steam_icon_<appid> file, Rofi/GTK never resolve the icon
+#  regardless of the active theme (Slot-Gray-Dark-Icons, Adwaita, etc. —
+#  none of them ship per-game Steam icons; that's manual curation done by
+#  themes like Papirus/Ant-*, and only for popular games).
 #
-#  Symlinks (no copias) en ~/.local/share/icons/hicolor/256x256/apps/: hicolor
-#  es el fallback universal de la spec de iconos freedesktop, heredado
-#  implícitamente por cualquier tema — así el fix sobrevive a un cambio de
-#  tema y no toca ni Slot-Gray-Dark-Icons ni nada gestionado por Steam.
+#  Symlinks (not copies) in ~/.local/share/icons/hicolor/256x256/apps/:
+#  hicolor is the universal fallback of the freedesktop icon spec,
+#  implicitly inherited by any theme — so the fix survives a theme change
+#  and doesn't touch Slot-Gray-Dark-Icons or anything Steam manages.
 #
-#  Idempotente: correr de nuevo sólo agrega symlinks para .desktop nuevos
-#  (juegos recién agregados) y no toca los que ya están linkeados.
+#  Idempotent: running it again only adds symlinks for new .desktop files
+#  (recently added games) and doesn't touch the ones already linked.
 # ============================================================================
 set -euo pipefail
 

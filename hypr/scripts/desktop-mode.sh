@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  desktop-mode.sh — perfiles de escritorio: normal / focus / gaming / cinema
+#  desktop-mode.sh — desktop profiles: normal / focus / gaming / cinema
 # ----------------------------------------------------------------------------
-#  Combina, por perfil:
+#  Combines, per profile:
 #   - DND (swaync-client -dn/-df)
-#   - blur/animaciones (hyprctl eval hl.config — igual mecanismo que
-#     hypr/dynamic-colors.sh: un hl.config() aplicado así persiste hasta el
-#     próximo login, un simple `hyprctl reload` NO lo resetea, porque reload
-#     no vuelve a ejecutar los módulos Lua)
-#   - hypridle: "normal" usa hypridle.service (systemd); "focus" para ese
-#     servicio y lanza un proceso crudo con hypridle-focus.conf (timeouts
-#     largos); "gaming"/"cinema" simplemente lo paran del todo
-#   - power-profile (powerprofilesctl, si está instalado)
-#   - waybar: sólo "cinema" la oculta (systemctl stop waybar.service)
+#   - blur/animations (hyprctl eval hl.config — same mechanism as
+#     hypr/dynamic-colors.sh: an hl.config() applied this way persists
+#     until the next login, a plain `hyprctl reload` does NOT reset it,
+#     because reload doesn't re-run the Lua modules)
+#   - hypridle: "normal" uses hypridle.service (systemd); "focus" stops
+#     that service and launches a raw process with hypridle-focus.conf
+#     (long timeouts); "gaming"/"cinema" just stop it entirely
+#   - power-profile (powerprofilesctl, if installed)
+#   - waybar: only "cinema" hides it (systemctl stop waybar.service)
 #
-#  Limitaciones conocidas y aceptadas (documentadas en la auditoría, no
-#  implementadas acá): "waybar minimal" en focus y "brillo bajo" en cinema.
-#  Ninguna de las dos tiene un mecanismo limpio disponible — la primera
-#  necesitaría mantener una config de waybar paralela (deuda que el resto
-#  de este rice evita a propósito), la segunda necesita brightnessctl, que
-#  no está instalado. El resto de cada perfil sí funciona de verdad.
+#  Known and accepted limitations (documented in the audit, not
+#  implemented here): "minimal waybar" in focus and "low brightness" in
+#  cinema. Neither has a clean mechanism available — the first would need
+#  maintaining a parallel waybar config (debt the rest of this rice
+#  deliberately avoids), the second needs brightnessctl, which isn't
+#  installed. The rest of each profile does actually work.
 #
-#  El modo NO sobrevive un relogin a propósito — hyprland.start vuelve a
-#  correr decoration.lua/animations.lua (blur/animaciones on) y arranca
-#  hypridle.service de cero. Nadie quiere volver a loguearse y seguir en
-#  "gaming" por accidente.
+#  The mode deliberately does NOT survive a relogin — hyprland.start
+#  re-runs decoration.lua/animations.lua (blur/animations on) and starts
+#  hypridle.service from scratch. Nobody wants to log back in and still
+#  be in "gaming" by accident.
 #
-#  Uso: desktop-mode.sh [normal|focus|gaming|cinema|status]
+#  Usage: desktop-mode.sh [normal|focus|gaming|cinema|status]
 # ============================================================================
 set -u
 set -o pipefail
@@ -43,7 +43,7 @@ stop_raw_hypridle() {
         [ -n "$pid" ] && kill "$pid" 2>/dev/null
         rm -f "$HYPRIDLE_PID_FILE"
     fi
-    # por si quedó uno huérfano de una corrida anterior sin pidfile
+    # in case one was left orphaned from a previous run with no pidfile
     pkill -f "hypridle -c $FOCUS_HYPRIDLE_CONF" 2>/dev/null || true
 }
 
@@ -98,11 +98,11 @@ case "$mode" in
         set_power_profile balanced
         ;;
     *)
-        echo "Uso: desktop-mode.sh [normal|focus|gaming|cinema|status]" >&2
+        echo "Usage: desktop-mode.sh [normal|focus|gaming|cinema|status]" >&2
         exit 1
         ;;
 esac
 
 mkdir -p "$(dirname "$STATE_FILE")"
 printf '%s' "$mode" > "$STATE_FILE"
-command -v notify-send >/dev/null 2>&1 && notify-send "Modo de escritorio" "→ $mode"
+command -v notify-send >/dev/null 2>&1 && notify-send "Desktop mode" "→ $mode"

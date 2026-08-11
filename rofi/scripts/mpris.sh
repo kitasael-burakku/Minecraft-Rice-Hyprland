@@ -18,7 +18,7 @@ command -v playerctl >/dev/null 2>&1 || exit 0
 
 mapfile -t players < <(playerctl -l 2>/dev/null)
 if [ "${#players[@]}" -eq 0 ]; then
-    command -v notify-send >/dev/null 2>&1 && notify-send "MPRIS" "No hay reproductores activos"
+    command -v notify-send >/dev/null 2>&1 && notify-send "MPRIS" "No active players"
     exit 0
 fi
 
@@ -35,7 +35,7 @@ for p in "${players[@]}"; do
     menu+="$label"$'\n'
 done
 
-chosen_player_label=$(printf '%s' "$menu" | rofi -dmenu -p "Reproductor" -theme "$THEME")
+chosen_player_label=$(printf '%s' "$menu" | rofi -dmenu -p "Player" -theme "$THEME")
 [ -n "$chosen_player_label" ] || exit 0
 player="${LABEL_TO_PLAYER[$chosen_player_label]}"
 [ -n "$player" ] || exit 0

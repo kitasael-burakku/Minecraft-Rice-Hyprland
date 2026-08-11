@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  playerctl-watch.sh — único proceso playerctl -F para waybar
-#  Escribe cada evento de metadata en un cache atómico; custom/playerctl y
-#  custom/playerlabel lo leen con `tail -F` en vez de lanzar cada uno su
-#  propio playerctl -a metadata -F (dos procesos escuchando lo mismo).
+#  playerctl-watch.sh — single playerctl -F process for waybar
+#  Writes every metadata event to an atomic cache; custom/playerctl and
+#  custom/playerlabel read it with `tail -F` instead of each launching its
+#  own playerctl -a metadata -F (two processes listening to the same thing).
 # ============================================================================
 set -o pipefail
 

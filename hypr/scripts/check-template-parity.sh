@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  check-template-parity.sh — chequeo informativo (no bloquea nada) de que
-#  cada plantilla dinámica de matugen y su *.static.* declaran el mismo set
-#  de identificadores. Mismo método que usaron a mano las auditorías 5 y 6
-#  para confirmar la paridad — esto lo deja automático dentro de dotbackup.
+#  check-template-parity.sh — informational check (blocks nothing) that
+#  each matugen dynamic template and its *.static.* counterpart declare the
+#  same set of identifiers. Same method audits 5 and 6 used by hand to
+#  confirm parity — this makes it automatic inside dotbackup.
 #
-#  Un identificador que aparece en un lado y no en el otro normalmente
-#  significa que se agregó/borró una variable en un archivo y se olvidó el
-#  espejo en el otro (plantilla dinámica vs. estático de referencia).
+#  An identifier that shows up on one side and not the other usually means
+#  a variable was added/removed in one file and the mirror in the other
+#  (dynamic template vs. static reference) was forgotten.
 # ============================================================================
 set -u
 
@@ -28,12 +28,12 @@ pairs=(
     "qt|$BASE/matugen/templates/qt-colors.conf|$BASE/qt5ct/colors/kitasan-glass.static.conf|iniassign"
 )
 
-# Extrae el set de identificadores declarados de un archivo, según su formato.
-# Cada formato usa la misma regex para plantilla y estático — lo que importa
-# es que ambos lados se lean con la MISMA lógica, no cubrir el 100% de la
-# sintaxis real del formato (ej. starship.toml tiene claves que no son
-# colores, como "Arch" o "Desktop" — no molesta que también se comparen,
-# porque existen igual en ambos lados).
+# Extracts the set of identifiers declared in a file, based on its format.
+# Each format uses the same regex for template and static — what matters
+# is that both sides get read with the SAME logic, not covering 100% of the
+# format's actual syntax (e.g. starship.toml has keys that aren't colors,
+# like "Arch" or "Desktop" — it doesn't matter that those get compared too,
+# since they exist on both sides either way).
 extract() {
     local format="$1" file="$2"
     case "$format" in
@@ -64,10 +64,10 @@ extract() {
             grep -oP '^\K\w+(?==)' "$file"
             ;;
         iniassign)
-            # active_colors=/disabled_colors=/inactive_colors= — anclado a
-            # inicio de línea a propósito: sin el "^" esto también matchea
-            # substrings de comentarios explicativos que mencionan
-            # "active_colors" en prosa (pasó en vivo al escribir esto).
+            # active_colors=/disabled_colors=/inactive_colors= — anchored to
+            # start of line on purpose: without the "^" this also matches
+            # substrings of explanatory comments that mention
+            # "active_colors" in prose (happened live while writing this).
             grep -oP '^\K[a-zA-Z_]+(?=\s*=)' "$file"
             ;;
     esac
@@ -79,7 +79,7 @@ for entry in "${pairs[@]}"; do
     IFS='|' read -r name template static format <<< "$entry"
 
     if [ ! -f "$template" ] || [ ! -f "$static" ]; then
-        echo "  ⚠ paridad plantilla/estático — $name: no encontré $template o $static"
+        echo "  ⚠ template/static parity — $name: couldn't find $template or $static"
         mismatches=$((mismatches + 1))
         continue
     fi
@@ -91,9 +91,9 @@ for entry in "${pairs[@]}"; do
     only_static="$(comm -13 <(echo "$tmpl_ids") <(echo "$static_ids"))"
 
     if [ -n "$only_tmpl" ] || [ -n "$only_static" ]; then
-        echo "  ⚠ paridad plantilla/estático — $name:"
-        [ -n "$only_tmpl" ] && echo "$only_tmpl" | sed 's/^/      solo en plantilla dinámica: /'
-        [ -n "$only_static" ] && echo "$only_static" | sed 's/^/      solo en estático:          /'
+        echo "  ⚠ template/static parity — $name:"
+        [ -n "$only_tmpl" ] && echo "$only_tmpl" | sed 's/^/      only in dynamic template: /'
+        [ -n "$only_static" ] && echo "$only_static" | sed 's/^/      only in static:          /'
         mismatches=$((mismatches + 1))
     fi
 done

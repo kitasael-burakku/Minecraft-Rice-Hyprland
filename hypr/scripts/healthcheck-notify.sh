@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  healthcheck-notify.sh — variante no interactiva de `healthcheck` (fish)
+#  healthcheck-notify.sh — non-interactive variant of `healthcheck` (fish)
 # ----------------------------------------------------------------------------
-#  fish/functions/healthcheck.fish está pensado para correr en una terminal:
-#  dibuja cajas ASCII y termina con un "Press Enter to exit" que colgaría
-#  para siempre si un timer lo invocara directo. Este script reusa los
-#  mismos chequeos de solo lectura (huérfanos, updates, pacnew/pacsave,
-#  servicios fallidos, reboot pendiente, errores críticos de arranque) pero
-#  sin dibujar nada — si no encuentra nada, sale en silencio; si encuentra
-#  algo, un único notify-send con el resumen. Pensado para
-#  healthcheck-notify.timer (diario).
+#  fish/functions/healthcheck.fish is meant to run in a terminal: it draws
+#  ASCII boxes and ends with a "Press Enter to exit" that would hang
+#  forever if a timer invoked it directly. This script reuses the same
+#  read-only checks (orphans, updates, pacnew/pacsave, failed services,
+#  pending reboot, critical boot errors) but without drawing anything — if
+#  it finds nothing, it exits silently; if it finds something, a single
+#  notify-send with the summary. Meant for healthcheck-notify.timer (daily).
 # ============================================================================
 
 set -u
@@ -17,13 +16,13 @@ set -o pipefail
 
 ISSUES=()
 
-# ── Huérfanos ─────────────────────────────────────────────────────────────
+# ── Orphans ─────────────────────────────────────────────────────────────
 orphans=$(pacman -Qtdq 2>/dev/null | wc -l)
-[ "$orphans" -gt 0 ] && ISSUES+=("󰮯 $orphans paquete(s) huérfano(s)")
+[ "$orphans" -gt 0 ] && ISSUES+=("󰮯 $orphans orphan package(s)")
 
-# ── Updates pendientes (mismo umbral "critical" que ya usa
-#    waybar/scripts/updates.sh: 50 — por debajo de eso es ruido diario, no
-#    algo que amerite una notificación) ──────────────────────────────────
+# ── Pending updates (same "critical" threshold already used by
+#    waybar/scripts/updates.sh: 50 — below that it's daily noise, not
+#    something worth a notification) ──────────────────────────────────
 pacman_updates=0
 command -v checkupdates >/dev/null 2>&1 && pacman_updates=$(checkupdates 2>/dev/null | wc -l)
 aur_updates=0
@@ -33,35 +32,35 @@ elif command -v paru >/dev/null 2>&1; then
     aur_updates=$(paru -Qua 2>/dev/null | wc -l)
 fi
 total_updates=$((pacman_updates + aur_updates))
-[ "$total_updates" -ge 50 ] && ISSUES+=("󰚰 $total_updates actualizaciones pendientes (pacman+AUR)")
+[ "$total_updates" -ge 50 ] && ISSUES+=("󰚰 $total_updates pending updates (pacman+AUR)")
 
 # ── Pacnew / Pacsave ──────────────────────────────────────────────────────
 pacfiles=$(find /etc -name '*.pacnew' -o -name '*.pacsave' 2>/dev/null | wc -l)
-[ "$pacfiles" -gt 0 ] && ISSUES+=("󰘓 $pacfiles archivo(s) .pacnew/.pacsave en /etc")
+[ "$pacfiles" -gt 0 ] && ISSUES+=("󰘓 $pacfiles .pacnew/.pacsave file(s) in /etc")
 
-# ── Servicios fallidos ────────────────────────────────────────────────────
+# ── Failed services ────────────────────────────────────────────────────
 failed_system=$(systemctl --failed --no-legend 2>/dev/null | wc -l)
 failed_user=$(systemctl --user --failed --no-legend 2>/dev/null | wc -l)
-[ "$failed_system" -gt 0 ] && ISSUES+=("󰋊 $failed_system servicio(s) del sistema fallidos")
-[ "$failed_user" -gt 0 ] && ISSUES+=("󰋊 $failed_user servicio(s) de usuario fallidos")
+[ "$failed_system" -gt 0 ] && ISSUES+=("󰋊 $failed_system failed system service(s)")
+[ "$failed_user" -gt 0 ] && ISSUES+=("󰋊 $failed_user failed user service(s)")
 
-# ── Reboot pendiente (mismo criterio que sysupdate.fish: el kernel que
-#    corre ya no tiene su directorio de módulos en disco) ─────────────────
+# ── Pending reboot (same approach as sysupdate.fish: the running kernel
+#    no longer has its module directory on disk) ─────────────────
 if [ ! -d "/usr/lib/modules/$(uname -r)" ]; then
-    ISSUES+=("󰜉 kernel actualizado ($(uname -r) sin módulos) — reinicio pendiente")
+    ISSUES+=("󰜉 kernel updated ($(uname -r) has no modules) — reboot pending")
 fi
 
-# ── Errores críticos de arranque, filtrando el ruido conocido de TPM (mismo
-#    criterio que healthcheck.fish) ───────────────────────────────────────
-# --output=json: un coredump multilínea es UN evento en journalctl, pero
-# "grep -c ." sobre el texto plano contaba cada línea del backtrace como un
-# error distinto (mismo bug ya corregido en healthcheck.fish). json emite un
-# objeto por evento en una sola línea sin importar cuántas líneas tenga el
-# MESSAGE, así que grep -c sobre eso cuenta eventos reales.
+# ── Critical boot errors, filtering out the known TPM noise (same
+#    approach as healthcheck.fish) ───────────────────────────────────
+# --output=json: a multiline coredump is ONE event in journalctl, but
+# "grep -c ." on the plain text counted every line of the backtrace as a
+# separate error (same bug already fixed in healthcheck.fish). json emits
+# one object per event on a single line no matter how many lines the
+# MESSAGE has, so grep -c on that counts real events.
 non_tpm=$(journalctl -b -p 3 --no-pager --output=json 2>/dev/null | grep -viE 'tpm2|pcrproduct|TPM key integrity' | grep -c .)
-[ "$non_tpm" -gt 0 ] && ISSUES+=("󰍛 $non_tpm error(es) crítico(s) de arranque (no-TPM)")
+[ "$non_tpm" -gt 0 ] && ISSUES+=("󰍛 $non_tpm critical boot error(s) (non-TPM)")
 
-# ── Reportar ──────────────────────────────────────────────────────────────
+# ── Report ──────────────────────────────────────────────────────────────
 if [ "${#ISSUES[@]}" -eq 0 ]; then
     exit 0
 fi

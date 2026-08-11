@@ -1,44 +1,44 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  generate-keybinds-doc.sh — regenera ~/Documents/KEYBINDS.txt desde
-#  hypr/modules/keybinds.lua (+ el bind privado de hypr/modules/private.lua,
-#  si existe), en vez de mantenerlo a mano y esperar a que checkkeybinds.fish
-#  avise del drift a posteriori.
+#  generate-keybinds-doc.sh — regenerates ~/Documents/KEYBINDS.txt from
+#  hypr/modules/keybinds.lua (+ the private bind from
+#  hypr/modules/private.lua, if it exists), instead of maintaining it by
+#  hand and waiting for checkkeybinds.fish to flag the drift after the fact.
 # ----------------------------------------------------------------------------
-#  Convención que este script asume (ya era la dominante en keybinds.lua
-#  antes de escribir esto): la descripción de un bind es el/los comentario(s)
-#  "-- " inmediatamente arriba de su hl.bind(...) — varias líneas "--"
-#  consecutivas se concatenan en una sola descripción, y de ahí se deriva un
-#  label CORTO (ver shorten_desc(): primera cláusula natural — hasta el
-#  primer " — "/": "/". " — o un tope duro de 60 caracteres). KEYBINDS.txt
-#  es referencia rápida, no documentación; la prosa completa sigue en el
-#  comentario fuente, no se pierde, sólo no se vuelca entera acá (antes sí
-#  se volcaba entera, y con comentarios largos rompía el visor TUI de
-#  fish/functions/keybinds.fish — caja de ancho fijo, ver los commits que
-#  siguieron a este mismo cambio). Si varios binds comparten un bloque de
-#  comentario (p.ej. las 4 direcciones de "Infinite Desktop — Navigation"),
-#  todos heredan la MISMA descripción — es una limitación conocida y
-#  aceptada (mismo criterio que ya declara checkkeybinds.fish sobre sus
-#  propios falsos negativos: mejor ser conservador y correcto la mayoría de
-#  las veces que inventar).
+#  Convention this script assumes (was already dominant in keybinds.lua
+#  before this was written): a bind's description is the "-- " comment(s)
+#  immediately above its hl.bind(...) — several consecutive "--" lines get
+#  concatenated into a single description, and a SHORT label is derived
+#  from that (see shorten_desc(): first natural clause — up to the first
+#  " — "/": "/". " — or a hard cap of 60 chars). KEYBINDS.txt is a quick
+#  reference, not documentation; the full prose stays in the source
+#  comment, it isn't lost, it's just not dumped in full here (it used to
+#  be dumped in full, and long comments broke the TUI viewer in
+#  fish/functions/keybinds.fish — fixed-width box, see the commits that
+#  followed this same change). If several binds share one comment block
+#  (e.g. the 4 directions of "Infinite Desktop — Navigation"), they all
+#  inherit the SAME description — a known and accepted limitation (same
+#  approach checkkeybinds.fish already states about its own false
+#  negatives: better to be conservative and correct most of the time than
+#  to invent).
 #
-#  Lo que NO intenta parsear (y por diseño no hace falta): el cuerpo de
-#  binds con function() ... end (CTRL+ALT+V, SUPER+SHIFT+S) — sólo se lee
-#  el primer argumento (la tecla), nunca la acción, así que la forma del
-#  callback no importa. El loop dinámico de workspaces (`for i = 1, 10 do`)
-#  SÍ está hardcodeado como caso especial porque su tecla no es un literal.
+#  What it does NOT try to parse (and by design doesn't need to): the body
+#  of binds with function() ... end (CTRL+ALT+V, SUPER+SHIFT+S) — only the
+#  first argument (the key) is read, never the action, so the callback's
+#  shape doesn't matter. The dynamic workspace loop (`for i = 1, 10 do`)
+#  IS hardcoded as a special case because its key isn't a literal.
 #
-#  Caso raro no cubierto: un comentario indentado DENTRO del cuerpo de un
-#  function() ... end (ej. los dos "-- está en..." de SUPER+SHIFT+S) puede
-#  quedar pegado como pending_desc si el bind siguiente no tiene comentario
-#  propio Y no hay un separador de sección entre medio — no ocurre hoy
-#  (siempre hay banner o comentario propio de por medio), pero si algún día
-#  aparece un bind sin descripción justo después de una función con
-#  comentarios internos, revisar a mano antes de confiar ciegamente.
+#  Rare uncovered case: an indented comment INSIDE the body of a
+#  function() ... end (e.g. the two "-- it's in..." for SUPER+SHIFT+S) can
+#  end up stuck as pending_desc if the next bind has no comment of its own
+#  AND there's no section separator in between — doesn't happen today
+#  (there's always a banner or its own comment in between), but if some day
+#  a bind with no description shows up right after a function with
+#  internal comments, check by hand before trusting it blindly.
 #
-#  Uso: generate-keybinds-doc.sh [--check]
-#    --check   no escribe nada; sale 1 si el KEYBINDS.txt actual difiere de
-#              lo que generaría (para un hook de dotbackup/CI a futuro).
+#  Usage: generate-keybinds-doc.sh [--check]
+#    --check   writes nothing; exits 1 if the current KEYBINDS.txt differs
+#              from what it would generate (for a future dotbackup/CI hook).
 # ============================================================================
 
 set -u
@@ -48,7 +48,7 @@ KEYBINDS_LUA="$HOME/.config/hypr/modules/keybinds.lua"
 PRIVATE_LUA="$HOME/.config/hypr/modules/private.lua"
 OUT="$HOME/Documents/KEYBINDS.txt"
 
-AWK_PROGRAM='
+AWK_PROGRAM=$(cat <<'AWKEOF'
 BEGIN {
     section = (section_init == "") ? "" : section_init
     banner_buf = ""
@@ -59,26 +59,25 @@ BEGIN {
 
 function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
 
-# KEYBINDS.txt es referencia rápida (y el visor TUI de fish/functions/keybinds.fish
-# tiene una caja de ancho fijo) — no el lugar para la prosa explicativa
-# completa que sí tiene sentido al lado del código. Se queda con la primera
-# cláusula natural (hasta el primer " — ", ": " o ". ", lo que aparezca
-# antes) como label corto; si ninguno aparece cerca (o aparece más allá del
-# tope), un corte duro cortando en el último espacio (nunca a mitad de
-# palabra) como red de seguridad. La prosa completa sigue viviendo en el
-# comentario fuente — esto no la pierde, sólo no la vuelca entera acá.
-#
-# MAXLEN=38 no es arbitrario: keybinds.fish dibuja la descripción en una
-# caja de ancho fijo (width=74) con columna de tecla de 25 — eso deja
-# exactamente desc_width=40 caracteres reales para la descripción
-# (__kb_pair, fish/functions/keybinds.fish). Si el label generado acá fuera
-# más largo, la TUI lo recortaría IGUAL con su propio "…" — dos cortes
-# encimados, uno de los cuales es inútil. 38 deja 2 de margen sobre esos 40
-# para que el corte que se vea sea siempre este, nunca el de la TUI. Si
-# alguna vez cambian esas constantes en keybinds.fish, este número tiene
-# que moverse con ellas — no hay una sola fuente de verdad para los dos
-# (bash acá, fish allá), así que quedaron desincronizados una vez ya
-# (ver el historial de este archivo) y puede volver a pasar.
+# KEYBINDS.txt is a quick reference (and the TUI viewer in
+# fish/functions/keybinds.fish has a fixed-width box) — not the place for
+# the full explanatory prose that does make sense next to the code. It
+# keeps the first natural clause (up to the first " — ", ": " or ". ",
+# whichever comes first) as the short label; if none appears nearby (or
+# appears beyond the cap), a hard cut at the last space (never mid-word)
+# as a safety net. The full prose keeps living in the source comment —
+# this doesn't lose it, it's just not dumped in full here.
+# MAXLEN=38 isn't arbitrary: keybinds.fish draws the description in a
+# fixed-width box (width=74) with a 25-char key column — that leaves
+# exactly desc_width=40 real characters for the description (__kb_pair,
+# fish/functions/keybinds.fish). If the label generated here were longer,
+# the TUI would truncate it too with its own "…" — two overlapping cuts,
+# one of which is useless. 38 leaves 2 chars of margin over those 40 so
+# the visible cut is always this one, never the TUI's. If those constants
+# in keybinds.fish ever change, this number has to move with them — there
+# isn't one single source of truth for the two (bash here, fish there), so
+# they got out of sync once already (see this file's history) and it can
+# happen again.
 function shorten_desc(desc,    cut, best, p, maxlen) {
     maxlen = 38
     best = length(desc)
@@ -139,11 +138,11 @@ function prettify_key(raw,    n, parts, i, out, tok, lower) {
 }
 
 function emit(key, desc) {
-    if (section == "") section = "(SIN SECCION)"
+    if (section == "") section = "(NO SECTION)"
     printf "%s\t%s\t%s\n", section, key, shorten_desc(desc)
 }
 
-# separador puro de banner (posible cierre de un bloque de nombre)
+# pure banner separator (possible close of a name block)
 /^-+[ \t]*$/ {
     if (banner_buf != "") {
         section = banner_buf
@@ -154,7 +153,7 @@ function emit(key, desc) {
     next
 }
 
-# línea de nombre dentro de un banner
+# name line inside a banner
 /^----[ \t]+[A-Za-z]/ {
     name = $0
     gsub(/^----[ \t]*/, "", name)
@@ -165,23 +164,24 @@ function emit(key, desc) {
     next
 }
 
-# loop dinámico de workspaces — caso especial, no parseable línea a línea
+# dynamic workspace loop — special case, not parseable line by line
 /^for i = 1, 10 do/ { in_ws_loop = 1; last_was_comment = 0; next }
 in_ws_loop && /^end[ \t]*$/ {
     in_ws_loop = 0
-    emit("SUPER + 1-0", "Cambiar a workspace 1-10")
-    emit("SUPER + SHIFT + 1-0", "Mover ventana a workspace 1-10")
+    emit("SUPER + 1-0", "Switch to workspace 1-10")
+    emit("SUPER + SHIFT + 1-0", "Move window to workspace 1-10")
     pending_desc = ""
     last_was_comment = 0
     next
 }
 in_ws_loop { next }
 
-# comentario descriptivo — varias líneas "--" consecutivas se acumulan en
-# una sola descripción; una línea "--" que NO sigue a otro comentario
-# arranca un bloque nuevo (pisa lo anterior, no se le suma). Tolera
-# indentación (private.lua vive indentado dentro de una tabla Lua; keybinds.lua
-# no, pero el mismo patrón cubre ambos sin necesitar dos regex distintas).
+# descriptive comment — several consecutive "--" lines accumulate into a
+# single description; a "--" line that does NOT follow another comment
+# starts a new block (overwrites the previous one, doesn't add to it).
+# Tolerates indentation (private.lua lives indented inside a Lua table;
+# keybinds.lua doesn't, but the same pattern covers both without needing
+# two different regexes).
 /^[ \t]*--[ \t]/ {
     text = $0
     sub(/^[ \t]*--[ \t]*/, "", text)
@@ -195,7 +195,7 @@ in_ws_loop { next }
     next
 }
 
-# bind real
+# actual bind
 /hl\.bind\(/ {
     line = $0
     if (match(line, /hl\.bind\([ \t]*(mainMod[ \t]*\.\.[ \t]*)?"([^"]*)"/)) {
@@ -209,32 +209,34 @@ in_ws_loop { next }
 
         full = has_mainmod ? ("SUPER + " raw) : raw
         key = prettify_key(full)
-        desc = (pending_desc != "") ? pending_desc : "(sin descripción)"
+        desc = (pending_desc != "") ? pending_desc : "(no description)"
         emit(key, desc)
     }
-    # pending_desc NO se limpia acá a propósito: varios binds sin comentario
-    # propio, seguidos, bajo un mismo bloque explicativo (ver ejemplo de
-    # Navigation/Pan arriba), heredan la misma descripción. Sí se limpia al
-    # cruzar a una sección nueva (regla del separador de banner, arriba).
+    # pending_desc is NOT cleared here on purpose: several consecutive
+    # binds with no comment of their own, under the same explanatory
+    # block (see the Navigation/Pan example above), inherit the same
+    # description. It does get cleared when crossing into a new section
+    # (banner separator rule, above).
     last_was_comment = 0
     next
 }
 
-# cualquier otra línea (código, blancos, cuerpos de function() ... end):
-# no toca pending_desc, sólo corta la racha de comentarios consecutivos.
+# any other line (code, blanks, function() ... end bodies): doesn't touch
+# pending_desc, just breaks the streak of consecutive comments.
 { last_was_comment = 0 }
-'
+AWKEOF
+)
 
-# ── Pasada 1: keybinds.lua público ────────────────────────────────────────
+# ── Pass 1: public keybinds.lua ────────────────────────────────────────
 rows="$(awk "$AWK_PROGRAM" "$KEYBINDS_LUA")"
 
-# ── Pasada 2: binds privados (opcional — private.lua no está versionado) ──
+# ── Pass 2: private binds (optional — private.lua isn't versioned) ──
 if [ -f "$PRIVATE_LUA" ]; then
-    private_rows="$(awk -v section_init="BINDS PRIVADOS" "$AWK_PROGRAM" "$PRIVATE_LUA")"
+    private_rows="$(awk -v section_init="PRIVATE BINDS" "$AWK_PROGRAM" "$PRIVATE_LUA")"
     [ -n "$private_rows" ] && rows="$rows"$'\n'"$private_rows"
 fi
 
-# ── Render: agrupar por sección en el orden de primera aparición ─────────
+# ── Render: group by section in first-appearance order ─────────
 render() {
     printf '%s\n' "$rows" | awk -F'\t' '
         NF < 3 { next }
@@ -244,13 +246,13 @@ render() {
             print "KEYBINDS"
             print "========"
             print ""
-            print "Main modifier: SUPER (Tecla Windows / Options)"
+            print "Main modifier: SUPER (Windows / Options key)"
             print ""
-            print "Generado automáticamente por hypr/scripts/generate-keybinds-doc.sh"
-            print "desde hypr/modules/keybinds.lua — no editar a mano, se pisa en el"
-            print "próximo regenerado. Para documentar un bind nuevo, agregá un"
-            print "comentario \"-- descripción\" arriba de su hl.bind(...) y volvé a"
-            print "correr este script."
+            print "Automatically generated by hypr/scripts/generate-keybinds-doc.sh"
+            print "from hypr/modules/keybinds.lua — do not edit by hand, it gets"
+            print "overwritten on the next regeneration. To document a new bind, add a"
+            print "\"-- description\" comment above its hl.bind(...) and run this"
+            print "script again."
             print ""
             for (i = 1; i <= n; i++) {
                 sec = order[i]
@@ -275,10 +277,10 @@ if [ "${1:-}" = "--check" ]; then
     if diff -q <(render) "$OUT" >/dev/null 2>&1; then
         exit 0
     else
-        echo "KEYBINDS.txt está desactualizado respecto a keybinds.lua — correr generate-keybinds-doc.sh" >&2
+        echo "KEYBINDS.txt is out of date with keybinds.lua — run generate-keybinds-doc.sh" >&2
         exit 1
     fi
 fi
 
 render > "$OUT"
-echo "$OUT regenerado ($(printf '%s\n' "$rows" | grep -c $'\t') binds documentados)."
+echo "$OUT regenerated ($(printf '%s\n' "$rows" | grep -c $'\t') binds documented)."

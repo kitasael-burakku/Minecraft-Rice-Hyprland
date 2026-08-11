@@ -1,18 +1,19 @@
 # ~/.config/fish/functions/ec.fish
-# "edit config" — abre un config en el editor y recicla las terminales.
+# "edit config" — opens a config in the editor and recycles the terminals.
 #
-# Reemplaza las ~12 aliases ecswaync/echypr/ecwaybar/... que eran todas la
-# misma línea con otra ruta. Los nombres viejos siguen existiendo como
-# envoltorios en conf.d/tools.fish, así que la memoria muscular no se rompe.
-# Agregar un config nuevo ahora es una línea en __ec_targets.
+# Replaces the ~12 ecswaync/echypr/ecwaybar/... aliases that were all the
+# same line with a different path. The old names still exist as wrappers in
+# conf.d/tools.fish, so muscle memory doesn't break. Adding a new config is
+# now one line in __ec_targets.
 
-# Tabla nombre→ruta(s). Una entrada por línea, rutas separadas por espacios.
-# Está en una función y no en una variable global para no ocupar entorno en
-# cada shell: solo se evalúa cuando se llama a ec o a su completion.
+# name→path(s) table. One entry per line, paths separated by spaces.
+# It's a function and not a global variable to avoid taking up environment
+# space in every shell: it's only evaluated when ec or its completion is
+# called.
 #
-# OJO: si agregás un target acá, agregá el nombre TAMBIÉN al bucle de aliases
-# en conf.d/tools.fish, o `ec <nombre>` va a andar pero `ec<nombre>` no.
-# (Fue exactamente lo que pasó con matugen.)
+# NOTE: if you add a target here, ALSO add the name to the alias loop in
+# conf.d/tools.fish, or `ec <name>` will work but `ec<name>` won't.
+# (That's exactly what happened with matugen.)
 function __ec_targets
     echo "swaync     $HOME/.config/swaync"
     echo "hypr       $HOME/.config/hypr"
@@ -25,8 +26,9 @@ function __ec_targets
     echo "cava       $HOME/.config/cava"
     echo "fastfetch  $HOME/.config/fastfetch"
     echo "matugen    $HOME/.config/matugen"
-    # starship se edita en la plantilla + el estático, nunca en el generado
-    # ~/.config/starship.toml, que matugen pisa en cada cambio de wallpaper.
+    # starship is edited in the template + the static one, never in the
+    # generated ~/.config/starship.toml, which matugen overwrites on every
+    # wallpaper change.
     echo "starship   $HOME/.config/matugen/templates/starship.toml $HOME/.config/starship.static.toml"
 end
 
@@ -36,21 +38,21 @@ function __ec_names
     end
 end
 
-function ec --description "Abrir un config en el editor (ec <TAB> para la lista)"
+function ec --description "Open a config in the editor (ec <TAB> for the list)"
     set -l editor codium
     set -q EC_EDITOR; and set editor $EC_EDITOR
 
     if test (count $argv) -eq 0
-        set_color brwhite; echo "ec — abrir un config en el editor"; set_color normal
+        set_color brwhite; echo "ec — open a config in the editor"; set_color normal
         echo ""
         printf "  %s\n" (__ec_names | string join " ")
         echo ""
-        set_color brblack; echo "  uso: ec <nombre>   ·   editor: $editor (override: \$EC_EDITOR)"; set_color normal
+        set_color brblack; echo "  usage: ec <name>   ·   editor: $editor (override: \$EC_EDITOR)"; set_color normal
         return 1
     end
 
     if not command -q $editor
-        set_color red; echo "ec: no se encontró '$editor'"; set_color normal
+        set_color red; echo "ec: '$editor' not found"; set_color normal
         return 127
     end
 
@@ -58,8 +60,8 @@ function ec --description "Abrir un config en el editor (ec <TAB> para la lista)
     for name in $argv
         set -l row (__ec_targets | string match -r "^$name\s.*")
         if test -z "$row"
-            set_color red; echo "ec: target desconocido '$name'"; set_color normal
-            set_color brblack; echo "    disponibles: "(__ec_names | string join " "); set_color normal
+            set_color red; echo "ec: unknown target '$name'"; set_color normal
+            set_color brblack; echo "    available: "(__ec_names | string join " "); set_color normal
             return 1
         end
         set -l fields (string split -n " " -- (string replace -ra ' +' ' ' -- $row))
@@ -68,14 +70,14 @@ function ec --description "Abrir un config en el editor (ec <TAB> para la lista)
 
     for p in $paths
         if not test -e "$p"
-            set_color yellow; echo "ec: aviso, no existe $p"; set_color normal
+            set_color yellow; echo "ec: warning, $p doesn't exist"; set_color normal
         end
     end
 
-    # Mismo comportamiento que las aliases viejas: "&& pkill kitty" para que las
-    # terminales levanten el tema nuevo. Ojo que esto también mata la terminal
-    # desde la que llamaste a ec — es lo que ya hacía ecswaync y compañía, así
-    # que se mantiene tal cual.
+    # Same behavior as the old aliases: "&& pkill kitty" so the terminals
+    # pick up the new theme. Note that this also kills the terminal you
+    # called ec from — that's what ecswaync and friends already did, so it's
+    # kept as-is.
     $editor $paths
     and pkill kitty
 end

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  updates.sh — contador de actualizaciones para Waybar (pacman + AUR)
+#  updates.sh — update counter for Waybar (pacman + AUR)
 # ============================================================================
 set -o pipefail
 
 CACHE_FILE="${XDG_RUNTIME_DIR:-/tmp}/waybar-updates.cache"
 NOTIFIED_FILE="${XDG_RUNTIME_DIR:-/tmp}/waybar-updates.notified"
 FAILED_FILE="${XDG_RUNTIME_DIR:-/tmp}/waybar-updates.failed"
-CACHE_TTL=300  # 5 minutos
+CACHE_TTL=300  # 5 minutes
 
-# ── Permitir refresco forzado: updates.sh --force ────────────────────────────
+# ── Allow a forced refresh: updates.sh --force ────────────────────────────────
 if [[ "${1:-}" != "--force" && -f "$CACHE_FILE" ]]; then
     age=$(( $(date +%s) - $(stat -c %Y "$CACHE_FILE") ))
     if (( age < CACHE_TTL )); then
@@ -18,11 +18,11 @@ if [[ "${1:-}" != "--force" && -f "$CACHE_FILE" ]]; then
     fi
 fi
 
-# ── Escape JSON seguro para tooltips ─────────────────────────────────────────
+# ── Safe JSON escaping for tooltips ─────────────────────────────────────────
 json_escape() {
     local s="$1"
     s="${s//\\/\\\\}"   # backslash
-    s="${s//\"/\\\"}"   # comillas
+    s="${s//\"/\\\"}"   # quotes
     printf '%s' "$s"
 }
 
@@ -30,10 +30,10 @@ updates=0
 aur=0
 error_msg=""
 
-# pacman (checkupdates de pacman-contrib no toca la base de datos real)
-# checkupdates documenta sus códigos de salida: 0 = hay updates, 2 = no hay
-# updates (caso normal, no es un fallo), cualquier otro (ej. 1: no pudo
-# sincronizar la DB temporal — sin red, lock, etc.) es un fallo real.
+# pacman (pacman-contrib's checkupdates doesn't touch the real database)
+# checkupdates documents its exit codes: 0 = updates available, 2 = no
+# updates (normal case, not a failure), anything else (e.g. 1: couldn't
+# sync the temp DB — no network, lock, etc.) is a real failure.
 if command -v checkupdates >/dev/null 2>&1; then
     cu_out="$(mktemp)"; cu_err="$(mktemp)"
     checkupdates >"$cu_out" 2>"$cu_err"
@@ -45,7 +45,7 @@ if command -v checkupdates >/dev/null 2>&1; then
     rm -f "$cu_out" "$cu_err"
 fi
 
-# AUR — soporta yay o paru automáticamente
+# AUR — supports yay or paru automatically
 aur_helper=""
 if command -v yay >/dev/null 2>&1; then
     aur_helper="yay"
@@ -54,11 +54,12 @@ elif command -v paru >/dev/null 2>&1; then
 fi
 
 if [[ -n "$aur_helper" ]]; then
-    # A diferencia de checkupdates, yay/paru -Qua sale con código 1 tanto en
-    # el caso normal de "no hay updates AUR" como en un fallo real, y no hay
-    # forma de distinguirlos por código de salida solo. Un fallo real (sin
-    # red, RPC caído, etc.) sí imprime algo a stderr; "no hay updates" no
-    # imprime nada. timeout matando el proceso (124) también cuenta como fallo.
+    # Unlike checkupdates, yay/paru -Qua exits with code 1 both in the
+    # normal "no AUR updates" case and on a real failure, and there's no
+    # way to tell them apart from the exit code alone. A real failure (no
+    # network, RPC down, etc.) does print something to stderr; "no
+    # updates" prints nothing. timeout killing the process (124) also
+    # counts as a failure.
     au_out="$(mktemp)"; au_err="$(mktemp)"
     timeout 20 "$aur_helper" -Qua >"$au_out" 2>"$au_err"
     au_rc=$?
@@ -71,16 +72,16 @@ if [[ -n "$aur_helper" ]]; then
     rm -f "$au_out" "$au_err"
 fi
 
-# Sanitizar (por si wc devuelve vacío o timeout mata el proceso)
+# Sanitize (in case wc returns empty or timeout kills the process)
 [[ "$updates" =~ ^[0-9]+$ ]] || updates=0
 [[ "$aur"     =~ ^[0-9]+$ ]] || aur=0
 
 total=$((updates + aur))
 
-# ── Construir salida ─────────────────────────────────────────────────────────
+# ── Build output ─────────────────────────────────────────────────────────
 if (( total == 0 )); then
     text="󰄬"
-    tooltip="Sistema actualizado"
+    tooltip="System up to date"
     css_class="updated"
 else
     text="󰚰 $total"
@@ -88,7 +89,7 @@ else
     if [[ -n "$aur_helper" ]]; then
         tooltip="$tooltip\n󰮯 $aur AUR ($aur_helper)"
     fi
-    # marca visual si hay muchas actualizaciones pendientes
+    # visual marker when there are lots of pending updates
     if (( total >= 50 )); then
         css_class="critical"
     else
@@ -96,8 +97,8 @@ else
     fi
 fi
 
-# Clases extra a devolver además de la de arriba (ej. "error"). Waybar acepta
-# "class" como string o como array de strings en módulos custom.
+# Extra classes to return besides the one above (e.g. "error"). Waybar
+# accepts "class" as a string or as an array of strings in custom modules.
 classes=("$css_class")
 
 if [[ -n "$error_msg" ]]; then
@@ -106,23 +107,24 @@ if [[ -n "$error_msg" ]]; then
     classes+=("error")
 fi
 
-# ── Notificación de escritorio ────────────────────────────────────────────────
-# Solo avisa cuando el total sube respecto al último aviso (no en cada
-# refresco de caché), y se resetea a 0 en cuanto el sistema queda al día
-# para que la próxima tanda de updates vuelva a notificar.
+# ── Desktop notification ────────────────────────────────────────────────────
+# Only alerts when the total rises above the last alert (not on every
+# cache refresh), and resets to 0 as soon as the system is up to date so
+# the next batch of updates triggers a notification again.
 last_notified=0
 [[ -f "$NOTIFIED_FILE" ]] && last_notified=$(<"$NOTIFIED_FILE")
 [[ "$last_notified" =~ ^[0-9]+$ ]] || last_notified=0
 
 if (( total > 0 && total > last_notified )) && command -v notify-send >/dev/null 2>&1; then
     notify-send -a "Waybar" -i software-update-available \
-        "󰚰 Actualizaciones disponibles" \
+        "󰚰 Updates available" \
         "$updates pacman$( [[ -n "$aur_helper" ]] && printf ' · %s AUR (%s)' "$aur" "$aur_helper" )"
 fi
 printf '%s\n' "$total" > "$NOTIFIED_FILE"
 
-# Igual que arriba pero para fallos: solo avisa al entrar en fallo (no en cada
-# refresco mientras siga fallando) y se resetea en cuanto vuelve a funcionar.
+# Same as above but for failures: only alerts when entering a failed state
+# (not on every refresh while it keeps failing) and resets as soon as it
+# works again.
 was_failed=0
 [[ -f "$FAILED_FILE" ]] && was_failed=$(<"$FAILED_FILE")
 [[ "$was_failed" =~ ^(0|1)$ ]] || was_failed=0
@@ -130,7 +132,7 @@ was_failed=0
 if [[ -n "$error_msg" ]]; then
     if (( was_failed == 0 )) && command -v notify-send >/dev/null 2>&1; then
         notify-send -u critical -a "Waybar" -i dialog-warning \
-            "󰀦 Fallo comprobando actualizaciones" \
+            "󰀦 Failed to check for updates" \
             "$error_msg"
     fi
     printf '1\n' > "$FAILED_FILE"
@@ -143,7 +145,7 @@ class_json="[${class_json%,}]"
 
 result="{\"text\":\"$(json_escape "$text")\",\"tooltip\":\"$(json_escape "$tooltip")\",\"class\":${class_json}}"
 
-# Escribir cache de forma atómica (evita que Waybar lea un archivo a medio escribir)
+# Write the cache atomically (avoids Waybar reading a half-written file)
 tmp="$(mktemp "${CACHE_FILE}.XXXXXX")"
 printf '%s\n' "$result" > "$tmp"
 mv -f "$tmp" "$CACHE_FILE"

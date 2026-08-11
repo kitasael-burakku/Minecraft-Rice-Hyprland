@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  gpu.sh — uso/temperatura/consumo/VRAM de la GPU (amdgpu) para Waybar
+#  gpu.sh — GPU (amdgpu) usage/temperature/power/VRAM for Waybar
 #
-#  No hardcodea card1/hwmon2: busca en /sys/class/drm/card*/device la primera
-#  tarjeta que exponga gpu_busy_percent (evita romperse si el índice de card
-#  cambia entre reinicios, igual que se corrigió para temperature/k10temp).
+#  Doesn't hardcode card1/hwmon2: searches /sys/class/drm/card*/device for
+#  the first card exposing gpu_busy_percent (avoids breaking if the card
+#  index changes between reboots, same fix already applied for
+#  temperature/k10temp).
 # ============================================================================
 set -o pipefail
 
-# ── Escape JSON seguro (backslash y comillas primero, saltos de línea reales
-#    al final para no duplicar el backslash que agrega el paso anterior) ────
+# ── Safe JSON escaping (backslash and quotes first, real newlines at the
+#    end so the backslash the previous step adds doesn't get duplicated) ────
 json_escape() {
     local s="$1"
     s="${s//\\/\\\\}"

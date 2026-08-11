@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 floating_tile_toggle.py
-Super+D: alterna entre mosaico y flotante en el workspace activo.
-Al volver a flotante, restaura cada ventana a su posición anterior
-(incluyendo coordenadas negativas del infinite canvas).
+Super+D: toggles between tiled and floating on the active workspace.
+When going back to floating, restores each window to its previous position
+(including negative coordinates from the infinite canvas).
 
-Uso: python3 floating_tile_toggle.py
-     (llamado desde un bind en hyprland.lua)
+Usage: python3 floating_tile_toggle.py
+       (called from a bind in hyprland.lua)
 """
 
 import subprocess
@@ -24,7 +24,7 @@ STATE_FILE = "/tmp/floating_tile_state.json"
 
 
 # ──────────────────────────────────────────────
-# Estado
+# State
 # ──────────────────────────────────────────────
 
 def load_state():
@@ -45,7 +45,7 @@ def clear_state(workspace_id):
 
 
 # ──────────────────────────────────────────────
-# Lógica principal
+# Main logic
 # ──────────────────────────────────────────────
 
 def get_active_workspace():
@@ -60,7 +60,7 @@ def get_floating_windows(workspace_id):
     ]
 
 def get_tiled_windows(workspace_id, saved_addresses):
-    """Ventanas que estaban flotantes antes (guardadas) y ahora son tileadas."""
+    """Windows that used to be floating (saved) and are now tiled."""
     clients = hyprctl_json(["clients"]) or []
     return [
         w for w in clients
@@ -70,13 +70,13 @@ def get_tiled_windows(workspace_id, saved_addresses):
     ]
 
 def tile_floating_windows(workspace_id):
-    """Guarda posiciones y pone en mosaico todas las flotantes del workspace."""
+    """Saves positions and tiles all floating windows in the workspace."""
     windows = get_floating_windows(workspace_id)
     if not windows:
-        print("No hay ventanas flotantes en el workspace activo.")
+        print("No floating windows on the active workspace.")
         return False
 
-    # Guardar posiciones y tamaños indexados por address
+    # Save positions and sizes indexed by address
     positions = {}
     for w in windows:
         positions[w["address"]] = {
@@ -92,24 +92,24 @@ def tile_floating_windows(workspace_id):
     state[str(workspace_id)] = positions
     save_state(state)
 
-    print(f"Guardadas {len(positions)} ventanas. Tileando...")
+    print(f"Saved {len(positions)} windows. Tiling...")
 
-    # Quitar flotante a todas en un solo batch
+    # Remove floating from all in a single batch
     exprs = [toggle_floating_lua(addr) for addr in positions]
     batch(exprs, timeout=5)
 
     return True
 
 def restore_floating_windows(workspace_id):
-    """Restaura ventanas a flotante y las mueve a sus posiciones guardadas."""
+    """Restores windows to floating and moves them to their saved positions."""
     state = load_state()
     positions = state.get(str(workspace_id))
 
     if not positions:
-        print("No hay posiciones guardadas para este workspace.")
+        print("No saved positions for this workspace.")
         return False
 
-    # Obtener ventanas que deben restaurarse
+    # Get windows that need restoring
     tiled = get_tiled_windows(workspace_id, set(positions.keys()))
 
     if not tiled:
@@ -120,14 +120,14 @@ def restore_floating_windows(workspace_id):
             and w["address"] in positions
         ]
 
-    print(f"Restaurando {len(tiled)} ventanas a flotante...")
+    print(f"Restoring {len(tiled)} windows to floating...")
 
-    # Paso 1: togglefloating a todas en un batch
+    # Step 1: togglefloating on all in a batch
     toggle_exprs = [toggle_floating_lua(w["address"]) for w in tiled if not w.get("floating")]
     if toggle_exprs:
         batch(toggle_exprs, timeout=5)
 
-    # Paso 2: mover y redimensionar todas en un solo batch
+    # Step 2: move and resize all in a single batch
     move_exprs = []
     for w in tiled:
         addr = w["address"]
@@ -149,7 +149,7 @@ def restore_floating_windows(workspace_id):
 
 
 def is_tiled_state(workspace_id):
-    """Determina si el workspace está en estado mosaico (hay posiciones guardadas)."""
+    """Determines whether the workspace is in tiled state (has saved positions)."""
     state = load_state()
     return str(workspace_id) in state
 
@@ -159,7 +159,7 @@ def is_tiled_state(workspace_id):
 # ──────────────────────────────────────────────
 
 def float_all_tiled(workspace_id):
-    """Pone flotantes todas las ventanas tileadas del workspace, sin mover."""
+    """Sets all tiled windows in the workspace to floating, without moving them."""
     clients = hyprctl_json(["clients"]) or []
     tiled = [
         w for w in clients
@@ -168,10 +168,10 @@ def float_all_tiled(workspace_id):
     ]
 
     if not tiled:
-        print("No hay ventanas tileadas en el workspace activo.")
+        print("No tiled windows on the active workspace.")
         return False
 
-    print(f"Poniendo {len(tiled)} ventanas en flotante...")
+    print(f"Setting {len(tiled)} windows to floating...")
     exprs = [toggle_floating_lua(w["address"]) for w in tiled]
     batch(exprs, timeout=5)
 
@@ -179,30 +179,30 @@ def float_all_tiled(workspace_id):
 
 
 def main():
-    # Lock file: si otra instancia ya corre, salir silenciosamente
+    # Lock file: if another instance is already running, exit silently
     lock_fd = open(LOCK_FILE, "w")
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
-        print("Otra instancia ya está corriendo, ignorando.")
+        print("Another instance is already running, ignoring.")
         sys.exit(0)
 
     try:
         workspace_id = get_active_workspace()
         if workspace_id is None:
-            print("Error: no se pudo obtener el workspace activo.")
+            print("Error: couldn't get the active workspace.")
             sys.exit(1)
 
         if is_tiled_state(workspace_id):
-            # Hay historial -> restaurar posiciones
+            # History exists -> restore positions
             restore_floating_windows(workspace_id)
         else:
             floating = get_floating_windows(workspace_id)
             if floating:
-                # Hay flotantes -> tilear y guardar posiciones
+                # There are floating windows -> tile them and save positions
                 tile_floating_windows(workspace_id)
             else:
-                # No hay flotantes ni historial -> flotar todas las tileadas
+                # No floating windows or history -> float all tiled ones
                 float_all_tiled(workspace_id)
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)

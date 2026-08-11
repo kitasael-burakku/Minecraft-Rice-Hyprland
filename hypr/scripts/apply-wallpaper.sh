@@ -1,25 +1,27 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  apply-wallpaper.sh — aplica un wallpaper (video o imagen) y lo persiste
+#  apply-wallpaper.sh — applies a wallpaper (video or image) and persists it
 # ----------------------------------------------------------------------------
-#  Fuente única de los flags de mpvpaper/awww — antes vivían duplicados entre
-#  hypr/modules/autostart.lua y rofi/scripts/wallpaper_grid.sh, sincronizados
-#  a mano con comentarios cruzados.
+#  Single source of truth for the mpvpaper/awww flags — they used to live
+#  duplicated between hypr/modules/autostart.lua and
+#  rofi/scripts/wallpaper_grid.sh, synced by hand with cross-referencing
+#  comments.
 #
-#  Además de aplicar el wallpaper al escritorio:
-#    - persiste la ruta elegida en ~/.config/hypr/.current-wallpaper, para
-#      que el próximo arranque restaure el mismo wallpaper en vez de volver
-#      siempre al default.
-#    - genera hyprlock/wallpapers/current.png a partir de ese mismo
-#      wallpaper, para que la pantalla de bloqueo herede lo que se ve en el
-#      escritorio (esto es independiente del toggle de matugen — es el
-#      wallpaper, no los colores).
+#  Besides applying the wallpaper to the desktop:
+#    - persists the chosen path to ~/.config/hypr/.current-wallpaper, so the
+#      next boot restores the same wallpaper instead of always going back
+#      to the default.
+#    - generates hyprlock/wallpapers/current.png from that same wallpaper,
+#      so the lock screen inherits what's showing on the desktop (this is
+#      independent of the matugen toggle — it's the wallpaper, not the
+#      colors).
 #
-#  Uso:
-#    apply-wallpaper.sh <ruta> [monitor]  — aplica y persiste
-#    apply-wallpaper.sh                   — restaura el último wallpaper
-#                                            persistido, o el default si no
-#                                            hay ninguno / ya no existe
+#  Usage:
+#    apply-wallpaper.sh <path> [monitor]  — applies and persists
+#    apply-wallpaper.sh                   — restores the last persisted
+#                                            wallpaper, or the default if
+#                                            there is none / it no longer
+#                                            exists
 # ============================================================================
 
 set -u
@@ -43,7 +45,7 @@ if [ -z "$target" ]; then
 fi
 
 if [ ! -f "$target" ]; then
-    echo "$(date) ERROR: wallpaper no existe: $target" >> "$LOG"
+    echo "$(date) ERROR: wallpaper doesn't exist: $target" >> "$LOG"
     exit 1
 fi
 
@@ -71,30 +73,30 @@ case "$ext_lc" in
     mp4|mkv|mov|webm) apply_video ;;
     jpg|jpeg|png|webp|gif) apply_image ;;
     *)
-        echo "$(date) ERROR: extensión no soportada: $target" >> "$LOG"
+        echo "$(date) ERROR: unsupported extension: $target" >> "$LOG"
         exit 1
         ;;
 esac
 
-# ── Persistir la elección ─────────────────────────────────────────────────────
+# ── Persist the choice ─────────────────────────────────────────────────────
 mkdir -p "$(dirname "$STATE_FILE")"
 printf '%s' "$target" > "$STATE_FILE"
 
-# ── Herencia en hyprlock ───────────────────────────────────────────────────────
+# ── Inheritance into hyprlock ───────────────────────────────────────────────
 mkdir -p "$(dirname "$HYPRLOCK_BG")"
 case "$ext_lc" in
     mp4|mkv|mov|webm)
         if command -v ffmpeg >/dev/null 2>&1; then
             ffmpeg -y -ss 00:00:01 -i "$target" -vframes 1 -update 1 "$HYPRLOCK_BG" >>"$LOG" 2>&1 \
-                || echo "$(date) WARN: no se pudo extraer frame para hyprlock de $target" >> "$LOG"
+                || echo "$(date) WARN: couldn't extract frame for hyprlock from $target" >> "$LOG"
         else
-            echo "$(date) WARN: ffmpeg no instalado, hyprlock no hereda este wallpaper" >> "$LOG"
+            echo "$(date) WARN: ffmpeg not installed, hyprlock won't inherit this wallpaper" >> "$LOG"
         fi
         ;;
     jpg|jpeg|png|webp|gif)
-        # Normalizado con ImageMagick (mismo binario que ya usa
-        # generate-thumbs.sh) en vez de un cp crudo, para que el contenido
-        # de current.png sea PNG de verdad sin importar el formato de origen.
+        # Normalized with ImageMagick (same binary generate-thumbs.sh
+        # already uses) instead of a raw cp, so current.png's content is
+        # a real PNG regardless of the source format.
         if command -v convert >/dev/null 2>&1; then
             convert "$target[0]" "$HYPRLOCK_BG" >>"$LOG" 2>&1 || cp -f "$target" "$HYPRLOCK_BG" 2>>"$LOG"
         else

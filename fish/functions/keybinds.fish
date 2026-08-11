@@ -22,15 +22,15 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
     end
 
     # ── Color palette ──────────────────────────────────────────────────────
-    # Nombres ANSI, igual que report-ui.fish: los resuelve la terminal, así que
-    # el visor sigue la paleta de kitty (que matugen regenera con el wallpaper)
-    # en vez de traer la suya congelada.
+    # ANSI names, same as report-ui.fish: the terminal resolves them, so the
+    # viewer follows kitty's palette (which matugen regenerates with the
+    # wallpaper) instead of shipping its own frozen one.
     #
-    # Antes esto era un if sobre $COLORTERM con una rama hex y otra ANSI. Se
-    # fue: la detección es frágil ($COLORTERM suele venir vacío por SSH/tmux
-    # aunque la terminal sí soporte 24 bits) y en esta máquina la rama de
-    # fallback no se ejecutaba nunca, o sea que estaba sin probar. Un solo
-    # camino, el que anda en todas partes.
+    # This used to be an if on $COLORTERM with a hex branch and an ANSI
+    # branch. Gone: the detection is fragile ($COLORTERM often comes back
+    # empty over SSH/tmux even when the terminal does support 24-bit) and on
+    # this machine the fallback branch never ran, i.e. it was untested. One
+    # single path, the one that works everywhere.
     set -g __kb_border  brblack
     set -g __kb_muted   brblack
     set -g __kb_accent  cyan
@@ -64,10 +64,10 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
 
     # ── Input without bullets ────────────────────────────────────────────────
 
-    # Estado del tty tal como estaba antes de entrar al visor. __kb_getch pone
-    # la terminal en raw mode y la restaura al salir, pero si cortás con Ctrl+C
-    # justo en el medio ese restore nunca corre y te quedás sin echo ni line
-    # editing. El handler de abajo usa esta copia para dejarla como estaba.
+    # tty state as it was before entering the viewer. __kb_getch puts the
+    # terminal in raw mode and restores it on exit, but if you Ctrl+C right
+    # in the middle that restore never runs and you're left without echo or
+    # line editing. The handler below uses this copy to put it back.
     set -g __kb_saved_tty (stty -g 2>/dev/null)
 
     function __kb_on_int --on-signal INT
@@ -241,7 +241,7 @@ function __keybinds_viewer --description "Interactive Hyprland keybinds viewer"
         __kb_text $width $__kb_muted "Hyprland Control Manual"
         __kb_mid $width
         __kb_raw $width "  Page  : $page / $total"
-        __kb_raw $width "  Mod   : SUPER (Tecla Windows/Options)"
+        __kb_raw $width "  Mod   : SUPER (Windows/Options key)"
         __kb_mid $width
         __kb_text $width $__kb_section "$section"
         __kb_mid $width
@@ -432,8 +432,8 @@ function __keybinds_prepare_window
     command -q hyprctl; or return 0
     command -q jq; or return 0
 
-    # Antes esto iba a /dev/null: un error de Lua acá quedaba invisible para
-    # siempre (mismo criterio que el fix de rofi/scripts/window-switcher.sh).
+    # This used to go to /dev/null: a Lua error here stayed invisible
+    # forever (same fix approach as rofi/scripts/window-switcher.sh).
     set -l runtime_dir /tmp
     set -q XDG_RUNTIME_DIR; and set runtime_dir "$XDG_RUNTIME_DIR"
     set -l log "$runtime_dir/keybinds-float.log"
@@ -479,20 +479,21 @@ function __keybinds_restore_window
     end
 
     if test "$__kb_was_floating" = "false"
-        # "toggle", no "off": en este punto la ventana está floating de
-        # verdad (la forzamos con "set" en prepare_window), así que
-        # alterna a tiled — mismo vocabulario que ya usa
-        # hypr/modules/keybinds.lua para el mismo caso (set/toggle, no on/off).
+        # "toggle", not "off": at this point the window is genuinely
+        # floating (we forced it with "set" in prepare_window), so this
+        # toggles it back to tiled — same vocabulary hypr/modules/keybinds.lua
+        # already uses for the same case (set/toggle, not on/off).
         hyprctl eval "hl.dispatch(hl.dsp.window.float({ action = 'toggle', window = 'address:$__kb_window_addr' }))" >>"$log" 2>&1
     end
 end
 
-# Fish no tiene scope real para funciones/variables anidadas — todo lo
-# definido dentro de __keybinds_viewer/__keybinds_prepare_window queda
-# global y persiste después de cerrar el visor. Se borra todo por nombre.
+# Fish has no real scoping for nested functions/variables — everything
+# defined inside __keybinds_viewer/__keybinds_prepare_window stays global
+# and persists after the viewer closes. Everything gets erased by name.
 function __keybinds_cleanup
-    # __kb_on_int va en la lista: si quedara colgado, el próximo Ctrl+C en una
-    # shell normal dispararía el restore de una ventana que ya no existe.
+    # __kb_on_int is in the list: if left hanging around, the next Ctrl+C in
+    # a normal shell would trigger the restore of a window that no longer
+    # exists.
     for fn in __kb_getch __kb_line __kb_mid __kb_bottom __kb_raw __kb_text __kb_pair __kb_hint __kb_entries __kb_draw __kb_search __kb_search_prompt __kb_read_key __kb_on_int
         functions -q $fn; and functions -e $fn
     end

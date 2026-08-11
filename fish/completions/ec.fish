@@ -1,6 +1,6 @@
-# Completado de `ec` — los nombres salen de la misma tabla que usa la función,
-# así que agregar un target en functions/ec.fish alcanza para las dos cosas.
-# -f: sin completado de archivos, los únicos candidatos válidos son los nombres.
+# Completion for `ec` — names come from the same table the function uses,
+# so adding a target in functions/ec.fish is enough to cover both.
+# -f: no file completion, the only valid candidates are the names.
 complete -c ec -f
 
 complete -c ec -a '(__ec_targets | string replace -ra "^(\S+)\s+(.*)\$" "\$1\t\$2")'

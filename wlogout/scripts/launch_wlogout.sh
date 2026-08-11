@@ -10,12 +10,12 @@ command -v wlogout >/dev/null 2>&1 || {
     exit 127
 }
 
-# Si ya existe una instancia de wlogout, la cierra y sale del script
+# If a wlogout instance already exists, close it and exit the script
 if pgrep -x "wlogout" > /dev/null
 then
     pkill -x wlogout
     exit 0
 fi
 
-# Si no está abierto, lo lanza con tu configuración
+# If it's not open, launch it with your config
 wlogout -l "$layout" -C "$style" &

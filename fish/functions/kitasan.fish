@@ -1,26 +1,26 @@
 # ~/.config/fish/functions/kitasan.fish
-# "kitasan" — CLI unificado para el rice. No agrega lógica nueva de fondo:
-# es pegamento sobre lo que ya existía suelto (healthcheck/quickcache/
-# cleantrash/sysupdate como funciones fish, theme.sh/systemd.sh/wallpaper
-# como scripts de rofi, check-template-parity.sh/generate-keybinds-doc.sh
-# como chequeos de hypr/scripts/) — la idea es tener una sola puerta de
-# entrada en vez de acordarse de 8 nombres sueltos.
+# "kitasan" — unified CLI for the rice. Doesn't add any new logic underneath:
+# it's glue over what already existed loose (healthcheck/quickcache/
+# cleantrash/sysupdate as fish functions, theme.sh/systemd.sh/wallpaper
+# as rofi scripts, check-template-parity.sh/generate-keybinds-doc.sh
+# as checks in hypr/scripts/) — the idea is one single entry point instead
+# of having to remember 8 loose names.
 #
 #   kitasan health          → healthcheck
-#   kitasan clean           → quickcache (rápido, sin sudo)
-#   kitasan clean --deep    → cleantrash (huérfanos + cache de pacman, con sudo)
+#   kitasan clean           → quickcache (fast, no sudo)
+#   kitasan clean --deep    → cleantrash (orphans + pacman cache, with sudo)
 #   kitasan update          → sysupdate
-#   kitasan theme           → selector de perfil visual (rofi)
-#   kitasan theme <scheme>  → fija el esquema directo, sin rofi (ej: vibrant)
-#   kitasan wall             → selector de wallpaper por terminal (fzf, sin rofi)
-#   kitasan mode             → normal/focus/gaming/cinema, selector rofi
-#   kitasan mode <perfil>    → fija el perfil directo, sin rofi
-#   kitasan doctor           → paridad de templates + drift de keybinds +
-#                               servicios systemd caídos + huérfanos (solo lectura)
-#   kitasan dashboard        → panorama del sistema (updates/temps/disco/reproductor), rofi
-#   kitasan diskbackup        → espejo a /mnt/storage (repos + temas + privados)
-#   kitasan diskbackup --check → solo mira si hay algo pendiente, no escribe nada
-#   kitasan menu              → todo lo de arriba, elegido desde un rofi
+#   kitasan theme           → visual profile picker (rofi)
+#   kitasan theme <scheme>  → sets the scheme directly, no rofi (e.g. vibrant)
+#   kitasan wall             → terminal wallpaper picker (fzf, no rofi)
+#   kitasan mode             → normal/focus/gaming/cinema, rofi picker
+#   kitasan mode <perfil>    → sets the profile directly, no rofi
+#   kitasan doctor           → template parity + keybinds drift +
+#                               downed systemd services + orphans (read-only)
+#   kitasan dashboard        → system overview (updates/temps/disk/player), rofi
+#   kitasan diskbackup        → mirror to /mnt/storage (repos + themes + private files)
+#   kitasan diskbackup --check → just checks if anything's pending, writes nothing
+#   kitasan menu              → all of the above, chosen from a rofi
 
 function __kitasan_doctor
     clear
@@ -30,67 +30,67 @@ function __kitasan_doctor
     _rui_top $W
     _rui_row $W brwhite "󰓙  kitasan doctor"
     _rui_mid $W
-    _rui_row $W brblack "Paridad · Keybinds · Servicios · Huérfanos"
+    _rui_row $W brblack "Parity · Keybinds · Services · Orphans"
     _rui_bot $W
     echo ""
 
-    _rui_section cyan "󰃟" "Paridad plantilla/estático (matugen)"
+    _rui_section cyan "󰃟" "Template/static parity (matugen)"
     set -l parity_out (bash "$HOME/.config/hypr/scripts/check-template-parity.sh" 2>&1)
     if test -z "$parity_out"
-        _rui_ok "Todas las plantillas dinámicas y sus estáticos coinciden."
+        _rui_ok "All dynamic templates match their statics."
     else
         printf "%s\n" $parity_out
     end
 
-    _rui_section cyan "󰌌" "Documentación de keybinds"
+    _rui_section cyan "󰌌" "Keybinds documentation"
     if bash "$HOME/.config/hypr/scripts/generate-keybinds-doc.sh" --check >/dev/null 2>&1
-        _rui_ok "KEYBINDS.txt está al día con keybinds.lua."
+        _rui_ok "KEYBINDS.txt is up to date with keybinds.lua."
     else
-        _rui_warn "KEYBINDS.txt desactualizado — corré 'checkkeybinds --write'."
+        _rui_warn "KEYBINDS.txt is outdated — run 'checkkeybinds --write'."
     end
 
-    _rui_section red "󰋊" "Servicios systemd caídos"
+    _rui_section red "󰋊" "Downed systemd services"
     set -l failed_sys (systemctl --failed --no-legend 2>/dev/null)
     set -l failed_usr (systemctl --user --failed --no-legend 2>/dev/null)
     if test (count $failed_sys) -eq 0 -a (count $failed_usr) -eq 0
-        _rui_ok "Sin servicios fallidos (sistema ni usuario)."
+        _rui_ok "No failed services (system or user)."
     else
         printf "  %s\n" $failed_sys $failed_usr
     end
 
-    _rui_section yellow "󰮯" "Paquetes huérfanos"
+    _rui_section yellow "󰮯" "Orphan packages"
     set -l orphans (pacman -Qtdq 2>/dev/null)
     if test (count $orphans) -eq 0
-        _rui_ok "Sin paquetes huérfanos."
+        _rui_ok "No orphan packages."
     else
         printf "  %s\n" $orphans
-        _rui_none "Limpiar con: kitasan clean --deep"
+        _rui_none "Clean up with: kitasan clean --deep"
     end
 
-    _rui_section cyan "󰋊" "Backup a /mnt/storage (diskbackup)"
-    # diskbackup es una herramienta personal (~/.local/bin/, NO versionada en
-    # este repo — mismo criterio que dotbackup, ver docs/ARCHITECTURE.md).
-    # Si alguien clona este rice, este script simplemente no existe ahí:
-    # degradar con gracia acá, no asumir que está. command -v (no test -x
-    # sobre una ruta fija) para ser consistente con cómo dashboard.sh
-    # chequea dotbackup — busca en $PATH, no en una ubicación hardcodeada.
+    _rui_section cyan "󰋊" "Backup to /mnt/storage (diskbackup)"
+    # diskbackup is a personal tool (~/.local/bin/, NOT versioned in this
+    # repo — same approach as dotbackup, see docs/ARCHITECTURE.md).
+    # If someone clones this rice, this script simply doesn't exist there:
+    # degrade gracefully here, don't assume it's present. command -v (not
+    # test -x on a fixed path) to stay consistent with how dashboard.sh
+    # checks for dotbackup — search $PATH, not a hardcoded location.
     if not command -v diskbackup >/dev/null 2>&1
-        _rui_none "diskbackup no está instalado (herramienta personal, no versionada)."
+        _rui_none "diskbackup isn't installed (personal tool, not versioned)."
     else
         set -l disk_out (diskbackup --check 2>&1)
         set -l disk_status $status
         switch $disk_status
             case 0
-                _rui_ok "Repos, temas y archivos privados al día en el segundo disco."
+                _rui_ok "Repos, themes and private files up to date on the second disk."
             case 2
-                _rui_warn "Hay cambios sin respaldar en /mnt/storage."
-                # Sin anchor ^: la línea real arranca con el código de color
-                # ANSI antes de los espacios, así que anclar al inicio nunca
-                # matchea.
+                _rui_warn "There are unbacked-up changes in /mnt/storage."
+                # No ^ anchor: the actual line starts with the ANSI color
+                # code before the spaces, so anchoring to the start never
+                # matches.
                 printf "%s\n" $disk_out | grep -E "    [~+] "
-                _rui_none "Actualizar con: kitasan diskbackup"
+                _rui_none "Update with: kitasan diskbackup"
             case '*'
-                _rui_warn "/mnt/storage no está montado — sin backup posible ahora mismo."
+                _rui_warn "/mnt/storage isn't mounted — no backup possible right now."
         end
     end
 
@@ -103,7 +103,7 @@ end
 function __kitasan_wall
     for dep in fd fzf
         if not command -q $dep
-            set_color red; echo "kitasan wall: falta '$dep'"; set_color normal
+            set_color red; echo "kitasan wall: missing '$dep'"; set_color normal
             return 127
         end
     end
@@ -131,8 +131,8 @@ function __kitasan_theme
     set -l scheme "scheme-$argv[1]"
     set -l valid scheme-content scheme-expressive scheme-fidelity scheme-fruit-salad scheme-monochrome scheme-neutral scheme-rainbow scheme-tonal-spot scheme-vibrant
     if not contains -- "$scheme" $valid
-        set_color red; echo "kitasan theme: esquema desconocido '$argv[1]'"; set_color normal
-        set_color brblack; echo "    válidos: content expressive fidelity fruit-salad monochrome neutral rainbow tonal-spot vibrant"; set_color normal
+        set_color red; echo "kitasan theme: unknown scheme '$argv[1]'"; set_color normal
+        set_color brblack; echo "    valid: content expressive fidelity fruit-salad monochrome neutral rainbow tonal-spot vibrant"; set_color normal
         return 1
     end
 
@@ -145,18 +145,18 @@ function __kitasan_theme
         set wall (cat "$HOME/.config/hypr/.current-wallpaper")
     end
     if test -z "$wall" -o ! -f "$wall"
-        set_color yellow; echo "kitasan theme: esquema guardado ($scheme) — elegí un wallpaper para generar colores."; set_color normal
+        set_color yellow; echo "kitasan theme: scheme saved ($scheme) — pick a wallpaper to generate colors."; set_color normal
         return 0
     end
 
     bash "$HOME/.config/rofi/scripts/matugen_reload.sh" "$wall"
-    set_color green; echo "kitasan theme: perfil visual → $scheme"; set_color normal
+    set_color green; echo "kitasan theme: visual profile → $scheme"; set_color normal
 end
 
 function __kitasan_menu
     set -l entries '󰕮  Dashboard' '󰒋  Health' '󰃣  Clean' '󰚰  Update' '󰸌  Theme' '󰸉  Wallpaper' '󰙀  Mode' '󰓙  Doctor'
-    # diskbackup es personal, no versionado (ver __kitasan_doctor) — solo
-    # aparece en el menú si de verdad existe en esta máquina.
+    # diskbackup is personal, not versioned (see __kitasan_doctor) — only
+    # shows up in the menu if it actually exists on this machine.
     command -v diskbackup >/dev/null 2>&1; and set -a entries '󰋊  Diskbackup'
 
     set -l choice (printf '%s\n' $entries | rofi -dmenu -p "kitasan" -theme "$HOME/.config/rofi/clipboard.rasi")
@@ -174,8 +174,8 @@ function __kitasan_menu
         case '*Theme*'
             __kitasan_theme
         case '*Wallpaper*'
-            # Ya estamos en rofi — el picker nativo (grid con thumbnails) es
-            # mejor UX acá que el fzf de terminal de `kitasan wall`.
+            # Already in rofi — the native picker (grid with thumbnails) is
+            # better UX here than the terminal fzf from `kitasan wall`.
             bash "$HOME/.config/rofi/scripts/wallpaper_launcher.sh"
         case '*Mode*'
             bash "$HOME/.config/rofi/scripts/mode.sh"
@@ -186,22 +186,22 @@ function __kitasan_menu
     end
 end
 
-function kitasan --description "CLI unificado del rice — health/clean/update/theme/wall/doctor/menu"
+function kitasan --description "Unified rice CLI — health/clean/update/theme/wall/doctor/menu"
     if test (count $argv) -eq 0
-        set_color brwhite; echo "kitasan — CLI unificado del rice"; set_color normal
+        set_color brwhite; echo "kitasan — unified rice CLI"; set_color normal
         echo ""
-        echo "  kitasan health           chequeo de salud del sistema"
-        echo "  kitasan clean            limpieza rápida de cache"
-        echo "  kitasan clean --deep     huérfanos + cache de pacman (sudo)"
-        echo "  kitasan update           update completo (pacman + AUR)"
-        echo "  kitasan theme [esquema]  perfil visual — sin argumento abre el selector rofi"
-        echo "  kitasan wall             selector de wallpaper por terminal (fzf)"
-        echo "  kitasan mode [perfil]    normal/focus/gaming/cinema — sin argumento abre el selector rofi"
-        echo "  kitasan doctor           paridad + keybinds + servicios + huérfanos"
-        echo "  kitasan dashboard        panorama del sistema (updates/temps/disco/reproductor), rofi"
-        echo "  kitasan diskbackup       espejo a /mnt/storage (repos + temas + privados)"
-        echo "  kitasan diskbackup --check   solo mira si hay algo pendiente, no escribe nada"
-        echo "  kitasan menu             todo lo de arriba, elegido desde rofi"
+        echo "  kitasan health           system health check"
+        echo "  kitasan clean            quick cache cleanup"
+        echo "  kitasan clean --deep     orphans + pacman cache (sudo)"
+        echo "  kitasan update           full update (pacman + AUR)"
+        echo "  kitasan theme [scheme]   visual profile — no argument opens the rofi picker"
+        echo "  kitasan wall             terminal wallpaper picker (fzf)"
+        echo "  kitasan mode [profile]   normal/focus/gaming/cinema — no argument opens the rofi picker"
+        echo "  kitasan doctor           parity + keybinds + services + orphans"
+        echo "  kitasan dashboard        system overview (updates/temps/disk/player), rofi"
+        echo "  kitasan diskbackup       mirror to /mnt/storage (repos + themes + private files)"
+        echo "  kitasan diskbackup --check   just checks if anything's pending, writes nothing"
+        echo "  kitasan menu             all of the above, chosen from rofi"
         return 1
     end
 
@@ -233,8 +233,8 @@ function kitasan --description "CLI unificado del rice — health/clean/update/t
             __kitasan_doctor
         case diskbackup
             if not command -v diskbackup >/dev/null 2>&1
-                set_color red; echo "kitasan diskbackup: no está instalado en este sistema"; set_color normal
-                set_color brblack; echo "    es una herramienta personal, no versionada en el repo (ver docs/ARCHITECTURE.md)"; set_color normal
+                set_color red; echo "kitasan diskbackup: not installed on this system"; set_color normal
+                set_color brblack; echo "    it's a personal tool, not versioned in the repo (see docs/ARCHITECTURE.md)"; set_color normal
                 return 127
             end
             diskbackup $rest
@@ -243,8 +243,8 @@ function kitasan --description "CLI unificado del rice — health/clean/update/t
         case menu
             __kitasan_menu
         case '*'
-            set_color red; echo "kitasan: subcomando desconocido '$sub'"; set_color normal
-            set_color brblack; echo "    correr 'kitasan' sin argumentos para ver la lista"; set_color normal
+            set_color red; echo "kitasan: unknown subcommand '$sub'"; set_color normal
+            set_color brblack; echo "    run 'kitasan' with no arguments to see the list"; set_color normal
             return 1
     end
 end

@@ -2,19 +2,19 @@ if status is-interactive; and command -q fzf
     fzf --fish | source
 end
 
-# Los tres bloques FZF_*_OPTS repetían el mismo --height/--layout/--border.
-# Va una sola vez acá: fzf lo lee siempre, así que también lo hereda cualquier
-# invocación a mano (por ejemplo la función Projects), que antes quedaba con
-# otro aspecto que los atajos.
+# The three FZF_*_OPTS blocks repeated the same --height/--layout/--border.
+# It goes here once: fzf always reads this, so any manual invocation (e.g.
+# the Projects function) inherits it too — previously that looked different
+# from the keybound shortcuts.
 set -gx FZF_DEFAULT_OPTS "
 --height=80%
 --layout=reverse
 --border=rounded
 "
 
-# fd/bat/eza son opcionales: si falta alguno, fzf cae al comando por defecto
-# (find) y al preview vacío en vez de tirar 'command not found' adentro del
-# panel.
+# fd/bat/eza are optional: if one's missing, fzf falls back to the default
+# command (find) and an empty preview instead of throwing 'command not found'
+# inside the panel.
 if command -q fd
     set -gx FZF_CTRL_T_COMMAND "fd . --type f --hidden --follow --exclude .git"
     set -gx FZF_ALT_C_COMMAND "fd . --type d --hidden --follow --exclude .git"

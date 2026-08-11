@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 move_window.py
-Mueve la ventana flotante activa 50px en la dirección indicada.
-Si toca el borde del monitor, empuja las demás ventanas en sentido contrario.
+Moves the active floating window 50px in the given direction.
+If it hits the monitor edge, pushes the other windows in the opposite direction.
 
-Uso: python3 move_window.py <left|right|up|down>
+Usage: python3 move_window.py <left|right|up|down>
 """
 
 import subprocess
@@ -40,7 +40,7 @@ def get_floating_windows(workspace_id):
 
 def main():
     if len(sys.argv) < 2 or sys.argv[1] not in ("left", "right", "up", "down"):
-        print("Uso: move_window.py <left|right|up|down>")
+        print("Usage: move_window.py <left|right|up|down>")
         sys.exit(1)
 
     direction = sys.argv[1]
@@ -68,7 +68,7 @@ def main():
     new_x = wx + dx
     new_y = wy + dy
 
-    # Calcular cuánto espacio real queda antes del borde
+    # Calculate how much real space is left before the edge
     if dx < 0:
         room = wx - monitor["left"]
         actual_dx = -min(STEP, room)
@@ -90,10 +90,10 @@ def main():
     hitting_edge = (actual_dx != dx) or (actual_dy != dy)
 
     if hitting_edge:
-        # Mover la ventana exactamente hasta el borde
+        # Move the window exactly up to the edge
         if actual_dx != 0 or actual_dy != 0:
             dispatch(move_window_exact_lua(wx + actual_dx, wy + actual_dy, addr))
-        # Empujar las demás con el paso completo en sentido contrario
+        # Push the others by the full step in the opposite direction
         others = [w for w in get_floating_windows(workspace_id) if w["address"] != addr]
         exprs = []
         for w in others:
@@ -102,7 +102,7 @@ def main():
             exprs.append(move_window_exact_lua(ox, oy, w["address"]))
         batch_async(exprs)
     else:
-        # Sin borde: mover solo la ventana activa el paso completo
+        # No edge: only move the active window by the full step
         dispatch(move_window_exact_lua(new_x, new_y, addr))
 
 

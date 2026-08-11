@@ -34,7 +34,7 @@ LABELS=(
     "󰸌  Fruit Salad"
     "󰸌  Monochrome"
     "󰸌  Rainbow"
-    "󰃟  Estático"
+    "󰃟  Static"
 )
 SCHEMES=(
     "scheme-tonal-spot"
@@ -52,7 +52,7 @@ SCHEMES=(
 menu=""
 for l in "${LABELS[@]}"; do menu+="$l"$'\n'; done
 
-chosen=$(printf '%s' "$menu" | rofi -dmenu -p "Tema" -theme "$THEME_RASI")
+chosen=$(printf '%s' "$menu" | rofi -dmenu -p "Theme" -theme "$THEME_RASI")
 [ -n "$chosen" ] || exit 0
 
 scheme=""
@@ -67,7 +67,7 @@ done
 if [ "$scheme" = "static" ]; then
     rm -f "$SENTINEL"
     bash "$APPLY_STATIC"
-    command -v notify-send >/dev/null 2>&1 && notify-send "Tema" "Estático (Kitasan Glass) restaurado"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Theme" "Static restored"
     exit 0
 fi
 
@@ -97,7 +97,7 @@ fi
 
 if [ -n "$wall" ]; then
     bash "$RELOAD_SCRIPT" "$wall"
-    command -v notify-send >/dev/null 2>&1 && notify-send "Tema" "Perfil visual: $scheme"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Theme" "Visual profile: $scheme"
 else
-    command -v notify-send >/dev/null 2>&1 && notify-send "Tema" "Perfil guardado ($scheme) — elegí un wallpaper para generar colores"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Theme" "Saved profile ($scheme) — choose a wallpaper to generate color"
 fi

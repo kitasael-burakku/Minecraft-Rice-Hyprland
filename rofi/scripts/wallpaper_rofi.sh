@@ -41,7 +41,7 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
             prompt_label="Imagen"
             ;;
         *)
-            echo "$(date) ERROR: tipo desconocido '$chosen'" >> "$LOG"
+            echo "$(date) ERROR: Unknown type '$chosen'" >> "$LOG"
             exit 1
             ;;
     esac

@@ -1,11 +1,12 @@
 function checkerrors
     clear
 
-    # rg se usa en casi todas las secciones de acá abajo. Sin esta guarda, si
-    # falta ripgrep salta un "command not found" crudo por cada pipeline, en
-    # medio de las cajas y sin decir cuál es el problema real.
+    # rg is used in almost every section below. Without this guard, if
+    # ripgrep is missing you get a raw "command not found" for every
+    # pipeline, in the middle of the boxes and without saying what's actually
+    # wrong.
     if not command -q rg
-        _rui_bad "Falta ripgrep (rg) — pacman -S ripgrep"
+        _rui_bad "Missing ripgrep (rg) — pacman -S ripgrep"
         return 127
     end
 

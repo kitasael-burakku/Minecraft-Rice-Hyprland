@@ -2,10 +2,10 @@
 
 set -u
 
-# Poll acotado sobre el proceso de hyprlock en vez de una apuesta de timing
-# fija (`sleep 0.8`) — mismo criterio que hypr/scripts/wait-for-hyprland.sh:
-# si hyprlock tarda menos, no se espera de más; si tarda más (o falla), hay
-# un techo para no colgar la suspensión indefinidamente.
+# Bounded poll on the hyprlock process instead of a fixed timing bet
+# (`sleep 0.8`) — same approach as hypr/scripts/wait-for-hyprland.sh: if
+# hyprlock takes less time, there's no extra wait; if it takes longer (or
+# fails), there's a ceiling so it doesn't hang suspend indefinitely.
 if command -v hyprlock >/dev/null 2>&1; then
     hyprlock &
     timeout=3

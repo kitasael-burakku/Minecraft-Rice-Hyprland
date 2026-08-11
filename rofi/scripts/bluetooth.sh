@@ -32,10 +32,10 @@ menu=""
 # abrir/cerrar bluetooth aunque el toggle sí funcionara. Ahora el ícono
 # coincide con lo que ves, y el texto deja explícita la acción aparte.
 if [ "$powered" = "yes" ]; then
-    label="󰂯  Bluetooth encendido — click para apagar"
+    label="󰂯  Bluetooth on — click to turn off"
     ACTION_OF["$label"]="power_off"
 else
-    label="󰂲  Bluetooth apagado — click para encender"
+    label="󰂲  Bluetooth off — click to turn on"
     ACTION_OF["$label"]="power_on"
 fi
 menu+="$label"$'\n'

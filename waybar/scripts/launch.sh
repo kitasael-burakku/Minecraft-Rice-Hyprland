@@ -1,28 +1,29 @@
 #!/usr/bin/env bash
 
-##############
-## Reinicio ##
-##############
-# Superseded por systemd (waybar.service, playerctl-watch.service,
-# swaync.service — ver ~/.config/systemd/user/) desde la migración de
-# autostart.lua. Ya no lo llama nada del rice: ni el arranque de sesión ni
-# el bind SUPER+SHIFT+R (ahora "systemctl --user restart waybar.service
-# playerctl-watch.service swaync.service"). Se deja andando como fallback
-# manual (bash launch.sh) para debug fuera de systemd si hiciera falta.
+###########
+## Restart ##
+###########
+# Superseded by systemd (waybar.service, playerctl-watch.service,
+# swaync.service — see ~/.config/systemd/user/) since the migration away
+# from autostart.lua. Nothing in the rice calls this anymore: not session
+# startup, not the SUPER+SHIFT+R bind (now "systemctl --user restart
+# waybar.service playerctl-watch.service swaync.service"). Left working as
+# a manual fallback (bash launch.sh) for debugging outside systemd if
+# needed.
 
 set -u
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-# Único watcher de playerctl compartido por custom/playerctl y custom/playerlabel
+# Single playerctl watcher shared by custom/playerctl and custom/playerlabel
 command -v playerctl >/dev/null 2>&1 && {
     pkill -f 'playerctl-watch.sh' 2>/dev/null || true
     "${script_dir}/playerctl-watch.sh" &
     disown
 }
 
-# Subshell a propósito: si waybar no está instalado, el "exit" de acá adentro
-# no debe matar el resto de este script (el reload de swaync más abajo).
+# Subshell on purpose: if waybar isn't installed, the "exit" in here
+# shouldn't kill the rest of this script (the swaync reload below).
 (
     command -v waybar >/dev/null 2>&1 || {
         command -v notify-send >/dev/null 2>&1 && notify-send "Waybar" "waybar is not installed or not in PATH"

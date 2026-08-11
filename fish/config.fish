@@ -6,7 +6,7 @@ function fastfetch
 
     set -l base "$HOME/.config/fastfetch"
 
-    # Configuración y pesos
+    # Configs and weights
     set -l weighted \
         "$base/kitasan.jsonc:12" \
         "$base/goldship.jsonc:10" \
@@ -22,12 +22,12 @@ function fastfetch
 
     set -l bag_file "$base/.fastfetch_bag"
 
-    # Si la bolsa no existe o está vacía (conteo real de entradas no vacías,
-    # no tamaño de archivo: al vaciarse, "printf %s\n $bag" con $bag vacío
-    # igual escribe 1 byte de salto de línea — "test -s" daba falso positivo
-    # de "no vacío", y ademas fish parsea ese byte como una lista de UN
-    # elemento vacío (count=1), no una lista vacía — de ahí que se chequee
-    # también que la primera entrada no sea la cadena vacía).
+    # If the bag doesn't exist or is empty (real count of non-empty entries,
+    # not file size: once emptied, "printf %s\n $bag" with an empty $bag
+    # still writes 1 newline byte — "test -s" gave a false positive of
+    # "not empty", and fish also parses that byte as a list of ONE empty
+    # element (count=1), not an empty list — hence also checking that the
+    # first entry isn't the empty string).
     set -l needs_refill 1
     if test -f "$bag_file"
         set -l probe (cat "$bag_file")
@@ -42,7 +42,7 @@ function fastfetch
             set -l file (string split ":" $item)[1]
             set -l weight (string split ":" $item)[2]
 
-            # Multiplicador para convertir decimales en enteros
+            # Multiplier to convert decimals into integers
             set -l repeats (math "ceil($weight * 8)")
 
             for i in (seq $repeats)
@@ -50,7 +50,7 @@ function fastfetch
             end
         end
 
-        # Mezclar la bolsa
+        # Shuffle the bag
         set -l shuffled
         while test (count $bag) -gt 0
             set -l idx (random 1 (count $bag))
@@ -61,13 +61,13 @@ function fastfetch
         printf "%s\n" $shuffled > "$bag_file"
     end
 
-    # Leer la bolsa
+    # Read the bag
     set -l bag (cat "$bag_file")
 
-    # Tomar el primero
+    # Take the first one
     set -l selected $bag[1]
 
-    # Eliminar el primero
+    # Remove the first one
     set bag $bag[2..]
 
     printf "%s\n" $bag > "$bag_file"
@@ -83,7 +83,7 @@ if status is-interactive
     end
 
     if command -q thefuck
-        function fuck --description "Carga thefuck recién en el primer uso (arranque instantáneo)"
+        function fuck --description "Loads thefuck only on first use (instant startup)"
             functions -e fuck
             thefuck --alias | source
             fuck $argv
@@ -96,8 +96,8 @@ end
 
 # Created by pipx / local user binaries
 #
-# -g y no universal: antes esto convivía con una fish_user_paths universal
-# guardada en fish_variables con el mismo valor, o sea la ruta estaba definida
-# en dos lugares y solo uno de los dos es visible en los dotfiles. Queda este,
-# que se lee acá y se puede versionar; la universal se borró.
+# -g and not universal: this used to coexist with a universal fish_user_paths
+# stored in fish_variables with the same value, meaning the path was defined
+# in two places and only one of them is visible in the dotfiles. This one
+# stays, readable here and versionable; the universal one was deleted.
 fish_add_path -g "$HOME/.local/bin"

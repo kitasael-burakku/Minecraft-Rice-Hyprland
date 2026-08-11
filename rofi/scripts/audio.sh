@@ -42,9 +42,9 @@ add_section() {
         id=$(printf '%s' "$line" | grep -oP '^\s*\S?\s*\*?\s*\K[0-9]+(?=\.)')
         [ -n "$id" ] || continue
         name=$(printf '%s' "$line" | grep -oP '^\s*\S?\s*\*?\s*[0-9]+\.\s+\K.*(?=\s*\[vol:)')
-        [ -n "$name" ] || name="(sin nombre)"
+        [ -n "$name" ] || name="(Unnamed)"
         is_default=""
-        printf '%s' "$line" | grep -qP '^\s*\S?\s*\*' && is_default=" (actual)"
+        printf '%s' "$line" | grep -qP '^\s*\S?\s*\*' && is_default=" (Current)"
         label="${icon}  ${name}${is_default}"
         ID_OF["$label"]="$id"
         menu+="$label"$'\n'
@@ -55,7 +55,7 @@ add_section "├─ Sinks:" "󰓃"
 add_section "├─ Sources:" "󰍬"
 
 if [ -z "$menu" ]; then
-    command -v notify-send >/dev/null 2>&1 && notify-send "Audio" "No se encontraron sinks/sources"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Audio" "No sinks/sources found"
     exit 0
 fi
 

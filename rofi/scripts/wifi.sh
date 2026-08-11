@@ -60,7 +60,7 @@ while IFS=: read -r ssid signal sec inuse; do
 done < <(nmcli -t -f SSID,SIGNAL,SECURITY,IN-USE dev wifi list --rescan no 2>/dev/null)
 
 if [ "${#SIGNAL_OF[@]}" -eq 0 ]; then
-    command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "No se encontraron redes"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "No nets found"
     exit 0
 fi
 
@@ -68,9 +68,13 @@ declare -A LABEL_TO_SSID
 menu=""
 for ssid in "${!SIGNAL_OF[@]}"; do
     icon="󰖩"
-    [ -n "${SEC_OF[$ssid]}" ] && icon="󰖩 󰌾"
     suffix=""
-    [ -n "${INUSE_OF[$ssid]:-}" ] && suffix="  (conectado)"
+    if [ -n "${SEC_OF[$ssid]}" ]; then
+        icon="󰖩 󰌾"
+    else
+        suffix="  [OPEN]"
+    fi
+    [ -n "${INUSE_OF[$ssid]:-}" ] && suffix="${suffix}  (Connected)"
     label="${icon}  ${ssid}  [${SIGNAL_OF[$ssid]}%]${suffix}"
     LABEL_TO_SSID["$label"]="$ssid"
     menu+="$label"$'\n'
@@ -97,12 +101,12 @@ if [ "$status" -ne 0 ] && printf '%s' "$err" | grep -qiE 'secrets were required|
     # visible en `ps`/`/proc/<pid>/cmdline` solo para otros procesos DEL
     # MISMO usuario local, nunca en la red ni para otros usuarios.
     if nmcli device wifi connect "$ssid" password "$pass" >/dev/null 2>&1; then
-        command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "Conectado a $ssid"
+        command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "Connected to $ssid"
     else
-        command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Wi-Fi" "No se pudo conectar a $ssid"
+        command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Wi-Fi" "Could not connect to $ssid"
     fi
 elif [ "$status" -eq 0 ]; then
-    command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "Conectado a $ssid"
+    command -v notify-send >/dev/null 2>&1 && notify-send "Wi-Fi" "Connected to $ssid"
 else
-    command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Wi-Fi" "No se pudo conectar a $ssid"
+    command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Wi-Fi" "Could not connect to $ssid"
 fi

@@ -21,21 +21,21 @@
 
   {
       "label": "shutdown",
-      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl poweroff' '¿Apagar?'",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl poweroff' 'Power off?'",
       "text": "",
       "keybind": "s"
   },
 
   {
       "label": "hibernate",
-      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl hibernate' '¿Hibernar?'",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl hibernate' 'Hibernate?'",
       "text": "",
       "keybind": "h"
   },
 
   {
       "label": "reboot",
-      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl reboot' '¿Reiniciar?'",
+      "action": "~/.config/wlogout/scripts/confirm-then.sh 'systemctl reboot' 'Reboot?'",
       "text": "",
       "keybind": "r"
   }

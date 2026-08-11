@@ -16,19 +16,19 @@ function sysupdate
     _rui_bot $W
     echo ""
 
-    # ── Pre-check: espacio libre ─────────────────────────────────────────────
-    # Es lo único de acá que puede dejar el sistema peor que antes: si / se
-    # llena a mitad de la transacción, pacman queda a medias. Los paquetes se
-    # descargan a /var/cache/pacman/pkg, que vive en /.
+    # ── Pre-check: free space ─────────────────────────────────────────────
+    # This is the only thing here that can leave the system worse off than
+    # before: if / fills up mid-transaction, pacman is left half-done.
+    # Packages get downloaded to /var/cache/pacman/pkg, which lives on /.
     set -l min_bytes (math "2 * 1024 * 1024 * 1024")
     set -l avail (df -B1 --output=avail / 2>/dev/null | tail -1 | string trim)
 
     if test -n "$avail"; and test "$avail" -lt "$min_bytes"
-        _rui_bad "Poco espacio en /: "(math -s1 "$avail / 1024 / 1024 / 1024")" GiB libres (mínimo 2 GiB)"
-        _rui_none "Liberá espacio primero — probá cleantrash o quickcache."
+        _rui_bad "Low space on /: "(math -s1 "$avail / 1024 / 1024 / 1024")" GiB free (minimum 2 GiB)"
+        _rui_none "Free up space first — try cleantrash or quickcache."
         return 1
     end
-    _rui_ok "Espacio en /: "(math -s1 "$avail / 1024 / 1024 / 1024")" GiB libres"
+    _rui_ok "Space on /: "(math -s1 "$avail / 1024 / 1024 / 1024")" GiB free"
     echo ""
 
     if not _rui_confirm "Continue?"
@@ -40,7 +40,7 @@ function sysupdate
     end
     echo ""
 
-    # ── Detectar AUR helper ──────────────────────────────────────────────────
+    # ── Detect AUR helper ──────────────────────────────────────────────────
     set -l aur_helper ""
     if command -q yay
         set aur_helper yay
@@ -78,38 +78,38 @@ function sysupdate
     end
 
     # ── Post-update ──────────────────────────────────────────────────────────
-    # Justo después del update es cuando aparecen estas tres cosas, y son
-    # exactamente los datos que healthcheck ya calcula — pero había que
-    # acordarse de correrlo aparte. Los tres chequeos son de solo lectura.
+    # These three things show up right after the update, and they're
+    # exactly the data healthcheck already computes — but you had to
+    # remember to run it separately. All three checks are read-only.
     _rui_section_plain cyan "󰋼" "Post-update"
 
     set -l dirty 0
 
-    # .pacnew/.pacsave — mismo find que usa healthcheck.fish
+    # .pacnew/.pacsave — same find healthcheck.fish uses
     set -l pacfiles (find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)
     if test (count $pacfiles) -gt 0
-        _rui_warn (count $pacfiles)" archivo(s) .pacnew/.pacsave en /etc"
+        _rui_warn (count $pacfiles)" .pacnew/.pacsave file(s) in /etc"
         printf "      %s\n" $pacfiles
         set dirty 1
     end
 
-    # Huérfanos — mismo pacman -Qtdq que usan healthcheck y checktrash
+    # Orphans — same pacman -Qtdq healthcheck and checktrash use
     set -l orphans (pacman -Qtdq 2>/dev/null)
     if test (count $orphans) -gt 0
-        _rui_warn (count $orphans)" paquete(s) quedaron huérfanos — cleantrash los limpia"
+        _rui_warn (count $orphans)" package(s) left orphaned — cleantrash removes them"
         set dirty 1
     end
 
-    # Reboot pendiente. Método agnóstico al paquete: si el directorio de
-    # módulos del kernel que está corriendo ya no existe, es porque el kernel
-    # se actualizó y el sistema sigue con uno que ya no tiene módulos en disco.
-    # Sirve igual con linux-cachyos, -lts o el que sea, sin hardcodear nombres.
+    # Pending reboot. Package-agnostic method: if the running kernel's
+    # module directory no longer exists, it's because the kernel was
+    # updated and the system is still on one with no modules left on disk.
+    # Works the same with linux-cachyos, -lts or whatever, no hardcoded names.
     if not test -d "/usr/lib/modules/"(uname -r)
-        _rui_warn "Kernel actualizado ("(uname -r)" ya no tiene módulos) — reiniciá"
+        _rui_warn "Kernel updated ("(uname -r)" no longer has modules) — reboot"
         set dirty 1
     end
 
-    test "$dirty" -eq 0; and _rui_ok "Nada pendiente: sin .pacnew, sin huérfanos, sin reboot."
+    test "$dirty" -eq 0; and _rui_ok "Nothing pending: no .pacnew, no orphans, no reboot."
 
     echo ""
     set_color green

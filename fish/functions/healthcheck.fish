@@ -1,10 +1,11 @@
 function healthcheck
     clear
 
-    # Ver la nota en checkerrors: rg se usa en varias secciones y sin él el
-    # reporte se llena de "command not found" en vez de fallar una sola vez.
+    # See the note in checkerrors: rg is used in several sections and
+    # without it the report fills up with "command not found" instead of
+    # failing once.
     if not command -q rg
-        _rui_bad "Falta ripgrep (rg) — pacman -S ripgrep"
+        _rui_bad "Missing ripgrep (rg) — pacman -S ripgrep"
         return 127
     end
 
@@ -38,8 +39,8 @@ function healthcheck
 
     # ── Updates ───────────────────────────────────────────────────────────────
     _rui_section yellow "󰚰" "Updates"
-    # Declaradas acá afuera a propósito: un "set -l" adentro del if quedaría
-    # escopado al bloque y no se vería más abajo.
+    # Declared out here on purpose: a "set -l" inside the if would be
+    # scoped to that block and wouldn't be visible further down.
     set -l pacman_updates
     set -l aur_updates
     if command -q checkupdates
@@ -102,13 +103,13 @@ function healthcheck
     # ── Boot errors ───────────────────────────────────────────────────────────
     _rui_section red "󰍛" "Boot errors"
     set -l boot_errors (journalctl -b -p 3 --no-pager 2>/dev/null)
-    # "count $boot_errors" contaba líneas, no eventos: un solo coredump
-    # (systemd-coredump) imprime un backtrace de cientos de líneas como UN
-    # evento, así que un par de crashes de waybar/swaync inflaban esto a
-    # tres dígitos aunque hubiera 10 entradas reales en el journal.
-    # --output=json emite un objeto JSON por evento en una sola línea (el
-    # MESSAGE multilínea va con \n escapado adentro), así que contarlo con
-    # "count" da el número real de eventos.
+    # "count $boot_errors" was counting lines, not events: a single coredump
+    # (systemd-coredump) prints a backtrace of hundreds of lines as ONE
+    # event, so a couple of waybar/swaync crashes inflated this to three
+    # digits even with only 10 real entries in the journal.
+    # --output=json emits one JSON object per event on a single line (the
+    # multiline MESSAGE goes in with \n escaped inside), so counting it with
+    # "count" gives the real number of events.
     set -l error_count (journalctl -b -p 3 --no-pager --output=json 2>/dev/null | count)
 
     _rui_val "Errors:" "$error_count this boot"
@@ -129,15 +130,16 @@ function healthcheck
 
     # ── Disk ──────────────────────────────────────────────────────────────────
     #
-    # Antes era "df -h / /boot", que estaba mal por dos motivos: /boot no es un
-    # montaje separado acá (solo lo es /boot/efi), así que df resolvía las dos
-    # rutas al mismo filesystem y la sección imprimía "/" DOS veces — y el
-    # segundo disco (/mnt/storage, 938G) no aparecía nunca.
+    # Used to be "df -h / /boot", which was wrong for two reasons: /boot
+    # isn't a separate mount here (only /boot/efi is), so df resolved both
+    # paths to the same filesystem and the section printed "/" TWICE — and
+    # the second disk (/mnt/storage, 938G) never showed up at all.
     #
-    # Ahora se autodetectan todos los filesystems reales excluyendo los
-    # pseudo-FS, así un disco o un USB nuevo aparece solo sin tocar la función.
-    # --output en vez de columnas posicionales ($6): con un device de nombre
-    # largo df parte la línea y el awk posicional se descoloca.
+    # Now all real filesystems are auto-detected, excluding the pseudo-FS,
+    # so a new disk or USB drive shows up on its own without touching the
+    # function. --output instead of positional columns ($6): with a
+    # long-named device df wraps the line and the positional awk gets thrown
+    # off.
     _rui_section cyan "󰪺" "Disk"
     df -h --output=target,used,size,pcent \
         -x tmpfs -x devtmpfs -x efivarfs -x overlay -x squashfs 2>/dev/null \

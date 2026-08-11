@@ -1,9 +1,9 @@
 # ── Typing animation ─────────────────────────────────────────────────────────
-# Definida a nivel de archivo, no adentro de quickcache: ahí quedaba igual en el
-# scope global (fish no tiene funciones anidadas de verdad) pero se redefinía en
-# cada llamada y sobrevivía a la salida sin que nadie la borrara. quickcache
-# tiene tres "return" distintos, así que limpiarla en cada uno sería frágil.
-# Mismo criterio que __rps_* en RPS.exe.fish y _rui_* en report-ui.fish.
+# Defined at file level, not inside quickcache: in there it still ended up in
+# the global scope (fish has no real nested functions) but got redefined on
+# every call and survived exit with nothing to clean it up. quickcache has
+# three different "return"s, so cleaning it up on each one would be fragile.
+# Same approach as __rps_* in RPS.exe.fish and _rui_* in report-ui.fish.
 function __quickcache_type
     set -l text "$argv[1]"
     set -l delay 0.012
@@ -43,10 +43,10 @@ function quickcache --description "Quick safe cache cleanup with animated confir
         "$HOME/.cache/opera" \
         "$HOME/.cache/thorium"
 
-    # Borrarle el cache a un navegador ABIERTO puede dejarle el perfil
-    # inconsistente: el proceso tiene descriptores abiertos contra esos
-    # archivos y los reescribe al cerrar. Por eso además de que el binario
-    # exista y el cache esté ahí, se chequea que no esté corriendo.
+    # Deleting the cache of an OPEN browser can leave the profile
+    # inconsistent: the process holds open file descriptors against those
+    # files and rewrites them on close. So besides checking that the binary
+    # exists and the cache is there, it also checks that it isn't running.
     set -l browser_targets
     set -l browser_skipped
     for i in (seq 1 (count $browser_cmds))
@@ -91,7 +91,7 @@ function quickcache --description "Quick safe cache cleanup with animated confir
     if test (count $browser_skipped) -gt 0
         echo ""
         for cmd in $browser_skipped
-            _rui_skip "Omitido el cache de $cmd — está corriendo, cerralo primero"
+            _rui_skip "Skipped $cmd's cache — it's running, close it first"
         end
     end
 

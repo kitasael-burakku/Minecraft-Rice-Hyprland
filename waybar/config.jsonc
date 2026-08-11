@@ -64,7 +64,8 @@
         "interval": 60,
         "format": "󰥔 {:%H:%M}",
         "max-length": 25,
-        "tooltip-format": "<tt>{calendar}</tt>"
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "on-click": "kitty fish -lc 'calcurse'"
     },
 
     "hyprland/workspaces": {

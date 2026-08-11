@@ -1,36 +1,35 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  confirm-then.sh — pide confirmación (rofi Sí/No) antes de correr $1
+#  confirm-then.sh — asks for confirmation (rofi Yes/No) before running $1
 # ----------------------------------------------------------------------------
-#  Reusa rofi/power-menu.rasi para el tema visual. wlogout no tiene paso de
-#  confirmación propio; esto se lo agrega a las acciones destructivas
-#  (apagar/reiniciar/hibernar) sin tocar lock/logout/suspend.
+#  Reuses rofi/power-menu.rasi for the visual theme. wlogout has no
+#  confirmation step of its own; this adds one to the destructive actions
+#  (poweroff/reboot/hibernate) without touching lock/logout/suspend.
 #
-#  Uso: confirm-then.sh '<comando a correr si confirma>' ['<pregunta>']
+#  Usage: confirm-then.sh '<command to run if confirmed>' ['<question>']
 # ============================================================================
 
 set -u
 set -o pipefail
 
 CMD="${1:-}"
-LABEL="${2:-¿Confirmar?}"
+LABEL="${2:-Confirm?}"
 ROFI_THEME="$HOME/.config/rofi/power-menu.rasi"
 
 [ -n "$CMD" ] || exit 1
 
-choice=$(printf "No\nSí" | rofi -dmenu -p "$LABEL" -theme "$ROFI_THEME")
+choice=$(printf "No\nYes" | rofi -dmenu -p "$LABEL" -theme "$ROFI_THEME")
 
-if [ "$choice" = "Sí" ]; then
-    # Whitelist en vez de "exec bash -c \"$CMD\"": hoy solo hay 3 llamadores
-    # literales (wlogout/layout), todos comandos systemd fijos — un
-    # re-parseo de string arbitrario es más superficie de la que hace falta
-    # para eso.
+if [ "$choice" = "Yes" ]; then
+    # Whitelist instead of "exec bash -c \"$CMD\"": today there are only 3
+    # literal callers (wlogout/layout), all fixed systemd commands —
+    # re-parsing an arbitrary string is more surface area than that needs.
     case "$CMD" in
         "systemctl poweroff"|"systemctl reboot"|"systemctl hibernate")
             exec $CMD
             ;;
         *)
-            echo "confirm-then.sh: comando no permitido: $CMD" >&2
+            echo "confirm-then.sh: command not allowed: $CMD" >&2
             exit 1
             ;;
     esac

@@ -1,18 +1,18 @@
 # ~/.config/fish/conf.d/report-ui.fish
-# Helpers de dibujo compartidos por los "reportes" de terminal:
+# Drawing helpers shared by the terminal "reports":
 # healthcheck, checkerrors, checktrash, cleantrash, quickcache, sysupdate.
 #
-# Antes cada script tenía su propia copia casi idéntica de estas funciones
-# (con prefijos __ce_/__ctr_/__ct_/__hc_/__qc_/__su_ solo para no chocar
-# entre sí). Como las funciones de fish son globales, un solo juego alcanza.
+# Previously each script had its own near-identical copy of these functions
+# (with __ce_/__ctr_/__ct_/__hc_/__qc_/__su_ prefixes just to avoid clashing
+# with each other). Since fish functions are global, a single set is enough.
 #
-# Colores: nombres ANSI, nunca hex. Los resuelve la terminal, así que los
-# reportes siguen la paleta de kitty — que matugen ya regenera con el
-# wallpaper — en vez de quedar congelados en una paleta propia. Es lo que ya
-# hacía RPS.exe.fish. Convención en uso:
-#   brblack = bordes y texto atenuado   brwhite = títulos y valores
-#   green   = ok      yellow = aviso    red = error
-#   cyan    = sección informativa       magenta = sección AUR/yay
+# Colors: ANSI names, never hex. The terminal resolves them, so the reports
+# follow kitty's palette — which matugen already regenerates with the
+# wallpaper — instead of staying frozen on their own palette. Same thing
+# RPS.exe.fish already did. Convention in use:
+#   brblack = borders and dim text      brwhite = titles and values
+#   green   = ok      yellow = warning  red = error
+#   cyan    = info section              magenta = AUR/yay section
 
 function _rui_top -a w
     set_color brblack
@@ -43,7 +43,7 @@ function _rui_row -a w color text
     set_color normal
 end
 
-# Encabezado de sección con divisor debajo (checkerrors/checktrash/healthcheck)
+# Section header with a divider below it (checkerrors/checktrash/healthcheck)
 function _rui_section -a color icon text
     echo ""
     set_color $color
@@ -53,7 +53,7 @@ function _rui_section -a color icon text
     set_color normal
 end
 
-# Encabezado de sección sin divisor (cleantrash/quickcache/sysupdate)
+# Section header without a divider (cleantrash/quickcache/sysupdate)
 function _rui_section_plain -a color icon text
     echo ""
     set_color $color
@@ -65,7 +65,7 @@ function _rui_section_plain -a color icon text
     set_color normal
 end
 
-# Fila "label: valor" — tercer argumento opcional cambia el ancho del label (default 16)
+# "label: value" row — optional third argument changes the label width (default 16)
 function _rui_val -a label value
     set -l width 16
     if set -q argv[3]
@@ -76,16 +76,16 @@ function _rui_val -a label value
     set_color normal
 end
 
-# Confirmación [y/N]. Devuelve 0 solo con "y"/"Y"; cualquier otra cosa
-# (incluido Enter vacío y Ctrl+D) es "no".
+# [y/N] confirmation. Returns 0 only for "y"/"Y"; anything else
+# (including empty Enter and Ctrl+D) is "no".
 #
-# Antes cleantrash, quickcache y sysupdate repetían cada uno el read -p entero
-# y encima con tres idiomas distintos para el mismo chequeo: dos con
-# `!= y -a != Y` y uno con `not test = y -o = Y`.
+# Previously cleantrash, quickcache and sysupdate each repeated the whole
+# read -p, and in three different ways for the same check: two with
+# `!= y -a != Y` and one with `not test = y -o = Y`.
 #
-# El prompt va por --prompt-str en vez del `read -p '<código fish>'` de antes:
-# ese -p evaluaba una cadena de código en cada llamada, acá alcanza con pasar
-# el texto ya coloreado.
+# The prompt goes through --prompt-str instead of the old `read -p '<fish code>'`:
+# that -p evaluated a code string on every call, here it's enough to pass
+# the already-colored text.
 function _rui_confirm -a text
     set -l label "  $text [y/N] > "
     set -l prompt (set_color yellow)"$label"(set_color normal)
@@ -112,8 +112,8 @@ function _rui_none -a text
     set_color brblack; echo "  · $text"; set_color normal
 end
 
-# _rui_skip era una copia byte a byte de _rui_none. Se mantiene el nombre
-# porque cleantrash/quickcache lo usan y "skip" se lee mejor ahí.
+# _rui_skip was a byte-for-byte copy of _rui_none. The name is kept
+# because cleantrash/quickcache use it and "skip" reads better there.
 function _rui_skip -a text
     _rui_none $text
 end

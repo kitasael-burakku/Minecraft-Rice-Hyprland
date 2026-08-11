@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  bluetooth.sh — estado de bluetooth para Waybar (custom/bluetooth)
+#  bluetooth.sh — bluetooth status for Waybar (custom/bluetooth)
 # ----------------------------------------------------------------------------
-#  El módulo nativo "bluetooth" de Waybar no está reflejando los cambios de
-#  power/conexión en la barra (confirmado: el estado real cambia bien vía
-#  bluetoothctl, pero el widget no se redibuja) y no expone ningún mecanismo
-#  externo para forzarlo a refrescar — a diferencia de un módulo custom/*, que
-#  sí acepta "signal" y se puede disparar a demanda. Este script reemplaza al
-#  módulo nativo con el mismo patrón que gpu.sh/updates.sh: rofi/scripts/
-#  bluetooth.sh manda pkill -RTMIN+9 waybar después de tocar el estado, así
-#  que el refresco no depende de que Waybar detecte el cambio por su cuenta.
+#  Waybar's native "bluetooth" module isn't reflecting power/connection
+#  changes in the bar (confirmed: the real state changes fine via
+#  bluetoothctl, but the widget doesn't redraw) and doesn't expose any
+#  external mechanism to force a refresh — unlike a custom/* module, which
+#  does accept "signal" and can be triggered on demand. This script
+#  replaces the native module with the same pattern as gpu.sh/updates.sh:
+#  rofi/scripts/bluetooth.sh sends pkill -RTMIN+9 waybar after touching the
+#  state, so the refresh doesn't depend on Waybar detecting the change on
+#  its own.
 # ============================================================================
 set -o pipefail
 
@@ -29,7 +30,7 @@ command -v bluetoothctl >/dev/null 2>&1 || {
 powered=$(bluetoothctl show 2>/dev/null | grep -oP 'Powered:\s*\K\w+')
 
 if [[ "$powered" != "yes" ]]; then
-    printf '%s\n' '{"text":"󰂲","tooltip":"Bluetooth apagado","class":"disabled"}'
+    printf '%s\n' '{"text":"󰂲","tooltip":"Bluetooth off","class":"disabled"}'
     exit 0
 fi
 
@@ -45,11 +46,11 @@ count=${#connected_names[@]}
 
 if (( count > 0 )); then
     text="󰂱 ${count}"
-    tooltip=$(printf 'Bluetooth encendido\n\nConectado:\n%s' "$(printf '  • %s\n' "${connected_names[@]}")")
+    tooltip=$(printf 'Bluetooth on\n\nConnected:\n%s' "$(printf '  • %s\n' "${connected_names[@]}")")
     css_class="connected"
 else
     text="󰂯"
-    tooltip="Bluetooth encendido"
+    tooltip="Bluetooth on"
     css_class="enabled"
 fi
 
