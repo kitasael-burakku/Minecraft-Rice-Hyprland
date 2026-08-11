@@ -87,8 +87,13 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
             disown
             ;;
         *"Correr dotbackup"*)
-            kitty --title dotbackup -e fish -c 'dotbackup' &
-            disown
+            # Doble chequeo: la fila no debería aparecer sin dotbackup
+            # instalado (ver el gate más abajo), pero no cuesta nada
+            # defenderse acá también en vez de asumir.
+            if command -v dotbackup >/dev/null 2>&1; then
+                kitty --title dotbackup -e fish -c 'dotbackup' &
+                disown
+            fi
             ;;
         *"Play/Pause"*)
             playerctl play-pause 2>/dev/null
@@ -103,7 +108,11 @@ echo -en "\0message\x1f${message}\n"
 
 [ "$updates_count" -gt 0 ] && echo "󰚰  Actualizar sistema ahora"
 [ "$failed_total" -gt 0 ] && echo "󰋊  Ver servicios caídos"
-[ -d "$DOTFILES_REPO/.git" ] && echo "󰊤  Correr dotbackup"
+# command -v, no sólo "el repo existe": dotbackup es una herramienta
+# personal (~/.local/bin/, no versionada — ver docs/ARCHITECTURE.md). Quien
+# clone este repo va a tener el .git pero no el script; sin este chequeo,
+# la fila aparecería igual y fallaría al tocarla.
+[ -d "$DOTFILES_REPO/.git" ] && command -v dotbackup >/dev/null 2>&1 && echo "󰊤  Correr dotbackup"
 if [ -f "$PLAYER_CACHE" ] && command -v jq >/dev/null 2>&1; then
     has_player="$(jq -r '.text // ""' "$PLAYER_CACHE" 2>/dev/null)"
     [ -n "$has_player" ] && echo "󰐊  Play/Pause"

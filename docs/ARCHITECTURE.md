@@ -275,3 +275,11 @@ This repo is not deployed by an installer — it's the *destination* of a one-wa
 **The direction matters:** changes flow `~/.config` → this repo, never the reverse. Editing a file in this repo directly does nothing to the live system until it's cloned or copied over by hand; conversely, editing the live `~/.config` does nothing to this repo until `dotbackup` runs. `hypr/scripts/dotbackup-remind.sh` (read-only, safe to enable) just diffs the two and notifies if they've drifted — it never syncs anything itself.
 
 If you fork this repo, note that `dotbackup` itself isn't part of what you get — you'd need your own equivalent, or just `cp -r` your configs over by hand when you want to update the repo.
+
+---
+
+## `diskbackup` — second-disk mirror
+
+Same non-distribution as `dotbackup`: `~/.local/bin/diskbackup` (also a standalone fish script) is not part of this repo. It mirrors things `dotbackup` deliberately leaves out — personal git repos with their own remote (this author's music daemon, a game project, its AUR PKGBUILD), a handful of manually-installed GTK/icon themes, and the files that are gitignored on purpose (`hypr/modules/private.lua` and similar — see the theming/private-config notes above) — onto a second local disk. It's defense in depth, not a replacement for GitHub: same one-way-sync philosophy as `dotbackup`, just pointed at `/mnt/storage` instead of a git remote. `diskbackup --check` does the same comparison without writing anything, which `kitasan doctor` uses to report whether the mirror is stale.
+
+`kitasan diskbackup` is wired in as a convenience, but every call site checks `test -x ~/.local/bin/diskbackup` first and degrades gracefully if it's missing — same reasoning as the `pcall` guard around `private.lua`: this repo (and `kitasan.fish` specifically) is meant to still work for anyone who clones it, even though this one script isn't part of what they get. If you fork this repo, `kitasan diskbackup` will just tell you it's not installed rather than erroring.

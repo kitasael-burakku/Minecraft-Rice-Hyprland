@@ -68,19 +68,30 @@ function __kitasan_doctor
     end
 
     _rui_section cyan "󰋊" "Backup a /mnt/storage (diskbackup)"
-    set -l disk_out (~/.local/bin/diskbackup --check 2>&1)
-    set -l disk_status $status
-    switch $disk_status
-        case 0
-            _rui_ok "Repos, temas y archivos privados al día en el segundo disco."
-        case 2
-            _rui_warn "Hay cambios sin respaldar en /mnt/storage."
-            # Sin anchor ^: la línea real arranca con el código de color ANSI
-            # antes de los espacios, así que anclar al inicio nunca matchea.
-            printf "%s\n" $disk_out | grep -E "    [~+] "
-            _rui_none "Actualizar con: kitasan diskbackup"
-        case '*'
-            _rui_warn "/mnt/storage no está montado — sin backup posible ahora mismo."
+    # diskbackup es una herramienta personal (~/.local/bin/, NO versionada en
+    # este repo — mismo criterio que dotbackup, ver docs/ARCHITECTURE.md).
+    # Si alguien clona este rice, este script simplemente no existe ahí:
+    # degradar con gracia acá, no asumir que está. command -v (no test -x
+    # sobre una ruta fija) para ser consistente con cómo dashboard.sh
+    # chequea dotbackup — busca en $PATH, no en una ubicación hardcodeada.
+    if not command -v diskbackup >/dev/null 2>&1
+        _rui_none "diskbackup no está instalado (herramienta personal, no versionada)."
+    else
+        set -l disk_out (diskbackup --check 2>&1)
+        set -l disk_status $status
+        switch $disk_status
+            case 0
+                _rui_ok "Repos, temas y archivos privados al día en el segundo disco."
+            case 2
+                _rui_warn "Hay cambios sin respaldar en /mnt/storage."
+                # Sin anchor ^: la línea real arranca con el código de color
+                # ANSI antes de los espacios, así que anclar al inicio nunca
+                # matchea.
+                printf "%s\n" $disk_out | grep -E "    [~+] "
+                _rui_none "Actualizar con: kitasan diskbackup"
+            case '*'
+                _rui_warn "/mnt/storage no está montado — sin backup posible ahora mismo."
+        end
     end
 
     echo ""
@@ -143,8 +154,12 @@ function __kitasan_theme
 end
 
 function __kitasan_menu
-    set -l choice (printf '󰕮  Dashboard\n󰒋  Health\n󰃣  Clean\n󰚰  Update\n󰸌  Theme\n󰸉  Wallpaper\n󰙀  Mode\n󰓙  Doctor\n󰋊  Diskbackup' \
-        | rofi -dmenu -p "kitasan" -theme "$HOME/.config/rofi/clipboard.rasi")
+    set -l entries '󰕮  Dashboard' '󰒋  Health' '󰃣  Clean' '󰚰  Update' '󰸌  Theme' '󰸉  Wallpaper' '󰙀  Mode' '󰓙  Doctor'
+    # diskbackup es personal, no versionado (ver __kitasan_doctor) — solo
+    # aparece en el menú si de verdad existe en esta máquina.
+    command -v diskbackup >/dev/null 2>&1; and set -a entries '󰋊  Diskbackup'
+
+    set -l choice (printf '%s\n' $entries | rofi -dmenu -p "kitasan" -theme "$HOME/.config/rofi/clipboard.rasi")
     test -n "$choice"; or return 0
 
     switch "$choice"
@@ -217,7 +232,12 @@ function kitasan --description "CLI unificado del rice — health/clean/update/t
         case doctor
             __kitasan_doctor
         case diskbackup
-            ~/.local/bin/diskbackup $rest
+            if not command -v diskbackup >/dev/null 2>&1
+                set_color red; echo "kitasan diskbackup: no está instalado en este sistema"; set_color normal
+                set_color brblack; echo "    es una herramienta personal, no versionada en el repo (ver docs/ARCHITECTURE.md)"; set_color normal
+                return 127
+            end
+            diskbackup $rest
         case dashboard
             rofi -show dashboard -modi "dashboard:$HOME/.config/rofi/scripts/dashboard.sh" -theme "$HOME/.config/rofi/clipboard.rasi"
         case menu
