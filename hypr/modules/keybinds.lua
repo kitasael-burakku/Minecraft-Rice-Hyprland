@@ -86,9 +86,15 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 1 }))
 -- Fullscreen mode 0
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = 0 }))
 
------------------------------
-----       SYSTEM         ----
------------------------------
+----------------------------
+---       SYSTEM         ---
+----------------------------
+
+-- Rofi wifi
+hl.bind(mainMod .. "+ F6", hl.dsp.exec_cmd(Programs.Wifi))
+
+-- Bluetooth 
+hl.bind(mainMod .. "+ F7", hl.dsp.exec_cmd(Programs.Bluetooth))
 
 -- Keybind Viewer
 hl.bind(mainMod .. "+ F1", hl.dsp.exec_cmd("kitty --title keybinds -e fish -c keybinds"))

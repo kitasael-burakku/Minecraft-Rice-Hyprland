@@ -98,7 +98,8 @@
 
     "cpu": {
         "interval": 5,
-        "format": "󰍛 {usage}%"
+        "format": "󰍛 {usage}%",
+        "on-click":"kitty fish -lc 'btop'"
     },
 
     "memory": {

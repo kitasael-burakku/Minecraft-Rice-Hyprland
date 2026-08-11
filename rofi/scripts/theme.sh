@@ -31,7 +31,7 @@ LABELS=(
     "󰸌  Fidelity"
     "󰸌  Content"
     "󰸌  Neutral"
-    "󰃟  Estático (Kitasan Glass)"
+    "󰃟  Estático"
 )
 SCHEMES=(
     "scheme-tonal-spot"

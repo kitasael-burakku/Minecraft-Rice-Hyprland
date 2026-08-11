@@ -19,14 +19,16 @@ Programs = {
     -- Rofi 
     wallpaper      = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/wallpaper_launcher.sh',
     clipboard      = 'pgrep -x rofi >/dev/null && pkill -x rofi || cliphist list | rofi -dmenu -display-columns 2 -p "Clipboard" -theme $HOME/.config/rofi/clipboard.rasi | cliphist decode | wl-copy',
-    windowswitcher ='pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show winswitcher -modi winswitcher:~/.config/rofi/scripts/window-switcher.sh -theme ~/.config/rofi/window-switcher.rasi', 
+    windowswitcher = 'pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show winswitcher -modi winswitcher:~/.config/rofi/scripts/window-switcher.sh -theme ~/.config/rofi/window-switcher.rasi', 
     themePicker    = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/theme.sh',
     services       = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/systemd.sh',
     powermenu      = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/power.sh',
     dashboard      = 'pgrep -x rofi >/dev/null && pkill -x rofi || rofi -show dashboard -modi dashboard:$HOME/.config/rofi/scripts/dashboard.sh -theme $HOME/.config/rofi/clipboard.rasi',
     themeToggle    = "bash $HOME/.config/rofi/scripts/matugen_toggle.sh",
     sessionMenu    = "bash $HOME/.config/wlogout/scripts/launch_wlogout.sh",
-    kitasanMenu    = "fish -c 'kitasan menu'"
+    kitasanMenu    = "fish -c 'kitasan menu'",
+    Wifi           = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/wifi.sh",
+    Bluetooth      = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/bluetooth.sh "
 }
 
 -- Comandos privados

@@ -4,11 +4,10 @@
   "cssPriority": "user",
   "ignore-gtk-theme": true,
 
-
   "control-center-width": 360,
   "control-center-margin-top": 15,
   "control-center-margin-bottom": 15,
-  "control-center-margin-right": 0,
+  "control-center-margin-right": 15,
   "control-center-margin-left": 15,
   "notification-window-width": 360,
   "notification-icon-size": 48,
@@ -16,11 +15,9 @@
   "notification-body-image-width": 200,
   "fit-to-screen": true,
 
-
   "timeout": 4,
   "timeout-low": 5,
   "timeout-critical": 0,
-
 
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
@@ -32,7 +29,7 @@
   "notification-inline-replies": true,
   "relative-timestamps": true,
   "notification-2fa-action": false,
-  "text-empty": "Zzz... (Silence SwayNC is sleeping)",
+  "text-empty": "Zzz... (Silence notifications are sleeping)",
 
   "notification-visibility": {
     "spotify-low-muted": {
