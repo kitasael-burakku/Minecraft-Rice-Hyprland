@@ -31,6 +31,9 @@ LABELS=(
     "󰸌  Fidelity"
     "󰸌  Content"
     "󰸌  Neutral"
+    "󰸌  Fruit Salad"
+    "󰸌  Monochrome"
+    "󰸌  Rainbow"
     "󰃟  Estático"
 )
 SCHEMES=(
@@ -40,6 +43,9 @@ SCHEMES=(
     "scheme-fidelity"
     "scheme-content"
     "scheme-neutral"
+    "scheme-fruit-salad"
+    "scheme-monochrome"
+    "scheme-rainbow"
     "static"
 )
 

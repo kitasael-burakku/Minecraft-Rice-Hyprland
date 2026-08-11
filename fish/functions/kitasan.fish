@@ -18,6 +18,8 @@
 #   kitasan doctor           → paridad de templates + drift de keybinds +
 #                               servicios systemd caídos + huérfanos (solo lectura)
 #   kitasan dashboard        → panorama del sistema (updates/temps/disco/reproductor), rofi
+#   kitasan diskbackup        → espejo a /mnt/storage (repos + temas + privados)
+#   kitasan diskbackup --check → solo mira si hay algo pendiente, no escribe nada
 #   kitasan menu              → todo lo de arriba, elegido desde un rofi
 
 function __kitasan_doctor
@@ -63,6 +65,22 @@ function __kitasan_doctor
     else
         printf "  %s\n" $orphans
         _rui_none "Limpiar con: kitasan clean --deep"
+    end
+
+    _rui_section cyan "󰋊" "Backup a /mnt/storage (diskbackup)"
+    set -l disk_out (~/.local/bin/diskbackup --check 2>&1)
+    set -l disk_status $status
+    switch $disk_status
+        case 0
+            _rui_ok "Repos, temas y archivos privados al día en el segundo disco."
+        case 2
+            _rui_warn "Hay cambios sin respaldar en /mnt/storage."
+            # Sin anchor ^: la línea real arranca con el código de color ANSI
+            # antes de los espacios, así que anclar al inicio nunca matchea.
+            printf "%s\n" $disk_out | grep -E "    [~+] "
+            _rui_none "Actualizar con: kitasan diskbackup"
+        case '*'
+            _rui_warn "/mnt/storage no está montado — sin backup posible ahora mismo."
     end
 
     echo ""
@@ -125,7 +143,7 @@ function __kitasan_theme
 end
 
 function __kitasan_menu
-    set -l choice (printf '󰕮  Dashboard\n󰒋  Health\n󰃣  Clean\n󰚰  Update\n󰸌  Theme\n󰸉  Wallpaper\n󰙀  Mode\n󰓙  Doctor' \
+    set -l choice (printf '󰕮  Dashboard\n󰒋  Health\n󰃣  Clean\n󰚰  Update\n󰸌  Theme\n󰸉  Wallpaper\n󰙀  Mode\n󰓙  Doctor\n󰋊  Diskbackup' \
         | rofi -dmenu -p "kitasan" -theme "$HOME/.config/rofi/clipboard.rasi")
     test -n "$choice"; or return 0
 
@@ -148,6 +166,8 @@ function __kitasan_menu
             bash "$HOME/.config/rofi/scripts/mode.sh"
         case '*Doctor*'
             kitty --title kitasan-doctor -e fish -c 'kitasan doctor'
+        case '*Diskbackup*'
+            kitty --title kitasan-diskbackup -e fish -c 'kitasan diskbackup'
     end
 end
 
@@ -164,6 +184,8 @@ function kitasan --description "CLI unificado del rice — health/clean/update/t
         echo "  kitasan mode [perfil]    normal/focus/gaming/cinema — sin argumento abre el selector rofi"
         echo "  kitasan doctor           paridad + keybinds + servicios + huérfanos"
         echo "  kitasan dashboard        panorama del sistema (updates/temps/disco/reproductor), rofi"
+        echo "  kitasan diskbackup       espejo a /mnt/storage (repos + temas + privados)"
+        echo "  kitasan diskbackup --check   solo mira si hay algo pendiente, no escribe nada"
         echo "  kitasan menu             todo lo de arriba, elegido desde rofi"
         return 1
     end
@@ -194,6 +216,8 @@ function kitasan --description "CLI unificado del rice — health/clean/update/t
             end
         case doctor
             __kitasan_doctor
+        case diskbackup
+            ~/.local/bin/diskbackup $rest
         case dashboard
             rofi -show dashboard -modi "dashboard:$HOME/.config/rofi/scripts/dashboard.sh" -theme "$HOME/.config/rofi/clipboard.rasi"
         case menu
