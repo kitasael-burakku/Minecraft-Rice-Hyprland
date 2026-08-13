@@ -7,13 +7,11 @@
 
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
--- Cursor settings — CursorTheme queda global (environment.lua es el primer
--- módulo que carga hyprland.lua) para que autostart.lua reuse el mismo
--- valor en su "hyprctl setcursor" en vez de repetirlo a mano en dos
--- archivos.
+-- Variables
 CursorTheme = "Future-black-cursors"
 GTKTheme = "Win11-Fantasy-Dark"
 
+-- Theme
 hl.env("XCURSOR_THEME", CursorTheme)
 hl.env("XCURSOR_SIZE", "24")
 hl.env("GTK_THEME", GTKTheme)

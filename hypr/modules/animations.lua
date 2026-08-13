@@ -29,9 +29,9 @@ hl.animation({ leaf="border",  enabled=true, speed=5.0, bezier="meniscus"})
 
 -- ─── Windows ──────────────────────────────────────────────────────────────────────────────────────
 -- hl.animation({ leaf="windows",     enabled=true, speed=3.0, bezier="settleFeel"                    })
-hl.animation({ leaf="windowsIn",   enabled=true, speed=3.6, bezier="birthFeel",  style="popin 85%" })
-hl.animation({ leaf="windowsOut",  enabled=true, speed=3.3, bezier="undertow",   style="popin 70%" })
-hl.animation({ leaf="windowsMove", enabled=true, speed=3.8, bezier="glideFeel"                     })
+hl.animation({ leaf="windowsIn",   enabled=true, speed=3.0, bezier="birthFeel",  style="popin" })
+hl.animation({ leaf="windowsOut",  enabled=true, speed=1.0, bezier="undertow",   style="slide" })
+hl.animation({ leaf="windowsMove", enabled=true, speed=4.0, bezier="glideFeel"                     })
 
 -- ─── Fades ──────────────────────────────────────────────────────────────────
 hl.animation({ leaf="fade",     enabled=true, speed=1.3, bezier="stillWater" })
@@ -40,8 +40,8 @@ hl.animation({ leaf="fadeOut",  enabled=true, speed=0.8, bezier="dissolve"   })
 
 -- ─── Layers ───────────────────────────────────────────────────────────────────────────────────────
 hl.animation({ leaf="layers",        enabled=true, speed=2.8, bezier="ryuOut"                      })
-hl.animation({ leaf="layersIn",      enabled=true, speed=2.2, bezier="ripple",   style="slide bot" })
-hl.animation({ leaf="layersOut",     enabled=true, speed=1.8, bezier="undertow", style="slide bot" })
+hl.animation({ leaf="layersIn",      enabled=true, speed=2.2, bezier="ripple",   style="slide" })
+hl.animation({ leaf="layersOut",     enabled=true, speed=1.8, bezier="undertow", style="slide" })
 
 -- ─── Workspaces ───────────────────────────────────────────────────────────────────────────────────────────
 hl.animation({ leaf="workspaces",    enabled=true, speed=3.5, bezier="tideFeel", style="slidefadevert 50%" })

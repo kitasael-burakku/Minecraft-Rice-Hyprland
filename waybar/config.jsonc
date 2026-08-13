@@ -94,13 +94,14 @@
         // pesado. pavucontrol sigue instalado y a un SUPER+SPACE de
         // distancia para mezcla per-app, que audio.sh no cubre.
         "on-click": "~/.config/rofi/scripts/audio.sh",
-        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-middle":"hyprctl clients | grep -i 'title: maly' >/dev/null && pkill -f 'kitty --title maly' || kitty --title maly -e maly"
     },
 
     "cpu": {
         "interval": 5,
         "format": "󰍛 {usage}%",
-        "on-click":"kitty fish -lc 'btop'"
+        "on-click":"hyprctl clients | grep -i 'title: btop' >/dev/null && pkill -f 'kitty --title btop' || kitty --title btop -e btop"
     },
 
     "memory": {
@@ -188,7 +189,7 @@
 
     "power-profiles-daemon": {
         "format": "{icon}",
-        "tooltip-format": "Perfil de energía: {profile}\nClick para cambiar",
+        "tooltip-format": "Energy Profile: {profile}\n    Click to change",
         "format-icons": {
             "default": "󰊚",
             "performance": "󰓅",
