@@ -135,16 +135,16 @@ Every daemon unit declares `PartOf=graphical-session.target` — a **lifecycle**
    scripts)        window switcher /
                     quick actions)
                      │
-                     │  SUPER + W                    SUPER + F4 / F5
-                     ▼                                     ▼
-          wallpaper_launcher.sh                    kitasan menu / dashboard
-                     │                              (Rofi frontend for health,
-        ┌────────────┴────────────┐                  clean, update, theme,
-        ▼                         ▼                   mode, and service mgmt)
- apply-wallpaper.sh        matugen_reload.sh   (only runs if the
- (mpvpaper / awww)                │              matugen sentinel is ON)
-                                   ▼
-                                matugen
+                     │  SUPER + W        SUPER + SHIFT + /        SUPER + F4 / F5
+                     ▼                          ▼                          ▼
+          wallpaper_launcher.sh        web_launcher.sh          kitasan menu / dashboard
+                     │                 (category → page          (Rofi frontend for health,
+        ┌────────────┴─────┐             → $BROWSER)              clean, update, theme,
+        ▼                  ▼                                       mode, and service mgmt)
+ apply-wallpaper.sh   matugen_reload.sh                     (only runs if the
+ (mpvpaper / awww)          │                                  matugen sentinel is ON)
+                            ▼
+                         matugen
                           (Material You engine)
                                    │
    ┌────────┬────────┬────────┬───┼────┬────────┬─────────┬────────────────┐
@@ -192,6 +192,37 @@ Applying a wallpaper always goes through **`hypr/scripts/apply-wallpaper.sh`**, 
 - regenerates `hyprlock/wallpapers/current.png` from that same wallpaper, so the lock screen background always matches — independent of whether dynamic theming is on.
 
 > ⚠️ The keybind must call `wallpaper_launcher.sh`, not `wallpaper_rofi.sh` directly — pointing it at the wrong script opens only the type selector and nothing happens after you choose.
+
+---
+
+## Rofi web hub
+
+A two-level static launcher for frequently-used web pages, tied to `SUPER + SHIFT + /`:
+
+```text
+SUPER + SHIFT + /
+      ↓
+web_launcher.sh                ← entry point (called from keybind)
+      ↓
+rofi (web-hub.rasi)            ← level 0: category
+  │   Linux · Development · AI · Documentation · Search · General
+      ↓ (chosen category printed on stdout)
+rofi (web-hub.rasi)            ← level 1: page
+  │   Arch Wiki · CachyOS Wiki · Arch Packages · ...
+      ↓ (chosen URL printed on stdout)
+$BROWSER opens the URL
+```
+
+- `rofi/scripts/web_launcher.sh` — entry point. Toggles an already-open picker closed (same rule as `wallpaper_launcher.sh`), validates rofi/data-file/browser are all available, then runs the category and page pickers as two blocking, sequential `rofi -dmenu` calls. Each level just prints its pick on stdout — no `${XDG_RUNTIME_DIR:-/tmp}` handoff file is needed here, unlike the wallpaper picker, because neither level needs rofi script mode (no thumbnails to render). Pressing ESC at either level means empty output, which the launcher treats as "stop, open nothing" — no orphaned rofi process, no browser launch.
+- `rofi/scripts/web_category.sh` — lists the `[Category]` headers from `websites.conf`.
+- `rofi/scripts/web_picker.sh <category>` — lists that category's pages and resolves the pick back to its URL.
+- `rofi/scripts/web_common.sh` — shared, non-executable parser for `websites.conf`, sourced by all three scripts above so the file format is handled in exactly one place.
+
+**Data** lives in `rofi/websites.conf` — plain `[Category]` sections, one `Name | URL` per line, `#` comments allowed. Adding a page is one line; adding a category is one new `[Header]`. No script changes needed either way, and the format is documented in the file's own header comment.
+
+**Browser resolution** — `rofi/scripts/web_launcher.sh` never hardcodes a browser. It resolves one, in order: `$BROWSER` (exported from `hypr/modules/programs.lua` via `hl.env("BROWSER", Programs.browser)`, so `Programs.browser` stays the single source of truth); failing that, `browser = "..."` parsed straight out of `programs.lua` (covers running the script before a Hyprland reload, or outside Hyprland entirely); failing that, `xdg-open`. The chosen browser launches detached (`nohup ... & disown`), matching the repo's background-launch idiom used elsewhere in `rofi/scripts/`.
+
+> ⚠️ The keybind must call `web_launcher.sh`, not `web_category.sh` or `web_picker.sh` directly — those two are only meant to be invoked by the launcher, and calling them standalone skips the rofi/browser validation and the toggle-close behavior.
 
 ---
 

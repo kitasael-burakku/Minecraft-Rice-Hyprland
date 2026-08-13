@@ -28,7 +28,8 @@ Programs = {
     sessionMenu    = "bash $HOME/.config/wlogout/scripts/launch_wlogout.sh",
     kitasanMenu    = "fish -c 'kitasan menu'",
     Wifi           = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/wifi.sh",
-    Bluetooth      = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/bluetooth.sh "
+    Bluetooth      = "pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/bluetooth.sh ",
+    webhub         = 'pgrep -x rofi >/dev/null && pkill -x rofi || bash $HOME/.config/rofi/scripts/web_launcher.sh'
 }
 
 -- Comandos privados
@@ -38,3 +39,8 @@ if ok and type(private) == "table" and type(private.programs) == "table" then
         Programs[key] = value
     end
 end
+
+-- El navegador vive sólo acá; exportarlo como $BROWSER lo vuelve visible para
+-- los scripts (rofi/scripts/web_launcher.sh) sin duplicar el valor. Va
+-- después del merge de private.lua para respetar un override ahí.
+hl.env("BROWSER", Programs.browser)

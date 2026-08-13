@@ -1,0 +1,139 @@
+/* =====================================================
+   WEB HUB — Kitasan Glass
+   ===================================================== */
+
+@import "~/.config/rofi/config.rasi"
+@import "~/.config/rofi/colors.rasi"
+
+configuration {
+    show-icons: false;
+}
+
+* {
+    font:           "JetBrainsMono Nerd Font Propo 11";
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            560px;
+    border-radius:    20px;
+    border:           1px;
+    border-color:     @border;
+    background-color: @bg-main;
+    cursor:           "default";
+}
+
+mainbox {
+    spacing:          0px;
+    padding:          0px;
+    background-color: transparent;
+    children:         [ "inputbar", "listbox" ];
+}
+
+/* ── Header ───────────────────────────────────────── */
+inputbar {
+    spacing:          10px;
+    padding:          14px 18px;
+    background-color: #0c0c0cbb;
+    border:           0px 0px 1px 0px;
+    border-color:     @border-soft;
+    text-color:       @fg;
+    children:         [ "prompt", "entry" ];
+}
+
+prompt {
+    expand:           false;
+    str:              "󰖟";
+    padding:          8px 12px;
+    border-radius:    10px;
+    background-color: @bg-glass;
+    border:           1px;
+    border-color:     @border-soft;
+    text-color:       @accent-muted;
+    font:             "JetBrainsMono Nerd Font Propo Bold 12";
+}
+
+entry {
+    expand:           true;
+    padding:          8px 14px;
+    border-radius:    10px;
+    background-color: @bg-glass;
+    border:           1px;
+    border-color:     @border-soft;
+    text-color:       @fg;
+    cursor:           text;
+    placeholder:      "Search pages...";
+    placeholder-color: @fg-dim;
+}
+
+/* ── Lista dinámica ───────────────────────────────── */
+listbox {
+    spacing:          10px;
+    padding:          14px 16px 16px 16px;
+    background-color: transparent;
+    children:         [ "listview", "message" ];
+}
+
+listview {
+    columns:          1;
+    lines:            10;         /* máximo */
+    cycle:            true;
+    fixed-height:     false;      /* se encoge si hay pocos items */
+    dynamic:          true;       /* se ajusta al filtrar */
+    scrollbar:        false;
+    layout:           vertical;
+    spacing:          3px;
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element {
+    padding:          9px 13px;
+    spacing:          10px;
+    border-radius:    10px;
+    border:           1px;
+    border-color:     transparent;
+    background-color: transparent;
+    text-color:       @fg-muted;
+    cursor:           pointer;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg-muted;
+    border-color:     transparent;
+}
+
+element selected.normal {
+    background-color: @bg-selected;
+    text-color:       @fg;
+    border-color:     @border-hover;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    cursor:           inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+}
+
+message {
+    background-color: transparent;
+}
+
+textbox {
+    padding:          10px 14px;
+    border-radius:    10px;
+    background-color: @bg-glass;
+    text-color:       @fg-muted;
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+    border:           1px;
+    border-color:     @border-soft;
+}

@@ -119,6 +119,8 @@ yay -S \
 >
 > "AUR" here is a loose label for "not in the base block above" — on CachyOS, `mpvpaper`, `hyprpicker`, `nwg-look`, `cava`, `awww`, and `matugen` are all actually in the `cachyos`/`cachyos-extra-znver4` repos, not the AUR proper; only `vscodium-bin` is genuine AUR on every distro. On vanilla Arch, more of this list (including `awww`) really does come from the AUR. Either way `yay -S` works for both cases — just know you're not necessarily pulling from AUR just because the command is `yay`.
 
+> The Rofi web hub (`SUPER + SHIFT + /`, see [ARCHITECTURE.md](ARCHITECTURE.md#rofi-web-hub)) needs **no extra packages** — it's a static Rofi menu over `rofi/websites.conf`, and it opens pages with whatever `Programs.browser` already points at.
+
 <details>
 <summary><b>Marked as "to verify" — click to expand</b></summary>
 <br>
@@ -334,6 +336,7 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 
 - Waybar is visible with all modules rendering (not blank/missing icons).
 - `SUPER + W` opens the wallpaper picker; picking one changes the desktop background.
+- `SUPER + SHIFT + /` opens the Rofi web hub; picking a category then a page opens it in your browser.
 - GTK apps (e.g. `nautilus`) render with the installed theme, not the GTK default (Adwaita fallback look) — if they don't, see [Troubleshooting](#troubleshooting).
 - `SUPER + F4` opens the `kitasan` menu.
 

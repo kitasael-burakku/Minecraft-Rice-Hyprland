@@ -31,6 +31,9 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(Programs.browser))
 -- App Launcher
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(Programs.menu))
 
+-- Rofi web hub
+hl.bind(mainMod .. " + SHIFT + slash", hl.dsp.exec_cmd(Programs.webhub))
+
 -- Notification Center
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t"))
 

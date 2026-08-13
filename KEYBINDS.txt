@@ -17,6 +17,7 @@ SUPER + Enter              Terminal
 SUPER + E                  File Manager
 SUPER + B                  Browser
 SUPER + Space              App Launcher
+SUPER + SHIFT + slash      Rofi web hub
 SUPER + A                  Notification Center
 SUPER + W                  Wallpaper picker
 SUPER + SHIFT + W          Toggle theming dinámico (matugen)

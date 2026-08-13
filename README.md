@@ -37,6 +37,7 @@
 - 🎨 Opt-in Material You theming that propagates across **13 app surfaces** through matugen — including GTK3/GTK4 and Qt5/Qt6, not just the terminal-adjacent apps
 - 🚀 A handful of purpose-built Rofi tools beyond the launcher — Wi-Fi, Bluetooth, audio device, MPRIS player picker, quick power menu, service manager, visual theme picker, and a system dashboard, all native Rofi script mode
 - 🖱️ Custom two-level Rofi wallpaper picker (video / image, each with its own theme) — built from scratch as native Rofi script mode, no external project
+- 🌐 Rofi web hub (`SUPER + SHIFT + /`) — category → page launcher over a static, hand-maintained URL list, opens with whatever browser is already configured
 - 🌀 Hand-tuned custom animation system, "流水 · Ryūsui Motion" (curves & springs)
 - 🪟 **Infinite Desktop** — pan and navigate a boundless floating-window canvas, now itself a supervised systemd service
 - 🐟 Custom Fish functions for health checks, maintenance, and an interactive keybind viewer — `KEYBINDS.txt` is generated from `keybinds.lua`, not maintained by hand
@@ -56,6 +57,7 @@
 | Dynamic theming via matugen — Rofi, Waybar, Kitty, GTK3/4, Qt5/6, and more (opt-in) | ✅ |
 | Rofi quick actions — Wi-Fi, Bluetooth, audio, MPRIS, power, services, dashboard | ✅ |
 | Two-level wallpaper picker (video / image) | ✅ |
+| Rofi web hub — category → page launcher for frequent sites | ✅ |
 | Infinite Desktop (floating canvas mode) | ✅ |
 | Custom Fish functions, aliases & completions | ✅ |
 | Window switcher with minimize/restore | ✅ |
@@ -139,7 +141,7 @@ A quick map before you go any further — what lives where, and what it's for. F
 | `hypr/` | Core Hyprland configuration — Lua modules, `hypridle.conf`, base `hyprlock.conf`, and maintenance/orchestration scripts (`hypr/scripts/`) |
 | `systemd/user/` | `systemd --user` unit files that supervise the session — see [docs/ARCHITECTURE.md § Session lifecycle](docs/ARCHITECTURE.md#session-lifecycle) |
 | `waybar/` | Status bar config, CSS, and scripts |
-| `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, power menu, window switcher, and quick-action scripts |
+| `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, web hub, power menu, window switcher, and quick-action scripts |
 | `kitty/` | Terminal configuration and colors |
 | `fish/` | Shell config, functions (including `kitasan`), aliases, themes, and completions |
 | `hyprlock/` | Lock screen layout, colors, wallpaper, and MPRIS scripts |
@@ -225,7 +227,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | `systemd --user` | Supervises every daemon — Waybar, SwayNC, Hypridle, clipboard, wallpaper, Infinite Desktop, and 4 background timers. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#session-lifecycle) |
 | `kitasan` (Fish function) | Unified CLI for the whole rice — health checks, cache cleanup, updates, theme/mode switching, dashboard. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#kitasan--unified-cli) |
 | Waybar | Status bar with taskbar (`wlr/taskbar`), inline audio slider (`pulseaudio/slider`), and media player controls |
-| Rofi | Launcher, clipboard selector, two-level wallpaper selector, decorative power menu, window switcher with minimize/restore (`ALT + TAB`), and quick-action tools. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#rofi-quick-actions) |
+| Rofi | Launcher, clipboard selector, two-level wallpaper selector, [web hub](docs/ARCHITECTURE.md#rofi-web-hub) (`SUPER + SHIFT + /`), decorative power menu, window switcher with minimize/restore (`ALT + TAB`), and quick-action tools. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#rofi-quick-actions) |
 | matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, propagates to 13 app surfaces including GTK3/4 and Qt5/6. See [docs/THEMING.md](docs/THEMING.md) |
 | power-profiles-daemon | CPU power profile switching (`balanced`/`performance`/`power-saver`) — driven by the Waybar module and by `kitasan mode` |
 | Kitty | Terminal |
