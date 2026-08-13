@@ -72,10 +72,27 @@ The next block uses `yay -S`, so you need `yay` (or `paru`) installed first. On 
 
 ```bash
 sudo pacman -S yay
-# or: sudo pacman -S paru
+# o paru 
 ```
 
 On vanilla Arch, `yay`/`paru` aren't in the official repos — you'd build one from the AUR manually first (`git clone` + `makepkg -si` against `base-devel`) before the block below works. `waybar/scripts/updates.sh` and `sysupdate` fall back from `yay` to `paru` if only the latter is installed, so either is fine.
+
+```bash
+# --> Yay installation
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay 
+makepkg -si
+cd ..
+```
+
+```bash
+# --> Paru installation
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
+```
 
 **AUR or to verify**
 
