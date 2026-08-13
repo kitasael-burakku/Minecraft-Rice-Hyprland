@@ -65,7 +65,7 @@
         "format": "󰥔 {:%H:%M}",
         "max-length": 25,
         "tooltip-format": "<tt>{calendar}</tt>",
-        "on-click": "kitty fish -lc 'calcurse'"
+        "on-click": "hyprctl clients | grep -i 'title: calcurse' >/dev/null && pkill -f 'kitty --title calcurse' || kitty --title calcurse -e calcurse"
     },
 
     "hyprland/workspaces": {
