@@ -51,9 +51,27 @@ fi
 
 ext_lc="$(printf '%s' "${target##*.}" | tr '[:upper:]' '[:lower:]')"
 
+# pkill solo manda la señal, no espera a que el proceso termine de verdad —
+# con hwdec/video pesado, mpvpaper puede tardar más que un sleep fijo en
+# soltar el layer-shell, y por esa ventana pueden convivir dos instancias
+# consumiendo GPU/decoder al mismo tiempo (más una tercera si volvés a
+# cambiar de wallpaper rápido). Este helper espera de verdad — hasta 2s en
+# pasos de 100ms — y si a esa altura sigue vivo, un SIGKILL en vez de dejarlo
+# potencialmente huérfano (mpvpaper no está supervisado por systemd, así que
+# nada más lo va a limpiar).
+kill_mpvpaper() {
+    pkill -x mpvpaper 2>/dev/null || return 0
+    local waited=0
+    while pgrep -x mpvpaper >/dev/null 2>&1 && [ "$waited" -lt 20 ]; do
+        sleep 0.1
+        waited=$((waited + 1))
+    done
+    pgrep -x mpvpaper >/dev/null 2>&1 && pkill -9 -x mpvpaper 2>/dev/null
+    return 0
+}
+
 apply_video() {
-    pkill -x mpvpaper 2>/dev/null
-    sleep 0.1
+    kill_mpvpaper
     if [ -n "$MONITOR" ]; then
         nohup mpvpaper -o "--loop-file=inf --no-audio --hwdec=auto" "$MONITOR" "$target" \
             >"${XDG_RUNTIME_DIR:-/tmp}/mpvpaper.log" 2>&1 &
@@ -65,7 +83,7 @@ apply_video() {
 }
 
 apply_image() {
-    pkill -x mpvpaper 2>/dev/null
+    kill_mpvpaper
     awww img "$target" --transition-type any --transition-fps 60 >/dev/null 2>&1
 }
 

@@ -13,8 +13,26 @@ WALLPAPER_DIR_IMG="${WALLPAPER_DIR_IMG:-$HOME/Pictures/Wallpapers}"
 THUMB_DIR="${THUMB_DIR:-$HOME/.cache/rofi-wallpapers/thumbs}"
 THUMB_SIZE="${THUMB_SIZE:-320}"   # ancho del thumbnail en píxeles
 LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper-gen.log"
+LOCK_FILE="$THUMB_DIR/.generate.lock"
 
 mkdir -p "$THUMB_DIR"
+
+# wallpaper_rofi.sh relanza este script en background cada vez que detecta
+# wallpapers más nuevos que ".last-scan" — pero ese marker solo se escribe
+# al FINAL de un escaneo completo. Sin este lock, reabrir el picker mientras
+# una librería grande todavía se está escaneando dispara un segundo
+# escaneo completo encima del primero (confirmado en vivo: dos
+# generate-thumbs.sh corriendo a la vez, cada uno con su propio `convert`
+# reprocesando los mismos archivos nuevos) — CPU/IO se duplica por cada
+# reapertura impaciente en vez de sumarse una sola vez. `flock -n` hace que
+# la segunda instancia salga al toque en vez de competir por los mismos
+# archivos; la primera termina su escaneo tranquila y deja el marker
+# actualizado para todos.
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    echo "$(date) generate-thumbs.sh: ya hay un escaneo corriendo, salgo" >> "$LOG"
+    exit 0
+fi
 
 generated=0
 skipped=0

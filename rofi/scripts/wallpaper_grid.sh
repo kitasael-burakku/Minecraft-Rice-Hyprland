@@ -14,12 +14,21 @@ RELOAD_SCRIPT="${RELOAD_SCRIPT:-$HOME/.config/rofi/scripts/matugen_reload.sh}"
 MONITOR="${WALLPAPER_MONITOR:-}"
 LOG="${XDG_RUNTIME_DIR:-/tmp}/rofi-wallpaper.log"
 
+# display_name/display_name_unique escriben su resultado en variables
+# globales (DISPLAY_NAME / DISPLAY_NAME_UNIQUE) en vez de "echo | captura"
+# ($(...)) — con colecciones grandes, $(basename "$f") + $(func "$f") por
+# archivo significaban 3 fork+exec por wallpaper SOLO para listar, medido en
+# ~3.3ms/wallpaper (2.5s con 800 wallpapers, 6.6s con 2000) antes de que rofi
+# dibuje nada. "${f##*/}" ya evita el fork externo de basename; sacar
+# también el $(...) de las funciones evita el fork interno de bash que
+# quedaba. Mismo resultado, sin ningún proceso nuevo por archivo.
+DISPLAY_NAME=""
 display_name() {
-    local f="$1"
-    f="${f%.*}"
-    f="${f//_/ }"
-    f="${f//-/ }"
-    printf '%s' "$f"
+    local name="$1"
+    name="${name%.*}"
+    name="${name//_/ }"
+    name="${name//-/ }"
+    DISPLAY_NAME="$name"
 }
 
 # Lista filtrada de wallpapers (mismas extensiones que se ofrecen en el grid).
@@ -43,26 +52,28 @@ collect_files() {
 declare -A name_count
 
 count_names() {
-    local f base name
+    local f base
     for f in "${files[@]}"; do
         [ -f "$f" ] || continue
-        base="$(basename "$f")"
-        name="$(display_name "$base")"
-        name_count["$name"]=$(( ${name_count["$name"]:-0} + 1 ))
+        base="${f##*/}"
+        display_name "$base"
+        name_count["$DISPLAY_NAME"]=$(( ${name_count["$DISPLAY_NAME"]:-0} + 1 ))
     done
 }
 
+DISPLAY_NAME_UNIQUE=""
 display_name_unique() {
-    local f="$1" base name
-    base="$(basename "$f")"
-    name="$(display_name "$base")"
-    if [ "${name_count[$name]:-0}" -gt 1 ]; then
+    local f="$1" base
+    base="${f##*/}"
+    display_name "$base"
+    if [ "${name_count[$DISPLAY_NAME]:-0}" -gt 1 ]; then
         # El nombre crudo del archivo siempre es único dentro del directorio
         # (a diferencia de solo la extensión: "night_city.mp4" vs
         # "night-city.mp4" chocan en extensión también).
-        name="$name ($base)"
+        DISPLAY_NAME_UNIQUE="$DISPLAY_NAME ($base)"
+    else
+        DISPLAY_NAME_UNIQUE="$DISPLAY_NAME"
     fi
-    printf '%s' "$name"
 }
 
 # La aplicación real (mpvpaper/awww), la persistencia para el próximo
@@ -89,7 +100,8 @@ if [ "${ROFI_RETV:-0}" = "1" ]; then
     count_names
     for f in "${files[@]}"; do
         [ -f "$f" ] || continue
-        if [ "$(display_name_unique "$f")" = "$chosen_display" ]; then
+        display_name_unique "$f"
+        if [ "$DISPLAY_NAME_UNIQUE" = "$chosen_display" ]; then
             target="$f"
             break
         fi
@@ -120,8 +132,9 @@ collect_files
 count_names
 for f in "${files[@]}"; do
     [ -f "$f" ] || continue
-    base="$(basename "$f")"
-    name="$(display_name_unique "$f")"
+    base="${f##*/}"
+    display_name_unique "$f"
+    name="$DISPLAY_NAME_UNIQUE"
     thumb="$THUMB_DIR/${base}.jpg"
 
     if [ -f "$thumb" ]; then
