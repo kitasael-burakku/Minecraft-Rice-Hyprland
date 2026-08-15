@@ -116,7 +116,7 @@ case "$ext_lc" in
         # already uses) instead of a raw cp, so current.png's content is
         # a real PNG regardless of the source format.
         if command -v convert >/dev/null 2>&1; then
-            convert "$target[0]" "$HYPRLOCK_BG" >>"$LOG" 2>&1 || cp -f "$target" "$HYPRLOCK_BG" 2>>"$LOG"
+            convert "${target}[0]" "$HYPRLOCK_BG" >>"$LOG" 2>&1 || cp -f "$target" "$HYPRLOCK_BG" 2>>"$LOG"
         else
             cp -f "$target" "$HYPRLOCK_BG" 2>>"$LOG"
         fi

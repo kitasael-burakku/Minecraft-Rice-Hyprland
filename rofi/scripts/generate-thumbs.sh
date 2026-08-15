@@ -40,36 +40,44 @@ errors=0
 
 process_image() {
     local src="$1"
-    local thumb="$THUMB_DIR/$(basename "$src").jpg"
+    local thumb
+    thumb="$THUMB_DIR/$(basename "$src").jpg"
 
     # "-nt" (más nuevo que) en vez de solo existencia: si el wallpaper se
     # reemplaza con el mismo nombre pero contenido distinto, el thumbnail
     # viejo quedaba para siempre porque nunca se comparaba mtime.
     [ -f "$thumb" ] && [ "$thumb" -nt "$src" ] && { skipped=$((skipped + 1)); return 0; }
 
-    convert "$src[0]" \
+    if convert "${src}[0]" \
         -thumbnail "${THUMB_SIZE}x" \
         -quality 85 \
-        "$thumb" >>"$LOG" 2>&1 \
-    && generated=$((generated + 1)) \
-    || { echo "$(date) ERROR imagen: $src" >> "$LOG"; errors=$((errors + 1)); }
+        "$thumb" >>"$LOG" 2>&1; then
+        generated=$((generated + 1))
+    else
+        echo "$(date) ERROR imagen: $src" >> "$LOG"
+        errors=$((errors + 1))
+    fi
 }
 
 process_video() {
     local src="$1"
-    local thumb="$THUMB_DIR/$(basename "$src").jpg"
+    local thumb
+    thumb="$THUMB_DIR/$(basename "$src").jpg"
 
     [ -f "$thumb" ] && [ "$thumb" -nt "$src" ] && { skipped=$((skipped + 1)); return 0; }
 
-    ffmpegthumbnailer \
+    if ffmpegthumbnailer \
         -i "$src" \
         -o "$thumb" \
         -s "$THUMB_SIZE" \
         -q 8 \
         -t 10% \
-        >>"$LOG" 2>&1 \
-    && generated=$((generated + 1)) \
-    || { echo "$(date) ERROR video: $src" >> "$LOG"; errors=$((errors + 1)); }
+        >>"$LOG" 2>&1; then
+        generated=$((generated + 1))
+    else
+        echo "$(date) ERROR video: $src" >> "$LOG"
+        errors=$((errors + 1))
+    fi
 }
 
 echo "$(date) === generate-thumbs START ===" >> "$LOG"

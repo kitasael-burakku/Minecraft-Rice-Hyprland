@@ -39,7 +39,7 @@ get_icon() {
 
     # Busca el .desktop file y extrae el Icon=
     local desktop_file icon
-    desktop_file="$(find /usr/share/applications ~/.local/share/applications 2>/dev/null \
+    desktop_file="$(find /usr/share/applications ~/.local/share/applications \
         -iname "${class}.desktop" -o -iname "${class,,}.desktop" 2>/dev/null \
         | head -n1)"
 

@@ -16,7 +16,6 @@
 set -u
 set -o pipefail
 
-THEME="$HOME/.config/rofi/clipboard.rasi"
 UPDATES_CACHE="${XDG_RUNTIME_DIR:-/tmp}/waybar-updates.cache"
 PLAYER_CACHE="${XDG_RUNTIME_DIR:-/tmp}/waybar-playerctl.json"
 GPU_SCRIPT="$HOME/.config/waybar/scripts/gpu.sh"
