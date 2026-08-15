@@ -88,11 +88,6 @@
             "default": ["󰕿", "󰖀", "󰕾"]
         },
         "scroll-step": 2,
-        // Antes abría pavucontrol (GUI pesada) para el caso común de
-        // "cambiar a los auriculares" — rofi/scripts/audio.sh lista
-        // sinks/sources y fija el default con wpctl, sin abrir nada
-        // pesado. pavucontrol sigue instalado y a un SUPER+SPACE de
-        // distancia para mezcla per-app, que audio.sh no cubre.
         "on-click": "~/.config/rofi/scripts/audio.sh",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-middle":"hyprctl clients | grep -i 'title: maly' >/dev/null && pkill -f 'kitty --title maly' || kitty --title maly -e maly"
@@ -109,7 +104,8 @@
         "format": " {percentage}%",
         "max-length": 10,
         "tooltip": true,
-        "tooltip-format": "     Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
+        "tooltip-format": "     Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB",
+        "on-click": "hyprctl clients | grep -i 'title: btm' >/dev/null && pkill -f 'kitty --title btm' || kitty --title btm -e btm"
     },
 
     "disk": {
@@ -128,8 +124,6 @@
         "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%",
         "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
         "tooltip-format-disconnected": "Disconnected",
-        // Antes abría nm-connection-editor (GTK, lento). rofi/scripts/wifi.sh
-        // lista redes con nmcli y conecta en el mismo click.
         "on-click": "~/.config/rofi/scripts/wifi.sh"
     },
 
@@ -145,11 +139,6 @@
 
     "temperature": {
         "interval": 4,
-        // Path fijo al hwmon del CPU (función PCI 00:18.3, propia del die AMD).
-        // hwmon-path-abs: "/sys/class/hwmon" tomaba la primera entrada por orden
-        // de directorio (no determinista: podía caer en nct6687, nvme, etc. en
-        // vez de k10temp) y thermal-zone no aplica en este equipo (no hay
-        // /sys/class/thermal/thermal_zone*, solo cooling_device*).
         "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
         "input-filename": "temp1_input",
         "format": "{icon} {temperatureC}°C",
@@ -198,11 +187,6 @@
         }
     },
 
-    // El módulo nativo "bluetooth" no reflejaba el estado real en la barra
-    // (power/conexión cambiaban bien por bluetoothctl, pero el widget no se
-    // redibujaba) y, al ser nativo, no expone forma de forzarlo a refrescar.
-    // custom/bluetooth (waybar/scripts/bluetooth.sh) sí — rofi/scripts/
-    // bluetooth.sh manda la señal después de cada cambio de estado.
     "custom/bluetooth": {
         "exec": "~/.config/waybar/scripts/bluetooth.sh",
         "interval": 5,

@@ -91,7 +91,7 @@ err=$(nmcli device wifi connect "$ssid" 2>&1)
 status=$?
 
 if [ "$status" -ne 0 ] && printf '%s' "$err" | grep -qiE 'secrets were required|802-1x|key-mgmt'; then
-    pass=$(rofi -dmenu -p "Contraseña de $ssid" -password -theme "$THEME")
+    pass=$(rofi -dmenu -p "Insert Password $ssid" -password -theme "$THEME")
     [ -n "$pass" ] || exit 0
     # nmcli no tiene forma no-interactiva de pasar la password sin argv (no
     # soporta stdin para esto); "nmcli --ask" evita el argv pidiéndola de

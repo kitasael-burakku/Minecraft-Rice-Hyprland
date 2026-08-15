@@ -9,7 +9,7 @@
 hl.config({
     general = {
         gaps_in  = 10,
-        gaps_out = 25,
+        gaps_out = 30,
 
         border_size = 2,
 
@@ -29,8 +29,8 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 15,
-        rounding_power = 2.4,
+        rounding       = 20,
+        rounding_power = 2.5,
 
         active_opacity   = 0.9,
         inactive_opacity = 0.8,
@@ -48,7 +48,7 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 10,
+            size     = 5,
             passes   = 2,
 
             ignore_opacity    = true,

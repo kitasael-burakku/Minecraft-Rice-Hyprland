@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # ============================================================================
-#  bluetooth.sh — conectar/desconectar dispositivos ya emparejados, vía rofi
+#  bluetooth.sh — conectar/desconectar/emparejar dispositivos, vía rofi
 # ----------------------------------------------------------------------------
 #  waybar abre blueman-manager en el click de bluetooth. bluetoothctl cubre
-#  el 95% del uso real (conectar/desconectar algo que ya está emparejado) —
-#  esto no reemplaza a blueman-manager para emparejar dispositivos nuevos,
-#  sólo evita abrirlo para el caso común.
+#  el uso real: conectar/desconectar algo ya emparejado, y también emparejar
+#  algo nuevo (ítem "Buscar dispositivos nuevos") sin recurrir a
+#  blueman-manager. `devices Paired` sólo lista lo YA emparejado — un mando o
+#  auricular nuevo en modo pairing no aparece ahí ni con nada de esto si no
+#  se pide un scan activo, por eso el ítem de búsqueda es explícito.
 # ============================================================================
 set -u
 set -o pipefail
@@ -23,7 +25,7 @@ fi
 
 powered="$(bluetoothctl show 2>/dev/null | grep -oP 'Powered:\s*\K\w+')"
 
-declare -A ACTION_OF
+declare -A ACTION_OF MAC_OF CONNECTED_OF
 menu=""
 
 # El ícono acá representa el ESTADO actual (no la acción del click) — antes
@@ -41,6 +43,10 @@ fi
 menu+="$label"$'\n'
 
 if [ "$powered" = "yes" ]; then
+    scan_label="󰂰  Buscar dispositivos nuevos…"
+    ACTION_OF["$scan_label"]="scan"
+    menu+="$scan_label"$'\n'
+
     while IFS= read -r line; do
         mac="$(printf '%s' "$line" | awk '{print $2}')"
         name="$(printf '%s' "$line" | cut -d' ' -f3-)"
@@ -49,7 +55,19 @@ if [ "$powered" = "yes" ]; then
         icon="󰂲"
         [ "$connected" = "yes" ] && icon="󰂱"
         label="${icon}  ${name}"
-        ACTION_OF["$label"]="toggle:${mac}:${connected}"
+        # No metemos mac y connected juntos en un solo string tipo
+        # "toggle:$mac:$connected" — un MAC ya tiene dos puntos adentro
+        # (14:3A:9A:CD:BD:14), así que cortar por ":" con ${rest%%:*} se
+        # quedaba con "14" como si fuera el mac completo, y el estado
+        # "connected" terminaba pegoteado con el resto del mac. Con eso
+        # nunca daba "yes" y el click SIEMPRE terminaba llamando a
+        # `connect` (nunca a `disconnect`) contra un mac inválido — el
+        # motivo real de que "no pasara nada" al clickear un dispositivo
+        # conectado. Arreglado con dos mapas paralelos en vez de encodear
+        # todo en un string.
+        ACTION_OF["$label"]="toggle"
+        MAC_OF["$label"]="$mac"
+        CONNECTED_OF["$label"]="$connected"
         menu+="$label"$'\n'
     done < <(bluetoothctl devices Paired 2>/dev/null)
 fi
@@ -63,10 +81,55 @@ action="${ACTION_OF[$chosen]:-}"
 case "$action" in
     power_on)  bluetoothctl power on ;;
     power_off) bluetoothctl power off ;;
-    toggle:*)
-        rest="${action#toggle:}"
-        mac="${rest%%:*}"
-        connected="${rest#*:}"
+    scan)
+        # OJO: `bluetoothctl scan on` como comando de una sola invocación
+        # (args de la shell) NO escanea nada de verdad en bluez 5.87 — hace
+        # SetDiscoveryFilter y el proceso termina ahí mismo, nunca llega a
+        # "Discovery started" (confirmado en vivo, con y sin pty, timeout
+        # incluido: sale al instante sin encontrar nada). El modo que sí
+        # funciona es alimentar "scan on" por stdin a una sesión interactiva
+        # y mantenerla viva con un sleep — así el proceso no se cierra antes
+        # de que lleguen los eventos [NEW] Device. No hace falta pty (probado
+        # con y sin `script`, da igual).
+        command -v notify-send >/dev/null 2>&1 && notify-send "Bluetooth" "Buscando dispositivos…"
+        found="$( (printf 'scan on\n'; sleep 6; printf 'exit\n') | timeout 10 bluetoothctl 2>/dev/null | grep -oP '(?<=Device )[0-9A-F:]{17}' | sort -u)"
+
+        declare -A DEV_ACTION
+        dev_menu=""
+        while IFS= read -r mac; do
+            [ -n "$mac" ] || continue
+            info="$(bluetoothctl info "$mac" 2>/dev/null)"
+            # Salteamos lo que ya está emparejado — eso vive en el menú
+            # principal con toggle de conectar/desconectar, no acá.
+            paired="$(printf '%s' "$info" | grep -oP 'Paired:\s*\K\w+')"
+            [ "$paired" = "yes" ] && continue
+            name="$(printf '%s' "$info" | grep -oP 'Name:\s*\K.+')"
+            [ -n "$name" ] || name="$mac"
+            label="󰂲  ${name}"
+            DEV_ACTION["$label"]="pair:${mac}"
+            dev_menu+="$label"$'\n'
+        done <<< "$found"
+
+        if [ -z "$dev_menu" ]; then
+            command -v notify-send >/dev/null 2>&1 && notify-send "Bluetooth" "No se encontraron dispositivos nuevos"
+            exit 0
+        fi
+
+        dev_chosen="$(printf '%s' "$dev_menu" | rofi -dmenu -p "Emparejar" -theme "$THEME")"
+        [ -n "$dev_chosen" ] || exit 0
+        dev_action="${DEV_ACTION[$dev_chosen]:-}"
+        mac="${dev_action#pair:}"
+        [ -n "$mac" ] || exit 0
+
+        if bluetoothctl pair "$mac" && bluetoothctl trust "$mac" && bluetoothctl connect "$mac"; then
+            command -v notify-send >/dev/null 2>&1 && notify-send "Bluetooth" "Emparejado y conectado"
+        else
+            command -v notify-send >/dev/null 2>&1 && notify-send -u critical "Bluetooth" "No se pudo emparejar — ¿está en modo pairing?"
+        fi
+        ;;
+    toggle)
+        mac="${MAC_OF[$chosen]}"
+        connected="${CONNECTED_OF[$chosen]}"
         if [ "$connected" = "yes" ]; then
             bluetoothctl disconnect "$mac"
         else

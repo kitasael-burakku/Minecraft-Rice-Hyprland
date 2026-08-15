@@ -73,7 +73,7 @@ window#waybar {
 }
 
 #pulseaudio { color: @fg; }
-#window { color: @fg; }
+#window { color: @mem; }
 #idle_inhibitor { color: @fg; }
 
 #custom-updates { color: @accent-gold; }
@@ -124,15 +124,9 @@ window#waybar {
     text-shadow: 0 0 8px alpha(@red, 0.6);
 }
 
-/* -----------------------------------
+/* -------------------------------------------------------
    MÓDULOS NUEVOS (tray / gpu / ppd / bluetooth / privacy)
------------------------------------ */
-
-/* Antes .disabled sólo bajaba la opacidad de @fg (35%) — muy sutil para
-   notar el cambio a simple vista, a diferencia de #network.disconnected /
-   #pulseaudio.muted (rojo directo, arriba). Mismo criterio acá: rojo
-   cuando está apagado, acento cuando hay un dispositivo conectado — tres
-   estados con tres colores reales, no una variación de opacidad. */
+-------------------------------------------------------- */
 #custom-bluetooth.disabled { color: @red; }
 #custom-bluetooth.connected { color: @fg; }
 
