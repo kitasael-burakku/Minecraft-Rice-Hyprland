@@ -89,6 +89,8 @@ if status is-interactive
             fuck $argv
         end
     end
+
+    fastfetch
 end
 
 # Created by pipx / local user binaries

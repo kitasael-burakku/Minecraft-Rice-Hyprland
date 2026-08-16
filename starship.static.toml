@@ -140,8 +140,8 @@ style = "fg:#ffffff italic"
 format = "[ 󰔚 $duration ]($style)"
 
 [character]
-success_symbol = "[ -->](fg:#7ab8b8 bold)"
-error_symbol   = "[ -->](fg:#b85c50 bold)"
+success_symbol = "[ ● ](fg:#ffffff bold)"
+error_symbol   = "[ ● ](fg:#b85c50 bold)"
 
 [status]
 disabled = false

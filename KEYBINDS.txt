@@ -88,6 +88,10 @@ SCRATCHPAD
 
 SUPER + S                  Toggle scratchpad
 SUPER + SHIFT + S          Move window to scratchpad
+
+MEDIA
+-----
+
 Volume +                   Volume
 Volume -                   Volume
 Mute                       Volume

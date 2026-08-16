@@ -218,9 +218,9 @@ hl.bind(mainMod .. " + SHIFT + S", function()
     end
 end)
 
-----------------------------
----        MEDIA         ---
-----------------------------
+------------------------------
+----        MEDIA         ----
+------------------------------
 
 -- Volume
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 2%+"), { locked = true, repeating = true })

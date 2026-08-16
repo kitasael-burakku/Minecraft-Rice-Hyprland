@@ -2,7 +2,7 @@
     "layer": "top",
     "position": "top",
     "spacing": 2,       // Separación horizontal entre módulos
-    "margin-top": 6,
+    "margin-top": 5,
     "margin-left": 10,
     "margin-right": 10,
 
@@ -213,9 +213,6 @@
         "max-length": 36,
         "exec": "~/.config/waybar/scripts/playerctl-read.sh",
         "on-click": "playerctl play-pause",
-        // Click derecho: con más de un reproductor abierto (Spotify + navegador
-        // + maly) `playerctl` sin -p actúa sobre el que él elija — este selector
-        // deja controlar uno específico a propósito.
         "on-click-right": "~/.config/rofi/scripts/mpris.sh",
         "tooltip": false,
         "format-icons": {
