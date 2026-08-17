@@ -69,22 +69,16 @@ hl.config({
         enabled = true,
     },
 
-    -- Scanout directo: manda una ventana a pantalla completa al plano de la
-    -- GPU sin pasar por el compositor — una copia menos por frame y hasta un
-    -- frame menos de latencia (5 ms a 200 Hz). Estaba en 0 (el default de
-    -- Hyprland), y `hyprctl monitors -j` lo confirmaba con
-    -- "directScanoutBlockedBy": ["USER", ...].
+    -- SIN render.direct_scanout. Se probó en 1 (2026-08-17) y se revirtió:
+    -- la opción tomaba efecto —"USER" desapareció de directScanoutBlockedBy—
+    -- pero en pantalla completa real directScanoutTo se quedó en "0", o sea
+    -- que el scanout nunca llegó a activarse. Activar una opción que no hace
+    -- nada es deuda: queda ahí sugiriendo que el camino rápido está en uso
+    -- cuando no lo está.
     --
-    -- Modo 1 (sólo para ventanas que lo piden) y NO 2 (forzado): el 2 es donde
-    -- aparecen los artefactos al entrar/salir de fullscreen que hicieron que
-    -- Hyprland lo dejara apagado por defecto.
-    --
-    -- A verificar en uso real: el monitor está en bitdepth = 10
-    -- (XRGB2101010) y las apps presentan buffers de 8 bits. Si el plano no
-    -- acepta esa conversión, el scanout directo no se activa nunca y esto no
-    -- hace nada — se comprueba con `hyprctl monitors -j | grep directScanout`
-    -- estando en fullscreen: si directScanoutTo sigue en "0", revertir.
-    render = {
-        direct_scanout = 1,
-    },
+    -- Sospecha no confirmada: el monitor va con bitdepth = 10 (formato de
+    -- salida XRGB2101010, ver modules/monitors.lua) y las apps presentan
+    -- buffers de 8 bits; si el plano no acepta el buffer sin conversión, el
+    -- scanout directo es imposible por construcción. Para descartarlo habría
+    -- que quitar bitdepth = 10 y repetir la prueba en fullscreen.
 })
