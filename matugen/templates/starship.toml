@@ -1,39 +1,65 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-# Generado por matugen — no editar a mano.
-# Estático de referencia: ~/.config/starship.static.toml
 
-# Se agregó el inicio del bloque derecho [] directamente en el formato principal
+# ── Plantilla dinámica (matugen) ─────────────────────────────────
+# Generada a ~/.config/starship.toml. NO editar el archivo generado.
+# Referencia estática: ~/.config/starship.static.toml — mismo contenido
+# con la paleta fija; los comentarios largos viven allá.
+# Sin post_hook: starship relee su config en cada render del prompt.
+#
+# ── Estructura ──────────────────────────────────────────────────
+# Su gemelo estático es ~/.config/starship.static.toml, con la paleta fija
+# "Kitasan Glass". hypr/scripts/apply-static-colors.sh copia ese archivo
+# encima de ~/.config/starship.toml al apagar matugen (SUPER+SHIFT+W), así
+# que todo cambio de estructura tiene que hacerse en los DOS o se pierde al
+# primer toggle. hypr/scripts/check-template-parity.sh compara el conjunto
+# de claves de ambos.
+#
+# ── Forma del prompt ────────────────────────────────────────────
+#   ┌ 󰣇 キタサンブラック@ゴールドシップ  󱂵 ホーム/󰒓 設定/hypr  󰊢 main 󰏫
+#   └ $
+#
+# Dos líneas a propósito: toda la información vive arriba y la segunda
+# línea es siempre "└ $ ", de ancho constante, así lo que escribís arranca
+# siempre en la misma columna sin que una ruta larga lo empuje.
+#
+# Sin fondos (bg:). El diseño anterior era de bloques powerline encadenados,
+# que exigen que cada bloque contraste con el vecino — frágil con matugen,
+# porque las paletas que saca de un wallpaper varían mucho y dos bloques
+# adyacentes pueden terminar casi del mismo color. Color sólo en primer
+# plano sobre el fondo del terminal es mucho más robusto ante una paleta
+# impredecible.
+#
+# Sin $fill ni [custom.right_cap]: no hay bloque derecho que cerrar. De paso
+# eso elimina los dos `sh -c` por render que costaba right_cap (9 ms).
+
 format = """
-$status\
+[┌](fg:{{colors.outline.default.hex}}) \
 $os\
 ${env_var.USER_PRETTY}\
+[@](fg:{{colors.outline.default.hex}})\
 ${env_var.HOSTNAME_PRETTY}\
 $directory\
-$fill\
-[](fg:{{colors.surface_container.default.hex}})\
 $git_branch\
 $git_status\
 $python\
 $nodejs\
 $rust\
 $golang\
-${custom.right_cap}\
-$line_break\
 $cmd_duration\
+$status\
+$line_break\
+[└](fg:{{colors.outline.default.hex}}) \
 $character\
 """
 
 command_timeout = 500
 add_newline = false
 
-[fill]
-symbol = " "
-
 # ── OS ──────────────────────────────────────────────────────────
 [os]
 disabled = false
-style = "bg:{{colors.surface_container_low.default.hex}} fg:{{colors.primary.default.hex}}"
-format = "[](fg:{{colors.surface_container_low.default.hex}})[ $symbol ]($style)"
+style = "fg:{{colors.secondary.default.hex}}"
+format = "[$symbol ]($style)"
 
 [os.symbols]
 Arch        = "󰣇"
@@ -51,33 +77,24 @@ Alpine      = ""
 Unknown     = "󰌽"
 
 # ── Usuario ─────────────────────────────────────────────────────
-# env_var y no custom: un [custom.*] lanza DOS `sh -c` por render de prompt
-# (uno para `when`, otro para `command`) sólo para leer una variable que
-# starship ya tiene en su propio entorno. env_var la lee en proceso, sin
-# forks. Se oculta sola si USER_PRETTY no está definida — mismo
-# comportamiento que daba el `when` anterior, sin el coste.
 [env_var.USER_PRETTY]
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.primary.default.hex}} bold"
-format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $env_value ]($style)"
+style = "fg:{{colors.primary.default.hex}} bold"
+format = "[$env_value]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
-# Antes: `hostnamectl --pretty`, que no lee un archivo sino que abre D-Bus
-# contra systemd-hostnamed (activando el servicio si no estaba corriendo) —
-# 59 ms medidos POR PROMPT, sobre un dato que no cambia entre logins. Era el
-# módulo más caro del prompt por un factor de 4.
-# HOSTNAME_PRETTY sale ahora de hypr/modules/environment.lua, la misma fuente
-# única donde ya viven XCURSOR_THEME y GTK_THEME.
 [env_var.HOSTNAME_PRETTY]
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.outline.default.hex}}"
-format = "[ 󰍹 $env_value ]($style)"
+style = "fg:{{colors.outline.default.hex}}"
+format = "[$env_value]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.tertiary.default.hex}} bold"
-format = "[ $path ]($style)[](fg:{{colors.surface_container.default.hex}} bg:none) "
+style = "fg:{{colors.tertiary.default.hex}} bold"
+format = "  [$path]($style)[$read_only]($read_only_style)"
+read_only_style = "fg:{{colors.error.default.hex}}"
+truncate_to_repo = false
 home_symbol = "󱂵 ホーム"
 read_only = " 󰌾 読取専用"
-truncation_length = 3
+truncation_length = 4
 truncation_symbol = "…/"
 
 [directory.substitutions]
@@ -95,14 +112,14 @@ truncation_symbol = "…/"
 # ── Git branch ──────────────────────────────────────────────────
 [git_branch]
 symbol = "󰊢"
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_surface_variant.default.hex}} bold"
+style = "fg:{{colors.on_surface_variant.default.hex}} bold"
 truncation_length = 18
-format = "[ $symbol $branch ]($style)"
+format = "  [$symbol $branch]($style)"
 
 # ── Git status ──────────────────────────────────────────────────
 [git_status]
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.error.default.hex}} bold"
-format = "[$all_status$ahead_behind ]($style)"
+style = "fg:{{colors.error.default.hex}} bold"
+format = "([ $all_status$ahead_behind]($style))"
 conflicted = "󰞇 "
 ahead      = "⇡${count}"
 behind     = "⇣${count}"
@@ -117,45 +134,39 @@ deleted    = "󰍶 "
 # ── Lenguajes ───────────────────────────────────────────────────
 [python]
 symbol = ""
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_tertiary_container.default.hex}} bold"
-format = "[$symbol $version ]($style)"
+style = "fg:{{colors.on_tertiary_container.default.hex}} bold"
+format = "  [$symbol $version]($style)"
 
 [nodejs]
 symbol = ""
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_secondary_container.default.hex}} bold"
-format = "[$symbol $version ]($style)"
+style = "fg:{{colors.on_secondary_container.default.hex}} bold"
+format = "  [$symbol $version]($style)"
 
 [rust]
 symbol = "󱘗"
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.secondary.default.hex}} bold"
-format = "[$symbol $version ]($style)"
+style = "fg:{{colors.secondary.default.hex}} bold"
+format = "  [$symbol $version]($style)"
 
 [golang]
 symbol = ""
-style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.on_primary_container.default.hex}} bold"
-format = "[$symbol $version ]($style)"
-
-# ── Cierre bloque derecho ────────────────────────────────────────
-[custom.right_cap]
-command = "echo"
-when = "true"
-format = "[](fg:{{colors.surface_container.default.hex}} bg:none)"
+style = "fg:{{colors.on_primary_container.default.hex}} bold"
+format = "  [$symbol $version]($style)"
 
 # ── Extras ───────────────────────────────────────────────────────
 [cmd_duration]
 min_time = 2000
 show_milliseconds = false
-style = "fg:{{colors.on_surface.default.hex}} italic"
-format = "[ 󰔚 $duration ]($style)"
-
-[character]
-success_symbol = "[ ● ](fg:{{colors.primary.default.hex}} bold)"
-error_symbol   = "[ ● ](fg:{{colors.error.default.hex}} bold)"
+style = "fg:{{colors.outline.default.hex}} italic"
+format = "  [󰔚 $duration]($style)"
 
 [status]
 disabled = false
 style = "fg:{{colors.error.default.hex}} bold"
-format = "[󰅚 $status ]($style)"
+format = "  [󰅚 $status]($style)"
+
+[character]
+success_symbol = '[\$](fg:{{colors.on_surface.default.hex}} bold)'
+error_symbol   = '[\$](fg:{{colors.error.default.hex}} bold)'
 
 [package]
 disabled = true

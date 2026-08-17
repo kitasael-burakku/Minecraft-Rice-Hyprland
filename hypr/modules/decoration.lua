@@ -69,16 +69,46 @@ hl.config({
         enabled = true,
     },
 
-    -- SIN render.direct_scanout. Se probó en 1 (2026-08-17) y se revirtió:
-    -- la opción tomaba efecto —"USER" desapareció de directScanoutBlockedBy—
-    -- pero en pantalla completa real directScanoutTo se quedó en "0", o sea
-    -- que el scanout nunca llegó a activarse. Activar una opción que no hace
-    -- nada es deuda: queda ahí sugiriendo que el camino rápido está en uso
-    -- cuando no lo está.
+    -- Scanout directo: manda la ventana en pantalla completa al plano de la
+    -- GPU sin pasar por el compositor — una copia menos por frame y hasta un
+    -- frame menos de latencia (5 ms a 200 Hz).
     --
-    -- Sospecha no confirmada: el monitor va con bitdepth = 10 (formato de
-    -- salida XRGB2101010, ver modules/monitors.lua) y las apps presentan
-    -- buffers de 8 bits; si el plano no acepta el buffer sin conversión, el
-    -- scanout directo es imposible por construcción. Para descartarlo habría
-    -- que quitar bitdepth = 10 y repetir la prueba en fullscreen.
+    -- Modo 1 (sólo ventanas que lo piden) y NO 2 (forzado): el 2 es donde
+    -- aparecen los artefactos al entrar/salir de fullscreen que hicieron que
+    -- Hyprland lo dejara apagado por defecto.
+    --
+    -- VERIFICADO EN VIVO (2026-08-17), con mpv --fs como cliente opaco:
+    --
+    --   direct_scanout=0 -> directScanoutTo "0",  blockedBy ["USER"]
+    --                       currentFormat XRGB2101010
+    --   direct_scanout=1 -> directScanoutTo <addr de la ventana>, blockedBy null
+    --                       currentFormat "Invalid" (= escanea el buffer
+    --                       del cliente, no compone)
+    --
+    -- Reproducido dos veces. Se había revertido antes creyendo que no hacía
+    -- nada, y sospechando que bitdepth = 10 (XRGB2101010, ver
+    -- modules/monitors.lua) impedía el scanout de buffers de 8 bits. Falso:
+    -- funciona con bitdepth = 10 puesto. Para que se active hacen falta dos
+    -- condiciones que sí importan y son fáciles de no cumplir sin darse
+    -- cuenta:
+    --   1. La ventana tiene que ser "solitary" — fullscreen real, nada
+    --      encima. Un juego en borderless-windowed o un vídeo en fullscreen
+    --      de navegador no califican.
+    --   2. Tiene que ser opaca. Lo es gracias a fullscreen_opacity = 1 de
+    --      acá arriba; con active_opacity 0.9 sola, ninguna ventana
+    --      calificaría nunca.
+    -- EXPERIMENTAL (activado 2026-08-17). Planificación de frames alternativa
+    -- que Hyprland 0.56 todavía no activa por defecto. Donde más debería
+    -- notarse es justo en este setup: 200 Hz con VRR activo, que es el caso
+    -- que más castiga un pacing malo.
+    --
+    -- No se puede medir con un contador — no cambia CPU ni GPU, cambia CUÁNDO
+    -- se presenta cada frame. Lo que hay que evaluar es si el movimiento de
+    -- ventanas y el scroll se sienten más UNIFORMES, no más rápidos. Si no se
+    -- nota nada, apagarlo: una opción experimental encendida sin razón es
+    -- deuda que se paga en el próximo bug raro.
+    render = {
+        direct_scanout = 1,
+        new_render_scheduling = true,
+    },
 })
