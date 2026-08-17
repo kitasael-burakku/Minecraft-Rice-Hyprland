@@ -129,7 +129,13 @@
 
     "custom/updates": {
         "exec": "~/.config/waybar/scripts/updates.sh",
-        "interval": 30,
+        // "once" y no un intervalo: el refresco real ya lo dispara
+        // updates-check.timer (cada 30 min) seguido de `pkill -RTMIN+8 waybar`,
+        // y el on-click de acá abajo manda su propia señal al terminar. El
+        // "interval": 30 anterior era el mecanismo previo al timer y quedó
+        // duplicando su trabajo: 2 spawns/min de updates.sh para releer un
+        // cache que sólo cambia cada media hora.
+        "interval": "once",
         "signal": 8,
         "return-type": "json",
         "on-click": "kitty fish -lc 'sysupdate; ~/.config/waybar/scripts/updates.sh --force >/dev/null; read -P \"Press Enter to exit\"'; pkill -RTMIN+8 waybar",
@@ -189,7 +195,13 @@
 
     "custom/bluetooth": {
         "exec": "~/.config/waybar/scripts/bluetooth.sh",
-        "interval": 5,
+        // 20 y no 5: cada corrida lanza bluetoothctl DOS veces (show +
+        // devices Connected), o sea 12 clientes D-Bus por minuto a 5s. Los
+        // cambios que inicia el usuario siguen siendo instantáneos —
+        // rofi/scripts/bluetooth.sh manda RTMIN+9 después de tocar el estado.
+        // Este intervalo sólo cubre cambios externos (unos auriculares que se
+        // conectan solos), y 20s para eso alcanza.
+        "interval": 20,
         "signal": 9,
         "return-type": "json",
         "format": "{}",

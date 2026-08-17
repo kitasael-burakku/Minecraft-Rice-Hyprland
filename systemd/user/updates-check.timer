@@ -20,6 +20,17 @@ Description=Timer periódico para updates-check.service
 # bug — y nunca tuvieron el problema. Mismo mecanismo acá ahora.
 OnCalendar=*:0/30
 Persistent=true
+# Persistent=true dispara la corrida perdida durante el apagado apenas arranca
+# el gestor de usuario. Como OnCalendar pasa dos veces por hora, casi cualquier
+# login cae después de un disparo perdido — y este servicio consulta la red
+# (checkupdates + yay -Qua): medido, era el servicio de usuario más caro del
+# arranque por un factor de 3 (2,689 s de pared, 781 ms de CPU, 138 MB de pico,
+# encima de los primeros 3 s de sesión). El retardo lo dispersa fuera del login
+# sin cambiar la cadencia normal de 30 min.
+# Mismo patrón que ya usan thumbs-refresh, healthcheck-notify y
+# dotbackup-remind. NO se cambia OnCalendar: el comentario de arriba documenta
+# por qué OnUnitActiveSec se rompía al reiniciar.
+RandomizedDelaySec=5min
 
 [Install]
 WantedBy=timers.target

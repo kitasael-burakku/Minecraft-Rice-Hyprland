@@ -6,8 +6,8 @@
 format = """
 $status\
 $os\
-${custom.user_pretty}\
-${custom.hostname_pretty}\
+${env_var.USER_PRETTY}\
+${env_var.HOSTNAME_PRETTY}\
 $directory\
 $fill\
 [](fg:{{colors.surface_container.default.hex}})\
@@ -51,19 +51,25 @@ Alpine      = ""
 Unknown     = "󰌽"
 
 # ── Usuario ─────────────────────────────────────────────────────
-[custom.user_pretty]
-disabled = false
-command = "echo $USER_PRETTY"
-when = "test -n \"$USER_PRETTY\""
+# env_var y no custom: un [custom.*] lanza DOS `sh -c` por render de prompt
+# (uno para `when`, otro para `command`) sólo para leer una variable que
+# starship ya tiene en su propio entorno. env_var la lee en proceso, sin
+# forks. Se oculta sola si USER_PRETTY no está definida — mismo
+# comportamiento que daba el `when` anterior, sin el coste.
+[env_var.USER_PRETTY]
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.primary.default.hex}} bold"
-format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $output ]($style)"
+format = "[](bg:{{colors.surface_container.default.hex}} fg:{{colors.surface_container_low.default.hex}})[ $env_value ]($style)"
 
 # ── Hostname ────────────────────────────────────────────────────
-[custom.hostname_pretty]
-command = "hostnamectl --pretty 2>/dev/null || hostname"
-when = "true"
+# Antes: `hostnamectl --pretty`, que no lee un archivo sino que abre D-Bus
+# contra systemd-hostnamed (activando el servicio si no estaba corriendo) —
+# 59 ms medidos POR PROMPT, sobre un dato que no cambia entre logins. Era el
+# módulo más caro del prompt por un factor de 4.
+# HOSTNAME_PRETTY sale ahora de hypr/modules/environment.lua, la misma fuente
+# única donde ya viven XCURSOR_THEME y GTK_THEME.
+[env_var.HOSTNAME_PRETTY]
 style = "bg:{{colors.surface_container.default.hex}} fg:{{colors.outline.default.hex}}"
-format = "[ 󰍹 $output ]($style)"
+format = "[ 󰍹 $env_value ]($style)"
 
 # ── Directorio ──────────────────────────────────────────────────
 [directory]

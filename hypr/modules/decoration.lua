@@ -68,4 +68,23 @@ hl.config({
     animations = {
         enabled = true,
     },
+
+    -- Scanout directo: manda una ventana a pantalla completa al plano de la
+    -- GPU sin pasar por el compositor — una copia menos por frame y hasta un
+    -- frame menos de latencia (5 ms a 200 Hz). Estaba en 0 (el default de
+    -- Hyprland), y `hyprctl monitors -j` lo confirmaba con
+    -- "directScanoutBlockedBy": ["USER", ...].
+    --
+    -- Modo 1 (sólo para ventanas que lo piden) y NO 2 (forzado): el 2 es donde
+    -- aparecen los artefactos al entrar/salir de fullscreen que hicieron que
+    -- Hyprland lo dejara apagado por defecto.
+    --
+    -- A verificar en uso real: el monitor está en bitdepth = 10
+    -- (XRGB2101010) y las apps presentan buffers de 8 bits. Si el plano no
+    -- acepta esa conversión, el scanout directo no se activa nunca y esto no
+    -- hace nada — se comprueba con `hyprctl monitors -j | grep directScanout`
+    -- estando en fullscreen: si directScanoutTo sigue en "0", revertir.
+    render = {
+        direct_scanout = 1,
+    },
 })

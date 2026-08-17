@@ -10,5 +10,7 @@ hl.monitor({
     output   = "HDMI-A-1",
     mode     = "1920x1080@200.00Hz",
     position = "0x0",
-    scale    = "1",
+    scale    = 1,
+    vrr      = 1,
+    bitdepth = 10,
 })
