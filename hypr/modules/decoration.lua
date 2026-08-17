@@ -97,16 +97,19 @@ hl.config({
     --   2. Tiene que ser opaca. Lo es gracias a fullscreen_opacity = 1 de
     --      acá arriba; con active_opacity 0.9 sola, ninguna ventana
     --      calificaría nunca.
-    -- EXPERIMENTAL (activado 2026-08-17). Planificación de frames alternativa
-    -- que Hyprland 0.56 todavía no activa por defecto. Donde más debería
-    -- notarse es justo en este setup: 200 Hz con VRR activo, que es el caso
-    -- que más castiga un pacing malo.
+    -- Planificación de frames alternativa que Hyprland 0.56 todavía no activa
+    -- por defecto. Donde más debería notarse es justo en este setup: 200 Hz
+    -- con VRR activo, que es el caso que más castiga un pacing malo.
     --
-    -- No se puede medir con un contador — no cambia CPU ni GPU, cambia CUÁNDO
-    -- se presenta cada frame. Lo que hay que evaluar es si el movimiento de
-    -- ventanas y el scroll se sienten más UNIFORMES, no más rápidos. Si no se
-    -- nota nada, apagarlo: una opción experimental encendida sin razón es
-    -- deuda que se paga en el próximo bug raro.
+    -- Activado 2026-08-17. Marcado como experimental río arriba, pero acá ya
+    -- tiene veredicto: el movimiento se siente más firme, y el "medio raro"
+    -- que había antes desapareció. Es una evaluación subjetiva y no puede ser
+    -- otra cosa — esto no cambia CPU ni GPU, cambia CUÁNDO se presenta cada
+    -- frame, así que ningún contador lo mide. Se queda.
+    --
+    -- Si alguna vez aparece un glitch de presentación raro (tearing donde no
+    -- debería, stutter al cambiar de refresh), éste es el primer sospechoso:
+    -- borrar la línea y volver a probar antes de investigar nada más.
     render = {
         direct_scanout = 1,
         new_render_scheduling = true,
