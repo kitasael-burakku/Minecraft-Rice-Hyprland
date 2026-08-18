@@ -253,7 +253,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted — see [docs/INSTALLATION.md § Themes, icons, cursors and fonts](docs/INSTALLATION.md#2-themes-icons-cursors-and-fonts) for where to get them.
-- Nerd Fonts and JetBrains Mono Nerd Font belong to their respective authors.
+- Nerd Fonts and IosevkaTerm Nerd Font belong to their respective authors.
 - Credits to **sarodscommits**, who made the Infinite Desktop: [hyprland-infinitie-desktop-v2](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2)
 
 If you reuse this rice, keep the credits for the projects and assets you use.
