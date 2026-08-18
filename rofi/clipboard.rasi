@@ -10,7 +10,7 @@ configuration {
 }
 
 * {
-    font:           "JetBrainsMono Nerd Font Propo 11";
+    font:           "IosevkaTerm Nerd Font Propo 11";
     background-color: transparent;
     text-color: @fg;
 }
@@ -54,7 +54,7 @@ prompt {
     border:           1px;
     border-color:     @border-soft;
     text-color:       @accent-muted;
-    font:             "JetBrainsMono Nerd Font Propo Bold 12";
+    font:             "IosevkaTerm Nerd Font Propo Bold 12";
 }
 
 entry {

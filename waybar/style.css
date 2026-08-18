@@ -7,7 +7,7 @@
 * {
     all: unset;
     font-size: 14px;
-    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "IosevkaTerm Nerd Font Mono", sans-serif;
 }
 
 window#waybar {
@@ -164,7 +164,7 @@ tooltip {
 
 /* El secreto es darle formato directo al contenedor del texto */
 tooltip label {
-    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "IosevkaTerm Nerd Font Mono", sans-serif;
     font-size: 13px;
     color: @fg;
     padding: 8px 12px; /* Aquí le devolvemos el aire interno */

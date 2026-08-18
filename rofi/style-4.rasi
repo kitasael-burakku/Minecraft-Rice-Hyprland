@@ -6,7 +6,7 @@
    vienen de config.rasi — este tema no necesita overrides. */
 
 * {
-    font:                       "JetBrainsMono Nerd Font Propo 11";
+    font:                       "IosevkaTerm Nerd Font Propo 11";
     background-color:           transparent;
 }
 

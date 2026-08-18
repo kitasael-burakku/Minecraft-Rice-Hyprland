@@ -8,7 +8,7 @@
 /* show-icons: true ya es el default de config.rasi — sin override acá. */
 
 * {
-    font:           "JetBrainsMono Nerd Font Propo 12";
+    font:           "IosevkaTerm Nerd Font Propo 12";
     background-color: transparent;
     text-color: @fg;
 }
@@ -44,7 +44,7 @@ inputbar {
 
 prompt {
     text-color:     @accent-muted;
-    font:           "JetBrainsMono Nerd Font Propo Bold 12";
+    font:           "IosevkaTerm Nerd Font Propo Bold 12";
 }
 
 entry {
@@ -112,7 +112,7 @@ element-text {
     horizontal-align: 0.5;
     vertical-align:   0.5;
     text-color:       inherit;
-    font:             "JetBrainsMono Nerd Font Propo 9";
+    font:             "IosevkaTerm Nerd Font Propo 9";
 }
 
 message {

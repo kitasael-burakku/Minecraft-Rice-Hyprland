@@ -8,7 +8,7 @@
 /* show-icons: true ya es el default de config.rasi — sin override acá. */
 
 * {
-    font:           "JetBrainsMono Nerd Font Propo 11";
+    font:           "IosevkaTerm Nerd Font Propo 11";
     background-color: transparent;
     text-color: @fg;
 }
@@ -51,7 +51,7 @@ textbox-title {
     border:         1px;
     border-color:   @border-soft;
     text-color:     @fg-muted;
-    font:           "JetBrainsMono Nerd Font Propo 11";
+    font:           "IosevkaTerm Nerd Font Propo 11";
 }
 
 listbox {

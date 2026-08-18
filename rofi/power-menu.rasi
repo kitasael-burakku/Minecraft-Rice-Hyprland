@@ -10,7 +10,7 @@ configuration {
 }
 
 * {
-    font:           "JetBrainsMono Nerd Font 13";
+    font:           "IosevkaTerm Nerd Font Mono 13";
     bg:             @bg-main;
     background-color: transparent;
     text-color: @fg;
@@ -52,7 +52,7 @@ textbox-title {
     border:           1px;
     border-color:     @border-soft;
     text-color:       @fg-muted;
-    font:             "JetBrainsMono Nerd Font 13";
+    font:             "IosevkaTerm Nerd Font Mono 13";
 }
 
 /* ── Lista — se ajusta a las 5 opciones exactas ───── */
