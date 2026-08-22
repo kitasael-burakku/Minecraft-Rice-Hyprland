@@ -146,8 +146,10 @@ format_pkgs() {
 
 kernel_pkgs() {
     [[ -f "$PKGS_FILE" ]] || return 0
-    local src name old new
-    while IFS=$'\t' read -r src name old new; do
+    local name
+    # Only field 2 matters here; the rest are placeholders so the tab-split
+    # lands `name` in the right column.
+    while IFS=$'\t' read -r _ name _ _; do
         is_kernel_pkg "$name" && printf '%s\n' "$name"
     done < "$PKGS_FILE"
 }

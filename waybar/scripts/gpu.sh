@@ -11,6 +11,9 @@
 #  a single subprocess: `read < file` instead of $(cat file). At interval 5
 #  that's ~10 forks/run saved, ~120/min, for exactly the same numbers.
 # ============================================================================
+# sysread() assigns through `printf -v "$__var"`, so ShellCheck can't see any
+# of these variables being set and flags every read of them as SC2154.
+# shellcheck disable=SC2154
 set -o pipefail
 
 json_escape() {
