@@ -6,36 +6,87 @@
     "margin-left": 10,
     "margin-right": 10,
 
+    // Necesario para el experimento de zonas: Waybar vigila style.css y todos
+    // sus @import, así que reescribir zone.css basta para cambiar la barra sin
+    // reiniciarla ni reconstruirla. Viene en false por defecto.
+    "reload_style_on_change": true,
+
+    // EXPERIMENTO (zonas por posición del cursor): los tres bloques de abajo se
+    // corresponden 1:1 con las cajas .modules-left / .modules-center /
+    // .modules-right. Los dos laterales se ocultan en reposo y aparecen cuando
+    // el cursor entra en su tercio de la franja superior; el centro es
+    // permanente. Quien decide es scripts/cursor-zone.py reescribiendo
+    // zone.css. Ver la sección "ZONAS" al final de style.css.
+    //
+    // Mover un módulo entre laterales no pide tocar nada más: las reglas usan
+    // "> *", así que cubren lo que haya en la caja.
+
+    // Bloque de música y volumen: oculto en reposo, aparece en la zona izquierda.
+    // custom/zone no se ve nunca; solo vive aquí para que Waybar sea dueño del
+    // ciclo de vida del vigilante. Puede estar en cualquiera de las tres listas,
+    // pero tiene que estar en alguna o se acaban las zonas.
+    // Va el ÚLTIMO por la cascada de aparición: los retrasos se reparten por
+    // posición (:nth-child) y, estando el primero, se llevaba el turno de 0ms
+    // siendo invisible y retrasaba 32ms a todo lo que sí se ve.
     "modules-left": [
-        "pulseaudio",
-        "pulseaudio/slider",
         "custom/playerctl",
-        "custom/playerlabel"
+        "custom/playerlabel",
+        "pulseaudio/slider",
+        "custom/zone"
     ],
+    // Centro permanente: nada de aquí se oculta nunca.
+    //
+    // El criterio de reparto es "control vs estado": lo que se USA puede
+    // esconderse en un lateral, lo que hay que ENTERARSE de que pasa no puede
+    // depender de que muevas el ratón a una esquina. Por eso aquí no hay ni
+    // una métrica de sistema (esas se consultan, y viven todas juntas a la
+    // derecha) y sí están los avisos.
+    //
+    //   window/workspaces/clock  contexto, navegación y hora
+    //   pulseaudio               estado + rueda para el volumen
+    //   updates/privacy/notif.   avisos; en reposo ocupan cero o casi
+    //   tray                     un solo icono estático (udiskie), y su
+    //                            "needs-attention" era invisible escondido
+    //   idle_inhibitor           un toggle cuyo estado no se podía consultar;
+    //                            apagado va al 25% para no hacer ruido
     "modules-center": [
         "hyprland/window",
         "hyprland/workspaces",
-        "clock"
-    ],
-    "modules-right": [
-        "custom/updates",
+        "clock",
+        "pulseaudio",
         "privacy",
-        "temperature",
+        "custom/notification",
+        "idle_inhibitor",
+        "tray",
+        "custom/updates"
+    ],
+    // Bloque de sistema: oculto en reposo, aparece en la zona derecha.
+    // Waybar dibuja esta lista de izquierda a derecha, así que el ÚLTIMO es el
+    // que queda pegado al borde de la pantalla: custom/power.
+    //
+    // Orden: primero las cinco MÉTRICAS juntas (cpu, memory, temperature, gpu,
+    // disk), pegadas al centro porque son las que se miran de un vistazo al
+    // asomarse; después los CONTROLES (perfil de energía, bluetooth, red); y
+    // el apagado al borde, lo más lejos posible del resto.
+    "modules-right": [
         "cpu",
         "memory",
-        "disk",
+        "temperature",
         "custom/gpu",
+        "disk",
         "power-profiles-daemon",
         "custom/bluetooth",
         "network",
-        "idle_inhibitor",
-        "tray",
         "custom/power"
     ],
 
+    // OJO con el markup en los tooltips: los módulos NATIVOS (memory, disk,
+    // temperature...) los ponen con set_tooltip_text, así que <tt>/<b> salen
+    // impresos literalmente. Solo los custom/* (usan set_tooltip_markup) y el
+    // reloj admiten markup — por eso "<tt>{calendar}</tt>" de abajo sí va.
     "hyprland/window": {
         "format": "󰣇 {title}",
-        "max-length": 25,
+        "max-length": 50,
         "separate-outputs": true,
         "rewrite": {
             "^.*Mozilla Firefox.*$": "󰈹 Firefox",
@@ -54,6 +105,15 @@
         }
     },
 
+    // Módulo sin salida: existe solo para que Waybar sea dueño del ciclo de vida
+    // del vigilante de zona (arranca y muere con la barra, sin tocar Hyprland ni
+    // systemd). El script no imprime nada, así que el módulo queda vacío.
+    "custom/zone": {
+        "exec": "~/.config/waybar/scripts/cursor-zone.py",
+        "format": "",
+        "tooltip": false
+    },
+
     "pulseaudio/slider": {
         "min": 0,
         "max": 100,
@@ -65,9 +125,21 @@
         "format": "󰥔 {:%H:%M}",
         "max-length": 25,
         "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "today": "<b><u>{}</u></b>"
+            }
+        },
+        "actions": {
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        },
         "on-click": "hyprctl clients | grep -i 'title: calcurse' >/dev/null && pkill -f 'kitty --title calcurse' || kitty --title calcurse -e calcurse"
     },
-
+    
     "hyprland/workspaces": {
         "format": "{icon}",
         "on-click": "activate",
@@ -114,7 +186,8 @@
         "path": "/",
         "tooltip": true,
         "unit": "GB",
-        "tooltip-format": "     Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB"
+        "tooltip-format": "     Storage ({path})\n\nUsed:  {specific_used:0.1f} GB ({percentage_used}%)\nFree:  {specific_free:0.1f} GB ({percentage_free}%)\nTotal: {specific_total:0.1f} GB",
+        "on-click": "hyprctl clients | grep -i 'title: duf' >/dev/null && pkill -f 'kitty --title duf' || kitty --title duf -e fish -lc 'duf; read -P \"Press Enter to exit\"'"
     },
 
     "network": {
@@ -123,22 +196,18 @@
         "format-disconnected": "󰈂 Disconnected",
         "tooltip-format-wifi": "󰖩 {essid}\n󰩟 {ipaddr}\n󰈀 {ifname}\n󰖩 {signalStrength}%",
         "tooltip-format-ethernet": " Ethernet\n󰩟 {ipaddr}\n󰈀 {ifname}",
-        "tooltip-format-disconnected": "Disconnected",
+        "tooltip-format-disconnected": "Disconnected\n\nLeft click to pick a network",
         "on-click": "~/.config/rofi/scripts/wifi.sh"
     },
 
     "custom/updates": {
         "exec": "~/.config/waybar/scripts/updates.sh",
-        // "once" y no un intervalo: el refresco real ya lo dispara
-        // updates-check.timer (cada 30 min) seguido de `pkill -RTMIN+8 waybar`,
-        // y el on-click de acá abajo manda su propia señal al terminar. El
-        // "interval": 30 anterior era el mecanismo previo al timer y quedó
-        // duplicando su trabajo: 2 spawns/min de updates.sh para releer un
-        // cache que sólo cambia cada media hora.
         "interval": "once",
         "signal": 8,
         "return-type": "json",
         "on-click": "kitty fish -lc 'sysupdate; ~/.config/waybar/scripts/updates.sh --force >/dev/null; read -P \"Press Enter to exit\"'; pkill -RTMIN+8 waybar",
+        "on-click-right": "hyprctl clients | grep -i 'title: updates-list' >/dev/null && pkill -f 'kitty --title updates-list' || kitty --title updates-list -e ~/.config/waybar/scripts/updates.sh --list",
+        "on-click-middle": "systemctl --user start updates-check.service",
         "format": "{}",
         "tooltip": true
     },
@@ -174,6 +243,18 @@
         "spacing": 8
     },
 
+    // Suscripción larga a swaync (una línea por evento, cero polling); el
+    // script le pone tooltip y cuenta, que -swb no trae.
+    "custom/notification": {
+        "exec": "~/.config/waybar/scripts/notifications.sh",
+        "return-type": "json",
+        "format": "{}",
+        "tooltip": true,
+        "on-click": "swaync-client -t -sw",
+        "on-click-middle": "swaync-client -C -sw",
+        "on-click-right": "swaync-client -d -sw"
+    },
+
     "custom/gpu": {
         "exec": "~/.config/waybar/scripts/gpu.sh",
         "interval": 5,
@@ -195,18 +276,14 @@
 
     "custom/bluetooth": {
         "exec": "~/.config/waybar/scripts/bluetooth.sh",
-        // 20 y no 5: cada corrida lanza bluetoothctl DOS veces (show +
-        // devices Connected), o sea 12 clientes D-Bus por minuto a 5s. Los
-        // cambios que inicia el usuario siguen siendo instantáneos —
-        // rofi/scripts/bluetooth.sh manda RTMIN+9 después de tocar el estado.
-        // Este intervalo sólo cubre cambios externos (unos auriculares que se
-        // conectan solos), y 20s para eso alcanza.
         "interval": 20,
         "signal": 9,
         "return-type": "json",
         "format": "{}",
         "tooltip": true,
-        "on-click": "~/.config/rofi/scripts/bluetooth.sh"
+        "on-click": "~/.config/rofi/scripts/bluetooth.sh",
+        "on-click-right": "~/.config/waybar/scripts/bluetooth.sh --toggle",
+        "on-click-middle": "blueman-manager"
     },
 
     "privacy": {
@@ -237,11 +314,11 @@
     "custom/playerlabel": {
         "format": "{}",
         "return-type": "json",
-        "max-length": 36,
+        "max-length": 50,
         "exec": "~/.config/waybar/scripts/playerctl-read.sh",
         "on-click": "playerctl previous",
         "on-click-middle": "playerctl play-pause",
         "on-click-right": "playerctl next",
-        "tooltip": false
+        "tooltip": true
     }
 }

@@ -5,7 +5,7 @@
 # Referencia estática: ~/.config/starship.static.toml — mismo contenido
 # con la paleta fija; los comentarios largos viven allá.
 # Sin post_hook: starship relee su config en cada render del prompt.
-#
+
 # ── Estructura ──────────────────────────────────────────────────
 # Su gemelo estático es ~/.config/starship.static.toml, con la paleta fija
 # "Kitasan Glass". hypr/scripts/apply-static-colors.sh copia ese archivo
@@ -13,24 +13,11 @@
 # que todo cambio de estructura tiene que hacerse en los DOS o se pierde al
 # primer toggle. hypr/scripts/check-template-parity.sh compara el conjunto
 # de claves de ambos.
-#
+
 # ── Forma del prompt ────────────────────────────────────────────
 #   ┌ 󰣇 キタサンブラック@ゴールドシップ  󱂵 ホーム/󰒓 設定/hypr  󰊢 main 󰏫
 #   └ $
-#
-# Dos líneas a propósito: toda la información vive arriba y la segunda
-# línea es siempre "└ $ ", de ancho constante, así lo que escribís arranca
-# siempre en la misma columna sin que una ruta larga lo empuje.
-#
-# Sin fondos (bg:). El diseño anterior era de bloques powerline encadenados,
-# que exigen que cada bloque contraste con el vecino — frágil con matugen,
-# porque las paletas que saca de un wallpaper varían mucho y dos bloques
-# adyacentes pueden terminar casi del mismo color. Color sólo en primer
-# plano sobre el fondo del terminal es mucho más robusto ante una paleta
-# impredecible.
-#
-# Sin $fill ni [custom.right_cap]: no hay bloque derecho que cerrar. De paso
-# eso elimina los dos `sh -c` por render que costaba right_cap (9 ms).
+
 
 format = """
 [┌](fg:{{colors.outline.default.hex}}) \
@@ -92,7 +79,7 @@ style = "fg:{{colors.tertiary.default.hex}} bold"
 format = "  [$path]($style)[$read_only]($read_only_style)"
 read_only_style = "fg:{{colors.error.default.hex}}"
 truncate_to_repo = false
-home_symbol = "󱂵 ホーム"
+home_symbol = "~ ホーム"
 read_only = " 󰌾 読取専用"
 truncation_length = 4
 truncation_symbol = "…/"

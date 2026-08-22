@@ -25,7 +25,7 @@ APPLY_STATIC="$HOME/.config/hypr/scripts/apply-static-colors.sh"
 WALLPAPER_STATE="$HOME/.config/hypr/.current-wallpaper"
 
 LABELS=(
-    "󰸌  Tonal Spot (default)"
+    "󰸌  Tonal Spot (Default)"
     "󰸌  Vibrant"
     "󰸌  Expressive"
     "󰸌  Fidelity"

@@ -4,14 +4,14 @@
 -- /    |    \  |  /|  | (  <_> )___ \  |  |  / __ \|  | \/|  |
 -- \____|__  /____/ |__|  \____/____  > |__| (____  /__|   |__|
 --         \/                       \/            \/
---
+
 -- Migrado a systemd (ver ~/.config/systemd/user/*.service): antes este
 -- archivo era ~60 líneas de hl.exec_cmd encadenadas a mano con "&&"/"&"
 -- dentro de strings Lua para simular orden y backgrounding — sin
 -- supervisión (si waybar o hypridle morían, quedaban muertos hasta un
 -- SUPER+SHIFT+R o un reinicio) y con logs sueltos por todos lados en
 -- $XDG_RUNTIME_DIR.
---
+
 -- Ahora "systemctl --user start hyprland-session.service" alcanza: ese
 -- servicio (BindsTo=/Wants=/After=graphical-session.target) activa el
 -- target, y el target trae solo a todo lo que declara

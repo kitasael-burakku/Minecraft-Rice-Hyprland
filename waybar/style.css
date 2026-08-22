@@ -1,17 +1,76 @@
 /* =====================================================
    WAYBAR - REFINED GLASS RICE
+   -----------------------------------------------------
+   CAPA DE ANIMACIÓN — lo que GTK 3.24 admite de verdad
+   (verificado a mano contra este GTK, no copiado de la web):
+
+   · Curvas: linear | ease | ease-in | ease-out | ease-in-out |
+     step-start | step-end | steps(n,start|end) | cubic-bezier(a,b,c,d),
+     y cubic-bezier ADMITE valores fuera de [0,1] => rebote real.
+   · Animables: opacity, color, background-color, background-image (los
+     gradientes interpolan), background-position, background-size,
+     box-shadow (múltiple e inset), text-shadow, -gtk-icon-shadow, margin,
+     padding, min-width, min-height, font-size, font-weight, letter-spacing,
+     border-radius, border-width, border-color, outline-width.
+   · NO existe: transform, filter, backdrop-filter, will-change,
+     ::before/::after, variables --x, easing linear(...), y
+     animation-timing-function dentro de un keyframe.
+
+   Curvas usadas aquí (GTK3 no tiene variables, así que van a mano):
+     ENTRAR   cubic-bezier(0.16, 1, 0.3, 1)      expo-out, entra y frena
+     SALIR    cubic-bezier(0.4, 0, 1, 1)         acelera, se va rápido
+     POP      cubic-bezier(0.34, 1.56, 0.64, 1)  se pasa de frenada
+     HOVER    cubic-bezier(0.4, 0, 0.2, 1)       estándar, corto
+
+   Regla de oro de esta barra: animar SOLO propiedades que no provocan
+   relayout (opacity, color, *-shadow, background-*). margin/padding/
+   min-width/font-size sí relayoutean y mueven a los módulos vecinos, que en
+   una barra se ve como temblor. Ninguna animación de este archivo cambia la
+   geometría: el layout es idéntico al de antes de la capa de animación.
 ===================================================== */
 
 @import "colors.css";
+@import "zone.css";   /* lo reescribe scripts/cursor-zone.py */
 
 * {
     all: unset;
     font-size: 14px;
-    font-family: "IosevkaTerm Nerd Font Mono", sans-serif;
+    font-family: "IosevkaTerm Nerd Font Propo", sans-serif;
 }
 
 window#waybar {
     background: transparent;
+}
+
+
+/* Alerta roja: crítico de temperatura / GPU / actualizaciones */
+@keyframes glow-crit {
+    from { text-shadow: 0 0 0px  alpha(@red, 0.0); }
+    to   { text-shadow: 0 0 9px  alpha(@red, 0.75); }
+}
+
+/* Aviso ámbar: el script falló, el dato puede estar viejo */
+@keyframes glow-warn {
+    from { text-shadow: 0 0 2px  alpha(@accent-gold, 0.15); }
+    to   { text-shadow: 0 0 10px alpha(@accent-gold, 0.85); }
+}
+
+/* Workspace urgente: cambia color Y halo a la vez */
+@keyframes urgent-ws {
+    from { color: @fg;  text-shadow: 0 0 2px  alpha(@red, 0.20); }
+    to   { color: @red; text-shadow: 0 0 10px alpha(@red, 0.85); }
+}
+
+/* Icono del tray pidiendo atención: pulso de fondo, no de texto */
+@keyframes attention {
+    from { background-color: alpha(@red, 0.12); }
+    to   { background-color: alpha(@red, 0.42); }
+}
+
+/* Respiración del reproductor mientras suena algo */
+@keyframes breathe {
+    from { text-shadow: 0 0 2px  alpha(@accent, 0.12); }
+    to   { text-shadow: 0 0 9px  alpha(@accent, 0.62); }
 }
 
 /* -----------------------------------
@@ -33,25 +92,46 @@ window#waybar {
    SEPARACIÓN REAL ENTRE WIDGETS
 ----------------------------------- */
 
-/* Forzamos margen a todos los módulos internos para que no se peguen */
+/* Forzamos margen a todos los módulos internos para que no se peguen.
+   El "transition" va aquí y no en cada módulo: es una lista explícita de
+   propiedades a propósito, nunca "all" — con "all" GTK vigila cada propiedad
+   del nodo y acabas animando cosas que no querías (y pagando por ellas). */
 #clock, #cpu, #memory, #disk, #network, #pulseaudio,
 #workspaces, #window, #custom-updates, #temperature,
 #idle_inhibitor, #custom-power, #pulseaudio-slider,
 #custom-playerctl, #custom-playerlabel, #custom-gpu,
-#power-profiles-daemon, #custom-bluetooth, #privacy, #tray {
+#power-profiles-daemon, #custom-bluetooth, #privacy, #tray,
+#custom-notification {
     margin: 0 7px;
     padding: 0;
+    transition: color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+                text-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Levantar el módulo bajo el cursor. El hover funciona porque cada módulo es
+   un EventBox (ventana propia) y GTK3 propaga el estado PRELIGHT al Label de
+   dentro; sobre el hueco vacío de la isla no funcionaría, que es justo por lo
+   que existe el experimento de zonas del final. */
+#clock:hover, #cpu:hover, #memory:hover, #disk:hover, #network:hover,
+#pulseaudio:hover, #window:hover, #custom-updates:hover, #temperature:hover,
+#idle_inhibitor:hover, #custom-gpu:hover, #power-profiles-daemon:hover,
+#custom-bluetooth:hover, #custom-playerctl:hover, #custom-playerlabel:hover,
+#custom-notification:hover {
+    text-shadow: 0 0 7px alpha(@fg, 0.45);
+}
 /* -----------------------------------
    WORKSPACES (Centro)
 ----------------------------------- */
 
+/* Sin fondo ni píldora: el workspace activo se distingue solo por color y
+   halo, como siempre. Lo único que cambia respecto al original es la curva:
+   POP (se pasa de frenada) en vez de ease-in-out. */
 #workspaces button {
     color: alpha(@fg, 0.25);
     margin: 0 4px;
     padding: 0 4px;
-    transition: all 250ms ease-in-out;
+    transition: color 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                text-shadow 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 #workspaces button:hover {
@@ -61,6 +141,10 @@ window#waybar {
 #workspaces button.active {
     color: @accent;
     text-shadow: 0 0 6px alpha(@accent, 0.5);
+}
+
+#workspaces button.urgent {
+    animation: urgent-ws 700ms ease-in-out infinite alternate;
 }
 
 /* -----------------------------------
@@ -88,10 +172,40 @@ window#waybar {
 #privacy { color: @red; }
 #tray { color: @fg; }
 
+/* Notificaciones: en reposo es una campana más del montón; con algo sin leer
+   sube a dorado. .dnd va DESPUÉS a propósito — si tienes el modo silencio con
+   avisos esperando, lo que importa es que sepas que estás en silencio. */
+#custom-notification { color: @fg; }
+
+#custom-notification.notification {
+    color: @accent-gold;
+    text-shadow: 0 0 6px alpha(@accent-gold, 0.45);
+}
+
+#custom-notification.dnd {
+    color: alpha(@fg, 0.35);
+    text-shadow: none;
+}
+
+/* Estados rojos "planos": solo transición de color, sin pulso. Un módulo
+   silenciado o una wifi caída son estados normales, no emergencias. */
 #pulseaudio.muted,
-#network.disconnected,
-#temperature.critical {
+#network.disconnected {
     color: @red;
+}
+
+/* Estados críticos de verdad: color fijo + halo que respira */
+#temperature.critical,
+#custom-gpu.critical,
+#custom-updates.critical {
+    color: @red;
+    animation: glow-crit 2400ms ease-in-out infinite alternate;
+}
+
+/* El icono de idle_inhibitor activo avisa sin gritar */
+#idle_inhibitor.activated {
+    color: @accent;
+    text-shadow: 0 0 6px alpha(@accent, 0.45);
 }
 
 /* -----------------------------------
@@ -103,11 +217,22 @@ window#waybar {
     min-width: 65px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.1);
+    transition: background-color 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#pulseaudio-slider:hover trough {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 #pulseaudio-slider highlight {
     border-radius: 999px;
     background: @accent;
+    transition: background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#pulseaudio-slider:hover highlight {
+    box-shadow: 0 0 8px alpha(@accent, 0.55);
 }
 
 /* -----------------------------------
@@ -117,6 +242,10 @@ window#waybar {
 #custom-power {
     color: @red;
     font-weight: bold;
+    /* El único hover con POP: es el botón que más miedo da pulsar, que se
+       note que responde. */
+    transition: color 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                text-shadow 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 #custom-power:hover {
@@ -130,12 +259,19 @@ window#waybar {
 #custom-bluetooth.disabled { color: @red; }
 #custom-bluetooth.connected { color: @fg; }
 
+/* No hay adaptador: ni rojo (no es un fallo que puedas arreglar desde aquí)
+   ni normal. Apagado y a un lado. */
+#custom-bluetooth.unavailable { color: alpha(@fg, 0.30); }
+
+/* Va DESPUÉS de .connected porque las dos clases coinciden a la vez y para el
+   color gana la última. */
+#custom-bluetooth.low-battery {
+    color: @accent-gold;
+    animation: glow-warn 1600ms ease-in-out infinite alternate;
+}
+
 #power-profiles-daemon.performance { color: @red; }
 #power-profiles-daemon.power-saver { color: @net; }
-
-#custom-gpu.critical {
-    color: @red;
-}
 
 #privacy-item {
     color: @red;
@@ -147,14 +283,16 @@ window#waybar {
 
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background: alpha(@red, 0.3);
     border-radius: 8px;
+    animation: attention 900ms ease-in-out infinite alternate;
 }
 
 /* -----------------------------------
    TOOLTIPS (Cajitas Flotantes Corregidas)
 ----------------------------------- */
 
+/* Los tooltips NO se pueden animar al aparecer: son un GtkWindow aparte y
+   Waybar no expone su revealer (Alexays/Waybar#2083). Solo estilo. */
 tooltip {
     background: alpha(@bg, 0.80);
     border: 1px solid alpha(@accent, 0.12);
@@ -164,7 +302,7 @@ tooltip {
 
 /* El secreto es darle formato directo al contenedor del texto */
 tooltip label {
-    font-family: "IosevkaTerm Nerd Font Mono", sans-serif;
+    font-family: "IosevkaTerm Nerd Font Propo", sans-serif;
     font-size: 13px;
     color: @fg;
     padding: 8px 12px; /* Aquí le devolvemos el aire interno */
@@ -189,6 +327,7 @@ menuitem {
     color: @fg;
     padding: 6px 10px;
     border-radius: 6px;
+    transition: background-color 140ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 menuitem:hover {
@@ -211,8 +350,17 @@ menu separator {
     margin-right: 0;
 }
 
-#custom-playerctl.Playing { color: @accent; }
-#custom-playerctl.Paused, #custom-playerctl.Stopped { color: alpha(@red, 0.468); }
+/* ESTA es la única animación que puede estar horas corriendo. Periodo largo
+   (3.4s) para que sea barata y no distraiga. Para matarla, borra la línea
+   "animation" y deja solo el color. */
+#custom-playerctl.Playing {
+    color: @accent;
+    animation: breathe 3400ms ease-in-out infinite alternate;
+}
+
+#custom-playerctl.Paused, #custom-playerctl.Stopped {
+    color: alpha(@red, 0.468);
+}
 
 #custom-playerlabel {
     font-size: 12px;
@@ -240,15 +388,114 @@ menu separator {
     font-weight: bold;
 }
 
-/* Cuando se acumulan más de 50 paquetes: color coral/alerta */
+/* Cuando se acumulan más de 50 paquetes: color coral/alerta. El pulso
+   glow-crit lo pone la regla de "críticos" de más arriba. */
 #custom-updates.critical {
-    color: @red;
     font-weight: bold;
 }
 
 /* checkupdates/AUR helper falló (sin red, DB bloqueada, etc.) — se combina
    con .updated/.pending/.critical (waybar permite varias clases a la vez),
-   así que solo tocamos el ícono de warning, no pisamos el color base */
+   así que solo tocamos el halo, no el color base.
+   OJO: "animation" es una propiedad, no se acumula entre reglas. Si coinciden
+   .critical y .error gana ésta por ir más abajo en el archivo, y verás el
+   pulso ámbar (más rápido) en vez del rojo. Es lo que queremos: "el número
+   que estás viendo puede ser mentira" manda sobre "el número es alto". */
 #custom-updates.error {
-    text-shadow: 0 0 6px alpha(@red, 0.6);
+    animation: glow-warn 1200ms ease-in-out infinite alternate;
+}
+
+/* =====================================================
+   ZONAS (EXPERIMENTO) — mostrar/ocultar por zona del cursor
+   -----------------------------------------------------
+   El centro entero es permanente: window, workspaces, clock, pulseaudio,
+   temperature, cpu y memory no se ocultan nunca. Solo reaccionan los dos
+   laterales, y aquí vive su estado EN REPOSO (ocultos) junto con la
+   coreografía de SALIDA. La de ENTRADA la escribe scripts/cursor-zone.py en
+   zone.css cada vez que el cursor cambia de tercio en la franja superior.
+   Estar en el tercio central equivale a no estar en ninguno.
+
+   Por qué no se hace con :hover: en GTK3 un GtkBox normal —y .modules-left/
+   -center/-right lo son— no recibe eventos de cruce sobre su propia área vacía,
+   solo cuando el puntero pasa por un módulo (que sí es un EventBox con ventana
+   propia) y el estado sube desde ahí. Resultado: franjas muertas entre islas,
+   en los márgenes y en el borde superior de la pantalla.
+
+   Ojo con el combinador si algún día apuntas a un módulo por nombre: cada
+   módulo es un EventBox SIN nombre que envuelve un Label CON el nombre, así que
+   "#cpu" es NIETO de la caja, no hijo. ".modules-center > #cpu" no coincide con
+   nada y la regla se pierde en silencio; hay que usar descendencia sin ">".
+   Por eso los laterales usan "> *", que sí matchea los EventBox.
+
+   Se oculta con opacity y no colapsando el ancho a propósito: el hueco de cada
+   módulo queda reservado, así la barra no da saltos. Efecto secundario: un
+   módulo invisible sigue aceptando clics.
+
+   --- LA CASCADA ---
+   Comprobado en este GTK: :nth-child(n) y :nth-last-child(n) NUMÉRICOS
+   funcionan, y transition-delay se puede dar por posición. Eso permite que los
+   módulos no aparezcan todos de golpe sino en cascada, sin que el CSS sepa
+   cuántos módulos hay en cada isla (nth-last-child cuenta desde el final).
+
+     ENTRA  izquierda: del borde izquierdo hacia dentro   -> nth-child
+            derecha:   del borde derecho hacia dentro     -> nth-last-child
+     SALE   al revés en cada isla, y la cápsula se apaga la última.
+
+   La entrada la manda zone.css porque sus selectores llevan "window#waybar"
+   delante (id = más especificidad, gana pase lo que pase en el orden). La
+   salida es la de aquí abajo. Si borras zone.css entero, la barra se queda con
+   los laterales ocultos y todo lo demás intacto.
+
+   Para desactivar el experimento: borra esta sección, el @import de zone.css
+   (arriba) y el módulo custom/zone de config.jsonc.
+===================================================== */
+
+/* --- Laterales: bloque completo oculto, cápsula incluida --- */
+
+.modules-left > *,
+.modules-right > * {
+    opacity: 0;
+    transition: opacity 160ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+.modules-left,
+.modules-right {
+    background-color: alpha(@bg, 0);
+    border-bottom-color: alpha(@accent, 0);
+    transition: background-color 200ms cubic-bezier(0.4, 0, 1, 1),
+                border-bottom-color 200ms cubic-bezier(0.4, 0, 1, 1);
+    /* la cápsula se va cuando ya no queda nada dentro */
+    transition-delay: 180ms;
+}
+
+/* --- Coreografía de SALIDA (22ms por paso, al revés que la entrada) --- */
+
+.modules-left > *:nth-last-child(1)  { transition-delay:   0ms; }
+.modules-left > *:nth-last-child(2)  { transition-delay:  22ms; }
+.modules-left > *:nth-last-child(3)  { transition-delay:  44ms; }
+.modules-left > *:nth-last-child(4)  { transition-delay:  66ms; }
+.modules-left > *:nth-last-child(5)  { transition-delay:  88ms; }
+.modules-left > *:nth-last-child(6)  { transition-delay: 110ms; }
+.modules-left > *:nth-last-child(7)  { transition-delay: 132ms; }
+.modules-left > *:nth-last-child(8)  { transition-delay: 154ms; }
+.modules-left > *:nth-last-child(9)  { transition-delay: 176ms; }
+.modules-left > *:nth-last-child(10) { transition-delay: 198ms; }
+
+.modules-right > *:nth-child(1)  { transition-delay:   0ms; }
+.modules-right > *:nth-child(2)  { transition-delay:  22ms; }
+.modules-right > *:nth-child(3)  { transition-delay:  44ms; }
+.modules-right > *:nth-child(4)  { transition-delay:  66ms; }
+.modules-right > *:nth-child(5)  { transition-delay:  88ms; }
+.modules-right > *:nth-child(6)  { transition-delay: 110ms; }
+.modules-right > *:nth-child(7)  { transition-delay: 132ms; }
+.modules-right > *:nth-child(8)  { transition-delay: 154ms; }
+.modules-right > *:nth-child(9)  { transition-delay: 176ms; }
+.modules-right > *:nth-child(10) { transition-delay: 198ms; }
+
+/* --- El vigilante de zona no se ve nunca --- */
+
+#custom-zone {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
 }
