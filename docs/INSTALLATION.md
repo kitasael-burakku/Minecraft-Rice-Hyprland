@@ -54,12 +54,22 @@ sudo pacman -S \
   nautilus btop udiskie polkit-kde-agent \
   jq imagemagick libnotify ffmpeg ffmpegthumbnailer \
   pacman-contrib reflector fzf fd bat eza zoxide ripgrep \
-  lm_sensors ttf-jetbrains-mono-nerd \
+  lm_sensors ttf-iosevkaterm-nerd \
   thefuck bottom python python-evdev bash \
   power-profiles-daemon qt5ct qt6ct
 ```
 
-> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely. `libpulse` is what provides `pactl`, used unguarded by Waybar's audio module (right-click to mute) — listed explicitly here rather than relying on it arriving transitively through `pavucontrol`.
+**Wired to a keybind or a Waybar click, but not required for the session to come up:**
+
+```bash
+sudo pacman -S yazi duf calcurse
+```
+
+> `yazi` is `SUPER + F`, `duf` is the Waybar disk module's click action, `calcurse` is the clock's. Without them the session starts fine, those three actions just do nothing.
+
+> `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely. `libpulse` is what provides `pactl`, used unguarded by Waybar's audio module (right-click to mute) — listed explicitly here rather than relying on it arriving transitively through `pavucontrol`. `python-evdev` is what the Infinite Desktop daemon reads raw input with (see [step 7](#7-infinite-desktop--input-group)).
+
+> **The font is Iosevka, not JetBrains Mono.** Kitty, Waybar, SwayNC and every Rofi theme ask for `IosevkaTerm Nerd Font` / `IosevkaTerm Nerd Font Propo` by name — `ttf-iosevkaterm-nerd` is the package that provides both. Earlier revisions of this rice used JetBrains Mono; nothing references it any more.
 
 > If you use CachyOS you can download Zen-Browser from pacman packages:
 > ```bash
@@ -142,10 +152,9 @@ This is the part the base dependency list above doesn't cover: the actual visual
 |---|---|---|---|
 | GTK theme | **Win11-Fantasy-Dark** | `hypr/modules/environment.lua` (`GTKTheme`), `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | [gnome-look.org/p/2307588](https://www.gnome-look.org/p/2307588) |
 | GTK theme (previous, referenced in older comments) | Colorful-Dark-GTK | historical — see [THEMING.md](THEMING.md#gtk-theming) | [gnome-look.org/p/2091032](https://www.gnome-look.org/p/2091032) |
-| Icon theme | **Slot Gray Dark Icons** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `hypr/scripts/link-steam-icons.sh` | [gnome-look.org/p/2345718](https://www.gnome-look.org/p/2345718) |
-| Cursor theme | **Future-black Cursors** | `hypr/modules/environment.lua` (`CursorTheme`) | [gnome-look.org/p/1519633](https://www.gnome-look.org/p/1519633) |
-| Cursor theme (alternative) | Colloid cursors | optional swap | [gnome-look.org/p/1831077](https://www.gnome-look.org/p/1831077) |
-| Monospace / UI font | JetBrainsMono Nerd Font | terminal, Waybar, SwayNC, Rofi | `ttf-jetbrains-mono-nerd` (already in the pacman list above) |
+| Icon theme | **Slot Gray Dark Icons** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `qt5ct/qt5ct.conf`, `qt6ct/qt6ct.conf`, `rofi/window-switcher.rasi`, `hypr/scripts/link-steam-icons.sh` | [gnome-look.org/p/2345718](https://www.gnome-look.org/p/2345718) |
+| Cursor theme | **Nordic Cursors Scalable** (by Flachz) | `hypr/modules/environment.lua` (`CursorTheme`), `gtk-3.0/settings.ini` | [gnome-look.org/p/2348743](https://www.gnome-look.org/p/2348743) — same listing on the [KDE Store](https://store.kde.org/p/2348743) |
+| Monospace / UI font | **IosevkaTerm Nerd Font** (and its `Propo` variant) | Kitty, Waybar, SwayNC, every Rofi theme | `ttf-iosevkaterm-nerd` (already in the pacman list above) |
 | GTK UI font | Adwaita Sans | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | `adwaita-fonts` (Arch repos) |
 
 > The `gtk-3.0/settings.ini` / `gtk-4.0/settings.ini` referenced above are **not shipped by this repo** — only `gtk.css` and `gtk-colors.static.css` are (that's all `dotbackup` tracks from those two folders; see [ARCHITECTURE.md](ARCHITECTURE.md#dotbackup--repo-sync)). `settings.ini` is what a tool like `nwg-look` writes for you locally, on your own machine, per the instructions right below — you'll generate it, not clone it.
@@ -170,9 +179,9 @@ After installing, apply them with `nwg-look` (already in the AUR list above) rat
 - `hypr/modules/environment.lua` — `CursorTheme` and `GTKTheme`
 - `hypr/scripts/link-steam-icons.sh` mentions `Slot-Gray-Dark-Icons` only in a comment (it doesn't hardcode the theme name in logic — it writes to the universal `hicolor` fallback instead, see [THEMING.md](THEMING.md#steam-game-icons)), so no code change is needed there if you pick a different icon theme.
 
-> `rofi/window-switcher.rasi` also requests `Papirus-Dark` for its own icon lookups, independent of your main icon theme. It falls back silently if not installed; grab it with `sudo pacman -S papirus-icon-theme` if you want window-switcher icons to resolve fully.
+> ⚠️ **Cursor theme names are case-sensitive.** `CursorTheme` in `environment.lua` has to match the *directory name* the theme installs as (e.g. `nordic_cursors_scalable`), not its pretty `Name=` from `index.theme`. If the cursor silently stays the default after logging in, check `ls ~/.icons ~/.local/share/icons` against what `environment.lua` says.
 
-> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting this repo's version (which imports `theme-base.css` + `gtk-colors.css` instead, so matugen/static color overrides keep working). If you use `nwg-look` to apply a GTK4 theme, re-run `hypr/scripts/apply-static-colors.sh` afterward — see [THEMING.md](THEMING.md#gtk-theming) for why.
+> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting the two-`@import` version this rice needs (`theme-base.css` + `gtk-colors.css`, which is what keeps matugen/static color overrides working). **`apply-static-colors.sh` does not undo this** — it only rewrites `theme-base.css`. The two-line file has to be restored by hand; see [THEMING.md § GTK theming](THEMING.md#gtk-theming) for the exact command.
 
 ---
 
@@ -208,28 +217,43 @@ The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/
 bash ~/.config/hypr/scripts/apply-static-colors.sh
 ```
 
+It writes 14 color files from their `*.static.*` counterparts, re-points the `gtk-4.0/theme-base.css` symlink at whatever `GTKTheme` names in `environment.lua`, and seeds `hyprlock/wallpapers/current.png` from the versioned `2.png` if no wallpaper has been picked yet.
+
 This has to run **before** step 6 (enabling services) — some of those services read the files this step creates. Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [THEMING.md](THEMING.md).
+
+> ⚠️ **One thing this script does not fix:** `~/.config/gtk-4.0/gtk.css` has to be the two-line `@import` file, and the copy committed in this repo currently isn't (it's the raw theme stylesheet — see [THEMING.md § GTK theming](THEMING.md#gtk-theming)). After copying the configs, run:
+>
+> ```bash
+> printf "@import 'theme-base.css';\n@import 'gtk-colors.css';\n" > ~/.config/gtk-4.0/gtk.css
+> ```
 
 ---
 
 ## 5. Make scripts executable
 
 ```bash
-chmod +x ~/.config/waybar/scripts/*.sh
+chmod +x ~/.config/waybar/scripts/*.sh ~/.config/waybar/scripts/cursor-zone.py
 chmod +x ~/.config/rofi/launcher.sh
 chmod +x ~/.config/swaync/scripts/*.sh
 chmod +x ~/.config/wlogout/scripts/*.sh
 chmod +x ~/.config/hyprlock/scripts/player.sh
-chmod +x ~/.config/rofi/scripts/*.sh
 chmod +x ~/.config/hypr/scripts/*.sh
 chmod +x ~/.config/hypr/infinite_desktop/floating_tile_toggle.py \
           ~/.config/hypr/infinite_desktop/move_window.py \
           ~/.config/hypr/infinite_desktop/move_window_tiled.py \
           ~/.config/hypr/infinite_desktop/navigate_windows.py \
           ~/.config/hypr/infinite_desktop/resize_window.py
+
+# rofi/scripts/ — everything EXCEPT web_common.sh (see the note below)
+find ~/.config/rofi/scripts -name '*.sh' ! -name 'web_common.sh' -exec chmod +x {} +
+chmod 644 ~/.config/rofi/scripts/web_common.sh
 ```
 
-> `hyprlock/scripts/` only needs `player.sh` executable — `music-colors.sh` and `music-colors.static.sh` are `source`d, never run directly, and are committed at `644` on purpose. `hypr_ipc.py` and `infinite_desktop_core.py` aren't in the list above either, for the same reason: both are invoked as `python3 <path>`, so the executable bit is never consulted.
+> ⚠️ **Do not `chmod +x` the whole of `rofi/scripts/`.** Rofi treats every executable file in a script-mode directory as a mode of its own, and `web_common.sh` is a sourced helper, not a mode — it is committed at `644` deliberately. The `find` above is why it's not a plain `chmod +x *.sh`.
+
+> `waybar/scripts/cursor-zone.py` **does** need the executable bit: `config.jsonc` runs it as `exec: ~/.config/waybar/scripts/cursor-zone.py`, with no `python3` prefix.
+
+> `hyprlock/scripts/` only needs `player.sh` executable — `music-colors.sh` and `music-colors.static.sh` are `source`d, never run directly, and are committed at `644` on purpose. `hypr_ipc.py` and `infinite_desktop_core.py` aren't in the list above either, for the same reason: both are imported or invoked as `python3 <path>`, so the executable bit is never consulted.
 
 ---
 
@@ -295,20 +319,29 @@ This repo runs on one specific machine and was never meant to be copied byte-for
 | `hypr/modules/monitors.lua` | Output name, resolution, position, scale (`HDMI-A-1`, `1920x1080@200Hz` here) — the one you're most likely to need before Hyprland even starts. Switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
 | `hypr/modules/input.lua` | Keyboard/mouse device names (`hl.device` blocks reference specific hardware) |
 | `hypr/scripts/apply-wallpaper.sh` | `DEFAULT_WALLPAPER` — a wallpaper you actually have. This is the only place the default lives; `autostart.lua` just calls this script |
-| `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones |
-| `hypr/modules/programs.lua` | Terminal, file manager, browser, launcher — change if you use different apps |
+| `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones. Also `HostnamePretty`, exported as `$HOSTNAME_PRETTY` and rendered by the Starship prompt and several Fastfetch presets |
+| `hypr/modules/programs.lua` | Terminal, file manager, browser, launcher — change if you use different apps. `browser` is also the single source of `$BROWSER`, which the web hub resolves against |
 | `waybar/config.jsonc` | `hwmon-path-abs` — the correct sensor path for your machine |
 | `rofi/scripts/dashboard.sh` | Same `hwmon-path-abs` sensor path as Waybar, hardcoded separately — both need fixing or the CPU temperature row won't work |
 | `qt5ct/qt5ct.conf` & `qt6ct/qt6ct.conf` | `color_scheme_path` — a hardcoded absolute path; point it at your own `$HOME` or Qt apps silently fail to find the color scheme |
 | `hypr/modules/keybinds.lua` | `obs`, screenshot paths, and any command you don't use |
 | `fish/conf.d/tools.fish` | The `ec*` aliases open folders in `codium` — change the editor if you use another one |
 | `rofi/scripts/window-switcher.sh` | `MINIMIZED_WS` defaults to `special:minimized` — change if you use a different special workspace name |
-| `hypr/scripts/dotbackup-remind.sh` & `systemd/user/dotbackup-remind.timer` | Assumes a fork checked out at `~/Projects/dotfiles` — see [step 6](#6-enable-the-systemd-units) |
+| `hypr/scripts/dotbackup-remind.sh` & `systemd/user/dotbackup-remind.timer` | Assumes a fork checked out at `~/Projects/dotfiles`. `rofi/scripts/dashboard.sh` hardcodes the same path for its "last backup" row — see [step 6](#6-enable-the-systemd-units) |
+| `rofi/websites.conf` | The web hub's page list — personal bookmarks, replace with your own (`[Category]` sections, `Name \| URL` lines) |
+| `swaync/config.json` | The notification centre's `label` widget text is a personal string |
+| `fastfetch/*.jsonc` | Personal logos and ASCII art under `fastfetch/fastfetchlogo/`; the weighted preset list lives in `fish/config.fish` |
 
-Find all of them at once:
+**One optional variable that is not in the repo at all:** `$USER_PRETTY`. Starship and five Fastfetch presets render it if it exists and fall back to `$USER` if it doesn't — it lives in `fish/fish_variables`, which is gitignored. Set your own with:
+
+```fish
+set -Ux USER_PRETTY "Your Name"
+```
+
+Find the hardcoded paths all at once:
 
 ```bash
-rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Future-black|Colloid" .
+rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Win11-Fantasy|Slot-Gray|nordic_cursors" .
 ```
 
 ---
@@ -334,11 +367,11 @@ systemctl --user --failed          # should be empty
 systemctl --user is-active waybar.service hypridle.service swaync.service
 ```
 
-- Waybar is visible with all modules rendering (not blank/missing icons).
+- Waybar is visible with all modules rendering (not blank/missing icons). **Only the centre island shows at rest** — moving the cursor into the top-left or top-right third of the screen reveals the other two. That's the cursor-zone behaviour, not a broken bar; see [ARCHITECTURE.md](ARCHITECTURE.md#waybar--three-islands-and-the-cursor-zones).
 - `SUPER + W` opens the wallpaper picker; picking one changes the desktop background.
 - `SUPER + SHIFT + /` opens the Rofi web hub; picking a category then a page opens it in your browser.
 - GTK apps (e.g. `nautilus`) render with the installed theme, not the GTK default (Adwaita fallback look) — if they don't, see [Troubleshooting](#troubleshooting).
-- `SUPER + F4` opens the `kitasan` menu.
+- `SUPER + F4` opens the `kitasan` menu; `kitasan doctor` reports clean (template parity, keybinds doc, failed services, orphans).
 
 ---
 
@@ -353,6 +386,10 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 | GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink — re-run `hypr/scripts/apply-static-colors.sh`, see [THEMING.md](THEMING.md#gtk-theming) |
 | Steam games have no icon in Rofi's launcher | Expected on a fresh clone until Steam has actually cached art for those games — see [THEMING.md](THEMING.md#steam-game-icons) |
 | CPU temperature row is empty in Waybar/dashboard | `hwmon-path-abs` in `waybar/config.jsonc` and `rofi/scripts/dashboard.sh` still point at the original machine's sensor — fix both, see step 9 |
+| Waybar's left/right modules never appear | Expected at rest — move the cursor into the top-left or top-right third to reveal them. If they never appear at all, `cursor-zone.py` isn't executable (step 5) or it couldn't reach Hyprland's socket; `journalctl --user -u waybar` shows it. The centre island renders either way |
+| Rofi shows odd extra modes, or the web hub misbehaves | `rofi/scripts/web_common.sh` got the executable bit — Rofi picks up every executable in a script-mode directory as a mode. `chmod 644` it, see step 5 |
+| The mouse cursor is the default X arrow, not the installed theme | `CursorTheme` in `environment.lua` doesn't match the theme's installed **directory** name (case-sensitive) — see step 2 |
+| Text renders with fallback glyphs / boxes | `ttf-iosevkaterm-nerd` isn't installed — the configs name `IosevkaTerm Nerd Font` explicitly, they don't ask for a generic monospace |
 
 ---
 

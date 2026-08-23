@@ -34,11 +34,12 @@
 
 - 🎛️ **Session managed by `systemd --user`**, not loose background processes — every daemon (Waybar, SwayNC, Hypridle, clipboard, wallpaper daemon, etc.) is a real unit with `Restart=`, its own journal, and a clean start/stop lifecycle tied to `graphical-session.target`
 - ⌨️ **`kitasan` — one CLI for the whole rice**: health checks, cache cleanup, updates, visual theme switching, desktop modes, and a system dashboard, all under one command with Fish completions
-- 🎨 Opt-in Material You theming that propagates across **13 app surfaces** through matugen — including GTK3/GTK4 and Qt5/Qt6, not just the terminal-adjacent apps
+- 🎨 Opt-in Material You theming that regenerates **14 color files** through matugen — including GTK3/GTK4 and Qt5/Qt6, not just the terminal-adjacent apps — across 9 selectable Material You schemes
 - 🚀 A handful of purpose-built Rofi tools beyond the launcher — Wi-Fi, Bluetooth, audio device, MPRIS player picker, quick power menu, service manager, visual theme picker, and a system dashboard, all native Rofi script mode
 - 🖱️ Custom two-level Rofi wallpaper picker (video / image, each with its own theme) — built from scratch as native Rofi script mode, no external project
 - 🌐 Rofi web hub (`SUPER + SHIFT + /`) — category → page launcher over a static, hand-maintained URL list, opens with whatever browser is already configured
-- 🌀 Hand-tuned custom animation system, "流水 · Ryūsui Motion" (curves & springs)
+- 📊 **Waybar in three islands with cursor-zone reveal** — the centre is permanent, the two side islands stay hidden until the cursor enters their third of the top band, then cascade in. Driven by a resident Python watcher that talks to Hyprland's socket directly and rewrites one CSS file
+- 🌀 Hand-tuned custom animation system, "流水 · Ryūsui Motion" (curves & springs), including a GTK3-verified animation layer for the bar itself
 - 🪟 **Infinite Desktop** — pan and navigate a boundless floating-window canvas, now itself a supervised systemd service
 - 🐟 Custom Fish functions for health checks, maintenance, and an interactive keybind viewer — `KEYBINDS.txt` is generated from `keybinds.lua`, not maintained by hand
 - 🎮 Minecraft-themed boot experience: Qylock (SDDM) + MINEGRUB (GRUB)
@@ -53,8 +54,8 @@
 | Session & daemons managed by `systemd --user` | ✅ |
 | `kitasan` unified CLI (health / clean / update / theme / mode / dashboard) | ✅ |
 | Desktop modes — normal / focus / gaming / cinema | ✅ |
-| Waybar (taskbar, audio slider, media controls) | ✅ |
-| Dynamic theming via matugen — Rofi, Waybar, Kitty, GTK3/4, Qt5/6, and more (opt-in) | ✅ |
+| Waybar — three islands, cursor-zone reveal, audio slider, media controls | ✅ |
+| Dynamic theming via matugen — Rofi, Waybar, Kitty, GTK3/4, Qt5/6, and more (opt-in, 9 schemes) | ✅ |
 | Rofi quick actions — Wi-Fi, Bluetooth, audio, MPRIS, power, services, dashboard | ✅ |
 | Two-level wallpaper picker (video / image) | ✅ |
 | Rofi web hub — category → page launcher for frequent sites | ✅ |
@@ -93,7 +94,7 @@ This README is a landing page. The actual how-to and why-to live in [`docs/`](do
 |---|---|
 | [docs/INSTALLATION.md](docs/INSTALLATION.md) | The full, ordered install path — dependencies, themes/icons/cursors (with gnome-look.org links), copying configs, enabling services, fixing personal paths, troubleshooting |
 | [docs/THEMING.md](docs/THEMING.md) | The color pipeline (static vs. matugen), GTK3/GTK4/Qt theming, and why Steam games need one extra script for their icons to show up |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The Lua config system, the systemd session lifecycle, `kitasan`, the Rofi wallpaper picker, and the `dotbackup` deploy pipeline |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The Lua config system, the systemd session lifecycle, Waybar's cursor zones, `kitasan`, the Rofi tooling, which scripts write which files, and the `dotbackup` deploy pipeline |
 | [KEYBINDS.txt](KEYBINDS.txt) | The full keybind reference (generated from `keybinds.lua`) |
 
 | If you... | Start here |
@@ -138,9 +139,9 @@ A quick map before you go any further — what lives where, and what it's for. F
 
 | Folder / File | What it is |
 |---|---|
-| `hypr/` | Core Hyprland configuration — Lua modules, `hypridle.conf`, base `hyprlock.conf`, and maintenance/orchestration scripts (`hypr/scripts/`) |
+| `hypr/` | Core Hyprland configuration — Lua modules (`hypr/modules/`), `hypridle.conf` + `hypridle-focus.conf`, base `hyprlock.conf`, the Infinite Desktop Python scripts (`hypr/infinite_desktop/`), and maintenance/orchestration scripts (`hypr/scripts/`) |
 | `systemd/user/` | `systemd --user` unit files that supervise the session — see [docs/ARCHITECTURE.md § Session lifecycle](docs/ARCHITECTURE.md#session-lifecycle) |
-| `waybar/` | Status bar config, CSS, and scripts |
+| `waybar/` | Status bar config, CSS (including the generated `zone.css`), and scripts |
 | `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, web hub, power menu, window switcher, and quick-action scripts |
 | `kitty/` | Terminal configuration and colors |
 | `fish/` | Shell config, functions (including `kitasan`), aliases, themes, and completions |
@@ -226,9 +227,9 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | Hyprland (Lua) | Modular window manager |
 | `systemd --user` | Supervises every daemon — Waybar, SwayNC, Hypridle, clipboard, wallpaper, Infinite Desktop, and 4 background timers. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#session-lifecycle) |
 | `kitasan` (Fish function) | Unified CLI for the whole rice — health checks, cache cleanup, updates, theme/mode switching, dashboard. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#kitasan--unified-cli) |
-| Waybar | Status bar with taskbar (`wlr/taskbar`), inline audio slider (`pulseaudio/slider`), and media player controls |
+| Waybar | Status bar split into three islands — permanent centre (window title, workspaces, clock, volume, privacy, notifications, tray, updates) plus a media/volume island and a system-metrics island that reveal on cursor zone. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#waybar--three-islands-and-the-cursor-zones) |
 | Rofi | Launcher, clipboard selector, two-level wallpaper selector, [web hub](docs/ARCHITECTURE.md#rofi-web-hub) (`SUPER + SHIFT + /`), decorative power menu, window switcher with minimize/restore (`ALT + TAB`), and quick-action tools. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#rofi-quick-actions) |
-| matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, propagates to 13 app surfaces including GTK3/4 and Qt5/6. See [docs/THEMING.md](docs/THEMING.md) |
+| matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, regenerates 14 color files including GTK3/4 and Qt5/6. Scheme picked with `SUPER + ALT + W`. See [docs/THEMING.md](docs/THEMING.md) |
 | power-profiles-daemon | CPU power profile switching (`balanced`/`performance`/`power-saver`) — driven by the Waybar module and by `kitasan mode` |
 | Kitty | Terminal |
 | Fish + Starship | Shell with custom prompt — "Floating Stone Bubbles" theme (Minecraft shader palette) |
@@ -250,10 +251,10 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - Hyprland, Waybar, Rofi, Kitty, Fish, Starship, Fastfetch, Hyprlock, Hypridle, Wlogout, and SwayNC belong to their respective projects.
 - The Rofi wallpaper selector is original work: a two-level picker built as native Rofi script mode, chaining two independent Rofi instances with state passed via a runtime-dir file. Replaces a previous Quickshell-based version.
 - [matugen](https://github.com/InioX/matugen) is the dynamic theming engine behind the optional wallpaper-driven color pipeline — see [docs/THEMING.md](docs/THEMING.md).
-- Some presets in `fastfetch/config*.jsonc` are adapted from the official Fastfetch project examples.
+- Some of the presets in `fastfetch/*.jsonc` are adapted from the official Fastfetch project examples.
 - Minecraft is property of Mojang/Microsoft. The aesthetic used here is fan-made/personal.
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted — see [docs/INSTALLATION.md § Themes, icons, cursors and fonts](docs/INSTALLATION.md#2-themes-icons-cursors-and-fonts) for where to get them.
-- Nerd Fonts and IosevkaTerm Nerd Font belong to their respective authors.
+- Nerd Fonts and IosevkaTerm Nerd Font belong to their respective authors (`ttf-iosevkaterm-nerd`).
 - Credits to **sarodscommits**, who made the Infinite Desktop: [hyprland-infinitie-desktop-v2](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2)
 
 If you reuse this rice, keep the credits for the projects and assets you use.
