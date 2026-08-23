@@ -76,9 +76,7 @@ GTK3 and GTK4 are handled differently because **GTK4 dropped support for the `GT
 > bash ~/.config/hypr/scripts/apply-static-colors.sh   # re-points theme-base.css
 > ```
 >
-> Check whether you're currently in the broken state with `head -3 ~/.config/gtk-4.0/gtk.css` — if it shows theme CSS rules instead of the two `@import`s, it's been overwritten.
-
-> ⚠️ **Known state of this repo:** `gtk-4.0/gtk.css` as committed here is currently the overwritten variant — a byte-for-byte copy of Win11-Fantasy-Dark's own 7955-line stylesheet, which is what `dotbackup` picked up by following the `nwg-look` symlink. `gtk-3.0/gtk.css` is fine. If you clone this repo, replace `gtk-4.0/gtk.css` with the two `@import` lines above rather than copying it as-is.
+> Check whether you're currently in the broken state with `head -3 ~/.config/gtk-4.0/gtk.css` — if it shows theme CSS rules instead of the two `@import`s, it's been overwritten. It's worth checking before a `dotbackup` run too: the sync follows the symlink, so an overwritten `gtk.css` gets committed as a full copy of the theme's stylesheet.
 
 **GTK4 dynamic theming was tried and reverted.** The shipped GTK theme paints most of its UI with literal hardcoded hex values in its CSS rules rather than through the standard `@theme_bg_color`/`@theme_selected_bg_color`/etc. variables — it *declares* those variable names, for compatibility, but barely *uses* them (`@theme_text_color` appears exactly once across the entire stylesheet, confirmed with `grep -oE '@[a-z_]+_color' gtk.css`). Redefining those variables via `gtk-colors.css` therefore has close to no visible effect on GTK4 apps. Making GTK4 apps genuinely follow the wallpaper would mean patching literal hex strings inside a private copy of the theme's own CSS — fragile, breaks silently on any theme update — and wasn't judged worth it. GTK3 apps *do* follow the wallpaper correctly, since GTK3 themes generally use the theme variables as intended.
 

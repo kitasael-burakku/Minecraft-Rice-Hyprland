@@ -65,7 +65,7 @@ sudo pacman -S \
 sudo pacman -S yazi duf calcurse
 ```
 
-> `yazi` is `SUPER + F`, `duf` is the Waybar disk module's click action, `calcurse` is the clock's. Without them the session starts fine, those three actions just do nothing.
+> `yazi` is `SUPER + CTRL + F`, `duf` is the Waybar disk module's click action, `calcurse` is the clock's. Without them the session starts fine, those three actions just do nothing.
 
 > `power-profiles-daemon` is a **system** service (`sudo systemctl enable --now power-profiles-daemon`), not a user one — it backs both the Waybar module and `kitasan mode`. `qt5ct`/`qt6ct` are what actually read `qt5ct.conf`/`qt6ct.conf` — without them, Qt apps ignore the theming in `qt5ct/`/`qt6ct/` entirely. `libpulse` is what provides `pactl`, used unguarded by Waybar's audio module (right-click to mute) — listed explicitly here rather than relying on it arriving transitively through `pavucontrol`. `python-evdev` is what the Infinite Desktop daemon reads raw input with (see [step 7](#7-infinite-desktop--input-group)).
 
@@ -221,11 +221,7 @@ It writes 14 color files from their `*.static.*` counterparts, re-points the `gt
 
 This has to run **before** step 6 (enabling services) — some of those services read the files this step creates. Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [THEMING.md](THEMING.md).
 
-> ⚠️ **One thing this script does not fix:** `~/.config/gtk-4.0/gtk.css` has to be the two-line `@import` file, and the copy committed in this repo currently isn't (it's the raw theme stylesheet — see [THEMING.md § GTK theming](THEMING.md#gtk-theming)). After copying the configs, run:
->
-> ```bash
-> printf "@import 'theme-base.css';\n@import 'gtk-colors.css';\n" > ~/.config/gtk-4.0/gtk.css
-> ```
+> One thing this script deliberately doesn't touch is `gtk-4.0/gtk.css` — it only writes `theme-base.css` and `gtk-colors.css`. The repo ships `gtk.css` as the correct two-`@import` file, so a plain copy is all it needs; it only ever needs restoring by hand after `nwg-look` overwrites it, see [THEMING.md § GTK theming](THEMING.md#gtk-theming).
 
 ---
 
