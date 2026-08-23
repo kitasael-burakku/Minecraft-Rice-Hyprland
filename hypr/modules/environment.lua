@@ -8,7 +8,7 @@
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 -- Variables
-CursorTheme = "Nordic_Cursors_Scalable"
+CursorTheme = "nordic_cursors_scalable"
 GTKTheme = "Win11-Fantasy-Dark"
 
 -- Nombre bonito de la máquina. Vive acá y no en `hostnamectl --pretty`

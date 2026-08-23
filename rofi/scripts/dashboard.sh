@@ -77,11 +77,11 @@ message="󰚰 Updates: ${updates_text}
 if [ "${ROFI_RETV:-0}" = "1" ]; then
     chosen="${1:-}"
     case "$chosen" in
-        *"Upgrade System"*)
+        *"Upgrade system"*)
             kitty --title kitasan-update -e fish -c 'kitasan update' &
             disown
             ;;
-        *"Downed services"*)
+        *"See downed services"*)
             bash "$HOME/.config/rofi/scripts/systemd.sh" &
             disown
             ;;

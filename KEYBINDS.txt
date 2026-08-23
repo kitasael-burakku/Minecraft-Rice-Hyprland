@@ -23,7 +23,7 @@ SUPER + W                  Wallpaper picker
 SUPER + SHIFT + W          Toggle theming dinámico (matugen)
 SUPER + ALT + W            Selector de perfil visual.
 SUPER + O                  OBS Studio
-SUPER + F                  Yazi
+SUPER + CTRL + F           Yazi
 
 WINDOWS
 -------
@@ -33,6 +33,10 @@ CTRL + ALT + V             Toggle floating mode
 ALT + TAB                  Window shitcher
 SUPER + F                  Fullscreen mode 1
 SUPER + SHIFT + F          Fullscreen mode 0
+
+SYSTEM
+------
+
 SUPER + F6                 Rofi wifi
 SUPER + F7                 Bluetooth
 SUPER + F1                 Keybind Viewer

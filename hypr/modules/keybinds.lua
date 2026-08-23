@@ -50,14 +50,14 @@ hl.bind(mainMod .. " + ALT + W", hl.dsp.exec_cmd(Programs.themePicker))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(Programs.record))
 
 -- Yazi 
-hl.bind(mainMod .. "+ F", hl.dsp.exec_cmd(Programs.terminal .. " --title btop -e yazi"))
+hl.bind(mainMod .. "+CTRL + F", hl.dsp.exec_cmd(Programs.terminal .. " --title yazi -e yazi"))
 
 -- Open Music player
 -- hl.bind(mainMod .. "+ M", hl.dsp.exec_cmd(Programs.music))
 
------------------------------
+------------------------------
 ----      WINDOWS         ----
------------------------------
+------------------------------
 
 -- Close focused window
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
@@ -92,9 +92,9 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = 1 }))
 -- Fullscreen mode 0
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = 0 }))
 
-----------------------------
----       SYSTEM         ---
-----------------------------
+------------------------------
+----       SYSTEM         ----
+------------------------------
 
 -- Rofi wifi
 hl.bind(mainMod .. "+ F6", hl.dsp.exec_cmd(Programs.Wifi))
@@ -138,9 +138,9 @@ hl.bind("SHIFT + ESCAPE", hl.dsp.exec_cmd(Programs.terminal .. " --title bottom 
 -- Reload Waybar & SwayNc
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("systemctl --user restart waybar.service playerctl-watch.service swaync.service"))
 
------------------------------
+------------------------------
 ----   CLIPBOARD / COLOR  ----
------------------------------
+------------------------------
 
 -- Clipboard history
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(Programs.clipboard))
@@ -148,9 +148,9 @@ hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd(Programs.clipboard))
 -- Color picker
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("hyprpicker -a"))
 
------------------------------
+------------------------------
 ----     SCREENSHOTS      ----
------------------------------
+------------------------------
 
 -- Full monitor
 hl.bind(mainMod .. " + F12", hl.dsp.exec_cmd("hyprshot -m output -o ~/Pictures/Screenshots"))
@@ -161,10 +161,10 @@ hl.bind(mainMod .. " + F11", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | swappy -f 
 -- Active window screenshot
 hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/Screenshots"))
 
------------------------------
+------------------------------
 ----   INFINITE DESKTOP   ----
 ----      NAVIGATION      ----
------------------------------
+------------------------------
 -- Reemplaza el focus nativo: navega/centra ventanas flotantes
 -- en el canvas infinito (hyprland-infinite-desktop-v2)
 
@@ -173,10 +173,10 @@ hl.bind(mainMod .. " + right", hl.dsp.exec_cmd("python3 " .. home .. "/.config/h
 hl.bind(mainMod .. " + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py up"))
 hl.bind(mainMod .. " + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/navigate_windows.py down"))
 
------------------------------
+------------------------------
 ----   INFINITE DESKTOP   ----
 ----         PAN          ----
------------------------------
+------------------------------
 -- Reemplaza el move nativo: desplaza ventanas flotantes dentro
 -- del canvas infinito (hyprland-infinite-desktop-v2)
 
@@ -185,9 +185,9 @@ hl.bind(mainMod .. " + SHIFT + right", hl.dsp.exec_cmd("python3 " .. home .. "/.
 hl.bind(mainMod .. " + SHIFT + up",    hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py up"),    { repeating = true })
 hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.exec_cmd("python3 " .. home .. "/.config/hypr/infinite_desktop/move_window.py down"),  { repeating = true })
 
------------------------------
+------------------------------
 ----      WORKSPACES      ----
------------------------------
+------------------------------
 
 for i = 1, 10 do
     local key = i % 10
@@ -233,9 +233,9 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"),  { locked = t
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"),  { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),    { locked = true })
 
------------------------------
+------------------------------
 ----        MOUSE         ----
------------------------------
+------------------------------
 
 -- Move / resize windows
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
@@ -245,9 +245,9 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 
------------------------------
+------------------------------
 ----   LAYOUT SWITCHER    ----
------------------------------
+------------------------------
 
 -- Dwindle layout
 hl.bind(mainMod .. "+ SHIFT + D", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "dwindle" } })']]))
@@ -258,9 +258,9 @@ hl.bind(mainMod .. "+ SHIFT + M", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ ge
 -- Scrolling layout
 hl.bind(mainMod .. "+ SHIFT + O", hl.dsp.exec_cmd([[hyprctl eval 'hl.config({ general = { layout = "scrolling" } })']]))
 
-------------------------------
+-------------------------------
 ----   INFINITE DESKTOP    ----
-------------------------------
+-------------------------------
 -- hyprland-infinite-desktop-v2 — requiere los scripts en ~/.config/hypr/infinite_desktop/
 -- (chmod +x) y el daemon infinite_desktop_core.py corriendo
 -- (autostart configurado aparte)
