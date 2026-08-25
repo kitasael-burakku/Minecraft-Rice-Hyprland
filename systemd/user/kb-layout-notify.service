@@ -1,0 +1,17 @@
+[Unit]
+Description=Keyboard layout change popup (Hyprland activelayout events)
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=%h/.config/hypr/scripts/kb-layout-notify.py
+# El script ya reconecta solo cuando Hyprland reinicia, así que esto es la red
+# de seguridad de segundo nivel, no el mecanismo normal.
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target
