@@ -7,7 +7,7 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 hl.monitor({
-    output   = "HDMI-A-1",
+    output   = "",
     mode     = "1920x1080@200.00Hz",
     position = "0x0",
     scale    = 1,
