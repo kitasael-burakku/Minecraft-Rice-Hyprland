@@ -243,8 +243,6 @@
         "spacing": 8
     },
 
-    // Suscripción larga a swaync (una línea por evento, cero polling); el
-    // script le pone tooltip y cuenta, que -swb no trae.
     "custom/notification": {
         "exec": "~/.config/waybar/scripts/notifications.sh",
         "return-type": "json",

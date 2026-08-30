@@ -29,7 +29,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 20,
+        rounding       = 15,
         rounding_power = 2.5,
 
         active_opacity   = 0.9,
@@ -48,7 +48,7 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 5,
+            size     = 10,
             passes   = 2,
 
             ignore_opacity    = true,
@@ -60,8 +60,6 @@ hl.config({
 
             vibrancy =0.18,
             vibrancy_darkness = 0.0,
-            input_methods             = true,
-            input_methods_ignorealpha = 0.20,
         },
     },
 

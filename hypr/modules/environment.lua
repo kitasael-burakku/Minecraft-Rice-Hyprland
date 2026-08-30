@@ -8,8 +8,8 @@
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 -- Variables
-CursorTheme = "nordic_cursors_scalable"
-GTKTheme = "Win11-Fantasy-Dark"
+CursorTheme = "Vimix-white-cursors"
+GTKTheme = "Adwaita-dark"
 
 -- Nombre bonito de la máquina. Vive acá y no en `hostnamectl --pretty`
 -- Valor personal: cambiar al clonar, igual que monitors.lua e input.lua.
