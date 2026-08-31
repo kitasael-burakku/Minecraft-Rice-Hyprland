@@ -24,6 +24,7 @@ require("modules.input")
 
 require("modules.animations")
 require("modules.decoration")
+require("modules.hyprglass")
 
 require("modules.layout")
 require("modules.windowrules")

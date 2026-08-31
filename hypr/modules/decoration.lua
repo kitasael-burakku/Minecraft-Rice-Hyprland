@@ -29,11 +29,11 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 15,
-        rounding_power = 2.5,
+        rounding       = 20,
+        rounding_power = 5,
 
-        active_opacity   = 0.9,
-        inactive_opacity = 0.8,
+        active_opacity   = 0.82,
+        inactive_opacity = 0.72,
         fullscreen_opacity = 1,
 
         shadow = {

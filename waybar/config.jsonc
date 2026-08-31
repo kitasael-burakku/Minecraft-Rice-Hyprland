@@ -176,8 +176,7 @@
         "format": " {percentage}%",
         "max-length": 10,
         "tooltip": true,
-        "tooltip-format": "     Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB",
-        "on-click": "hyprctl clients | grep -i 'title: btm' >/dev/null && pkill -f 'kitty --title btm' || kitty --title btm -e btm"
+        "tooltip-format": "     Memory\n\nUsed:  {used:0.1f} GB ({percentage}%)\nAvailable:  {avail:0.1f} GB\nTotal:  {total:0.1f} GB"
     },
 
     "disk": {
