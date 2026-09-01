@@ -24,23 +24,23 @@ hg.preset("liquid", {
     -- Refracción alta: Rango 0.0-1.0.
     refraction_strength = 1,
 
-    -- Bisel con cuerpo. Máximo admitido 0.15.
-    edge_thickness = 0.15,
+    -- Bisel con cuerpo.
+    edge_thickness = 0.10,
 
     -- El glint que recorre el borde superior, y el halo del canto.
     specular_strength = 0.1,
     fresnel_strength  = 0.1,
 
     -- Frost.
-    blur_strength   = 0.4,
-    blur_iterations = 2,
+    blur_strength   = 0.40,
+    blur_iterations = 1,
 
     -- Dispersión espectral en el canto.
-    chromatic_aberration = 0.5,
+    chromatic_aberration = 1.50,
 
     -- Domo central sutil. La superficie no es plana, magnifica un pelo por el
     -- centro. Subirlo mucho hace efecto ojo de pez.
-    lens_distortion = 1,
+    lens_distortion = 1.2,
 
     glass_opacity = 1.0,
 

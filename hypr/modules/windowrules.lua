@@ -63,4 +63,4 @@ hl.layer_rule({ name  = "waybar", match  = { namespace = "waybar", }, blur = tru
 --hl.window_rule({ name  = "no-gaps-f1", match = { float     = false, workspace = "f[1]", }, border_size    = 2, rounding       = 20, rounding_power = 2.4, })
 
 -- Special workspace (scratchpad)
-hl.workspace_rule({ workspace = "special:magic", gaps_out  = 20, gaps_in   = 5, border_size = 3, })
+hl.workspace_rule({ workspace = "special:magic", gaps_out  = 20, gaps_in   = 5, border_size = 0, })

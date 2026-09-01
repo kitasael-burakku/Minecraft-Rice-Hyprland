@@ -9,9 +9,9 @@
 hl.config({
     general = {
         gaps_in  = 10,
-        gaps_out = 30,
+        gaps_out = 20,
 
-        border_size = 2,
+        border_size = 0,
 
         -- Teal Kitasan Glass, no blanco — misma identidad de reposo que
         -- hypr/scripts/dynamic-colors.static.sh (fuente de verdad), para que
