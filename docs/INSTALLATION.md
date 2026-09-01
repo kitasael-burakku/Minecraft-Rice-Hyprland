@@ -152,7 +152,7 @@ This is the part the base dependency list above doesn't cover: the actual visual
 |---|---|---|---|
 | GTK theme | **Adwaita-dark** | `hypr/modules/environment.lua` (`GTKTheme`), `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | **Nothing to install** — stock GTK, ships in `/usr/share/themes/` with GTK itself |
 | GTK theme (previous, still referenced in some code comments) | Win11-Fantasy-Dark, and before it Colorful-Dark-GTK | historical — see [THEMING.md § GTK theming](THEMING.md#gtk-theming) | [gnome-look.org/p/2307588](https://www.gnome-look.org/p/2307588) / [p/2091032](https://www.gnome-look.org/p/2091032) |
-| Icon theme | **Slot Gray Dark Icons** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `qt5ct/qt5ct.conf`, `qt6ct/qt6ct.conf`, `rofi/window-switcher.rasi`, `hypr/scripts/link-steam-icons.sh` | [gnome-look.org/p/2345718](https://www.gnome-look.org/p/2345718) |
+| Icon theme | **ryoku-folders** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `qt5ct/qt5ct.conf`, `qt6ct/qt6ct.conf`, `rofi/window-switcher.rasi` | Personal/hand-installed into `~/.local/share/icons/`. Any icon theme works — just use the same name in all five places |
 | Cursor theme | **Vimix-white-cursors** | `hypr/modules/environment.lua` (`CursorTheme`), `gtk-3.0/settings.ini` | `vimix-cursors` — a package, not a manual download. Installs to `/usr/share/icons/Vimix-white-cursors/` |
 | Monospace / UI font | **IosevkaTerm Nerd Font** (and its `Propo` variant) | Kitty, Waybar, SwayNC, every Rofi theme | `ttf-iosevkaterm-nerd` (already in the pacman list above) |
 | GTK UI font | Adwaita Sans | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | `adwaita-fonts` (Arch repos) |
@@ -177,11 +177,12 @@ mkdir -p ~/.themes ~/.icons ~/.local/share/icons
 After installing, apply them with `nwg-look` (already in the AUR list above) rather than editing GTK settings files by hand — it keeps `gtk-3.0/settings.ini` and `gtk-4.0/settings.ini` consistent. Then update the two names this repo hardcodes so they match what you installed:
 
 - `hypr/modules/environment.lua` — `CursorTheme` and `GTKTheme`
-- `hypr/scripts/link-steam-icons.sh` mentions `Slot-Gray-Dark-Icons` only in a comment (it doesn't hardcode the theme name in logic — it writes to the universal `hicolor` fallback instead, see [THEMING.md](THEMING.md#steam-game-icons)), so no code change is needed there if you pick a different icon theme.
+- `hypr/scripts/link-steam-icons.sh` mentions the icon theme only in a comment (it doesn't hardcode the name in logic — it writes to the universal `hicolor` fallback instead, see [THEMING.md](THEMING.md#steam-game-icons)), so no code change is needed there if you pick a different icon theme.
+- `qt5ct/qt5ct.conf`, `qt6ct/qt6ct.conf` and `rofi/window-switcher.rasi` **do** hardcode it, and have to match what `nwg-look` wrote into `settings.ini`. Those `settings.ini` files aren't versioned, so a fresh clone won't have them — set the theme with `nwg-look`, then make the three versioned files agree.
 
 > ⚠️ **Cursor theme names are case-sensitive.** `CursorTheme` in `environment.lua` has to match the *directory name* the theme installs as (`Vimix-white-cursors` here), not its pretty `Name=` from `index.theme`. If the cursor silently stays the default after logging in, check `ls /usr/share/icons ~/.icons ~/.local/share/icons` against what `environment.lua` says — a packaged theme lands in the first of those three, a hand-installed one in the other two.
 
-> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting the self-contained palette file this rice ships there. **`apply-static-colors.sh` does not undo this** — it never writes `gtk.css` at all. Restore it from the repo (`cp gtk-4.0/gtk.css ~/.config/gtk-4.0/gtk.css`), and check the file before running `dotbackup`, or the theme's whole stylesheet gets committed in its place. See [THEMING.md § GTK theming](THEMING.md#gtk-theming).
+> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting the one-line `@import` this rice ships there. **`apply-static-colors.sh` does not undo this** — it never writes `gtk.css` at all. Restore it with `printf "@import 'gtk-colors.css';\n" > ~/.config/gtk-4.0/gtk.css`, and check the file before running `dotbackup`, or the theme's whole stylesheet gets committed in its place. See [THEMING.md § GTK theming](THEMING.md#gtk-theming).
 
 ---
 
@@ -217,11 +218,11 @@ The per-app color files (`rofi/colors.rasi`, `waybar/colors.css`, `kitty/colors/
 bash ~/.config/hypr/scripts/apply-static-colors.sh
 ```
 
-It writes 14 color files from their `*.static.*` counterparts, re-points the `gtk-4.0/theme-base.css` symlink at whatever `GTKTheme` names in `environment.lua`, and seeds `hyprlock/wallpapers/current.png` from the versioned `2.png` if no wallpaper has been picked yet.
+It writes 14 color files from their `*.static.*` counterparts and seeds `hyprlock/wallpapers/current.png` from the versioned `2.png` if no wallpaper has been picked yet.
 
 This has to run **before** step 6 (enabling services) — some of those services read the files this step creates. Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [THEMING.md](THEMING.md).
 
-> This script does **not** write `gtk-3.0/gtk.css` or `gtk-4.0/gtk.css` — those are shipped complete by the repo and a plain copy is all they need. It only writes `gtk-colors.css` and the `theme-base.css` symlink, neither of which the current `gtk.css` files import any more; see [THEMING.md § Known inconsistency](THEMING.md#known-inconsistency-in-the-gtk-layer) for why those two outputs are currently inert.
+> This script does **not** write `gtk-3.0/gtk.css` or `gtk-4.0/gtk.css`. Those are shipped by the repo as a single `@import 'gtk-colors.css';` line and a plain copy is all they need — what the script writes is the `gtk-colors.css` that line pulls in. See [THEMING.md § GTK theming](THEMING.md#gtk-theming).
 
 ---
 
@@ -340,7 +341,7 @@ set -Ux USER_PRETTY "Your Name"
 Find the hardcoded paths all at once:
 
 ```bash
-rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Slot-Gray|Vimix|Adwaita-dark|Win11-Fantasy" .
+rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|ryoku-folders|Vimix|Adwaita-dark" .
 ```
 
 ---
@@ -413,7 +414,8 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 | `systemctl --user is-enabled <unit>` says `disabled` after copying the units | `[Install]` blocks don't self-activate — re-run step 6's `enable --now` |
 | Hyprland doesn't start, or ignores the whole config | Your Hyprland build doesn't support the native Lua config API (`hl.*`) — see [ARCHITECTURE.md](ARCHITECTURE.md#hyprland-in-lua) |
 | Wallpaper picker errors on `awww` | You installed `swww` instead — this rice uses `awww`, not `swww` |
-| GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink. `apply-static-colors.sh` does **not** repair this — restore the file from the repo by hand, see [THEMING.md](THEMING.md#gtk-theming) |
+| GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink. `apply-static-colors.sh` does **not** repair this — restore the one `@import` line by hand, see [THEMING.md](THEMING.md#gtk-theming) |
+| GTK apps and Qt/Rofi show different icon sets | The icon theme name disagrees between `gtk-*/settings.ini` (written by `nwg-look`, not versioned) and `qt5ct.conf` / `qt6ct.conf` / `rofi/window-switcher.rasi`. Make all five say the same thing, see [step 2](#2-themes-icons-cursors-and-fonts) |
 | Steam games have no icon in Rofi's launcher | Expected on a fresh clone until Steam has actually cached art for those games — see [THEMING.md](THEMING.md#steam-game-icons) |
 | CPU temperature row is empty in Waybar/dashboard | `hwmon-path-abs` in `waybar/config.jsonc` and `rofi/scripts/dashboard.sh` still point at the original machine's sensor — fix both, see step 9 |
 | Waybar's left/right modules never appear | Expected at rest — move the cursor into the top-left or top-right third to reveal them. If they never appear at all, `cursor-zone.py` isn't executable (step 5) or it couldn't reach Hyprland's socket; `journalctl --user -u waybar` shows it. The centre island renders either way |

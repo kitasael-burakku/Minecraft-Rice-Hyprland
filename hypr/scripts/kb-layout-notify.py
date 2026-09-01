@@ -11,9 +11,15 @@ Escucha el socket de EVENTOS de Hyprland (.socket2.sock), que no es el mismo
 que el de control (.socket.sock) que usa waybar/scripts/cursor-zone.py: aquí
 Hyprland empuja líneas "evento>>datos" y no hay que sondear nada.
 
-Ojo con el duplicado: hay tres teclados declarados en input.lua y Hyprland
-emite un `activelayout` POR DISPOSITIVO, así que un solo Alt+Shift dispara
-tres eventos idénticos. Se deduplica por nombre de distribución.
+Ojo con el duplicado: Hyprland emite un `activelayout` POR DISPOSITIVO, así
+que con varios teclados declarados en input.lua un solo Alt+Shift dispara un
+evento por cada uno. Se deduplica por nombre de distribución. Hoy input.lua
+declara UN teclado, así que la deduplicación es red de seguridad y no algo
+que haga falta — sigue ahí porque agregar un segundo teclado no debería
+obligar a tocar este script.
+
+Lo arranca systemd/user/kb-layout-notify.service (WantedBy=graphical-session
+.target, Restart=always), no un keybind ni autostart.lua.
 """
 
 import os

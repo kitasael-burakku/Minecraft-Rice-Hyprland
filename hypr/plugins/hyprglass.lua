@@ -77,7 +77,7 @@ hl.config({
     },
 })
 
--- ── Dónde no quiero vidrio ───────────────────────────────────────────────────ç
+-- ── Dónde no quiero vidrio ───────────────────────────────────────────────────
 -- Los tags que entiende el plugin (src/PluginConfig.hpp):
 --   hyprglass_disabled        apaga el vidrio ahí (gana sobre _enabled)
 --   hyprglass_enabled         lo fuerza aunque el global esté en 0

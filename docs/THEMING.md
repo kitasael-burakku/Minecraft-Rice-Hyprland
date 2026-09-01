@@ -36,8 +36,8 @@ The same thing is available headless as `kitasan theme <scheme>` (no `scheme-` p
 | SwayNC | `swaync/colors.css` | `swaync-client -rs` |
 | Starship | `starship.toml` | none needed — re-read on every prompt render |
 | Fish | `fish/conf.d/theme-goldship.fish` | none possible — `conf.d/` is only sourced when a shell starts; new terminals pick it up automatically |
-| GTK3 | `gtk-3.0/gtk-colors.css` | none possible — GTK only reads `gtk.css` at app launch; already-open apps keep their old colors. **Currently inert** — nothing imports this file any more, see [GTK theming](#gtk-theming) below |
-| GTK4 | `gtk-4.0/gtk-colors.css` | same as GTK3, and inert for the same reason |
+| GTK3 | `gtk-3.0/gtk-colors.css` | none possible — GTK only reads `gtk.css` at app launch; already-open apps keep their old colors |
+| GTK4 | `gtk-4.0/gtk-colors.css` | same as GTK3 — same file, different destination |
 | Qt5 | `qt5ct/colors/kitasan-glass.conf` | none possible — same per-launch limitation as GTK |
 | Qt6 | `qt6ct/colors/kitasan-glass.conf` | same as Qt5 (same template, different output path) |
 
@@ -57,30 +57,44 @@ If you want to adapt this to your own palette instead of matugen's Material You 
 
 ## GTK theming
 
-> **This section was rewritten to match what the repo actually ships.** The GTK layer was reworked around the 2026-08-30 backup (`c87bfab`), together with the switch to a stock GTK theme. The two-`@import` chain described in earlier revisions of this document is no longer what's in the tree. See [Known inconsistency](#known-inconsistency-in-the-gtk-layer) at the end of this section for the loose ends that rework left behind.
+Both toolkits are themed by **one palette file, deployed twice**. `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css` are a single line each:
 
-**What ships today:** `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css` are **byte-identical, self-contained colour files**. No `@import`, no theme chaining. Each declares the same palette twice, under two sets of names:
+```css
+@import 'gtk-colors.css';
+```
 
-- the **libadwaita / GTK4** role names — `accent_color`, `window_bg_color`, `view_bg_color`, `headerbar_bg_color`, `card_bg_color`, `sidebar_bg_color`, `dialog_bg_color`, `popover_bg_color`, the `destructive_*` / `warning_*` / `success_*` semantics;
-- the **classic GTK3 (Adwaita)** names — `theme_bg_color`, `theme_fg_color`, `theme_base_color`, `theme_selected_bg_color`, the `theme_unfocused_*` set, `insensitive_*`, `borders`, `error_color`.
+`gtk-colors.css` is the generated file — written by matugen when dynamic theming is on, or copied from `gtk-colors.static.css` by `apply-static-colors.sh` when it's off. It declares the same palette under **two sets of names**:
 
-Each toolkit ignores the other's names, so both sets coexist in one file and one file themes both. That's what makes the two copies identical — they aren't two configurations, they're the same configuration deployed twice.
+- the **libadwaita / GTK4** role names — `accent_color`, `window_bg_color`, `view_bg_color`, `headerbar_bg_color`, `card_bg_color`, `sidebar_bg_color`, `dialog_bg_color`, `popover_bg_color`, plus `destructive_*` / `warning_color` / `success_color`;
+- the **classic GTK3 (Adwaita)** names — `theme_bg_color`, `theme_fg_color`, `theme_base_color`, `theme_selected_bg_color`, the `theme_unfocused_*` set, `insensitive_*`, `borders`, `unfocused_borders`, `error_color`.
 
-This works because `GTKTheme` is now **`Adwaita-dark`** — stock GTK, no third-party theme to chain onto. The historical problem this section used to describe (GTK4 dropped support for the `GTK_THEME` env var that GTK3 still honors, so `~/.config/gtk-4.0/gtk.css` had to *contain* the theme rather than merely override it) went away with the third-party theme: there is no external stylesheet left to pull in on either side.
+Each toolkit ignores the other's names, so both sets live in one file. 42 `@define-color` declarations in total, identical between the template and its static mirror — `check-template-parity.sh` enforces that.
 
-> ⚠️ **`nwg-look` will still overwrite `~/.config/gtk-4.0/gtk.css`** if you use its GUI to pick a GTK4 theme — it replaces the file with a direct symlink to the theme's own stylesheet. The palette above is then gone. Check with `head -3 ~/.config/gtk-4.0/gtk.css`: it should show the `/* Ryoku palette -> GTK ... */` comment, not theme CSS rules. This is worth checking **before a `dotbackup` run** too — the sync follows the symlink and commits the theme's entire stylesheet into the repo, which is how a previous drift got in.
+**Why this is enough now.** `GTKTheme` is stock **`Adwaita-dark`**: GTK3 loads it through the `GTK_THEME` env var (set from `environment.lua`), and GTK4 gets it from libadwaita, which is built in. There is no third-party stylesheet left to chain onto, so `gtk.css` only has to supply colors. Earlier revisions of this rice used a third-party GTK theme, which is why `gtk-4.0/gtk.css` used to need a `theme-base.css` symlink to the theme's own stylesheet — that whole mechanism is gone.
 
-**GTK4 dynamic theming was tried and reverted.** The GTK theme in use at the time painted most of its UI with literal hardcoded hex values rather than through the standard `@theme_bg_color`/`@theme_selected_bg_color` variables — it *declared* those names for compatibility but barely *used* them (`@theme_text_color` appeared exactly once across the entire stylesheet). Redefining them therefore had close to no visible effect on GTK4 apps. Making GTK4 genuinely follow the wallpaper would have meant patching literal hex strings inside a private copy of a third-party stylesheet — fragile, and silently broken by any theme update. That reasoning is what the current stock-Adwaita + one-palette-file arrangement replaces.
+**Surface ladder.** The container roles are mapped so the result follows Adwaita's own convention rather than flattening into one tone:
 
-### Known inconsistency in the GTK layer
+| Role | Used for | Static value |
+|---|---|---|
+| `surface_container_lowest` | content views (`view_bg_color`, `theme_base_color`) | `#0d0d0d` |
+| `surface` | window background | `#1a1a1a` |
+| `surface_container_low` | cards, sidebars | `#202020` |
+| `surface_container` | headerbars, popovers, insensitive | `#262626` |
+| `surface_container_high` | dialogs | `#2f2f2f` |
 
-Documented rather than silently patched, because resolving it is a design decision, not a doc fix. As of this writing, three artifacts of the pre-rework chain are still in the tree and no longer do anything:
+Content views end up *darker* than the window and headerbars *lighter*, which is what GTK apps expect. matugen's own dark schemes order these roles the same way, so the dynamic output keeps the same relationship at whatever hue the wallpaper produces.
 
-1. **`gtk-colors.css` is generated but never imported.** `matugen/config.toml` still declares the `[templates.gtk3]` and `[templates.gtk4]` outputs, and `apply-static-colors.sh` still copies `gtk-colors.static.css` over them. Since neither `gtk.css` imports that file any more, **GTK apps no longer follow the wallpaper at all** — the matugen GTK path is inert, not merely partial as it was before.
-2. **`theme-base.css` is dead.** Nothing imports it. `apply-static-colors.sh` still tries to recreate the symlink from `GTKTheme`, but it only searches `~/.themes/` and `~/.local/share/themes/` — and `Adwaita-dark` lives in `/usr/share/themes/`, so the symlink is never refreshed. On the reference machine it is currently *dangling*, still pointing at a `~/.themes/Win11-Fantasy-Dark/` that no longer exists. Harmless only because nothing reads it.
-3. **The header comment in `gtk.css` says "Rendered by matugen; do not edit."** No matugen template produces `gtk.css` — `config.toml` only ever writes `gtk-colors.css`. The file is hand-maintained despite what it says about itself.
+matugen has no `warning`/`success` roles of its own, so those reuse `tertiary`/`secondary` — the same substitution `waybar-colors.css` and `starship.toml` already make.
 
-If the intent is for GTK to follow the wallpaper again, the smallest fix is to restore an `@import 'gtk-colors.css';` line at the top of both `gtk.css` files and let the existing template pipeline resume. If the intent is a fixed GTK palette, then the two matugen GTK templates, the two `gtk-colors.static.css` files and the `theme-base.css` block in `apply-static-colors.sh` are all removable. **Neither was assumed here.**
+> ⚠️ **`nwg-look` will overwrite `~/.config/gtk-4.0/gtk.css`** if you use its GUI to pick a GTK4 theme — it replaces the file with a direct symlink to that theme's stylesheet, and the `@import` is gone. Check with `cat ~/.config/gtk-4.0/gtk.css`: it should be the one `@import` line and nothing else. Restore it with:
+>
+> ```bash
+> printf "@import 'gtk-colors.css';\n" > ~/.config/gtk-4.0/gtk.css
+> ```
+>
+> Worth checking **before a `dotbackup` run**: the sync follows the symlink and would commit the theme's entire stylesheet into the repo in place of the one-liner. That is exactly how a previous drift got in.
+
+**A note on GTK4 coverage.** Redefining libadwaita's named colors works for apps that use them — which stock Adwaita/libadwaita apps do, unlike the third-party theme this rice used before (it painted with literal hex and declared the variables only for show, which is why GTK4 dynamic theming was tried and abandoned back then). Apps that hardcode their own colors, or ship their own stylesheet, still won't follow the wallpaper; that is a per-app limit, not a pipeline one.
 
 ---
 
@@ -96,11 +110,20 @@ If the intent is for GTK to follow the wallpaper again, the smallest fix is to r
 
 1. Install your GTK/icon/cursor theme (see [INSTALLATION.md](INSTALLATION.md#2-themes-icons-cursors-and-fonts) for where to get them and where they go).
 2. Update `CursorTheme` / `GTKTheme` in `hypr/modules/environment.lua`. `CursorTheme` must be the theme's **directory** name and is case-sensitive.
-3. If you install a third-party GTK theme in place of stock `Adwaita-dark`, decide how it should combine with `gtk-3.0/gtk.css` / `gtk-4.0/gtk.css`. Those files are a self-contained palette today, not an overlay — a GTK4 theme needs its own stylesheet imported *before* the palette, or the palette will be all GTK4 gets. See [Known inconsistency](#known-inconsistency-in-the-gtk-layer) above; this is the part that is genuinely undecided in the current tree.
+3. If you install a third-party GTK theme in place of stock `Adwaita-dark`, GTK3 picks it up from `GTK_THEME` on its own, but **GTK4 does not** — there is no env var for it. A GTK4 theme has to be imported by `gtk-4.0/gtk.css` itself, *before* the color overlay:
+
+   ```css
+   @import 'theme-base.css';   /* symlink to the theme's own gtk-4.0/gtk.css */
+   @import 'gtk-colors.css';
+   ```
+
+   That is the chain this rice used to ship and dropped when it moved to stock Adwaita. Whether the overlay then has any visible effect depends on the theme actually using the `@theme_*` / libadwaita variables instead of literal hex — many don't.
 4. If you used `nwg-look` to apply the theme, check `gtk-4.0/gtk.css` afterwards — it overwrites that file (see the warning above).
 5. Update `icon_theme=` in `qt5ct/qt5ct.conf` and `qt6ct/qt6ct.conf` if you changed the icon theme; Qt reads its icon theme from there, not from the GTK settings.
 
-Icon themes mostly don't need a code change — `hypr/scripts/link-steam-icons.sh` writes into the universal `hicolor` fallback (see below), which works under any active icon theme. Two places do hardcode the name and have to be kept in sync with it: `rofi/window-switcher.rasi` (`configuration { icon-theme: "Slot-Gray-Dark-Icons"; }`, so its by-class lookup has something concrete to resolve against) and `icon_theme=` in `qt5ct.conf`/`qt6ct.conf`. The icon theme is still `Slot-Gray-Dark-Icons`; only the GTK theme and the cursor theme changed in the rework described above.
+Icon themes mostly don't need a code change — `hypr/scripts/link-steam-icons.sh` writes into the universal `hicolor` fallback (see below), which works under any active icon theme. Two places do hardcode the name and have to be kept in sync with it: `rofi/window-switcher.rasi` (`configuration { icon-theme: "ryoku-folders"; }`, so its by-class lookup has something concrete to resolve against) and `icon_theme=` in `qt5ct.conf`/`qt6ct.conf`.
+
+> The icon theme is **`ryoku-folders`**. GTK reads it from `gtk-3.0/settings.ini` / `gtk-4.0/settings.ini`, which are written by `nwg-look` and are **not** versioned in this repo — so those two files are the one place the name lives that a fresh clone won't set for you. The three versioned references above have to agree with them, or GTK apps and Qt/Rofi end up showing different icon sets.
 
 ---
 
@@ -118,7 +141,7 @@ That name is **never materialized as an actual icon file anywhere** on a native 
 
 - For every `steam_icon_<appid>` referenced in `~/.local/share/applications/*.desktop`, it finds that game's `logo.png` inside `~/.local/share/Steam/appcache/librarycache/<appid>/` (searched at any depth, since Steam nests it under a changing CDN-hash subfolder).
 - It creates a **symlink** — not a copy — at `~/.local/share/icons/hicolor/256x256/apps/steam_icon_<appid>.png` pointing at that `logo.png`.
-- `hicolor` is the icon-theme spec's universal fallback, implicitly inherited by *every* theme — so this works regardless of which theme (`Slot-Gray-Dark-Icons` or anything you switch to later) is active, and never touches the theme's own files.
+- `hicolor` is the icon-theme spec's universal fallback, implicitly inherited by *every* theme — so this works regardless of which theme (`ryoku-folders` or anything you switch to later) is active, and never touches the theme's own files.
 - It's idempotent: re-running it only adds symlinks for games it hasn't seen before.
 
 It runs once per Hyprland session via `hl.exec_cmd(...)` in `hypr/modules/autostart.lua` — a plain one-shot, not a systemd service, since there's no daemon behavior to supervise (same reasoning as the `hyprctl setcursor` call next to it).

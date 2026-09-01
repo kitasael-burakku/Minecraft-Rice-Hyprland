@@ -359,7 +359,7 @@ Nothing in this rice is generated at build time — but several things *are* wri
 | Writer | Writes | When |
 |---|---|---|
 | `matugen` (driven by `rofi/scripts/matugen_reload.sh`) | the 14 per-app color files listed in [THEMING.md](THEMING.md) | on every wallpaper apply, while the sentinel is on |
-| `hypr/scripts/apply-static-colors.sh` | those same 14 files, from their `*.static.*` counterparts; plus the `gtk-4.0/theme-base.css` symlink and a bootstrap `hyprlock/wallpapers/current.png` | fresh-clone bootstrap, and every time dynamic theming is switched off |
+| `hypr/scripts/apply-static-colors.sh` | those same 14 files, from their `*.static.*` counterparts; plus a bootstrap `hyprlock/wallpapers/current.png` | fresh-clone bootstrap, and every time dynamic theming is switched off |
 | `hypr/scripts/apply-wallpaper.sh` | `hypr/.current-wallpaper`, `hyprlock/wallpapers/current.png` | every wallpaper apply, from any entry point |
 | `waybar/scripts/cursor-zone.py` | `waybar/zone.css` | whenever the cursor crosses into a different third of the top band |
 | `rofi/scripts/generate-thumbs.sh` | `~/.cache/rofi-wallpapers/thumbs/` | picker open (if stale) and daily via timer |
