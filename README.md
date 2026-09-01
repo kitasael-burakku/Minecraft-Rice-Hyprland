@@ -34,6 +34,7 @@
 
 - 🎛️ **Session managed by `systemd --user`**, not loose background processes — every daemon (Waybar, SwayNC, Hypridle, clipboard, wallpaper daemon, etc.) is a real unit with `Restart=`, its own journal, and a clean start/stop lifecycle tied to `graphical-session.target`
 - ⌨️ **`kitasan` — one CLI for the whole rice**: health checks, cache cleanup, updates, visual theme switching, desktop modes, and a system dashboard, all under one command with Fish completions
+- 🩺 **Three read-only checkers behind `kitasan doctor`** — template/static colour parity, cross-file drift (do `gtk.css`'s imports resolve? do the five places that name the icon theme agree? does anything still load what matugen generates?), and `KEYBINDS.txt` vs. `keybinds.lua`. Plus `kitasan doctor --fresh-clone`, which reports which machine-specific values don't yet resolve on *your* box. None of them writes anything
 - 🎨 Opt-in Material You theming that regenerates **14 color files** through matugen — including GTK3/GTK4 and Qt5/Qt6, not just the terminal-adjacent apps — across 9 selectable Material You schemes
 - 🚀 A handful of purpose-built Rofi tools beyond the launcher — Wi-Fi, Bluetooth, audio device, MPRIS player picker, quick power menu, service manager, visual theme picker, and a system dashboard, all native Rofi script mode
 - 🖱️ Custom two-level Rofi wallpaper picker (video / image, each with its own theme) — built from scratch as native Rofi script mode, no external project
@@ -54,6 +55,7 @@
 | Lua-based Hyprland configuration | ✅ |
 | Session & daemons managed by `systemd --user` | ✅ |
 | `kitasan` unified CLI (health / clean / update / theme / mode / dashboard) | ✅ |
+| `kitasan doctor` — read-only config checkers, incl. `--fresh-clone` | ✅ |
 | Desktop modes — normal / focus / gaming / cinema | ✅ |
 | Waybar — three islands, cursor-zone reveal, audio slider, media controls | ✅ |
 | Dynamic theming via matugen — Rofi, Waybar, Kitty, GTK3/4, Qt5/6, and more (opt-in, 9 schemes) | ✅ |
@@ -229,7 +231,7 @@ This configuration was developed and tested on this hardware. Some parts depend 
 |---|---|
 | Hyprland (Lua) | Modular window manager |
 | `systemd --user` | Supervises every daemon — Waybar, SwayNC, Hypridle, clipboard, wallpaper, Infinite Desktop, and 4 background timers. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#session-lifecycle) |
-| `kitasan` (Fish function) | Unified CLI for the whole rice — health checks, cache cleanup, updates, theme/mode switching, dashboard. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#kitasan--unified-cli) |
+| `kitasan` (Fish function) | Unified CLI for the whole rice — health checks, cache cleanup, updates, theme/mode switching, dashboard, and `doctor` (three read-only checkers; `--fresh-clone` audits the machine-specific values). See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#kitasan--unified-cli) |
 | Waybar | Status bar split into three islands — permanent centre (window title, workspaces, clock, volume, privacy, notifications, tray, updates) plus a media/volume island and a system-metrics island that reveal on cursor zone. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#waybar--three-islands-and-the-cursor-zones) |
 | Rofi | Launcher, clipboard selector, two-level wallpaper selector, [web hub](docs/ARCHITECTURE.md#rofi-web-hub) (`SUPER + SHIFT + /`), decorative power menu, window switcher with minimize/restore (`ALT + TAB`), and quick-action tools. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#rofi-quick-actions) |
 | matugen | Dynamic theming engine — off by default, toggled with `SUPER + SHIFT + W`, regenerates 14 color files including GTK3/4 and Qt5/6. Scheme picked with `SUPER + ALT + W`. See [docs/THEMING.md](docs/THEMING.md) |
@@ -278,12 +280,14 @@ Personal rice in progress. May contain paths, decisions, and dependencies very s
 
 ## Project Philosophy
 
-My goal is not to build a perfect configuration, but one that I can understand, maintain, and modify without depending on external tools or unnecessary layers of abstraction.
+My goal is not to build a perfect configuration, but one that I can understand, maintain, and modify without depending on layers of abstraction I haven't read.
 
 I prefer:
 
 - Modular configuration over giant files.
-- Manual installation over magic scripts.
+- Scripts I run on purpose over an installer that hides the steps.
 - Understanding over copying.
 - Simplicity over unnecessary complexity.
-- Learning over automating.
+- Tools that report over tools that decide.
+
+**This is not the same as "no automation".** The rice automates a great deal: the whole session is `systemd --user` units, `KEYBINDS.txt` is generated from `keybinds.lua`, the colour pipeline regenerates fourteen files from twelve templates, and `kitasan doctor` runs three checkers over the config. What it refuses is automation that acts *for* you — a one-shot installer that hides what it did, or a "fixer" that silently rewrites your system. Every script here is meant to be read before it's run, and the checkers are strictly read-only: they report what's wrong and exit, they never repair anything on their own.

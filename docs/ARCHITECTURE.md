@@ -304,11 +304,17 @@ kitasan update           → sysupdate
 kitasan theme [scheme]   → visual profile picker — Rofi if no argument, direct if you pass one
 kitasan wall             → wallpaper picker over fzf, for when you don't want Rofi
 kitasan mode [profile]   → normal / focus / gaming / cinema — see below
-kitasan doctor           → template parity + keybinds drift + failed services + orphans, read-only
+kitasan doctor           → parity + config drift + keybinds drift + failed services
+                           + orphans + diskbackup state, read-only
+kitasan doctor --fresh-clone → the other question: does every machine-specific
+                           value resolve on THIS machine? Its own report, not a
+                           seventh section — see below
 kitasan dashboard        → same panel as SUPER + F5, launched from a terminal
 kitasan diskbackup       → second-disk mirror — see below; hidden if not installed
 kitasan menu             → all of the above, picked from Rofi (same as SUPER + F4)
 ```
+
+`doctor` is where the three read-only checkers surface — see [Scripts that write other files](#scripts-that-write-other-files) for what each one compares. `--fresh-clone` is deliberately a separate report rather than another section of the daily pass: after cloning you want to know what you still owe the machine, not whether something is failing right now, and "orphan packages" is noise at that moment.
 
 **Desktop modes** (`kitasan mode`) bundle DND, blur/animations, idle timeout, and power profile into one live-applied state, each via the mechanism that actually supports it — `hyprctl eval` for blur/animations (same one used for dynamic border colors), `swaync-client -dn/-df` for DND, and `systemctl --user stop/start hypridle.service` (or a raw `hypridle -c` process with longer timeouts) for idle behavior:
 
