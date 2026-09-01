@@ -15,8 +15,8 @@
 #   kitasan wall             → terminal wallpaper picker (fzf, no rofi)
 #   kitasan mode             → normal/focus/gaming/cinema, rofi picker
 #   kitasan mode <perfil>    → sets the profile directly, no rofi
-#   kitasan doctor           → template parity + keybinds drift +
-#                               downed systemd services + orphans (read-only)
+#   kitasan doctor           → template parity + config drift + keybinds drift
+#                               + downed systemd services + orphans (read-only)
 #   kitasan dashboard        → system overview (updates/temps/disk/player), rofi
 #   kitasan diskbackup        → mirror to /mnt/storage (repos + themes + private files)
 #   kitasan diskbackup --check → just checks if anything's pending, writes nothing
@@ -30,7 +30,7 @@ function __kitasan_doctor
     _rui_top $W
     _rui_row $W brwhite "󰓙  kitasan doctor"
     _rui_mid $W
-    _rui_row $W brblack "Parity · Keybinds · Services · Orphans"
+    _rui_row $W brblack "Parity · Drift · Keybinds · Services · Orphans"
     _rui_bot $W
     echo ""
 
@@ -40,6 +40,14 @@ function __kitasan_doctor
         _rui_ok "All dynamic templates match their statics."
     else
         printf "%s\n" $parity_out
+    end
+
+    _rui_section cyan "󰋩" "Config drift (cross-file references)"
+    set -l drift_out (bash "$HOME/.config/hypr/scripts/check-config-drift.sh" 2>&1)
+    if test -z "$drift_out"
+        _rui_ok "gtk.css imports, theme names, icon theme and symlinks all resolve."
+    else
+        printf "%s\n" $drift_out
     end
 
     _rui_section cyan "󰌌" "Keybinds documentation"

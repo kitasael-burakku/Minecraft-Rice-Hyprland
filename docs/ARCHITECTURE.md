@@ -369,7 +369,23 @@ Nothing in this rice is generated at build time — but several things *are* wri
 | `hypr/scripts/generate-keybinds-doc.sh --write` (via `checkkeybinds --write`) | `~/Documents/KEYBINDS.txt` | manually, after editing `keybinds.lua` |
 | `waybar/scripts/updates.sh --force`, `playerctl-watch.sh` | caches under `$XDG_RUNTIME_DIR` | timer / MPRIS events |
 
-Two read-only checkers exist alongside them, both surfaced through `kitasan doctor`: `hypr/scripts/check-template-parity.sh` (every matugen template and its `*.static.*` mirror must declare the same set of identifiers — 11 pairs) and `hypr/scripts/generate-keybinds-doc.sh --check` (KEYBINDS.txt vs. `keybinds.lua`). Neither writes anything.
+Three read-only checkers exist alongside them, all surfaced through `kitasan doctor`. None writes anything, and none blocks anything — they report and exit with the number of problems found.
+
+| Checker | What it compares |
+|---|---|
+| `check-template-parity.sh` | Every matugen template against its `*.static.*` mirror: both must declare the same set of identifiers (11 pairs). Looks *inside* the color files |
+| `check-config-drift.sh` | The wiring *between* files — see below |
+| `generate-keybinds-doc.sh --check` | `KEYBINDS.txt` against `keybinds.lua` |
+
+**Why `check-config-drift.sh` exists.** `dotbackup` syncs `~/.config` **into** the repo, so config changes arrive as `dotfiles: backup <date>` commits with no stated intent, and nothing compares the pieces against each other. A half-finished migration can therefore sit broken for days — which is exactly what happened to the GTK layer in August 2026. It runs five checks:
+
+1. Every `@import` in `gtk-3.0/gtk.css` / `gtk-4.0/gtk.css` resolves, and neither file has been replaced by an `nwg-look` symlink.
+2. `CursorTheme` and `GTKTheme` from `environment.lua` name directories that actually exist (both lookups are case-sensitive and fail silently).
+3. The five places that hardcode the icon theme agree — the two `settings.ini` files plus `qt5ct.conf`, `qt6ct.conf` and `rofi/window-switcher.rasi`.
+4. Every file matugen generates has something that loads it. A generated file with no reader is how the GTK pipeline went inert.
+5. No broken symlinks anywhere in the config dirs this repo owns.
+
+Its own failure modes were verified against a fixture tree rather than assumed — `KITASAN_CONFIG_DIR` overrides the base path for exactly that purpose. Two limitations are documented in the script header: check 4 matches by basename, so the three surfaces that each generate a `colors.css` mask one another, and checks 2 and 3 read the real `/usr/share` and `~/.icons` regardless of that override.
 
 ---
 

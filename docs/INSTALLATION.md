@@ -401,7 +401,7 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 - `SUPER + W` opens the wallpaper picker; picking one changes the desktop background.
 - `SUPER + SHIFT + /` opens the Rofi web hub; picking a category then a page opens it in your browser.
 - GTK apps (e.g. `nautilus`) render with the installed theme, not the GTK default (Adwaita fallback look) — if they don't, see [Troubleshooting](#troubleshooting).
-- `SUPER + F4` opens the `kitasan` menu; `kitasan doctor` reports clean (template parity, keybinds doc, failed services, orphans).
+- `SUPER + F4` opens the `kitasan` menu; `kitasan doctor` reports clean (template parity, config drift, keybinds doc, failed services, orphans). On a fresh clone the drift section will flag the missing `gtk-*/settings.ini` until you've run `nwg-look` — see [step 2](#2-themes-icons-cursors-and-fonts).
 - If you did [step 11](#11-hyprland-plugins-optional): `hyprpm list` shows both plugins as `enabled: true`, translucent windows have a visible glass bezel, and the cursor tilts as you move it. None of this is required for a correct install — see [PLUGINS.md](PLUGINS.md).
 
 ---
