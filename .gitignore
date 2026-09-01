@@ -15,6 +15,11 @@
 fastfetch/.fastfetch_bag
 fish/fish_variables
 matugen/enabled
+# Igual que matugen/enabled: estado de sesión, no diseño del rice. Lo escriben
+# rofi/scripts/theme.sh (SUPER+ALT+W) y `kitasan theme`, y matugen_reload.sh
+# cae a scheme-tonal-spot si no existe — así que un clon nuevo no necesita el
+# archivo. Versionado solo generaba un commit por cada cambio de esquema.
+matugen/scheme
 hypr/.current-wallpaper
 hyprlock/wallpapers/current.png
 
