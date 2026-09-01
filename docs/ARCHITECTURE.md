@@ -375,6 +375,7 @@ Three read-only checkers exist alongside them, all surfaced through `kitasan doc
 |---|---|
 | `check-template-parity.sh` | Every matugen template against its `*.static.*` mirror: both must declare the same set of identifiers (11 pairs). Looks *inside* the color files |
 | `check-config-drift.sh` | The wiring *between* files — see below |
+| `check-personal-paths.sh` | Every machine-specific value against the machine it's running on. Not part of the daily pass — it's what `kitasan doctor --fresh-clone` runs |
 | `generate-keybinds-doc.sh --check` | `KEYBINDS.txt` against `keybinds.lua` |
 
 **Why `check-config-drift.sh` exists.** `dotbackup` syncs `~/.config` **into** the repo, so config changes arrive as `dotfiles: backup <date>` commits with no stated intent, and nothing compares the pieces against each other. A half-finished migration can therefore sit broken for days — which is exactly what happened to the GTK layer in August 2026. It runs five checks:
@@ -386,6 +387,23 @@ Three read-only checkers exist alongside them, all surfaced through `kitasan doc
 5. No broken symlinks anywhere in the config dirs this repo owns.
 
 Its own failure modes were verified against a fixture tree rather than assumed — `KITASAN_CONFIG_DIR` overrides the base path for exactly that purpose. Two limitations are documented in the script header: check 4 matches by basename, so the three surfaces that each generate a `colors.css` mask one another, and checks 2 and 3 read the real `/usr/share` and `~/.icons` regardless of that override.
+
+**Why `check-personal-paths.sh` exists.** [INSTALLATION.md § 9](INSTALLATION.md#9-fix-personal-paths) is a table of fifteen values hardcoded to one machine. It's the highest-risk step of the install and it arrives as homework — nothing tells you which rows you still owe. This answers that mechanically, and it deliberately does **not** compare against the original author's values: it checks that each value *resolves on the machine it's running on*. That makes it useful on a fork and on the original machine alike, where it stays silent until something actually breaks — a monitor swap, a renamed input device, a deleted wallpaper.
+
+| # | Checks |
+|---|---|
+| 1 | No file still points at another user's `/home` (the documented placeholders `user` / `youruser` / `your-username` are excluded) |
+| 2 | The `mode` in `monitors.lua` is one a connected display actually offers |
+| 3 | Each `hl.device` name in `input.lua` matches a connected device (names normalised, since `hyprctl devices` prints slugs) |
+| 4 | The hwmon path exists — and `waybar/config.jsonc` and `dashboard.sh` still agree on it |
+| 5 | `DEFAULT_WALLPAPER` exists (video wallpapers aren't distributed, so this fails on every fresh clone) |
+| 6 | The picker's wallpaper directories exist, honouring `$WALLPAPER_DIR_IMG` / `$WALLPAPER_DIR_VIDEO` |
+| 7 | Qt's `color_scheme_path` resolves |
+| 8 | The plain commands in `programs.lua` are installed |
+| 9 | The fork checkout path assumed by `dotbackup-remind.sh` and `dashboard.sh` exists |
+| 10 | `$USER_PRETTY` is set — a note, not a fault, since it has a documented fallback |
+
+Checks 2 and 3 need a running compositor; without one they're skipped with a note rather than guessing, so the report still works from a TTY on a first boot.
 
 ---
 

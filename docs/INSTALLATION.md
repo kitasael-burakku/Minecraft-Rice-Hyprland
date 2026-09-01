@@ -316,7 +316,7 @@ This repo runs on one specific machine and was never meant to be copied byte-for
 
 | File | What to change |
 |---|---|
-| `hypr/modules/monitors.lua` | Output name, resolution, position, scale (`HDMI-A-1`, `1920x1080@200Hz` here) — the one you're most likely to need before Hyprland even starts. Switch to `output = ""`, `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
+| `hypr/modules/monitors.lua` | Resolution, position, scale. `output` is already `""` (all outputs), so the name needs no editing — but `mode` is the literal `1920x1080@200.00Hz`, and Hyprland falls back silently when a display can't do it. Switch to `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
 | `hypr/modules/input.lua` | Keyboard/mouse device names (`hl.device` blocks reference specific hardware) |
 | `hypr/scripts/apply-wallpaper.sh` | `DEFAULT_WALLPAPER` — a wallpaper you actually have. This is the only place the default lives; `autostart.lua` just calls this script |
 | `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones. Also `HostnamePretty`, exported as `$HOSTNAME_PRETTY` and rendered by the Starship prompt and several Fastfetch presets |
@@ -331,6 +331,8 @@ This repo runs on one specific machine and was never meant to be copied byte-for
 | `rofi/websites.conf` | The web hub's page list — personal bookmarks, replace with your own (`[Category]` sections, `Name \| URL` lines) |
 | `swaync/config.json` | The notification centre's `label` widget text is a personal string |
 | `fastfetch/*.jsonc` | Personal logos and ASCII art under `fastfetch/fastfetchlogo/`; the weighted preset list lives in `fish/config.fish` |
+
+> **Check your work:** `kitasan doctor --fresh-clone` reports which of the rows above still don't resolve on your machine — a monitor mode your display can't do, an hwmon path that doesn't exist, a wallpaper that isn't there, a `color_scheme_path` still pointing at someone else's home. It writes nothing. Run it after editing, and again after your first login (two of its checks need a running Hyprland and are skipped without one).
 
 **One optional variable that is not in the repo at all:** `$USER_PRETTY`. Starship and five Fastfetch presets render it if it exists and fall back to `$USER` if it doesn't — it lives in `fish/fish_variables`, which is gitignored. Set your own with:
 

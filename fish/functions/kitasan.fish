@@ -17,12 +17,22 @@
 #   kitasan mode <perfil>    → sets the profile directly, no rofi
 #   kitasan doctor           → template parity + config drift + keybinds drift
 #                               + downed systemd services + orphans (read-only)
+#   kitasan doctor --fresh-clone → the other question: is every machine-specific
+#                               value adapted to THIS machine? (read-only)
 #   kitasan dashboard        → system overview (updates/temps/disk/player), rofi
 #   kitasan diskbackup        → mirror to /mnt/storage (repos + themes + private files)
 #   kitasan diskbackup --check → just checks if anything's pending, writes nothing
 #   kitasan menu              → all of the above, chosen from a rofi
 
 function __kitasan_doctor
+    # --fresh-clone answers a different question from the daily health pass, so
+    # it's its own report rather than a seventh section: after cloning you want
+    # "what do I still owe this machine", not "is anything failing right now".
+    if contains -- --fresh-clone $argv
+        __kitasan_doctor_fresh_clone
+        return
+    end
+
     clear
     set -l W 56
 
@@ -102,6 +112,35 @@ function __kitasan_doctor
         end
     end
 
+    echo ""
+    set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
+    echo ""
+    read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
+end
+
+function __kitasan_doctor_fresh_clone
+    clear
+    set -l W 56
+
+    echo ""
+    _rui_top $W
+    _rui_row $W brwhite "󰃨  kitasan doctor --fresh-clone"
+    _rui_mid $W
+    _rui_row $W brblack "Machine-specific values, checked against this box"
+    _rui_bot $W
+    echo ""
+
+    _rui_section cyan "󰇄" "Personal paths and hardware"
+    set -l out (bash "$HOME/.config/hypr/scripts/check-personal-paths.sh" 2>&1)
+    if test -z "$out"
+        _rui_ok "Everything machine-specific resolves on this machine."
+    else
+        printf "%s\n" $out
+    end
+
+    echo ""
+    _rui_none "Full list of what's hardcoded: docs/INSTALLATION.md § 9"
+    _rui_none "For the daily health pass, run: kitasan doctor"
     echo ""
     set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
     echo ""
@@ -238,7 +277,7 @@ function kitasan --description "Unified rice CLI — health/clean/update/theme/w
                 bash "$HOME/.config/hypr/scripts/desktop-mode.sh" $rest[1]
             end
         case doctor
-            __kitasan_doctor
+            __kitasan_doctor $rest
         case diskbackup
             if not command -v diskbackup >/dev/null 2>&1
                 set_color red; echo "kitasan diskbackup: not installed on this system"; set_color normal

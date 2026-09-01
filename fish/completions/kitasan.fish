@@ -16,12 +16,15 @@ complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a update 
 complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a theme -d "Visual profile (matugen scheme)"
 complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a wall -d "Terminal wallpaper picker (fzf)"
 complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a mode -d "Desktop mode (normal/focus/gaming/cinema)"
-complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a doctor -d "Parity + keybinds + services + orphans"
+complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a doctor -d "Parity + drift + keybinds + services + orphans"
 complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a dashboard -d "System overview (rofi)"
 complete -c kitasan -n "not __fish_seen_subcommand_from $subcommands" -a menu -d "All of the above, chosen from rofi"
 
 # ── kitasan clean --deep ────────────────────────────────────────────────
 complete -c kitasan -n "__fish_seen_subcommand_from clean" -l deep -d "Orphans + pacman cache (sudo)"
+
+# ── kitasan doctor --fresh-clone ────────────────────────────────────────
+complete -c kitasan -n "__fish_seen_subcommand_from doctor" -l fresh-clone -d "Are the machine-specific values adapted?"
 
 # ── kitasan theme <scheme> — same 9 validated by __kitasan_theme ─────────
 complete -c kitasan -n "__fish_seen_subcommand_from theme" -a tonal-spot  -d "matugen default"
