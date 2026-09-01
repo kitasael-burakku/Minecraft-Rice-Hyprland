@@ -25,6 +25,20 @@
 local home = os.getenv("HOME") or "/home/user"
 
 hl.on("hyprland.start", function()
+    -- Plugins primero: hyprpm carga los .so de /var/cache/hyprpm/$USER y, al
+    -- cargarlos, Hyprland reparsea la config — que es cuando las guardas de
+    -- plugins/*.lua pasan y su configuracion se aplica de verdad. Antes de
+    -- esto, `plugin:*` no existe todavia.
+    --
+    -- Sin sudo a proposito: solo `hyprpm add/update/remove` escriben en
+    -- /var/cache/hyprpm (de root) y necesitan privilegios; `reload` solo lee
+    -- los .so (-rwxr-xr-x) y habla con hyprctl. Meter sudo aqui colgaria el
+    -- arranque esperando una contrasena que nadie puede escribir.
+    --
+    -- -n = notificacion de Hyprland al cargar bien. Los errores/avisos
+    -- notifican igual, con o sin el flag.
+    hl.exec_cmd("hyprpm reload -n")
+
     -- Entorno primero: graphical-session.target (y todo lo que arranca con
     -- él) necesita que el D-Bus activation environment ya tenga
     -- WAYLAND_DISPLAY/XDG_CURRENT_DESKTOP/XDG_SESSION_TYPE actualizados, o

@@ -3,15 +3,8 @@
 -- Plugin externo, no forma parte de Hyprland: github.com/hyprnux/hyprglass
 -- Se instala con hyprpm, que guarda el .so compilado en
 -- /var/cache/hyprpm/$USER/ (de root: por eso pide sudo).
---
--- Apagarlo entero = comentar el require("plugins.hyprglass") de hyprland.lua.
--- Estado y diagnóstico = `checkhyprglass` en fish.
 
 -- ── Guarda ───────────────────────────────────────────────────────────────────
--- El plugin puede perfectamente no estar cargado: tras cada update de Hyprland
--- hyprpm necesita un `hyprpm update`, y hasta entonces no carga nada. Sin esta
--- guarda, arrancar en ese estado revienta con "attempt to index a nil value" y
--- se lleva por delante el resto de la config, no solo el vidrio.
 if not (hl.plugin and hl.plugin.hyprglass) then
     return
 end
@@ -84,21 +77,13 @@ hl.config({
     },
 })
 
--- ── Dónde no quiero vidrio ───────────────────────────────────────────────────
--- El plugin solo actúa sobre ventanas con transparencia, así que lo opaco
--- queda fuera solo. Estas reglas son para lo translúcido que igual no debería
--- llevarlo.
---
+-- ── Dónde no quiero vidrio ───────────────────────────────────────────────────ç
 -- Los tags que entiende el plugin (src/PluginConfig.hpp):
 --   hyprglass_disabled        apaga el vidrio ahí (gana sobre _enabled)
 --   hyprglass_enabled         lo fuerza aunque el global esté en 0
 --   hyprglass_preset_<nombre> usa otro preset solo ahí
 --   hyprglass_theme_<nombre>  usa otro tema solo ahí
--- En caliente: hyprctl dispatch tagwindow +hyprglass_preset_subtle
 
--- Vídeo: el vidrio re-muestrea el fondo. Sobre imagen en movimiento eso es
--- coste de GPU sostenido, y el issue #59 del repo describe que el re-render se
--- queda corto justo en ese caso, así que además se ve desfasado.
 hl.window_rule({
     name  = "hyprglass-off-video",
     match = { class = "^(mpv)$" },

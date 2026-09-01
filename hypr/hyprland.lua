@@ -40,3 +40,4 @@ require("modules.autostart")
 
 -- Plugins
 require("plugins.hyprglass")
+require("plugins.dym-cursor")

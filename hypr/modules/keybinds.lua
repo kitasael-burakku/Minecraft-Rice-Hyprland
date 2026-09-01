@@ -72,8 +72,8 @@ hl.bind("CTRL + ALT + V", function()
     end
 
     if not win.floating then
-        local width = monitor.width * 0.50
-        local height = monitor.height * 0.60
+        local width = monitor.width * 0.58
+        local height = monitor.height * 0.58
 
         hl.dispatch(hl.dsp.window.float({ action = "set" }))
         hl.dispatch(hl.dsp.window.resize({ x = width, y = height }))
