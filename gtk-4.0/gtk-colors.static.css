@@ -1,36 +1,74 @@
-/* Kitasan Glass — overrides de color GTK, paleta estática (baseline para
-   restaurar si se apaga el theming dinámico). Mismos tonos que
-   waybar/colors.static.css y swaync/colors.static.css.
-   Generado dinámicamente: ~/.config/matugen/templates/gtk-colors.css */
+/* Kitasan Glass — colores GTK, paleta estática (baseline para restaurar si se
+   apaga el theming dinámico). Mismos tonos que waybar/colors.static.css y
+   swaync/colors.static.css.
+   Generado dinámicamente: ~/.config/matugen/templates/gtk-colors.css
 
-@define-color theme_bg_color            #1a1a1a;
-@define-color theme_bg_color_breeze     #1a1a1a;
+   Mismo juego de variables que ese template, y en el mismo orden: si acá
+   falta una o sobra otra, check-template-parity.sh lo reporta.
 
-@define-color theme_fg_color            #e8e8e8;
-@define-color theme_fg_color_breeze     #e8e8e8;
+   Escalera de superficies (equivalente teal de la de Material 3 oscuro):
+     #0d0d0d  surface_container_lowest   vistas de contenido
+     #1a1a1a  surface                    fondo de ventana
+     #202020  surface_container_low      tarjetas, barras laterales
+     #262626  surface_container          headerbars, popovers
+     #2f2f2f  surface_container_high     diálogos                        */
 
-@define-color theme_base_color          #0d0d0d;
-@define-color theme_base_color_breeze   #0d0d0d;
+/* ── libadwaita / GTK4 (Nautilus, editores de texto, apps GNOME) ───────── */
+@define-color accent_color                #7ab8b8;
+@define-color accent_bg_color             #7ab8b8;
+@define-color accent_fg_color             #0d0d0d;
 
-@define-color theme_text_color          #e8e8e8;
-@define-color theme_text_color_breeze   #e8e8e8;
+@define-color window_bg_color             #1a1a1a;
+@define-color window_fg_color             #e8e8e8;
 
-@define-color theme_selected_bg_color          #7ab8b8;
-@define-color theme_selected_bg_color_breeze   #7ab8b8;
-@define-color theme_selected_fg_color          #0d0d0d;
-@define-color theme_selected_fg_color_breeze   #0d0d0d;
-@define-color theme_hovering_selected_bg_color_breeze #7ab8b8;
-@define-color theme_view_active_decoration_color_breeze #7ab8b8;
-@define-color theme_view_hover_decoration_color_breeze  #7ab8b8;
+@define-color view_bg_color               #0d0d0d;
+@define-color view_fg_color               #e8e8e8;
 
-@define-color borders             rgba(122, 184, 184, 0.30);
-@define-color borders_breeze      rgba(122, 184, 184, 0.30);
-@define-color unfocused_borders   rgba(122, 184, 184, 0.14);
-@define-color unfocused_borders_breeze rgba(122, 184, 184, 0.14);
+@define-color headerbar_bg_color          #262626;
+@define-color headerbar_fg_color          #e8e8e8;
+@define-color headerbar_border_color      rgba(122, 184, 184, 0.30);
+@define-color headerbar_backdrop_color    #1a1a1a;
 
-@define-color error_color         #b85c50;
-@define-color error_color_breeze  #b85c50;
-@define-color warning_color         #c8b898;
-@define-color warning_color_breeze  #c8b898;
-@define-color success_color         #7ab8b8;
-@define-color success_color_breeze  #7ab8b8;
+@define-color card_bg_color               #202020;
+@define-color card_fg_color               #e8e8e8;
+
+@define-color dialog_bg_color             #2f2f2f;
+@define-color dialog_fg_color             #e8e8e8;
+
+@define-color popover_bg_color            #262626;
+@define-color popover_fg_color            #e8e8e8;
+
+@define-color sidebar_bg_color            #202020;
+@define-color sidebar_fg_color            #e8e8e8;
+
+@define-color destructive_color           #b85c50;
+@define-color destructive_bg_color        #b85c50;
+@define-color destructive_fg_color        #0d0d0d;
+
+@define-color warning_color               #c8b898;
+@define-color success_color               #7ab8b8;
+
+/* ── GTK3 clásico (paleta con nombre de Adwaita) ───────────────────────── */
+@define-color theme_bg_color              #1a1a1a;
+@define-color theme_fg_color              #e8e8e8;
+@define-color theme_base_color            #0d0d0d;
+@define-color theme_text_color            #e8e8e8;
+
+@define-color theme_selected_bg_color     #7ab8b8;
+@define-color theme_selected_fg_color     #0d0d0d;
+
+@define-color theme_unfocused_bg_color            #1a1a1a;
+@define-color theme_unfocused_fg_color            #e8e8e8;
+@define-color theme_unfocused_base_color          #0d0d0d;
+@define-color theme_unfocused_text_color          #e8e8e8;
+@define-color theme_unfocused_selected_bg_color   #7ab8b8;
+@define-color theme_unfocused_selected_fg_color   #0d0d0d;
+
+@define-color insensitive_bg_color        #262626;
+@define-color insensitive_fg_color        #a8a8a8;
+@define-color insensitive_base_color      #0d0d0d;
+
+@define-color borders                     rgba(122, 184, 184, 0.30);
+@define-color unfocused_borders           rgba(122, 184, 184, 0.14);
+
+@define-color error_color                 #b85c50;

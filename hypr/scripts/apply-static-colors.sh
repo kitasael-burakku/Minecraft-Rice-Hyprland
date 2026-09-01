@@ -35,33 +35,14 @@ cp "$HOME/.config/qt6ct/colors/kitasan-glass.static.conf" "$HOME/.config/qt6ct/c
 STATIC_HYPR="$HOME/.config/hypr/scripts/dynamic-colors.static.sh"
 [ -x "$STATIC_HYPR" ] && bash "$STATIC_HYPR"
 
-# gtk-4.0/theme-base.css: symlink to the real theme (whatever GTKTheme
-# declares in hypr/modules/environment.lua — currently Win11-Fantasy-Dark),
-# deliberately NOT versioned — it's a third-party file installed in
-# ~/.themes/ or ~/.local/share/themes/, not something this repo should
-# publish, and an absolute symlink with the username hardcoded wouldn't
-# survive a clone on another machine either. Recreated here (idempotent)
-# so a fresh clone's bootstrap leaves gtk-4.0/gtk.css working without
-# depending on theme-base.css having survived the clone.
-#
-# The theme name is read from environment.lua instead of being hardcoded
-# here too — GTKTheme changed from Colorful-Dark-GTK to Win11-Fantasy-Dark
-# once and this script was left pointing at the old theme (broken
-# symlinks) until someone noticed by hand. With this, changing the theme
-# in one place is enough. Both standard locations are searched because
-# nwg-look installs in ~/.themes/ but other installers use
-# ~/.local/share/themes/.
-ENV_LUA="$HOME/.config/hypr/modules/environment.lua"
-GTK_THEME_NAME=$(grep -oP '(?<=^GTKTheme = ")[^"]+' "$ENV_LUA" 2>/dev/null)
-if [ -n "$GTK_THEME_NAME" ]; then
-    for base in "$HOME/.themes" "$HOME/.local/share/themes"; do
-        THEME_GTK4="$base/$GTK_THEME_NAME/gtk-4.0/gtk.css"
-        if [ -f "$THEME_GTK4" ]; then
-            ln -sf "$THEME_GTK4" "$HOME/.config/gtk-4.0/theme-base.css" 2>/dev/null || true
-            break
-        fi
-    done
-fi
+# Acá vivía la recreación del symlink gtk-4.0/theme-base.css, que apuntaba al
+# gtk.css del tema GTK de terceros que estuviera activo. Ya no hace falta y se
+# quitó: GTKTheme es Adwaita-dark (stock), así que no hay tema externo que
+# encadenar — GTK3 lo carga por la env var GTK_THEME y GTK4 lo trae libadwaita
+# incorporado. gtk-3.0/gtk.css y gtk-4.0/gtk.css son hoy un único
+# @import 'gtk-colors.css', y ese archivo lo escribe el bloque de copias de
+# arriba (o matugen, si el dinámico está encendido). Ver
+# docs/THEMING.md § GTK theming.
 
 # Hyprlock background: bootstrap from the static 2.png only if there's no
 # current.png yet — doesn't override the user's actual choice if it already

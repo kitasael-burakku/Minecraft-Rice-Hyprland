@@ -9,14 +9,14 @@
 #  ~/.local/share/Steam/appcache/librarycache/<appid>/**/logo.png (the
 #  hashed subfolder changes when Steam refreshes that cache). Without an
 #  actual steam_icon_<appid> file, Rofi/GTK never resolve the icon
-#  regardless of the active theme (Slot-Gray-Dark-Icons, Adwaita, etc. —
+#  regardless of the active theme (ryoku-folders, Adwaita, etc. —
 #  none of them ship per-game Steam icons; that's manual curation done by
 #  themes like Papirus/Ant-*, and only for popular games).
 #
 #  Symlinks (not copies) in ~/.local/share/icons/hicolor/256x256/apps/:
 #  hicolor is the universal fallback of the freedesktop icon spec,
 #  implicitly inherited by any theme — so the fix survives a theme change
-#  and doesn't touch Slot-Gray-Dark-Icons or anything Steam manages.
+#  and doesn't touch ryoku-folders or anything Steam manages.
 #
 #  Idempotent: running it again only adds symlinks for new .desktop files
 #  (recently added games) and doesn't touch the ones already linked.

@@ -10,7 +10,7 @@ configuration {
        propio de este tema — window-switcher.sh resuelve iconos por nombre
        genérico (el Icon= del .desktop), así que el tema activo define la
        cobertura. Se usa el mismo que GTK/Qt para no divergir. */
-    icon-theme: "Slot-Gray-Dark-Icons";
+    icon-theme: "ryoku-folders";
 }
 
 * {
