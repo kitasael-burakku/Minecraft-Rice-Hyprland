@@ -108,26 +108,55 @@ for m in json.load(sys.stdin):
     esac
 fi
 
-# ── 3. The per-device input blocks match a device that is plugged in ────────
-# A device block whose name matches nothing is not an error in Hyprland: it is
-# simply ignored, so the sensitivity/layout tweaks quietly never apply.
+# ── 3. The per-device input blocks actually match a device ──────────────────
+# Two separate failures, both silent:
+#
+#   a) The name isn't in slug form. Hyprland matches devices on the slugified
+#      name that `hyprctl devices` prints, NOT the manufacturer's display name.
+#      A block with the display name is ignored outright — and `hyprctl eval`
+#      still answers "ok", because it validates the call, not the match. This
+#      is not a guess: it was verified on 2026-09-01 by setting scroll_factor
+#      through both forms and reading it back from `hyprctl devices -j`. The
+#      display name left it untouched; the slug changed it. Two blocks in this
+#      repo had been dead since they were written.
+#
+#   b) The name is a valid slug but nothing by that name is plugged in.
+#
+# (a) is checked without needing a compositor, which matters: it is a typo
+# class, not a hardware fact.
 IN_LUA="$BASE/hypr/modules/input.lua"
 if [ -f "$IN_LUA" ]; then
     dev_names="$(grep -oP '^\s*name\s*=\s*"\K[^"]+' "$IN_LUA" 2>/dev/null || true)"
     if [ -n "$dev_names" ]; then
-        if [ "$have_hypr" -eq 1 ]; then
+        present=""
+        [ "$have_hypr" -eq 1 ] && \
             present="$(hyprctl devices 2>/dev/null | grep -oP '^\t\t\K[a-z0-9][a-z0-9-]*$' | sort -u || true)"
-            while IFS= read -r dn; do
-                [ -n "$dn" ] || continue
-                if ! printf '%s\n' "$present" | grep -qx "$(slug "$dn")"; then
+
+        checked_hw=0
+        while IFS= read -r dn; do
+            [ -n "$dn" ] || continue
+            dn_slug="$(slug "$dn")"
+
+            if [ "$dn" != "$dn_slug" ]; then
+                warn "input.lua — device name '$dn' is not in slug form"
+                detail "Hyprland matches the name \`hyprctl devices\` prints, so this"
+                detail "block is silently ignored — no error, and eval still says ok"
+                detail "use: name = \"$dn_slug\""
+                continue
+            fi
+
+            if [ "$have_hypr" -eq 1 ]; then
+                checked_hw=1
+                if ! printf '%s\n' "$present" | grep -qx "$dn_slug"; then
                     warn "input.lua — no connected device is named '$dn'"
                     detail "its per-device settings are being ignored"
-                    detail "connected devices: $(printf '%s' "$present" | tr '\n' ' ' | cut -c1-160)"
+                    detail "connected: $(printf '%s' "$present" | tr '\n' ' ' | cut -c1-160)"
                 fi
-            done <<< "$dev_names"
-        else
-            note "input devices not checked — no running Hyprland to ask"
-        fi
+            fi
+        done <<< "$dev_names"
+
+        [ "$have_hypr" -eq 0 ] && [ "$checked_hw" -eq 0 ] && \
+            note "input devices not checked against hardware — no running Hyprland"
     fi
 fi
 

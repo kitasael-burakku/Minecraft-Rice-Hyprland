@@ -52,7 +52,7 @@ The two `require("plugins.…")` lines after them configure external Hyprland pl
 | `hypr/modules/keybinds.lua` | All keyboard shortcuts; references `Programs.*` and `home` |
 | `hypr/modules/autostart.lua` | Deliberately thin — runs `hyprpm reload -n` (loads the plugin `.so` files, see [PLUGINS.md](PLUGINS.md)), pushes the Wayland env into the D-Bus activation environment, starts `hyprland-session.service` (see [Session lifecycle](#session-lifecycle) below), sets the cursor theme, runs `link-steam-icons.sh`, and runs any private autostart commands. Declares the `hyprland.shutdown` teardown handler |
 | `hypr/modules/monitors.lua` | Output, resolution, position, scale — hardcoded per machine, see [INSTALLATION.md](INSTALLATION.md#9-fix-personal-paths) |
-| `hypr/modules/input.lua` | Keyboard layout and per-device config |
+| `hypr/modules/input.lua` | Keyboard layout and per-device config. **`hl.device` names must be the slug `hyprctl devices` prints** (lowercase, non-alphanumerics collapsed to dashes) — a display name matches nothing and the block is silently ignored, with no error and no clue |
 | `hypr/modules/environment.lua` | Wayland/Qt/Electron/AMD env vars, plus `CursorTheme`/`GTKTheme` |
 | `hypr/modules/decoration.lua` | Gaps, rounding, blur, shadows; hardcoded border colors here are the cold-start fallback before any theming has run — kept equal to `hypr/scripts/dynamic-colors.static.sh`'s values on purpose |
 | `hypr/modules/layout.lua` | dwindle/master/scrolling tuning; `scrolling` is the active default |
@@ -394,7 +394,7 @@ Its own failure modes were verified against a fixture tree rather than assumed �
 |---|---|
 | 1 | No file still points at another user's `/home` (the documented placeholders `user` / `youruser` / `your-username` are excluded) |
 | 2 | The `mode` in `monitors.lua` is one a connected display actually offers |
-| 3 | Each `hl.device` name in `input.lua` matches a connected device (names normalised, since `hyprctl devices` prints slugs) |
+| 3 | Each `hl.device` name in `input.lua` is in slug form *and* matches a connected device. The slug half needs no compositor — it's a typo class, not a hardware fact |
 | 4 | The hwmon path exists — and `waybar/config.jsonc` and `dashboard.sh` still agree on it |
 | 5 | `DEFAULT_WALLPAPER` exists (video wallpapers aren't distributed, so this fails on every fresh clone) |
 | 6 | The picker's wallpaper directories exist, honouring `$WALLPAPER_DIR_IMG` / `$WALLPAPER_DIR_VIDEO` |

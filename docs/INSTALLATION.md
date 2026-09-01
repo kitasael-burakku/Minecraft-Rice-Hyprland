@@ -317,7 +317,7 @@ This repo runs on one specific machine and was never meant to be copied byte-for
 | File | What to change |
 |---|---|
 | `hypr/modules/monitors.lua` | Resolution, position, scale. `output` is already `""` (all outputs), so the name needs no editing — but `mode` is the literal `1920x1080@200.00Hz`, and Hyprland falls back silently when a display can't do it. Switch to `mode = "preferred"`, `position = "auto"`, `scale = "auto"` for automatic detection instead |
-| `hypr/modules/input.lua` | Keyboard/mouse device names (`hl.device` blocks reference specific hardware) |
+| `hypr/modules/input.lua` | Keyboard/mouse device names. Use the **slug** from `hyprctl devices` (`logitech-g203-lightsync-gaming-mouse`), never the pretty name — Hyprland matches on the slug, and a block that doesn't match is ignored without any error. `kitasan doctor --fresh-clone` flags both mistakes |
 | `hypr/scripts/apply-wallpaper.sh` | `DEFAULT_WALLPAPER` — a wallpaper you actually have. This is the only place the default lives; `autostart.lua` just calls this script |
 | `hypr/modules/environment.lua` | `CursorTheme` / `GTKTheme` — see [step 2](#2-themes-icons-cursors-and-fonts) if you installed different ones. Also `HostnamePretty`, exported as `$HOSTNAME_PRETTY` and rendered by the Starship prompt and several Fastfetch presets |
 | `hypr/modules/programs.lua` | Terminal, file manager, browser, launcher — change if you use different apps. `browser` is also the single source of `$BROWSER`, which the web hub resolves against |
