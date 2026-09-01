@@ -42,6 +42,7 @@
 - 🌀 Hand-tuned custom animation system, "流水 · Ryūsui Motion" (curves & springs), including a GTK3-verified animation layer for the bar itself
 - 🪟 **Infinite Desktop** — pan and navigate a boundless floating-window canvas, now itself a supervised systemd service
 - 🐟 Custom Fish functions for health checks, maintenance, and an interactive keybind viewer — `KEYBINDS.txt` is generated from `keybinds.lua`, not maintained by hand
+- 🪟 **Two external Hyprland plugins**, loaded through `hyprpm` and configured in `hypr/plugins/` — [hyprglass](https://github.com/hyprnux/hyprglass) for the glass material and [hypr-dynamic-cursors](https://github.com/VirtCode/hypr-dynamic-cursors) for cursor motion. Both optional, both guarded so a missing plugin can't take the config down. Full attribution in [docs/PLUGINS.md](docs/PLUGINS.md)
 - 🎮 Minecraft-themed boot experience: Qylock (SDDM) + MINEGRUB (GRUB)
 
 <br>
@@ -64,6 +65,7 @@
 | Window switcher with minimize/restore | ✅ |
 | cava audio visualizer with GLSL shaders (needs a cava build with OpenGL/`ngl` support) | ✅ |
 | Hyprlock with MPRIS now-playing block | ✅ |
+| Hyprland plugins — glass material + dynamic cursors (external, optional) | ✅ |
 | Minecraft-themed SDDM / GRUB | ✅ |
 | Automatic one-click installer | ❌ *(by design — see [The Philosophy](#the-philosophy))* |
 
@@ -95,6 +97,7 @@ This README is a landing page. The actual how-to and why-to live in [`docs/`](do
 | [docs/INSTALLATION.md](docs/INSTALLATION.md) | The full, ordered install path — dependencies, themes/icons/cursors (with gnome-look.org links), copying configs, enabling services, fixing personal paths, troubleshooting |
 | [docs/THEMING.md](docs/THEMING.md) | The color pipeline (static vs. matugen), GTK3/GTK4/Qt theming, and why Steam games need one extra script for their icons to show up |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The Lua config system, the systemd session lifecycle, Waybar's cursor zones, `kitasan`, the Rofi tooling, which scripts write which files, and the `dotbackup` deploy pipeline |
+| [docs/PLUGINS.md](docs/PLUGINS.md) | The two external Hyprland plugins — who wrote them, what they add, how to install them with `hyprpm`, and how this rice configures them |
 | [KEYBINDS.txt](KEYBINDS.txt) | The full keybind reference (generated from `keybinds.lua`) |
 
 | If you... | Start here |
@@ -139,7 +142,7 @@ A quick map before you go any further — what lives where, and what it's for. F
 
 | Folder / File | What it is |
 |---|---|
-| `hypr/` | Core Hyprland configuration — Lua modules (`hypr/modules/`), `hypridle.conf` + `hypridle-focus.conf`, base `hyprlock.conf`, the Infinite Desktop Python scripts (`hypr/infinite_desktop/`), and maintenance/orchestration scripts (`hypr/scripts/`) |
+| `hypr/` | Core Hyprland configuration — Lua modules (`hypr/modules/`), external-plugin config (`hypr/plugins/`), `hypridle.conf` + `hypridle-focus.conf`, base `hyprlock.conf`, the Infinite Desktop Python scripts (`hypr/infinite_desktop/`), and maintenance/orchestration scripts (`hypr/scripts/`) |
 | `systemd/user/` | `systemd --user` unit files that supervise the session — see [docs/ARCHITECTURE.md § Session lifecycle](docs/ARCHITECTURE.md#session-lifecycle) |
 | `waybar/` | Status bar config, CSS (including the generated `zone.css`), and scripts |
 | `rofi/` | Launcher, clipboard picker, two-level wallpaper selector, web hub, power menu, window switcher, and quick-action scripts |
@@ -241,6 +244,9 @@ This configuration was developed and tested on this hardware. Some parts depend 
 | awww | Static image wallpaper (replaces swww) |
 | cava | Audio visualizer — config, custom GLSL shaders, and themes (agua, solarized_dark, tricolor) |
 | Infinite Desktop | Floating desktop tiled style — built by **sarodscommits** |
+| hyprglass | Hyprland plugin — glass material on translucent windows (blur, edge refraction, chromatic aberration). External, by the [hyprnux](https://github.com/hyprnux/hyprglass) project. See [docs/PLUGINS.md](docs/PLUGINS.md) |
+| hypr-dynamic-cursors | Hyprland plugin — cursor tilt on movement plus shake-to-find. External, by [VirtCode](https://github.com/VirtCode/hypr-dynamic-cursors). See [docs/PLUGINS.md](docs/PLUGINS.md) |
+| `hyprpm` | Hyprland's own plugin manager — builds and loads both plugins above. Ships with Hyprland |
 | Qylock | Minecraft-style SDDM theme — [Darkkal44/qylock](https://github.com/Darkkal44/qylock) |
 | MINEGRUB | Minecraft-style GRUB theme — [Lxtharia/minegrub-theme](https://github.com/Lxtharia/minegrub-theme) |
 
@@ -256,6 +262,9 @@ This configuration was developed and tested on this hardware. Some parts depend 
 - SDDM Minecraft, Minegrub, cursors, wallpapers, icons, logos, and character images are external assets unless otherwise noted — see [docs/INSTALLATION.md § Themes, icons, cursors and fonts](docs/INSTALLATION.md#2-themes-icons-cursors-and-fonts) for where to get them.
 - Nerd Fonts and IosevkaTerm Nerd Font belong to their respective authors (`ttf-iosevkaterm-nerd`).
 - Credits to **sarodscommits**, who made the Infinite Desktop: [hyprland-infinitie-desktop-v2](https://github.com/sarodscommits/hyprland-infinitie-desktop-v2)
+- **[hyprglass](https://github.com/hyprnux/hyprglass)** — the glass/refraction material on translucent windows. By the **hyprnux** project (BSD 3-Clause). External software; this repo only contains its configuration, in `hypr/plugins/hyprglass.lua`.
+- **[hypr-dynamic-cursors](https://github.com/VirtCode/hypr-dynamic-cursors)** — cursor tilt and shake-to-find. By **VirtCode** (MIT). External software; this repo only contains its configuration, in `hypr/plugins/dym-cursor.lua`.
+- Both plugins are installed with `hyprpm` and are **not vendored here** — no plugin source or binary is in this repository. See [docs/PLUGINS.md](docs/PLUGINS.md) for the full attribution, requirements and install steps.
 
 If you reuse this rice, keep the credits for the projects and assets you use.
 

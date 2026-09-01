@@ -2,6 +2,8 @@
 
 How the pieces fit together: the Lua config system, the systemd session lifecycle, Waybar's cursor zones, the Rofi tooling, and how changes get backed up to this repo in the first place.
 
+The two external Hyprland plugins this rice loads get their own page — see [PLUGINS.md](PLUGINS.md).
+
 ---
 
 ## Hyprland in Lua
@@ -20,9 +22,15 @@ require("modules.programs")
 require("modules.keybinds")
 require("modules.misc")
 require("modules.autostart")
+
+-- Plugins
+require("plugins.hyprglass")
+require("plugins.dym-cursor")
 ```
 
-`environment` loads first because later modules depend on the globals it exports. `programs` loads before `keybinds`, which reads the global `Programs` table. `autostart` loads last.
+`environment` loads first because later modules depend on the globals it exports. `programs` loads before `keybinds`, which reads the global `Programs` table. `autostart` is the last of the modules.
+
+The two `require("plugins.…")` lines after them configure external Hyprland plugins, not the compositor itself — they load last, and each file guards on its plugin's config namespace actually existing so a missing or unbuilt plugin can't take the rest of the config down with it. Full detail in [PLUGINS.md](PLUGINS.md).
 
 > ⚠️ This is **not the classic `hyprland.conf` format**. It's Hyprland's native Lua config API (`hl.*`) — keybinds use `hl.bind()`, dispatches use `hl.dsp.*`. You need a Hyprland build with Lua config support for this to load at all; official API stubs live at `/usr/share/hypr/stubs/hl.meta.lua`, and `hypr/.vscode/settings.json` (deliberately published, unlike the rest of `.vscode/`) wires the Lua LSP against them.
 
@@ -42,7 +50,7 @@ require("modules.autostart")
 |---|---|
 | `hypr/modules/programs.lua` | Terminal, file manager, browser, and launcher commands — the global `Programs` table |
 | `hypr/modules/keybinds.lua` | All keyboard shortcuts; references `Programs.*` and `home` |
-| `hypr/modules/autostart.lua` | Deliberately thin — starts `hyprland-session.service` (see [Session lifecycle](#session-lifecycle) below), sets the cursor theme, runs `link-steam-icons.sh`, and runs any private autostart commands. Declares the `hyprland.shutdown` teardown handler |
+| `hypr/modules/autostart.lua` | Deliberately thin — runs `hyprpm reload -n` (loads the plugin `.so` files, see [PLUGINS.md](PLUGINS.md)), pushes the Wayland env into the D-Bus activation environment, starts `hyprland-session.service` (see [Session lifecycle](#session-lifecycle) below), sets the cursor theme, runs `link-steam-icons.sh`, and runs any private autostart commands. Declares the `hyprland.shutdown` teardown handler |
 | `hypr/modules/monitors.lua` | Output, resolution, position, scale — hardcoded per machine, see [INSTALLATION.md](INSTALLATION.md#9-fix-personal-paths) |
 | `hypr/modules/input.lua` | Keyboard layout and per-device config |
 | `hypr/modules/environment.lua` | Wayland/Qt/Electron/AMD env vars, plus `CursorTheme`/`GTKTheme` |
@@ -53,13 +61,14 @@ require("modules.autostart")
 | `hypr/modules/misc.lua` | Miscellaneous settings, including disabling Hyprland's random wallpaper/logo |
 | `hypr/modules/private.lua` *(optional, gitignored)* | Personal programs/autostart/keybinds — see `private.example.lua` for the template. Loaded via `pcall(require, "modules.private")` everywhere it's used, so its absence is harmless |
 
-Two more things live under `hypr/` without being Lua modules:
+Four more things live under `hypr/` without being Lua modules:
 
 | Path | Purpose |
 |---|---|
 | `hypr/hypridle.conf` / `hypr/hypridle-focus.conf` | Idle/lock timeouts. The first is what `hypridle.service` runs (5 min lock / 10 min DPMS off); the second is the longer-timeout variant (30 min / 60 min) that `desktop-mode.sh` launches as a raw process in `focus` mode |
 | `hypr/infinite_desktop/` | The Python side of Infinite Desktop — `infinite_desktop_core.py` (the daemon, run by `infinite-desktop.service`), `hypr_ipc.py` (the shared Hyprland-0.55+ `hyprctl dispatch 'hl.dsp.*'` compatibility layer both it and the keybind scripts import), and the five one-shot scripts bound in `keybinds.lua` |
 | `hypr/scripts/` | Maintenance and orchestration — see [Scripts that write other files](#scripts-that-write-other-files) below |
+| `hypr/plugins/` | Configuration for the two external Hyprland plugins — `hyprglass.lua` and `dym-cursor.lua`. Not modules, and not loaded with them: `hyprland.lua` requires these last, each behind a guard. The plugins themselves are third-party software installed with `hyprpm`, not code in this repo — see [PLUGINS.md](PLUGINS.md) |
 
 **Hot-reloading:** `hyprctl reload` is unreliable for anything the Lua layer parsed. The only mechanism that reliably re-applies Lua-driven config at runtime is `hyprctl eval '<lua expression>'` — this is how the dynamic color pipeline pushes new border colors into a running session without a full relogin (see [THEMING.md](THEMING.md)). Only two lifecycle events exist: `"hyprland.start"` and `"hyprland.shutdown"` — there is no `"hyprland.exit"`.
 
@@ -86,8 +95,9 @@ graphical-session.target  (native systemd target, RefuseManualStart=yes —
 ├──▶ swaync.service              ├──▶ cliphist-image.service
 ├──▶ hypridle.service            ├──▶ infinite-desktop.service
 ├──▶ udiskie.service             ├──▶ playerctl-watch.service
-├──▶ awww.service                └──▶ polkit-agent.service
-└──▶ wallpaper.service (oneshot — restores the last wallpaper, kicks matugen)
+├──▶ awww.service                ├──▶ polkit-agent.service
+├──▶ wallpaper.service (oneshot — restores the last wallpaper, kicks matugen)
+└──▶ kb-layout-notify.service
 
 + timers.target → updates-check.timer, thumbs-refresh.timer,
                   healthcheck-notify.timer, dotbackup-remind.timer
@@ -353,7 +363,7 @@ Nothing in this rice is generated at build time — but several things *are* wri
 | `hypr/scripts/apply-wallpaper.sh` | `hypr/.current-wallpaper`, `hyprlock/wallpapers/current.png` | every wallpaper apply, from any entry point |
 | `waybar/scripts/cursor-zone.py` | `waybar/zone.css` | whenever the cursor crosses into a different third of the top band |
 | `rofi/scripts/generate-thumbs.sh` | `~/.cache/rofi-wallpapers/thumbs/` | picker open (if stale) and daily via timer |
-| `rofi/scripts/theme.sh`, `kitasan theme` | `matugen/scheme`, `matugen/enabled` | when you pick a visual profile |
+| `rofi/scripts/theme.sh`, `kitasan theme` | `~/.config/matugen/scheme`, `~/.config/matugen/enabled` | when you pick a visual profile. Both are local state and both are gitignored — see [THEMING.md](THEMING.md#two-tracks-static-baseline-vs-matugen) |
 | `rofi/scripts/matugen_toggle.sh` | `matugen/enabled` | `SUPER + SHIFT + W` |
 | `hypr/scripts/desktop-mode.sh` | `~/.cache/kitasan-desktop-mode` | every mode switch |
 | `hypr/scripts/generate-keybinds-doc.sh --write` (via `checkkeybinds --write`) | `~/Documents/KEYBINDS.txt` | manually, after editing `keybinds.lua` |
@@ -370,8 +380,9 @@ Kept deliberately rather than deleted, but nothing calls them — worth knowing 
 | File | Status |
 |---|---|
 | `waybar/scripts/launch.sh`, `swaync/scripts/launch.sh` | Superseded by `waybar.service` / `swaync.service`. Manual debugging fallbacks only |
-| `hypr/scripts/kb-layout-notify.py` | Notifies on keyboard-layout change (`grp:alt_shift_toggle` is set in `input.lua`), but **nothing starts it** — no keybind, no unit, no autostart entry. Its own docstring also assumes three keyboards declared in `input.lua`, where there is currently one |
 | `rofi/scripts/wallpaper_rofi.sh`, `web_category.sh`, `web_picker.sh` | Not orphaned, but not entry points either — only their launchers should ever call them |
+
+> `hypr/scripts/kb-layout-notify.py` used to be listed here as having no caller. It has one now: `systemd/user/kb-layout-notify.service` (`WantedBy=graphical-session.target`, `Restart=always`) runs it as a session daemon, so it needs `enable --now` like every other unit — see [INSTALLATION.md § 6](INSTALLATION.md#6-enable-the-systemd-units). One thing in it is still stale: its docstring says three keyboards are declared in `input.lua` and that a single `Alt+Shift` therefore fires three identical `activelayout` events. `input.lua` currently declares **one** keyboard and one mouse, so the dedup-by-layout-name logic is now belt-and-braces rather than load-bearing.
 
 ---
 

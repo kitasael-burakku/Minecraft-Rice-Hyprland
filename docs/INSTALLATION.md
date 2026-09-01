@@ -150,10 +150,10 @@ This is the part the base dependency list above doesn't cover: the actual visual
 
 | Kind | Name used in this rice | Where it's referenced | Get it |
 |---|---|---|---|
-| GTK theme | **Win11-Fantasy-Dark** | `hypr/modules/environment.lua` (`GTKTheme`), `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | [gnome-look.org/p/2307588](https://www.gnome-look.org/p/2307588) |
-| GTK theme (previous, referenced in older comments) | Colorful-Dark-GTK | historical — see [THEMING.md](THEMING.md#gtk-theming) | [gnome-look.org/p/2091032](https://www.gnome-look.org/p/2091032) |
+| GTK theme | **Adwaita-dark** | `hypr/modules/environment.lua` (`GTKTheme`), `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | **Nothing to install** — stock GTK, ships in `/usr/share/themes/` with GTK itself |
+| GTK theme (previous, still referenced in some code comments) | Win11-Fantasy-Dark, and before it Colorful-Dark-GTK | historical — see [THEMING.md § GTK theming](THEMING.md#gtk-theming) | [gnome-look.org/p/2307588](https://www.gnome-look.org/p/2307588) / [p/2091032](https://www.gnome-look.org/p/2091032) |
 | Icon theme | **Slot Gray Dark Icons** | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini`, `qt5ct/qt5ct.conf`, `qt6ct/qt6ct.conf`, `rofi/window-switcher.rasi`, `hypr/scripts/link-steam-icons.sh` | [gnome-look.org/p/2345718](https://www.gnome-look.org/p/2345718) |
-| Cursor theme | **Nordic Cursors Scalable** (by Flachz) | `hypr/modules/environment.lua` (`CursorTheme`), `gtk-3.0/settings.ini` | [gnome-look.org/p/2348743](https://www.gnome-look.org/p/2348743) — same listing on the [KDE Store](https://store.kde.org/p/2348743) |
+| Cursor theme | **Vimix-white-cursors** | `hypr/modules/environment.lua` (`CursorTheme`), `gtk-3.0/settings.ini` | `vimix-cursors` — a package, not a manual download. Installs to `/usr/share/icons/Vimix-white-cursors/` |
 | Monospace / UI font | **IosevkaTerm Nerd Font** (and its `Propo` variant) | Kitty, Waybar, SwayNC, every Rofi theme | `ttf-iosevkaterm-nerd` (already in the pacman list above) |
 | GTK UI font | Adwaita Sans | `gtk-3.0/settings.ini`, `gtk-4.0/settings.ini` | `adwaita-fonts` (Arch repos) |
 
@@ -179,9 +179,9 @@ After installing, apply them with `nwg-look` (already in the AUR list above) rat
 - `hypr/modules/environment.lua` — `CursorTheme` and `GTKTheme`
 - `hypr/scripts/link-steam-icons.sh` mentions `Slot-Gray-Dark-Icons` only in a comment (it doesn't hardcode the theme name in logic — it writes to the universal `hicolor` fallback instead, see [THEMING.md](THEMING.md#steam-game-icons)), so no code change is needed there if you pick a different icon theme.
 
-> ⚠️ **Cursor theme names are case-sensitive.** `CursorTheme` in `environment.lua` has to match the *directory name* the theme installs as (e.g. `nordic_cursors_scalable`), not its pretty `Name=` from `index.theme`. If the cursor silently stays the default after logging in, check `ls ~/.icons ~/.local/share/icons` against what `environment.lua` says.
+> ⚠️ **Cursor theme names are case-sensitive.** `CursorTheme` in `environment.lua` has to match the *directory name* the theme installs as (`Vimix-white-cursors` here), not its pretty `Name=` from `index.theme`. If the cursor silently stays the default after logging in, check `ls /usr/share/icons ~/.icons ~/.local/share/icons` against what `environment.lua` says — a packaged theme lands in the first of those three, a hand-installed one in the other two.
 
-> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting the two-`@import` version this rice needs (`theme-base.css` + `gtk-colors.css`, which is what keeps matugen/static color overrides working). **`apply-static-colors.sh` does not undo this** — it only rewrites `theme-base.css`. The two-line file has to be restored by hand; see [THEMING.md § GTK theming](THEMING.md#gtk-theming) for the exact command.
+> ⚠️ **Known trap:** `nwg-look` writes `~/.config/gtk-4.0/gtk.css` as a direct symlink to the theme's own `gtk.css`, overwriting the self-contained palette file this rice ships there. **`apply-static-colors.sh` does not undo this** — it never writes `gtk.css` at all. Restore it from the repo (`cp gtk-4.0/gtk.css ~/.config/gtk-4.0/gtk.css`), and check the file before running `dotbackup`, or the theme's whole stylesheet gets committed in its place. See [THEMING.md § GTK theming](THEMING.md#gtk-theming).
 
 ---
 
@@ -221,7 +221,7 @@ It writes 14 color files from their `*.static.*` counterparts, re-points the `gt
 
 This has to run **before** step 6 (enabling services) — some of those services read the files this step creates. Dynamic wallpaper-driven theming is off by default; toggle it later with `SUPER + SHIFT + W` — see [THEMING.md](THEMING.md).
 
-> One thing this script deliberately doesn't touch is `gtk-4.0/gtk.css` — it only writes `theme-base.css` and `gtk-colors.css`. The repo ships `gtk.css` as the correct two-`@import` file, so a plain copy is all it needs; it only ever needs restoring by hand after `nwg-look` overwrites it, see [THEMING.md § GTK theming](THEMING.md#gtk-theming).
+> This script does **not** write `gtk-3.0/gtk.css` or `gtk-4.0/gtk.css` — those are shipped complete by the repo and a plain copy is all they need. It only writes `gtk-colors.css` and the `theme-base.css` symlink, neither of which the current `gtk.css` files import any more; see [THEMING.md § Known inconsistency](THEMING.md#known-inconsistency-in-the-gtk-layer) for why those two outputs are currently inert.
 
 ---
 
@@ -262,13 +262,16 @@ systemctl --user daemon-reload
 systemctl --user enable --now \
   waybar.service swaync.service hypridle.service udiskie.service \
   awww.service wallpaper.service cliphist-text.service cliphist-image.service \
-  infinite-desktop.service playerctl-watch.service polkit-agent.service
+  infinite-desktop.service playerctl-watch.service polkit-agent.service \
+  kb-layout-notify.service
 
 systemctl --user enable --now \
   updates-check.timer thumbs-refresh.timer healthcheck-notify.timer dotbackup-remind.timer
 ```
 
 > `hyprland-session.service` is **not** in that list — it has no `[Install]` block on purpose, it's only ever started by `hypr/modules/autostart.lua` when Hyprland itself launches. See [ARCHITECTURE.md](ARCHITECTURE.md#session-lifecycle) for why the architecture is split this way.
+
+> `kb-layout-notify.service` shows a popup when the keyboard layout changes — only useful if you actually have more than one layout configured in `hypr/modules/input.lua` (`grp:alt_shift_toggle` is what switches them). Skip it if you don't; nothing else depends on it.
 
 > `dotbackup-remind.timer` only makes sense if you keep your own fork checked out and want a reminder when `~/.config` drifts from it (see `hypr/scripts/dotbackup-remind.sh`). If that's not your workflow, skip enabling that one timer — nothing else depends on it.
 
@@ -337,7 +340,7 @@ set -Ux USER_PRETTY "Your Name"
 Find the hardcoded paths all at once:
 
 ```bash
-rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Win11-Fantasy|Slot-Gray|nordic_cursors" .
+rg "/home/|your-username|kitasa-elburakku|wallpaper|hwmon|Slot-Gray|Vimix|Adwaita-dark|Win11-Fantasy" .
 ```
 
 ---
@@ -351,6 +354,36 @@ chsh -s /usr/bin/fish
 ```
 
 Log into Hyprland. If something doesn't exist on your system, Hyprland may start incomplete, or some shortcuts won't do anything — that's expected until step 9 is fully done.
+
+---
+
+## 11. Hyprland plugins (optional)
+
+This rice loads two **external** Hyprland plugins — [hyprglass](https://github.com/hyprnux/hyprglass) and [hypr-dynamic-cursors](https://github.com/VirtCode/hypr-dynamic-cursors). Neither is code from this repository; both are third-party projects with their own authors and licenses. Only their *configuration* lives here, in `hypr/plugins/`.
+
+This step is genuinely optional and comes last on purpose: `hyprpm` builds each plugin against the Hyprland you are actually running, so it wants a working Hyprland first. Skip it and the session still comes up — you just don't get the glass material or the cursor motion. The config files guard on the plugin being loaded and return early when it isn't.
+
+```bash
+hyprpm update        # sync hyprpm's headers with your Hyprland (asks for sudo)
+
+hyprpm add https://github.com/hyprnux/hyprglass
+hyprpm enable hyprglass
+
+hyprpm add https://github.com/virtcode/hypr-dynamic-cursors
+hyprpm enable dynamic-cursors
+
+hyprpm list          # confirm both show `enabled: true`
+```
+
+Then relogin, or `hyprpm reload -n` to load them into the running session.
+
+> `hyprpm` ships with Hyprland — there is nothing extra to install for it. It builds the plugins from source and stores the resulting `.so` files in `/var/cache/hyprpm/$USER/`, which is root-owned: `add`, `update` and `remove` need `sudo`, `reload` does not.
+
+> **`hypr/modules/autostart.lua` runs `hyprpm reload -n` on every `hyprland.start`**, so the plugins load themselves on each login once they're built. It deliberately does *not* run `hyprpm update` — that needs `sudo` and would hang the session start on a password prompt nothing can answer.
+
+> ⚠️ **After every Hyprland update, run `hyprpm update` by hand.** A plugin built against the old ABI refuses to load. Until you do, the two plugins simply don't load and everything else works normally — that's what the guards in `hypr/plugins/*.lua` are for.
+
+> `hypr-dynamic-cursors` is **`x86_64`-only** (it uses Hyprland's function-hook API), and on Nvidia GPUs it forces software cursors because of driver limitations. `hyprglass` needs Hyprland's shadow decoration present in the render pipeline and auto-enables it at load. Full requirements, options and attribution: [PLUGINS.md](PLUGINS.md).
 
 ---
 
@@ -368,6 +401,7 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 - `SUPER + SHIFT + /` opens the Rofi web hub; picking a category then a page opens it in your browser.
 - GTK apps (e.g. `nautilus`) render with the installed theme, not the GTK default (Adwaita fallback look) — if they don't, see [Troubleshooting](#troubleshooting).
 - `SUPER + F4` opens the `kitasan` menu; `kitasan doctor` reports clean (template parity, keybinds doc, failed services, orphans).
+- If you did [step 11](#11-hyprland-plugins-optional): `hyprpm list` shows both plugins as `enabled: true`, translucent windows have a visible glass bezel, and the cursor tilts as you move it. None of this is required for a correct install — see [PLUGINS.md](PLUGINS.md).
 
 ---
 
@@ -379,13 +413,16 @@ systemctl --user is-active waybar.service hypridle.service swaync.service
 | `systemctl --user is-enabled <unit>` says `disabled` after copying the units | `[Install]` blocks don't self-activate — re-run step 6's `enable --now` |
 | Hyprland doesn't start, or ignores the whole config | Your Hyprland build doesn't support the native Lua config API (`hl.*`) — see [ARCHITECTURE.md](ARCHITECTURE.md#hyprland-in-lua) |
 | Wallpaper picker errors on `awww` | You installed `swww` instead — this rice uses `awww`, not `swww` |
-| GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink — re-run `hypr/scripts/apply-static-colors.sh`, see [THEMING.md](THEMING.md#gtk-theming) |
+| GTK4 apps suddenly lose the theme after using `nwg-look` | `nwg-look` overwrote `~/.config/gtk-4.0/gtk.css` with a direct theme symlink. `apply-static-colors.sh` does **not** repair this — restore the file from the repo by hand, see [THEMING.md](THEMING.md#gtk-theming) |
 | Steam games have no icon in Rofi's launcher | Expected on a fresh clone until Steam has actually cached art for those games — see [THEMING.md](THEMING.md#steam-game-icons) |
 | CPU temperature row is empty in Waybar/dashboard | `hwmon-path-abs` in `waybar/config.jsonc` and `rofi/scripts/dashboard.sh` still point at the original machine's sensor — fix both, see step 9 |
 | Waybar's left/right modules never appear | Expected at rest — move the cursor into the top-left or top-right third to reveal them. If they never appear at all, `cursor-zone.py` isn't executable (step 5) or it couldn't reach Hyprland's socket; `journalctl --user -u waybar` shows it. The centre island renders either way |
 | Rofi shows odd extra modes, or the web hub misbehaves | `rofi/scripts/web_common.sh` got the executable bit — Rofi picks up every executable in a script-mode directory as a mode. `chmod 644` it, see step 5 |
 | The mouse cursor is the default X arrow, not the installed theme | `CursorTheme` in `environment.lua` doesn't match the theme's installed **directory** name (case-sensitive) — see step 2 |
 | Text renders with fallback glyphs / boxes | `ttf-iosevkaterm-nerd` isn't installed — the configs name `IosevkaTerm Nerd Font` explicitly, they don't ask for a generic monospace |
+| No glass effect on windows, and no cursor tilt, after a Hyprland update | The plugins are built against the old ABI and refuse to load. `hyprpm update`, then relogin — see [step 11](#11-hyprland-plugins-optional) |
+| The glass effect only appears while dragging a window | Hyprland's `blur:new_optimizations` cache is hiding it. hyprglass sets `noblur` on glassed windows to prevent exactly this; check `manage_window_blur` hasn't been set to `0` in `hypr/plugins/hyprglass.lua` — see [PLUGINS.md](PLUGINS.md#hyprglass) |
+| Hyprland starts but the whole Lua config seems ignored, right after adding a plugin | A plugin config file was edited without its guard. Reading `hl.plugin.<name>.*` when the plugin isn't loaded aborts the entire config, not just that file — see [PLUGINS.md § How plugins are wired in](PLUGINS.md#how-plugins-are-wired-into-this-rice) |
 
 ---
 
