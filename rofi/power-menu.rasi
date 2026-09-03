@@ -34,7 +34,7 @@ mainbox {
     children:         [ "inputbar", "listview" ];
 }
 
-/* ── Header (Estilo de wallpaper-type-select) ─────── */
+/* ── Header ─────── */
 inputbar {
     padding:          0px;
     spacing:          0px;

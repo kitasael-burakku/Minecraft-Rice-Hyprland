@@ -95,9 +95,9 @@ hl.config { plugin = { dynamic_cursors = {
         threshold = 6.0,
 
         -- magnification level immediately after shake start
-        base = 4.0,
+        base = 3.0,
         -- magnification increase per second when continuing to shake
-        speed = 4.0,
+        speed = 3.0,
         -- how much the speed is influenced by the current shake intensity
         influence = 0.0,
 
@@ -106,7 +106,7 @@ hl.config { plugin = { dynamic_cursors = {
         limit = 0.0,
 
         -- time in milliseconds the cursor will stay magnified after a shake has ended
-        timeout = 2000,
+        timeout = 2500,
 
         -- show cursor behaviour `tilt`, `rotate`, etc. while shaking
         effects = false,

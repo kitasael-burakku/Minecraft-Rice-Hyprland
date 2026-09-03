@@ -38,19 +38,19 @@ hl.window_rule({ name  = "move-hyprland-run", match = { class = "hyprland-run", 
 -------------------
 
 -- Notification Center
-hl.layer_rule({ name  = "swaync-control-blur", match = { namespace = "swaync-control-center", },blur = true , ignore_alpha = 0.5, animation = "slide right" })
+hl.layer_rule({ name  = "swaync-control-blur", match = { namespace = "swaync-control-center", },blur = true , ignore_alpha = 0.70, animation = "slide right" })
 
 -- Notification Window
-hl.layer_rule({ name  = "swaync-window-blur", match = { namespace = "swaync-notification-window", }, blur = true, ignore_alpha = 0.5 })
+hl.layer_rule({ name  = "swaync-window-blur", match = { namespace = "swaync-notification-window", }, blur = true, ignore_alpha = 0.70 })
 
 -- Rofi
-hl.layer_rule({ name  = "rofi", match = { namespace = "rofi", },blur = true, ignore_alpha = 0.5, animation = "slide" })
+hl.layer_rule({ name  = "rofi", match = { namespace = "rofi", }, animation = "slide" })
 
 -- Wlogout 
-hl.layer_rule({ name  = "wlogout", match = { namespace = "logout_dialog", }, blur = true, ignore_alpha=0.5 })
+hl.layer_rule({ name  = "wlogout", match = { namespace = "logout_dialog", }, blur = true, ignore_alpha=0.2 })
 
 -- Waybar 
-hl.layer_rule({ name  = "waybar", match  = { namespace = "waybar", }, blur = true, ignore_alpha = 0.5 })
+hl.layer_rule({ name  = "waybar", match  = { namespace = "waybar", }, blur = true, ignore_alpha = 0.60 })
 
 --------------------------
 ---- WORKSPACE RULES -----
