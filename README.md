@@ -100,6 +100,7 @@ This README is a landing page. The actual how-to and why-to live in [`docs/`](do
 | [docs/THEMING.md](docs/THEMING.md) | The color pipeline (static vs. matugen), GTK3/GTK4/Qt theming, and why Steam games need one extra script for their icons to show up |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The Lua config system, the systemd session lifecycle, Waybar's cursor zones, `kitasan`, the Rofi tooling, which scripts write which files, and the `dotbackup` deploy pipeline |
 | [docs/PLUGINS.md](docs/PLUGINS.md) | The two external Hyprland plugins — who wrote them, what they add, how to install them with `hyprpm`, and how this rice configures them |
+| [docs/IMAGES.md](docs/IMAGES.md) | The full screenshot gallery — every part of the rice, grouped by area, with the keybind that opens it |
 | [KEYBINDS.txt](KEYBINDS.txt) | The full keybind reference (generated from `keybinds.lua`) |
 
 | If you... | Start here |
@@ -171,29 +172,26 @@ A quick map before you go any further — what lives where, and what it's for. F
 
 <div align="center">
 <img src="docs/screenshots/desktop.jpg" alt="Desktop" width="850"/>
-<br><sub><b>Desktop</b></sub>
+<br><sub><b>Desktop</b> — Waybar collapsed to its centre island, Fastfetch, and the MPRIS player</sub>
 </div>
 
 <br>
 
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/rofi.jpg" alt="Rofi + SwayNC"/><br><sub align="center"><b>Rofi + SwayNC</b></sub></td>
-<td width="50%"><img src="docs/screenshots/window-minimiser.jpg" alt="Window Switcher"/><br><sub align="center"><b>Window Switcher</b></sub></td>
+<td width="50%"><img src="docs/screenshots/rofi.jpg" alt="App launcher and notification centre"/><br><sub align="center"><b>App launcher + SwayNC</b> · <code>SUPER + Space</code></sub></td>
+<td width="50%"><img src="docs/screenshots/dashboard.jpg" alt="System dashboard"/><br><sub align="center"><b>System dashboard</b> · <code>SUPER + F5</code></sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="docs/screenshots/wallpaper-picker.jpg" alt="Wallpaper Picker"/><br><sub align="center"><b>Wallpaper Picker</b></sub></td>
-<td width="50%"><img src="docs/screenshots/video-wallpaper-picker.jpg" alt="Video Wallpaper Picker"/><br><sub align="center"><b>Video Wallpaper Picker</b></sub></td>
-</tr>
-<tr>
-<td width="50%"><img src="docs/screenshots/Image_wallpaperpicker.jpg" alt="Image Wallpaper Picker"/><br><sub align="center"><b>Image Wallpaper Picker</b></sub></td>
-<td width="50%"><img src="docs/screenshots/keybinds.jpg" alt="Keybinds and Btop"/><br><sub align="center"><b>Keybinds and Btop</b></sub></td>
+<td width="50%"><img src="docs/screenshots/Image_wallpaperpicker.jpg" alt="Wallpaper picker"/><br><sub align="center"><b>Wallpaper picker</b> · <code>SUPER + W</code></sub></td>
+<td width="50%"><img src="docs/screenshots/hyprlock.jpg" alt="Hyprlock"/><br><sub align="center"><b>Hyprlock</b> · <code>SUPER + ALT + H</code></sub></td>
 </tr>
 </table>
 
 <div align="center">
-<img src="docs/screenshots/hyprlock.jpg" alt="Hyprlock" width="850"/>
-<br><sub><b>Hyprlock</b></sub>
+
+**→ [Full gallery: docs/IMAGES.md](docs/IMAGES.md)** — all 14 screenshots, grouped by area, with the keybind and the script behind each one: the `kitasan` menu, the window switcher, the video wallpaper grid, the theme-scheme picker, the systemd service manager, Wi-Fi and Bluetooth.
+
 </div>
 
 ---

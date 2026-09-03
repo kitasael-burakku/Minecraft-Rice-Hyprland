@@ -8,6 +8,7 @@ This folder holds the deep-dive docs for [Minecraft-Rice-Hyprland](../README.md)
 | [THEMING.md](THEMING.md) | Understand or change the color pipeline (static vs. matugen), GTK/Qt theming, and where to get the icon/cursor/GTK themes this rice uses |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Understand how the pieces fit together — the Lua config system, the systemd session lifecycle, Waybar's cursor zones, `kitasan`, the Rofi tooling, which scripts write which files, and the `dotbackup` deploy pipeline |
 | [PLUGINS.md](PLUGINS.md) | Know what the two external Hyprland plugins (hyprglass, hypr-dynamic-cursors) are, who wrote them, how to install them with `hyprpm`, and how this rice configures them |
+| [IMAGES.md](IMAGES.md) | See what all of this actually looks like — every screenshot in the repo, grouped by area, with the keybind that opens each thing and the doc that explains it |
 
 Two more references live outside this folder, on purpose:
 
