@@ -503,6 +503,14 @@ function __keybinds_cleanup
 end
 
 function keybinds --description "Open keybinds viewer in current terminal as floating window"
+    if test (count $argv) -gt 1
+        set_color red
+        echo "keybinds: expected at most one argument, got "(count $argv)
+        set_color normal
+        echo "Usage: keybinds [/path/to/KEYBINDS.txt]"
+        return 2
+    end
+
     if test "$argv[1]" = -h -o "$argv[1]" = --help
         echo "keybinds — interactive Hyprland keybinds viewer"
         echo ""
@@ -513,9 +521,26 @@ function keybinds --description "Open keybinds viewer in current terminal as flo
         return 0
     end
 
+    # A path that does not exist is a legitimate "file not found" (1); an
+    # unrecognised FLAG is a usage error (2). Without this an unknown option
+    # was silently treated as a document path.
+    if string match -qr '^-' -- "$argv[1]"
+        set_color red
+        echo "keybinds: unknown option '$argv[1]'"
+        set_color normal
+        echo "Usage: keybinds [/path/to/KEYBINDS.txt]"
+        return 2
+    end
+
     clear
     __keybinds_prepare_window
     __keybinds_viewer $argv
+    # Captured immediately: restore_window and cleanup both run afterwards and
+    # each overwrite $status, so without this the caller saw the exit code of
+    # the last `functions -e` in the cleanup loop (a literal 4 when the
+    # document was missing) instead of the viewer's real result.
+    set -l rc $status
     __keybinds_restore_window
     __keybinds_cleanup
+    return $rc
 end

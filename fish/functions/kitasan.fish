@@ -24,13 +24,46 @@
 #   kitasan diskbackup --check → just checks if anything's pending, writes nothing
 #   kitasan menu              → all of the above, chosen from a rofi
 
+# Runs one of the hypr/rofi helper scripts and reports what happened.
+#
+# These used to be called as a bare `bash "$path"` whose output was captured
+# and printed as if it were the check's own result — so a missing or
+# non-executable script rendered "bash: No such file or directory" inside the
+# report, styled like a finding. A check that cannot run is not a check that
+# passed, and it is not a finding either; it has to say which.
+#
+# Prints the script's combined output on stdout and returns:
+#   0   ran, clean (no output)
+#   10  ran, produced findings
+#   127 could not run
+function __kitasan_script -a path
+    if not test -f "$path"
+        _rui_warn "Check unavailable: "(string replace "$HOME" "~" "$path")" not found."
+        return 127
+    end
+
+    set -l out (bash "$path" $argv[2..] 2>&1)
+    set -l rc $status
+
+    if test (count $out) -gt 0
+        printf "%s\n" $out
+        return 10
+    end
+
+    if test $rc -ne 0
+        _rui_warn "Check exited $rc with no output: "(string replace "$HOME" "~" "$path")
+        return 10
+    end
+    return 0
+end
+
 function __kitasan_doctor
     # --fresh-clone answers a different question from the daily health pass, so
     # it's its own report rather than a seventh section: after cloning you want
     # "what do I still owe this machine", not "is anything failing right now".
     if contains -- --fresh-clone $argv
         __kitasan_doctor_fresh_clone
-        return
+        return $status
     end
 
     clear
@@ -44,45 +77,85 @@ function __kitasan_doctor
     _rui_bot $W
     echo ""
 
+    # Counts sections that reported something actionable, so the exit status
+    # matches what is on screen instead of always being 0.
+    set -l findings 0
+
     _rui_section cyan "󰃟" "Template/static parity (matugen)"
-    set -l parity_out (bash "$HOME/.config/hypr/scripts/check-template-parity.sh" 2>&1)
-    if test -z "$parity_out"
-        _rui_ok "All dynamic templates match their statics."
-    else
-        printf "%s\n" $parity_out
+    __kitasan_script "$HOME/.config/hypr/scripts/check-template-parity.sh"
+    switch $status
+        case 0
+            _rui_ok "All dynamic templates match their statics."
+        case '*'
+            set findings (math $findings + 1)
     end
 
     _rui_section cyan "󰋩" "Config drift (cross-file references)"
-    set -l drift_out (bash "$HOME/.config/hypr/scripts/check-config-drift.sh" 2>&1)
-    if test -z "$drift_out"
-        _rui_ok "gtk.css imports, theme names, icon theme and symlinks all resolve."
-    else
-        printf "%s\n" $drift_out
+    __kitasan_script "$HOME/.config/hypr/scripts/check-config-drift.sh"
+    switch $status
+        case 0
+            _rui_ok "gtk.css imports, theme names, icon theme and symlinks all resolve."
+        case '*'
+            set findings (math $findings + 1)
     end
 
     _rui_section cyan "󰌌" "Keybinds documentation"
-    if bash "$HOME/.config/hypr/scripts/generate-keybinds-doc.sh" --check >/dev/null 2>&1
+    set -l gen "$HOME/.config/hypr/scripts/generate-keybinds-doc.sh"
+    if not test -f "$gen"
+        _rui_warn "Check unavailable: generate-keybinds-doc.sh not found."
+        set findings (math $findings + 1)
+    else if bash "$gen" --check >/dev/null 2>&1
         _rui_ok "KEYBINDS.txt is up to date with keybinds.lua."
     else
         _rui_warn "KEYBINDS.txt is outdated — run 'checkkeybinds --write'."
+        set findings (math $findings + 1)
     end
 
     _rui_section red "󰋊" "Downed systemd services"
-    set -l failed_sys (systemctl --failed --no-legend 2>/dev/null)
-    set -l failed_usr (systemctl --user --failed --no-legend 2>/dev/null)
-    if test (count $failed_sys) -eq 0 -a (count $failed_usr) -eq 0
+    # systemctl exits 0 when nothing has failed, so a non-zero status means the
+    # query itself failed. The old 2>/dev/null capture made that indistinguish-
+    # able from a healthy system and printed "No failed services".
+    set -l failed_sys
+    set -l failed_usr
+    set -l svc_unknown 0
+
+    if _rui_capture systemctl --failed --no-legend; and test $__rui_rc -eq 0
+        set failed_sys $__rui_out
+    else
+        set svc_unknown 1
+    end
+    if _rui_capture systemctl --user --failed --no-legend; and test $__rui_rc -eq 0
+        set failed_usr $__rui_out
+    else
+        set svc_unknown 1
+    end
+
+    if test $svc_unknown -eq 1
+        _rui_warn "Could not query systemd services — status unknown."
+        set findings (math $findings + 1)
+    else if test (count $failed_sys) -eq 0 -a (count $failed_usr) -eq 0
         _rui_ok "No failed services (system or user)."
     else
         printf "  %s\n" $failed_sys $failed_usr
+        set findings (math $findings + 1)
     end
 
     _rui_section yellow "󰮯" "Orphan packages"
-    set -l orphans (pacman -Qtdq 2>/dev/null)
-    if test (count $orphans) -eq 0
+    # -Qtdq exits 1 for "no orphans" and for a database error alike, so the
+    # old 2>/dev/null turned an unreadable database into a confident
+    # "No orphan packages."
+    if not _rui_capture pacman -Qtdq
+        _rui_warn "Could not run the orphan query (no temporary file)."
+        set findings (math $findings + 1)
+    else if test (count $__rui_err) -gt 0
+        _rui_warn "Could not query orphans: $__rui_err[1]"
+        set findings (math $findings + 1)
+    else if test (count $__rui_out) -eq 0
         _rui_ok "No orphan packages."
     else
-        printf "  %s\n" $orphans
+        printf "  %s\n" $__rui_out
         _rui_none "Clean up with: kitasan clean --deep"
+        set findings (math $findings + 1)
     end
 
     _rui_section cyan "󰋊" "Backup to /mnt/storage (diskbackup)"
@@ -107,15 +180,21 @@ function __kitasan_doctor
                 # matches.
                 printf "%s\n" $disk_out | grep -E "    [~+] "
                 _rui_none "Update with: kitasan diskbackup"
+                set findings (math $findings + 1)
             case '*'
                 _rui_warn "/mnt/storage isn't mounted — no backup possible right now."
+                set findings (math $findings + 1)
         end
     end
 
-    echo ""
-    set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
-    echo ""
-    read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
+    if test $findings -gt 0
+        _rui_verdict warn "$findings section(s) need attention."
+        _rui_pause
+        return 10
+    end
+    _rui_verdict ok "Everything checked out."
+    _rui_pause
+    return 0
 end
 
 function __kitasan_doctor_fresh_clone
@@ -131,20 +210,24 @@ function __kitasan_doctor_fresh_clone
     echo ""
 
     _rui_section cyan "󰇄" "Personal paths and hardware"
-    set -l out (bash "$HOME/.config/hypr/scripts/check-personal-paths.sh" 2>&1)
-    if test -z "$out"
+    __kitasan_script "$HOME/.config/hypr/scripts/check-personal-paths.sh"
+    set -l rc $status
+    if test $rc -eq 0
         _rui_ok "Everything machine-specific resolves on this machine."
-    else
-        printf "%s\n" $out
     end
 
     echo ""
     _rui_none "Full list of what's hardcoded: docs/INSTALLATION.md § 9"
     _rui_none "For the daily health pass, run: kitasan doctor"
-    echo ""
-    set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
-    echo ""
-    read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
+
+    if test $rc -ne 0
+        _rui_verdict warn "Some machine-specific values still need adapting."
+        _rui_pause
+        return 10
+    end
+    _rui_verdict ok "Nothing left to adapt on this machine."
+    _rui_pause
+    return 0
 end
 
 function __kitasan_wall
@@ -162,15 +245,32 @@ function __kitasan_wall
                   --preview 'file {}' --preview-window=down:2:wrap
     )
 
+    # An empty selection means the picker was closed without choosing —
+    # that is a cancellation, not a failure of the wallpaper machinery.
     test -n "$selected"; or return 1
 
-    bash "$HOME/.config/hypr/scripts/apply-wallpaper.sh" "$selected"
-    and nohup bash "$HOME/.config/rofi/scripts/matugen_reload.sh" "$selected" >/dev/null 2>&1 &
+    if not bash "$HOME/.config/hypr/scripts/apply-wallpaper.sh" "$selected"
+        set_color red
+        echo "kitasan wall: apply-wallpaper.sh failed for $selected"
+        set_color normal
+        return 1
+    end
+
+    # `disown` used to sit unconditionally after an `and`-guarded background
+    # job: when apply-wallpaper.sh failed, no job was ever started and disown
+    # printed "There are no suitable jobs" at the user. It only runs now on
+    # the path that actually backgrounds something.
+    nohup bash "$HOME/.config/rofi/scripts/matugen_reload.sh" "$selected" >/dev/null 2>&1 &
     disown
+    return 0
 end
 
 function __kitasan_theme
     if test (count $argv) -eq 0
+        if not command -q rofi
+            set_color red; echo "kitasan theme: rofi not installed — pass a scheme name instead"; set_color normal
+            return 127
+        end
         bash "$HOME/.config/rofi/scripts/theme.sh"
         return $status
     end
@@ -180,7 +280,7 @@ function __kitasan_theme
     if not contains -- "$scheme" $valid
         set_color red; echo "kitasan theme: unknown scheme '$argv[1]'"; set_color normal
         set_color brblack; echo "    valid: content expressive fidelity fruit-salad monochrome neutral rainbow tonal-spot vibrant"; set_color normal
-        return 1
+        return 2
     end
 
     mkdir -p "$HOME/.config/matugen"
@@ -196,11 +296,22 @@ function __kitasan_theme
         return 0
     end
 
-    bash "$HOME/.config/rofi/scripts/matugen_reload.sh" "$wall"
+    if not bash "$HOME/.config/rofi/scripts/matugen_reload.sh" "$wall"
+        set_color red
+        echo "kitasan theme: scheme saved ($scheme) but colour regeneration failed"
+        set_color normal
+        return 1
+    end
     set_color green; echo "kitasan theme: visual profile → $scheme"; set_color normal
+    return 0
 end
 
 function __kitasan_menu
+    if not command -q rofi
+        set_color red; echo "kitasan menu: rofi not installed"; set_color normal
+        return 127
+    end
+
     set -l entries '󰕮  Dashboard' '󰒋  Health' '󰃣  Clean' '󰚰  Update' '󰸌  Theme' '󰸉  Wallpaper' '󰙀  Mode' '󰓙  Doctor'
     # diskbackup is personal, not versioned (see __kitasan_doctor) — only
     # shows up in the menu if it actually exists on this machine.
@@ -234,7 +345,13 @@ function __kitasan_menu
 end
 
 function kitasan --description "Unified rice CLI — health/clean/update/theme/wall/doctor/menu"
-    if test (count $argv) -eq 0
+    # Asking for help succeeds; running kitasan with nothing at all is still a
+    # usage error, since it means the command was incomplete rather than
+    # informational.
+    set -l want_help 0
+    contains -- $argv[1] -h --help; and set want_help 1
+
+    if test (count $argv) -eq 0; or test $want_help -eq 1
         set_color brwhite; echo "kitasan — unified rice CLI"; set_color normal
         echo ""
         echo "  kitasan health           system health check"
@@ -249,7 +366,8 @@ function kitasan --description "Unified rice CLI — health/clean/update/theme/w
         echo "  kitasan diskbackup       mirror to /mnt/storage (repos + themes + private files)"
         echo "  kitasan diskbackup --check   just checks if anything's pending, writes nothing"
         echo "  kitasan menu             all of the above, chosen from rofi"
-        return 1
+        test $want_help -eq 1; and return 0
+        return 2
     end
 
     set -l sub $argv[1]
@@ -292,6 +410,6 @@ function kitasan --description "Unified rice CLI — health/clean/update/theme/w
         case '*'
             set_color red; echo "kitasan: unknown subcommand '$sub'"; set_color normal
             set_color brblack; echo "    run 'kitasan' with no arguments to see the list"; set_color normal
-            return 1
+            return 2
     end
 end

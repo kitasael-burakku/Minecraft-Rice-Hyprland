@@ -40,7 +40,20 @@ end
 
 function ec --description "Open a config in the editor (ec <TAB> for the list)"
     set -l editor codium
-    set -q EC_EDITOR; and set editor $EC_EDITOR
+    if set -q EC_EDITOR; and test -n "$EC_EDITOR"
+        set editor $EC_EDITOR
+    end
+
+    # -h/--help is the same listing as the no-argument form, but asking for it
+    # deliberately is a success, not the usage error that a bare `ec` reports.
+    if contains -- $argv[1] -h --help
+        set_color brwhite; echo "ec — open a config in the editor"; set_color normal
+        echo ""
+        printf "  %s\n" (__ec_names | string join " ")
+        echo ""
+        set_color brblack; echo "  usage: ec <name>   ·   editor: $editor (override: \$EC_EDITOR)"; set_color normal
+        return 0
+    end
 
     if test (count $argv) -eq 0
         set_color brwhite; echo "ec — open a config in the editor"; set_color normal
@@ -48,7 +61,7 @@ function ec --description "Open a config in the editor (ec <TAB> for the list)"
         printf "  %s\n" (__ec_names | string join " ")
         echo ""
         set_color brblack; echo "  usage: ec <name>   ·   editor: $editor (override: \$EC_EDITOR)"; set_color normal
-        return 1
+        return 2
     end
 
     if not command -q $editor
@@ -58,11 +71,22 @@ function ec --description "Open a config in the editor (ec <TAB> for the list)"
 
     set -l paths
     for name in $argv
-        set -l row (__ec_targets | string match -r "^$name\s.*")
+        # $name used to be interpolated straight into a regex, so a target
+        # containing a regex metacharacter (".", "+", "[") matched the wrong
+        # row or nothing at all. Compare the parsed first field literally
+        # instead — no pattern language involved.
+        set -l row ""
+        for line in (__ec_targets)
+            set -l fields (string split -n " " -- (string replace -ra ' +' ' ' -- $line))
+            if test (count $fields) -ge 2; and test "$fields[1]" = "$name"
+                set row $line
+                break
+            end
+        end
         if test -z "$row"
             set_color red; echo "ec: unknown target '$name'"; set_color normal
             set_color brblack; echo "    available: "(__ec_names | string join " "); set_color normal
-            return 1
+            return 2
         end
         set -l fields (string split -n " " -- (string replace -ra ' +' ' ' -- $row))
         set -a paths $fields[2..]
@@ -74,10 +98,16 @@ function ec --description "Open a config in the editor (ec <TAB> for the list)"
         end
     end
 
-    # Same behavior as the old aliases: "&& pkill kitty" so the terminals
-    # pick up the new theme. Note that this also kills the terminal you
-    # called ec from — that's what ecswaync and friends already did, so it's
-    # kept as-is.
+    # Same behavior as the old aliases.
     $editor $paths
-    and pkill kitty
+    set -l rc $status
+
+    # "&& pkill kitty" so the terminals pick up the new theme. Note that this
+    # also kills the terminal you called ec from — that's what ecswaync and
+    # friends already did, so it's kept as-is. pkill's own status (1 when it
+    # matched nothing) must not become ec's result, hence the capture above.
+    if test $rc -eq 0
+        pkill kitty
+    end
+    return $rc
 end

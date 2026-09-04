@@ -18,6 +18,19 @@ function __quickcache_type
 end
 
 function quickcache --description "Quick safe cache cleanup with animated confirmation"
+    # Takes no arguments; rejecting them rather than ignoring them keeps the
+    # contract identical across every function in this directory.
+    if test (count $argv) -gt 0
+        if contains -- $argv[1] -h --help
+            echo "quickcache — Quick, safe cleanup of regenerable cache folders."
+            echo "Usage: quickcache   (takes no arguments)"
+            return 0
+        end
+        _rui_bad "quickcache: unexpected argument '$argv[1]'"
+        _rui_none "usage: quickcache   (takes no arguments)"
+        return 2
+    end
+
     clear
 
     set -l W 52
@@ -95,12 +108,12 @@ function quickcache --description "Quick safe cache cleanup with animated confir
         end
     end
 
-    if test "$found" = 0
+    if test $found -eq 0
         set_color green
         __quickcache_type "  ✓ No known cache folders found." 0.015
         set_color normal
         echo ""
-        read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
+        _rui_pause
         return 0
     end
 
@@ -119,66 +132,87 @@ function quickcache --description "Quick safe cache cleanup with animated confir
         __quickcache_type "  Cancelled." 0.015
         set_color normal
         echo ""
-        read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
-        return 0
+        _rui_pause
+        return 1
     end
 
     _rui_section_plain cyan "󰆴" "Removing cache folders"
     echo ""
 
+    # Anything the safety guard refuses, or any rm that fails, has to reach
+    # the verdict at the bottom — otherwise the run ends on a green tick that
+    # describes a cleanup which did not happen.
+    set -l failures 0
+
     for target in $targets
         if test -e "$target"
             set -l target_real (realpath "$target" 2>/dev/null)
             if test -z "$target_real"
-                set_color red; echo "  ✘ Skipping unsafe path: $target"; set_color normal
+                set_color red; echo "  ✘ Skipping unresolvable path: $target"; set_color normal
+                set failures (math $failures + 1)
                 continue
             end
             if string match -q -- "$HOME/.cache/*" "$target_real"; or test "$target_real" = "$HOME/.codex/.tmp"
                 set_color brblack; printf "  Removing %-40s" (string replace $HOME "~" $target_real); set_color normal
-                rm -rf -- "$target_real"
-                set_color green; echo "done"; set_color normal
+                if rm -rf -- "$target_real"
+                    set_color green; echo "done"; set_color normal
+                else
+                    set_color red; echo "failed"; set_color normal
+                    set failures (math $failures + 1)
+                end
             else
                 set_color red; echo "  ✘ Refusing unsafe path: $target_real"; set_color normal
+                set failures (math $failures + 1)
             end
         end
     end
 
     # ── Cliphist ──────────────────────────────────────────────────────────────
-    if type -q cliphist
+    if command -q cliphist
         _rui_section_plain magenta "󰅇" "Cliphist"
         set_color brblack
         __quickcache_type "  Clears clipboard history stored by cliphist." 0.012
         set_color normal
         echo ""
         if _rui_confirm "Run cliphist wipe?"
-            cliphist wipe
-            set_color green; echo "  ✓ cliphist wiped."; set_color normal
+            if cliphist wipe
+                _rui_ok "cliphist wiped."
+            else
+                _rui_warn "cliphist wipe failed."
+                set failures (math $failures + 1)
+            end
         else
             set_color brblack; echo "  · Skipped."; set_color normal
         end
     end
 
     # ── npm ───────────────────────────────────────────────────────────────────
-    if type -q npm
+    if command -q npm
         _rui_section_plain green "" "npm cache"
         set_color brblack
         __quickcache_type "  Clears npm download cache." 0.012
         set_color normal
         echo ""
         if _rui_confirm "Clean npm cache?"
-            npm cache clean --force
-            set_color green; echo "  ✓ npm cache cleaned."; set_color normal
+            if npm cache clean --force
+                _rui_ok "npm cache cleaned."
+            else
+                _rui_warn "npm cache clean failed."
+                set failures (math $failures + 1)
+            end
         else
             set_color brblack; echo "  · Skipped."; set_color normal
         end
     end
 
     # ── Done ──────────────────────────────────────────────────────────────────
-    echo ""
-    set_color brblack; printf "  ────────────────────────────────────────────────────\n"; set_color normal
-    set_color green
-    __quickcache_type "  ✓ Quick cache cleanup complete." 0.018
-    set_color normal
-    echo ""
-    read -p 'set_color brblack; echo -n "  Press Enter to exit..."; set_color normal' __discard
+    if test $failures -gt 0
+        _rui_verdict warn "Cache cleanup finished with $failures problem(s) — see above."
+        _rui_pause
+        return 20
+    end
+
+    _rui_verdict ok "Quick cache cleanup complete."
+    _rui_pause
+    return 0
 end

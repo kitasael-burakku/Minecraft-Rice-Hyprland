@@ -19,9 +19,9 @@ hg.preset("liquid", {
     fresnel_strength     = 0.1,
     blur_strength        = 0.80,  -- × 12 = px reales
     blur_iterations      = 1,
-    chromatic_aberration = 0.85,
+    chromatic_aberration = 0.60,
     lens_distortion      = 1.4,   -- domo central; escala con la dimensión menor
-    glass_opacity        = 0.95,
+    glass_opacity        = 1.0,
     tint_color           = 0xf2f4ff18,  -- RRGGBBAA, los 2 últimos = fuerza
 
     -- Los defaults de dark (brightness 0.82, saturation 0.80, vibrancy 0.15)

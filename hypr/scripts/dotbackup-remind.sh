@@ -12,6 +12,15 @@
 #  parsearlo a mano es más frágil que mantener dos listas cortas
 #  sincronizadas). Mismo criterio que ya usa fish/conf.d/tools.fish para los
 #  alias de `ec` frente a __ec_targets.
+#
+#  El precio de esa decisión es que hay que sincronizarlas a mano, y ya se
+#  desincronizaron una vez (nueve archivos, ver la nota junto a FILES). Para
+#  comprobarlo sin leer los dos archivos enteros:
+#
+#    diff <(awk "/set -l config_files/,/set -l documents_files/" ~/.local/bin/dotbackup \
+#             | grep -oE "\"[^\"]+\"" | tr -d "\"" | sort -u) \
+#         <(awk "/^FILES=\\(/,/^\\)/" ~/.config/hypr/scripts/dotbackup-remind.sh \
+#             | tr " " "\n" | grep -E "^[a-z]" | sort -u)
 # ============================================================================
 
 set -u
@@ -35,7 +44,17 @@ FILES=(
     systemd/user/thumbs-refresh.service systemd/user/thumbs-refresh.timer
     systemd/user/healthcheck-notify.service systemd/user/healthcheck-notify.timer
     systemd/user/dotbackup-remind.service systemd/user/dotbackup-remind.timer
+    systemd/user/kb-layout-notify.service
+    gtk-3.0/gtk.css gtk-3.0/gtk-colors.static.css
+    gtk-4.0/gtk.css gtk-4.0/gtk-colors.static.css
+    qt5ct/qt5ct.conf qt5ct/colors/kitasan-glass.static.conf
+    qt6ct/qt6ct.conf qt6ct/colors/kitasan-glass.static.conf
 )
+# Las nueve entradas de arriba (kb-layout-notify + los ocho archivos gtk/qt) se
+# agregaron el 2026-09-04: estaban en config_files de dotbackup pero se habían
+# quedado fuera de ESTA lista, así que un cambio en el tema GTK o en la config
+# de Qt nunca disparaba el recordatorio — el timer comparaba, no veía nada y
+# decía que todo estaba al día.
 
 [ -d "$REPO/.git" ] || exit 0
 
